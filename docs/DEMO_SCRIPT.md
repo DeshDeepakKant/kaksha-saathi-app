@@ -1,0 +1,30 @@
+# 3-minute demo script (for the submission video)
+
+Record against the frozen deployment. Have a second tab with the seeded demo data open in case
+you need to restart. Times are cumulative.
+
+| Time | Screen | Say / do |
+|---|---|---|
+| 0:00–0:15 | Landing page | "One teacher, 30 children, three grades. She knows the syllabus — not where each child actually is. Kaksha Saathi keeps that map and turns it into tomorrow's lesson." |
+| 0:15–0:35 | Teacher → board | "She opens her class. No new test: today's groups are already computed from evidence she collected during teaching." Point at the three groups and the two children marked *assessment pending* (absent today). |
+| 0:35–0:55 | Group card → plan | Open the **हासिल (carrying)** group. "Five children, one shared gap, eight minutes, materials she has, a blackboard line she can copy." Tap the speaker: Hindi read-aloud. |
+| 0:55–1:20 | Capture → note | Back → **साक्ष्य जोड़ें** → voice tab → type (or speak) `आज उधार वाला घटाव कराया। मीना को उधार समझ नहीं आया। अर्जुन ने सही किया। प्रिया नहीं आई।` Show the chips: one absent, one struggling, one correct — each with the quoted words. "Nothing is saved until she confirms." |
+| 1:20–1:35 | Confirm → board changed | Confirm. "Meena moves into the borrowing group; Arjun leaves it; Priya is marked absent, not weak." |
+| 1:35–1:55 | Child profile | Open Meena. Show status chips, the misconception chip *"smaller minus larger"*, the timeline, and the **2-minute probe** button. "The probe uses a prepared script — the teacher only reads it aloud." |
+| 1:55–2:10 | Work photo (optional) | Take a photo of a written subtraction page (have one ready). Show per-question verdicts and that `52 − 28 = 36` is computed by code, not by the model. |
+| 2:10–2:35 | Parent app | Switch to the parent app. Sign in (DEMO / 12 / phone / 0000). Show the focus list derived from school evidence → start the session → the owl's line, the big mic, a tap question. "The AI writes the words; the app decides the path, judges the answer, and stops after two tries." |
+| 2:35–2:50 | Offline | Turn the network off. Start a session from the cached pack. "No signal: same session, tap fallback, evidence syncs later." |
+| 2:50–3:00 | Close | "Diagnosis, grouping, intervention, home practice, reassessment — one loop, one child-level map. Claude reads the messy evidence and writes the language; code decides the status. $0.08 per class per day." |
+
+## Things to have ready
+
+- A photographed notebook page (subtraction with borrowing, one deliberate mistake).
+- A quiet room if you demo real speech; otherwise use typed input (still fully functional).
+- The reset command, in case the DB is messy: `make seed` (or delete `backend/kaksha_dev.db` and restart).
+- A recorded backup of this exact run — the tech guidance asks for a 2–3 minute fallback video.
+
+## What NOT to claim
+
+- No learning-outcome numbers from a real classroom (none measured yet).
+- Do not call the demo children real; say "fictional demo class".
+- If a key is missing on the demo host, say "deterministic fallback" rather than implying model output.

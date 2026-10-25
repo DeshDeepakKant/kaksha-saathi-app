@@ -1,0 +1,10 @@
+{
+  "note": "Pre-written guided-probe scripts (deterministic fallback for the probe feature). Each item is asked by the teacher; teacher records pass/fail.",
+  "probes": [
+    {"checkpoint_id":"N.G2.sub_2digit_borrow","kind":"misconception_check","title_hi":"उधार समझ रहा है या नहीं?","items":[{"ask_hi":"53 − 27 करो","expect":"26"},{"ask_hi":"40 − 16 करो","expect":"24"},{"ask_hi":"सवाल: 40 में से 16 निकालने के लिए उधार लिया? कहाँ से?"}],"pass_rule":"2/2 सही और उधार समझाया","tell_hi":"2/2 सही → गलती लापरवाही की; 1/2 → उधार में फिर से अभ्यास; 0/2 → आधार कमज़ोर।"},
+    {"checkpoint_id":"L.G1.matra_basic","kind":"concept_vs_language","title_hi":"मात्रा नहीं पता या शब्द नहीं पता?","items":[{"ask_hi":"बोलो: का"},{"ask_hi":"बोलो: कि"},{"ask_hi":"कौन सा शब्द है - 'का' या 'काम'?"},{"ask_hi":"गृहभाषा में एक शब्द बोलो जिसमें आ की आवाज़ है"}],"pass_rule":"3/4 सही","tell_hi":"हिंदी में 1/4 पर गृहभाषा में सही → भाषा का मामला; दोनों में कम → मात्रा का आधार कमज़ोर।"},
+    {"checkpoint_id":"L.G1.vyanjan","kind":"misconception_check","title_hi":"कौन से अक्षर मिल रहे हैं?","items":[{"ask_hi":"ये बोलो: स, श"},{"ask_hi":"ये बोलो: न, ण"},{"ask_hi":"सुनो और बताओ: श"}],"pass_rule":"2/3 सही","tell_hi":"स/श में गलती → कार्ड से जोड़े बनाएँ।"},
+    {"checkpoint_id":"L.G2.all_matras","kind":"misconception_check","title_hi":"कौन सी मात्राएँ मिल रही हैं?","items":[{"ask_hi":"पढ़ो: कु, कू"},{"ask_hi":"पढ़ो: के, कै"},{"ask_hi":"पढ़ो: को, कौ"}],"pass_rule":"4/6 सही","tell_hi":"जो जोड़ी में कम → उसी जोड़ी का अभ्यास।"},
+    {"checkpoint_id":"N.G2.place_value_99","kind":"misconception_check","title_hi":"दहाई-इकाई का पता है?","items":[{"ask_hi":"47 में कितनी दहाई?"},{"ask_hi":"47 में कितनी इकाई?"},{"ask_hi":"दहाई जोड़ो: 3 दहाई + 2 दहाई"}],"pass_rule":"2/3 सही","tell_hi":"अंक को जोड़ने की गलती → तिलियों के बंडल।"}
+  ]
+}

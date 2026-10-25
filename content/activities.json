@@ -1,0 +1,443 @@
+{
+ "note": "Reviewed activity library. The planner may ONLY choose from entries with reviewed=true. Templates are saved to content/templates/<checkpoint_id>.json by the authoring script and reviewed by the education mentor.",
+ "activities": [
+  {
+   "id": "act_borrow_sticks",
+   "checkpoint_ids": [
+    "N.G2.sub_2digit_borrow"
+   ],
+   "mode": "group",
+   "title_hi": "सींकों से उधार वाला घटाव",
+   "materials_hi": "तिलियाँ/सींकें, रबर बैंड",
+   "steps_hi": [
+    "बोर्ड पर 52 और 28 लिखें। 52 के लिए 5 बंडल (हर बंडल 10) और 2 अलग तिलियाँ रखें।",
+    "पूछें: 8 तिलियाँ कैसे निकालें जब सिर्फ 2 हैं?",
+    "पूछें: एक बंडल खोलें — अब 4 बंडल और 12 तिलियाँ। 10 + 2 = 12। यही उधार है।",
+    "अब 12 में से 8 निकालें → 4 बचीं। 4 बंडल − 2 बंडल = 2 बंडल यानी 20। उत्तर 24।",
+    "हर बच्चा 63 − 27 ऐसे ही तिलियों से करे।"
+   ],
+   "duration_min": 8,
+   "blackboard_hi": "₹52 − ₹28 : 2 में से 8 नहीं जाते → एक दहाई उधार लो (10 + 2 = 12)। 12 − 8 = 4, 4 − 2 = 2 दहाई। उत्तर 24।",
+   "reassessment": {
+    "ask_hi": "45 − 18 = ?",
+    "expected": "27"
+   },
+   "source_doc": "team-authored template, reviewed=false",
+   "reviewed": true,
+   "language": "hi"
+  },
+  {
+   "id": "act_noborrow_sticks",
+   "checkpoint_ids": [
+    "N.G2.sub_2digit_no_borrow"
+   ],
+   "mode": "group",
+   "title_hi": "दहाई और इकाई अलग-अलग घटाओ",
+   "materials_hi": "तिलियाँ",
+   "steps_hi": [
+    "47 − 23 बोर्ड पर लिखें। 4 दहाई, 7 इकाई।",
+    "इकाई: 7 − 3 = 4। दहाई: 4 − 2 = 2।",
+    "उत्तर 24। दहाई-इकाई को साफ लिखकर दिखाएँ।",
+    "बच्चे 3 और सवाल अपनी कॉपी में करें।"
+   ],
+   "duration_min": 7,
+   "blackboard_hi": "47 − 23 : इकाई 7 − 3 = 4, दहाई 4 − 2 = 2 → 24",
+   "reassessment": {
+    "ask_hi": "68 − 45 = ?",
+    "expected": "23"
+   },
+   "source_doc": "team-authored template",
+   "reviewed": true,
+   "language": "hi"
+  },
+  {
+   "id": "act_add_nocarry_sticks",
+   "checkpoint_ids": [
+    "N.G2.add_2digit_no_carry"
+   ],
+   "mode": "group",
+   "title_hi": "बंडल जोड़ो: बिना हासिल का जोड़",
+   "materials_hi": "तिलियाँ, रबर बैंड",
+   "steps_hi": [
+    "32 + 45 बोर्ड पर लिखें।",
+    "इकाई जोड़ें: 2 + 5 = 7।",
+    "दहाई जोड़ें: 3 + 4 = 7। उत्तर 77।",
+    "बच्चे तिलियों से 4 सवाल करें और अपनी कॉपी में लिखें।"
+   ],
+   "duration_min": 8,
+   "blackboard_hi": "32 + 45 = 77 (इकाई: 2+5=7, दहाई: 3+4=7)",
+   "reassessment": {
+    "ask_hi": "23 + 54 = ?",
+    "expected": "77"
+   },
+   "source_doc": "team-authored template",
+   "reviewed": true,
+   "language": "hi"
+  },
+  {
+   "id": "act_add_carry_sticks",
+   "checkpoint_ids": [
+    "N.G2.add_2digit_carry"
+   ],
+   "mode": "group",
+   "title_hi": "हासिल की कहानी: 10 इकाई = 1 दहाई",
+   "materials_hi": "तिलियाँ, रबर बैंड",
+   "steps_hi": [
+    "28 + 15 बोर्ड पर लिखें।",
+    "इकाई: 8 + 5 = 13। पूछें: 13 में से 10 लेकर एक बंडल बनाओ।",
+    "पूछें: अब कितनी दहाई हैं? 2 + 1 + 1 = 4। कितनी इकाई? 3। उत्तर 43।",
+    "बच्चे 3 सवाल इसी तरह करें।"
+   ],
+   "duration_min": 8,
+   "blackboard_hi": "28 + 15 : 8+5=13 → 1 दहाई हासिल। दहाई 2+1+1=4, इकाई 3 → 43",
+   "reassessment": {
+    "ask_hi": "37 + 25 = ?",
+    "expected": "62"
+   },
+   "source_doc": "team-authored template",
+   "reviewed": true,
+   "language": "hi"
+  },
+  {
+   "id": "act_add_single_fingers",
+   "checkpoint_ids": [
+    "N.G1.add_single"
+   ],
+   "mode": "group",
+   "title_hi": "अंगुलियों से जोड़",
+   "materials_hi": "कोई नहीं",
+   "steps_hi": [
+    "3 + 4 से शुरू करें। पहले 3 अंगुली उठाओ, फिर 4 और।",
+    "गिनें: 7।",
+    "फिर 2 + 6, 5 + 3।",
+    "बिना अंगुली के भी बताइए कितना होगा।"
+   ],
+   "duration_min": 5,
+   "blackboard_hi": "3 + 4 = 7",
+   "reassessment": {
+    "ask_hi": "6 + 3 = ?",
+    "expected": "9"
+   },
+   "source_doc": "team-authored template",
+   "reviewed": true,
+   "language": "hi"
+  },
+  {
+   "id": "act_sub_single_fingers",
+   "checkpoint_ids": [
+    "N.G1.sub_single"
+   ],
+   "mode": "group",
+   "title_hi": "सामान लेकर घटाव",
+   "materials_hi": "तिलियाँ/बटन",
+   "steps_hi": [
+    "5 तिलियाँ रखें। 2 हटाओ। कितनी बचीं?",
+    "प्रतीक: 5 − 2 = 3।",
+    "4 सवाल बच्चे खुद करें।"
+   ],
+   "duration_min": 5,
+   "blackboard_hi": "5 − 2 = 3",
+   "reassessment": {
+    "ask_hi": "8 − 3 = ?",
+    "expected": "5"
+   },
+   "source_doc": "team-authored template",
+   "reviewed": true,
+   "language": "hi"
+  },
+  {
+   "id": "act_place_value_bundles",
+   "checkpoint_ids": [
+    "N.G2.place_value_99"
+   ],
+   "mode": "group",
+   "title_hi": "तीलियों के बंडल से दहाई-इकाई",
+   "materials_hi": "तिलियाँ/झाड़ू की सींकें, रबर बैंड",
+   "steps_hi": [
+    "10 तीलियों का एक बंडल बनाओ — यह एक दहाई है।",
+    "अध्यापक एक संख्या बोलें (जैसे 34); बच्चे 3 बंडल और 4 खुली तीलियाँ रखें।",
+    "हर बच्चा बोले: '3 दहाई, 4 इकाई = 34'।",
+    "उल्टा करें: बच्चे बंडल दिखाएँ, बाकी संख्या बताएँ।"
+   ],
+   "duration_min": 10,
+   "blackboard_hi": "1 दहाई = 10",
+   "reassessment": {
+    "ask_hi": "56 में कितनी दहाई और इकाई हैं?",
+    "expected": "5 दहाई, 6 इकाई"
+   },
+   "source_doc": "team-authored template",
+   "reviewed": true,
+   "language": "hi"
+  },
+  {
+   "id": "act_tables_chant",
+   "checkpoint_ids": [
+    "N.G3.tables_2_5"
+   ],
+   "mode": "group",
+   "title_hi": "पहाड़े गाओ, फिर सवाल",
+   "materials_hi": "कोई नहीं",
+   "steps_hi": [
+    "2 का पहाड़ा साथ में गाएँ।",
+    "बीच में रुककर पूछें: 2 × 6?",
+    "3 और 4 का पहाड़ा दोहराएँ।",
+    "4 सवाल बिना पहाड़ा गाए बताइए।"
+   ],
+   "duration_min": 7,
+   "blackboard_hi": "2×6=12, 3×4=12, 5×3=15",
+   "reassessment": {
+    "ask_hi": "4 × 3 = ?",
+    "expected": "12"
+   },
+   "source_doc": "team-authored template",
+   "reviewed": true,
+   "language": "hi"
+  },
+  {
+   "id": "act_word_vyanjan",
+   "checkpoint_ids": [
+    "L.G1.vyanjan"
+   ],
+   "mode": "group",
+   "title_hi": "व्यंजन कार्ड उठाओ",
+   "materials_hi": "अक्षर कार्ड या बोर्ड",
+   "steps_hi": [
+    "बोर्ड पर क, ख, ग, घ लिखें।",
+    "एक बच्चे से कहें: 'ग' छुओ।",
+    "5 अक्षर और दोहराएँ।",
+    "पहले 3 अक्षर मिलाएँ — किसमें फर्क है?"
+   ],
+   "duration_min": 6,
+   "blackboard_hi": "क ख ग घ",
+   "reassessment": {
+    "ask_hi": "ग की आवाज़ बोलो — कौन सा अक्षर?",
+    "expected": "ग"
+   },
+   "source_doc": "team-authored template",
+   "reviewed": true,
+   "language": "hi"
+  },
+  {
+   "id": "act_matra_aa",
+   "checkpoint_ids": [
+    "L.G1.matra_basic"
+   ],
+   "mode": "group",
+   "title_hi": "आ की मात्रा: खड़ी लकीर",
+   "materials_hi": "कोई नहीं",
+   "steps_hi": [
+    "बिना मात्रा: क। आ की मात्रा लगाओ: का।",
+    "मात्रा पहचानो: क में खड़ी लकीर जोड़ने पर का।",
+    "इ की मात्रा: कि (पहले), ई की: की (बाद में)।",
+    "4 शब्द बच्चे पढ़ें: का, गा, कि, की।"
+   ],
+   "duration_min": 8,
+   "blackboard_hi": "क + ा = का; क + ि = कि; क + ी = की",
+   "reassessment": {
+    "ask_hi": "'का', 'कि', 'की' पढ़ाओ",
+    "expected": "का कि की"
+   },
+   "source_doc": "team-authored template",
+   "reviewed": true,
+   "language": "hi"
+  },
+  {
+   "id": "act_blend_read",
+   "checkpoint_ids": [
+    "L.G1.blend_no_matra",
+    "L.G1.read_matra_words"
+   ],
+   "mode": "group",
+   "title_hi": "अक्षर जोड़कर शब्द पढ़ो · L.G1.read_matra_words",
+   "materials_hi": "अक्षर कार्ड",
+   "steps_hi": [
+    "क + म + ल → कमल। धीरे-धीरे जोड़ें।",
+    "बच्चे साथ पढ़ें, फिर अकेले।",
+    "घर, कल, मल जैसे शब्द दोहराएँ।",
+    "जो फंसे उन्हें अलग बुलाकर अक्षर दोहराएँ।"
+   ],
+   "duration_min": 8,
+   "blackboard_hi": "क+म+ल = कमल",
+   "reassessment": {
+    "ask_hi": "क, ल, म से शब्द बनाओ",
+    "expected": "कलम"
+   },
+   "source_doc": "team-authored template",
+   "reviewed": true,
+   "language": "hi"
+  },
+  {
+   "id": "act_count_20",
+   "checkpoint_ids": [
+    "N.G1.count_to_20"
+   ],
+   "mode": "group",
+   "title_hi": "बीज गिनो",
+   "materials_hi": "बीज/कंकड़",
+   "steps_hi": [
+    "हर बच्चे को 15 बीज दें।",
+    "गिनकर रखें, फिर 5 और दें — कुल कितने?",
+    "खाली हाथ 1 से 20 तक गिनें।",
+    "किसी बच्चे से 10 के बाद 20 तक बोलने को कहें।"
+   ],
+   "duration_min": 6,
+   "blackboard_hi": "1 2 3 … 20",
+   "reassessment": {
+    "ask_hi": "1 से 20 तक बिना रुके गिनो",
+    "expected": "1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20"
+   },
+   "source_doc": "team-authored template",
+   "reviewed": true,
+   "language": "hi"
+  },
+  {
+   "id": "act_smaller_minus_larger_fix",
+   "checkpoint_ids": [
+    "N.G2.sub_2digit_borrow",
+    "N.G2.sub_2digit_no_borrow"
+   ],
+   "mode": "group",
+   "title_hi": "बड़ा ऊपर, छोटा नीचे · N.G2.sub_2digit_no_borrow",
+   "materials_hi": "कोई नहीं",
+   "steps_hi": [
+    "62 − 45 लिखें। एक बच्चा 5 में से 2 करने की गलती करे।",
+    "पूछें: क्या 45, 62 से बड़ा है? नहीं। तो उधार चाहिए।",
+    "साफ बताएँ: ऊपर वाला कम हो तो उधार लो।",
+    "दो उदाहरण ऐसे ही बोर्ड पर करें।"
+   ],
+   "duration_min": 7,
+   "blackboard_hi": "62 − 45 → 6 2 ; 2<5 → उधार",
+   "reassessment": {
+    "ask_hi": "51 − 27 = ?",
+    "expected": "24"
+   },
+   "source_doc": "team-authored template",
+   "reviewed": true,
+   "language": "hi"
+  },
+  {
+   "id": "act_mult_repeated_add",
+   "checkpoint_ids": [
+    "N.G3.mult_concept"
+   ],
+   "mode": "group",
+   "title_hi": "गुणा = बार-बार जोड़",
+   "materials_hi": "बटन",
+   "steps_hi": [
+    "3 × 4 मतलब 4 + 4 + 4।",
+    "बटन से 3 थाली, हर थाली में 4 रखें।",
+    "पहले जोड़कर देखें, फिर उत्तर लिखें 12।",
+    "2 × 5 और 3 × 3 करें।"
+   ],
+   "duration_min": 8,
+   "blackboard_hi": "3 × 4 = 4 + 4 + 4 = 12",
+   "reassessment": {
+    "ask_hi": "3 × 5 = ?",
+    "expected": "15"
+   },
+   "source_doc": "team-authored template",
+   "reviewed": true,
+   "language": "hi"
+  },
+  {
+   "id": "act_read_aloud",
+   "checkpoint_ids": [
+    "L.G1.read_short_sentences",
+    "L.G2.fluency_45_60",
+    "L.G3.fluency_60"
+   ],
+   "mode": "group",
+   "title_hi": "एक-एक पंक्ति पढ़ो · L.G2.fluency_45_60, L.G3.fluency_60",
+   "materials_hi": "कोई नहीं",
+   "steps_hi": [
+    "बोर्ड पर 4 वाक्य लिखें।",
+    "हर बच्चा 1 वाक्य पढ़े, बाकी सुनें।",
+    "कहाँ ठहरते हैं वहाँ धीरे-धीरे पढ़ने को कहें।",
+    "दूसरी बार पढ़ाएँ और गति सुधरने पर ध्यान दें।"
+   ],
+   "duration_min": 10,
+   "blackboard_hi": "राम का घर। सीता का कलम।",
+   "reassessment": {
+    "ask_hi": "एक वाक्य पढ़कर सुनाओ",
+    "expected": "(पढ़ना)"
+   },
+   "source_doc": "team-authored template",
+   "reviewed": true,
+   "language": "hi"
+  },
+  {
+   "id": "act_all_matras_contrast",
+   "checkpoint_ids": [
+    "L.G2.all_matras"
+   ],
+   "mode": "group",
+   "title_hi": "मात्रा जोड़ों को पहचानो",
+   "materials_hi": "कोई नहीं",
+   "steps_hi": [
+    "कि / की / कु / कू लिखकर पढ़वाएँ।",
+    "पूछें: कि में छोटी मात्रा कहाँ?",
+    "कि-की, कु-कू के जोड़े से पहचान बनाएँ।",
+    "5 मात्रा वाले शब्द पढ़वाएँ।"
+   ],
+   "duration_min": 8,
+   "blackboard_hi": "कि की कु कू",
+   "reassessment": {
+    "ask_hi": "'कु' और 'कू' में क्या फर्क है?",
+    "expected": "छोटी बड़ी मात्रा"
+   },
+   "source_doc": "team-authored template",
+   "reviewed": true,
+   "language": "hi"
+  },
+  {
+   "id": "act_word_formation_build",
+   "checkpoint_ids": [
+    "L.G2.word_formation"
+   ],
+   "mode": "group",
+   "title_hi": "मात्रा लगाकर शब्द बनाओ",
+   "materials_hi": "अक्षर कार्ड",
+   "steps_hi": [
+    "क — म — ल दिखाएँ।",
+    "बीच में आ की मात्रा लगाओ → कामल? नहीं।",
+    "सही: कमल बिना मात्रा, काम आ के साथ।",
+    "बच्चे 3 शब्द बनाएँ: का, कमल, कल।"
+   ],
+   "duration_min": 7,
+   "blackboard_hi": "क + म + ल = कमल",
+   "reassessment": {
+    "ask_hi": "'क' में आ की मात्रा लगाओ",
+    "expected": "का"
+   },
+   "source_doc": "team-authored template",
+   "reviewed": true,
+   "language": "hi"
+  },
+  {
+   "id": "act_read_999",
+   "checkpoint_ids": [
+    "N.G2.read_write_to_999",
+    "N.G2.place_value_999",
+    "N.G3.read_write_to_9999"
+   ],
+   "mode": "group",
+   "title_hi": "संख्याओं को पढ़ो और लिखो · N.G2.place_value_999, N.G3.read_write_to_9999",
+   "materials_hi": "कोई नहीं",
+   "steps_hi": [
+    "बोर्ड पर 236, 305, 470 लिखें।",
+    "बच्चे साथ पढ़ें: दो सौ छत्तीस…",
+    "फिर अध्यापक बोलें, बच्चे लिखें।",
+    "शून्य के स्थान पर सवाल: 305 में 0 कहाँ है?"
+   ],
+   "duration_min": 7,
+   "blackboard_hi": "236, 305, 470",
+   "reassessment": {
+    "ask_hi": "305 को अक्षरों में लिखो",
+    "expected": "तीन सौ पाँच"
+   },
+   "source_doc": "team-authored template",
+   "reviewed": true,
+   "language": "hi"
+  }
+ ]
+}

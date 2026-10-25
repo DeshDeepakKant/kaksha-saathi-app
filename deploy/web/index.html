@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kaksha Saathi — कक्षा साथी</title>
+<style>
+  :root{--ink:#1d2b2a;--muted:#5c6b69;--bg:#fbf8f2;--card:#fff;--accent:#0f6b5c;--accent2:#e7a13b;--line:#e6e0d4}
+  @media (prefers-color-scheme: dark){:root{--ink:#ece7dc;--muted:#a9b3ae;--bg:#141a19;--card:#1c2422;--line:#2b3633}}
+  *{box-sizing:border-box}body{margin:0;font-family:system-ui,"Noto Sans Devanagari",sans-serif;background:var(--bg);color:var(--ink);line-height:1.55}
+  main{max-width:980px;margin:0 auto;padding:32px 16px 64px}
+  h1{font-size:clamp(28px,5vw,44px);margin:.2em 0}
+  .sub{color:var(--muted);max-width:62ch}
+  .grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));margin:28px 0}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px}
+  .card h2{margin:.1em 0 .4em;font-size:20px}
+  a.btn{display:inline-block;background:var(--accent);color:#fff;text-decoration:none;padding:12px 18px;border-radius:12px;font-weight:600;margin-top:8px}
+  a.btn.alt{background:var(--accent2);color:#221}
+  .flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:14px;color:var(--muted)}
+  .flow span{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:4px 10px}
+  code{background:var(--card);border:1px solid var(--line);padding:1px 6px;border-radius:6px}
+  footer{color:var(--muted);font-size:13px;margin-top:40px}
+  .badge{font-size:12px;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:2px 10px;display:inline-block}
+</style>
+</head>
+<body>
+<main>
+  <span class="badge">AI for Foundational Learning Hackathon · ShikshaNext × Anthropic</span>
+  <h1>कक्षा साथी <span style="font-size:.5em;color:var(--muted)">Kaksha Saathi</span></h1>
+  <p class="sub">One child-level learning map that both classroom and home see. The teacher captures evidence in under two minutes — a voice note, a notebook photo, three taps — and gets today's classroom groups and a ready intervention. The child practises the same gap at home with a structured voice tutor.</p>
+  <div class="flow" aria-label="cycle">
+    <span>roadmap</span>→<span>assess</span>→<span>gaps</span>→<span>groups</span>→<span>intervention</span>→<span>home practice</span>→<span>reassess</span>→<span>updated map</span>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <h2>शिक्षिका ऐप · Teacher</h2>
+      <p>School code + PIN. See the class board, today's groups, capture evidence, plan interventions, reassess.</p>
+      <p><small>Demo: code <code>DEMO</code>, PIN <code>1234</code></small></p>
+      <a class="btn" href="/teacher/">Open teacher app</a>
+    </div>
+    <div class="card">
+      <h2>अभिभावक ऐप · Parent</h2>
+      <p>Parent gate → a 25–30 minute structured voice session on the child's top gaps, with tap fallback that works offline.</p>
+      <p><small>Demo: code <code>DEMO</code>, roll <code>12</code>, phone <code>9876500000</code>, PIN <code>0000</code></small></p>
+      <a class="btn alt" href="/parent/">Open parent app</a>
+    </div>
+    <div class="card">
+      <h2>Technical</h2>
+      <p>Architecture, AI call inventory, guardrails, evaluation plan and build plan are in the repository <code>docs/</code> folder.</p>
+      <p><a href="/api/docs">API reference</a> · <a href="/healthz">Health</a> · <a href="/readyz">Readiness</a></p>
+    </div>
+  </div>
+  <footer>All children in the demo are fictional. No audio is stored. Photos of work pages are deleted after 7 days.</footer>
+</main>
+</body>
+</html>

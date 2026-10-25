@@ -1,0 +1,12 @@
+{"id": "n01", "transcript": "आज उधार वाला घटाव कराया। राजकुमार और सूरज नहीं आए। मीना को उधार समझ नहीं आया। अर्जुन ने सही किया।", "absent": [8, 9], "wrong": [[2, "N.G2.sub_2digit_borrow"]], "correct": [[3, "N.G2.sub_2digit_borrow"]]}
+{"id": "n02", "transcript": "दो अंकों का जोड़ हासिल के साथ कराया। सोनल को हासिल भूल जाता है। अमित ने तीनों सवाल सही किए। प्रिया नहीं आई।", "absent": [4], "wrong": [[6, "N.G2.add_2digit_carry"]], "correct": [[7, "N.G2.add_2digit_carry"]]}
+{"id": "n03", "transcript": "आज मात्राएँ दोहराईं। कविता को इ और ई में फर्क नहीं आता। दीपा सही पढ़ रही है।", "absent": [], "wrong": [[12, "L.G1.matra_basic"]], "correct": [[10, "L.G1.matra_basic"]]}
+{"id": "n04", "transcript": "स्थानीय मान कराया। नितेश को दहाई-इकाई समझ नहीं आया। विकास ने खुद किए। राहुल अनुपस्थित था।", "absent": [1], "wrong": [[11, "N.G2.place_value_99"]], "correct": [[13, "N.G2.place_value_99"]]}
+{"id": "n05", "transcript": "व्यंजन जाँचे। रीना को स और श में फर्क नहीं आता। अनिल ठीक पढ़ता है।", "absent": [], "wrong": [[16, "L.G1.vyanjan"]], "correct": [[17, "L.G1.vyanjan"]]}
+{"id": "n06", "transcript": "पहाड़े 2 से 5 दोहराए। मनीष का 4 का पहाड़ा कठिन लगा। गीता सही बोल गई।", "absent": [], "wrong": [[15, "N.G3.tables_2_5"]], "correct": [[20, "N.G3.tables_2_5"]]}
+{"id": "n07", "transcript": "बिना उधार घटाव कराया। करन गलत कर रहा है, छोटे में से बड़ा घटा देता है। पूजा सही कर रही है।", "absent": [], "wrong": [[5, "N.G2.sub_2digit_no_borrow"]], "correct": [[14, "N.G2.sub_2digit_no_borrow"]]}
+{"id": "n08", "transcript": "आज कुछ नया नहीं कराया, पिछला दोहराया। कोई बच्चा अनुपस्थित नहीं था।", "absent": [], "wrong": [], "correct": []}
+{"id": "n09", "transcript": "शब्द बनाना कराया। लक्ष्मी मात्रा गलत लगाती है। जय ने सही शब्द बनाए। दिनेश नहीं आया।", "absent": [19], "wrong": [[22, "L.G2.word_formation"]], "correct": [[27, "L.G2.word_formation"]]}
+{"id": "n10", "transcript": "मौखिक गिनती कराई। बबलू 10 के बाद अटक जाता है। सुनीता 20 तक ठीक गिनती करती है।", "absent": [], "wrong": [[23, "N.G1.count_to_20"]], "correct": [[24, "N.G1.count_to_20"]]}
+{"id": "n11", "transcript": "संयुक्ताक्षर पढ़ाए। नेहा क्ष और छ में फर्क नहीं करती। रमेश सही पढ़ता है।", "absent": [], "wrong": [[28, "L.G2.conjuncts"]], "correct": [[30, "L.G2.conjuncts"]]}
+{"id": "n12", "transcript": "तीन अंकों का जोड़ कराया। आशा हासिल भूल जाती है। मोहन सही करता है। रवि बीमार था।", "absent": [25], "wrong": [[26, "N.G3.add_sub_3digit"]], "correct": [[21, "N.G3.add_sub_3digit"]]}

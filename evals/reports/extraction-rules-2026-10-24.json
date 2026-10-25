@@ -1,0 +1,406 @@
+{
+  "mode": "rules",
+  "date": "2026-10-24",
+  "notes": 12,
+  "child_event": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0,
+    "tp": 22,
+    "fp": 0,
+    "fn": 0
+  },
+  "absence": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0
+  },
+  "wrong_child_events": 0,
+  "unresolved_names": 0,
+  "cases": [
+    {
+      "id": "n01",
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "predicted": [
+        [
+          2,
+          "N.G2.sub_2digit_borrow",
+          "incorrect"
+        ],
+        [
+          3,
+          "N.G2.sub_2digit_borrow",
+          "correct"
+        ]
+      ],
+      "gold": [
+        [
+          2,
+          "N.G2.sub_2digit_borrow",
+          "incorrect"
+        ],
+        [
+          3,
+          "N.G2.sub_2digit_borrow",
+          "correct"
+        ]
+      ],
+      "absent_pred": [
+        8,
+        9
+      ],
+      "absent_gold": [
+        8,
+        9
+      ]
+    },
+    {
+      "id": "n02",
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "predicted": [
+        [
+          6,
+          "N.G2.add_2digit_carry",
+          "incorrect"
+        ],
+        [
+          7,
+          "N.G2.add_2digit_carry",
+          "correct"
+        ]
+      ],
+      "gold": [
+        [
+          6,
+          "N.G2.add_2digit_carry",
+          "incorrect"
+        ],
+        [
+          7,
+          "N.G2.add_2digit_carry",
+          "correct"
+        ]
+      ],
+      "absent_pred": [
+        4
+      ],
+      "absent_gold": [
+        4
+      ]
+    },
+    {
+      "id": "n03",
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "predicted": [
+        [
+          10,
+          "L.G1.matra_basic",
+          "correct"
+        ],
+        [
+          12,
+          "L.G1.matra_basic",
+          "incorrect"
+        ]
+      ],
+      "gold": [
+        [
+          10,
+          "L.G1.matra_basic",
+          "correct"
+        ],
+        [
+          12,
+          "L.G1.matra_basic",
+          "incorrect"
+        ]
+      ],
+      "absent_pred": [],
+      "absent_gold": []
+    },
+    {
+      "id": "n04",
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "predicted": [
+        [
+          11,
+          "N.G2.place_value_99",
+          "incorrect"
+        ],
+        [
+          13,
+          "N.G2.place_value_99",
+          "correct"
+        ]
+      ],
+      "gold": [
+        [
+          11,
+          "N.G2.place_value_99",
+          "incorrect"
+        ],
+        [
+          13,
+          "N.G2.place_value_99",
+          "correct"
+        ]
+      ],
+      "absent_pred": [
+        1
+      ],
+      "absent_gold": [
+        1
+      ]
+    },
+    {
+      "id": "n05",
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "predicted": [
+        [
+          16,
+          "L.G1.vyanjan",
+          "incorrect"
+        ],
+        [
+          17,
+          "L.G1.vyanjan",
+          "correct"
+        ]
+      ],
+      "gold": [
+        [
+          16,
+          "L.G1.vyanjan",
+          "incorrect"
+        ],
+        [
+          17,
+          "L.G1.vyanjan",
+          "correct"
+        ]
+      ],
+      "absent_pred": [],
+      "absent_gold": []
+    },
+    {
+      "id": "n06",
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "predicted": [
+        [
+          15,
+          "N.G3.tables_2_5",
+          "incorrect"
+        ],
+        [
+          20,
+          "N.G3.tables_2_5",
+          "correct"
+        ]
+      ],
+      "gold": [
+        [
+          15,
+          "N.G3.tables_2_5",
+          "incorrect"
+        ],
+        [
+          20,
+          "N.G3.tables_2_5",
+          "correct"
+        ]
+      ],
+      "absent_pred": [],
+      "absent_gold": []
+    },
+    {
+      "id": "n07",
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "predicted": [
+        [
+          5,
+          "N.G2.sub_2digit_no_borrow",
+          "incorrect"
+        ],
+        [
+          14,
+          "N.G2.sub_2digit_no_borrow",
+          "correct"
+        ]
+      ],
+      "gold": [
+        [
+          5,
+          "N.G2.sub_2digit_no_borrow",
+          "incorrect"
+        ],
+        [
+          14,
+          "N.G2.sub_2digit_no_borrow",
+          "correct"
+        ]
+      ],
+      "absent_pred": [],
+      "absent_gold": []
+    },
+    {
+      "id": "n08",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "predicted": [],
+      "gold": [],
+      "absent_pred": [],
+      "absent_gold": []
+    },
+    {
+      "id": "n09",
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "predicted": [
+        [
+          22,
+          "L.G2.word_formation",
+          "incorrect"
+        ],
+        [
+          27,
+          "L.G2.word_formation",
+          "correct"
+        ]
+      ],
+      "gold": [
+        [
+          22,
+          "L.G2.word_formation",
+          "incorrect"
+        ],
+        [
+          27,
+          "L.G2.word_formation",
+          "correct"
+        ]
+      ],
+      "absent_pred": [
+        19
+      ],
+      "absent_gold": [
+        19
+      ]
+    },
+    {
+      "id": "n10",
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "predicted": [
+        [
+          23,
+          "N.G1.count_to_20",
+          "incorrect"
+        ],
+        [
+          24,
+          "N.G1.count_to_20",
+          "correct"
+        ]
+      ],
+      "gold": [
+        [
+          23,
+          "N.G1.count_to_20",
+          "incorrect"
+        ],
+        [
+          24,
+          "N.G1.count_to_20",
+          "correct"
+        ]
+      ],
+      "absent_pred": [],
+      "absent_gold": []
+    },
+    {
+      "id": "n11",
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "predicted": [
+        [
+          28,
+          "L.G2.conjuncts",
+          "incorrect"
+        ],
+        [
+          30,
+          "L.G2.conjuncts",
+          "correct"
+        ]
+      ],
+      "gold": [
+        [
+          28,
+          "L.G2.conjuncts",
+          "incorrect"
+        ],
+        [
+          30,
+          "L.G2.conjuncts",
+          "correct"
+        ]
+      ],
+      "absent_pred": [],
+      "absent_gold": []
+    },
+    {
+      "id": "n12",
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "predicted": [
+        [
+          21,
+          "N.G3.add_sub_3digit",
+          "correct"
+        ],
+        [
+          26,
+          "N.G3.add_sub_3digit",
+          "incorrect"
+        ]
+      ],
+      "gold": [
+        [
+          21,
+          "N.G3.add_sub_3digit",
+          "correct"
+        ],
+        [
+          26,
+          "N.G3.add_sub_3digit",
+          "incorrect"
+        ]
+      ],
+      "absent_pred": [
+        25
+      ],
+      "absent_gold": [
+        25
+      ]
+    }
+  ]
+}

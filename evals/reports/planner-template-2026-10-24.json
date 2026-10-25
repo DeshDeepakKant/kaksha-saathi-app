@@ -1,0 +1,210 @@
+{
+  "mode": "template",
+  "date": "2026-10-24",
+  "scenarios": 6,
+  "valid": 6,
+  "results": [
+    {
+      "id": "s1_borrow_only",
+      "groups": 3,
+      "total_minutes": 25,
+      "valid": true,
+      "issues": [],
+      "source": "fallback",
+      "plan": {
+        "groups": [
+          {
+            "why_hi": "दो-अंकीय जोड़ (हासिल के साथ) पर अभी अभ्यास चाहिए।",
+            "activity_id": "act_add_carry_sticks",
+            "teacher_script_hi": "28 + 15 बोर्ड पर लिखें। इकाई: 8 + 5 = 13। पूछें: 13 में से 10 लेकर एक बंडल बनाओ। पूछें: अब कितनी दहाई हैं? 2 + 1 + 1 = 4। कितनी इकाई? 3। उत्तर 43। बच्चे 3 सवाल इसी तरह करें।",
+            "reassessment": {
+              "ask_hi": "37 + 25 = ?",
+              "expected": "62"
+            },
+            "time_min": 8,
+            "deferred": false,
+            "key": "N.G2.add_2digit_carry",
+            "order": 1
+          },
+          {
+            "why_hi": "दहाई-इकाई (स्थानीय मान, 99 तक) पर अभी अभ्यास चाहिए।",
+            "activity_id": "act_place_value_bundles",
+            "teacher_script_hi": "10 तीलियों का एक बंडल बनाओ — यह एक दहाई है। अध्यापक एक संख्या बोलें (जैसे 34); बच्चे 3 बंडल और 4 खुली तीलियाँ रखें। हर बच्चा बोले: '3 दहाई, 4 इकाई = 34'। उल्टा करें: बच्चे बंडल दिखाएँ, बाकी संख्या बताएँ।",
+            "reassessment": {
+              "ask_hi": "56 में कितनी दहाई और इकाई हैं?",
+              "expected": "5 दहाई, 6 इकाई"
+            },
+            "time_min": 10,
+            "deferred": false,
+            "key": "N.G2.place_value_99",
+            "order": 2
+          },
+          {
+            "why_hi": "दो-अंकीय घटाव (उधार के साथ) पर अभी अभ्यास चाहिए।",
+            "activity_id": "act_borrow_sticks",
+            "teacher_script_hi": "बोर्ड पर 52 और 28 लिखें। 52 के लिए 5 बंडल (हर बंडल 10) और 2 अलग तिलियाँ रखें। पूछें: 8 तिलियाँ कैसे निकालें जब सिर्फ 2 हैं? पूछें: एक बंडल खोलें — अब 4 बंडल और 12 तिलियाँ। 10 + 2 = 12। यही उधार है। अब 12 में से 8 निकालें → 4 बचीं। 4 बंडल − 2 बंडल = 2 बंडल यानी 20। उत्तर 24। हर बच्चा 63 − 27 ऐसे ही तिलियों से करे।",
+            "reassessment": {
+              "ask_hi": "45 − 18 = ?",
+              "expected": "27"
+            },
+            "time_min": 7,
+            "deferred": false,
+            "key": "N.G2.sub_2digit_borrow",
+            "order": 3
+          }
+        ],
+        "whole_class_note_hi": "",
+        "today_observation_to_collect_hi": "आज के अभ्यास के बाद 2 बच्चों का सवाल जाँचें।",
+        "template": true
+      }
+    },
+    {
+      "id": "s2_foundation_gap",
+      "groups": 1,
+      "total_minutes": 10,
+      "valid": true,
+      "issues": [],
+      "source": "fallback",
+      "plan": {
+        "groups": [
+          {
+            "why_hi": "दहाई-इकाई (स्थानीय मान, 99 तक) पर अभी अभ्यास चाहिए।",
+            "activity_id": "act_place_value_bundles",
+            "teacher_script_hi": "10 तीलियों का एक बंडल बनाओ — यह एक दहाई है। अध्यापक एक संख्या बोलें (जैसे 34); बच्चे 3 बंडल और 4 खुली तीलियाँ रखें। हर बच्चा बोले: '3 दहाई, 4 इकाई = 34'। उल्टा करें: बच्चे बंडल दिखाएँ, बाकी संख्या बताएँ।",
+            "reassessment": {
+              "ask_hi": "56 में कितनी दहाई और इकाई हैं?",
+              "expected": "5 दहाई, 6 इकाई"
+            },
+            "time_min": 10,
+            "deferred": false,
+            "key": "N.G2.place_value_99",
+            "order": 1
+          }
+        ],
+        "whole_class_note_hi": "",
+        "today_observation_to_collect_hi": "आज के अभ्यास के बाद 2 बच्चों का सवाल जाँचें।",
+        "template": true
+      }
+    },
+    {
+      "id": "s3_literacy_mixed",
+      "groups": 3,
+      "total_minutes": 21,
+      "valid": true,
+      "issues": [],
+      "source": "fallback",
+      "plan": {
+        "groups": [
+          {
+            "why_hi": "व्यंजन पहचानना पर अभी अभ्यास चाहिए।",
+            "activity_id": "act_word_vyanjan",
+            "teacher_script_hi": "बोर्ड पर क, ख, ग, घ लिखें। एक बच्चे से कहें: 'ग' छुओ। 5 अक्षर और दोहराएँ। पहले 3 अक्षर मिलाएँ — किसमें फर्क है?",
+            "reassessment": {
+              "ask_hi": "ग की आवाज़ बोलो — कौन सा अक्षर?",
+              "expected": "ग"
+            },
+            "time_min": 6,
+            "deferred": false,
+            "key": "L.G1.vyanjan",
+            "order": 1
+          },
+          {
+            "why_hi": "आ, इ, ई की मात्राएँ पर अभी अभ्यास चाहिए।",
+            "activity_id": "act_matra_aa",
+            "teacher_script_hi": "बिना मात्रा: क। आ की मात्रा लगाओ: का। मात्रा पहचानो: क में खड़ी लकीर जोड़ने पर का। इ की मात्रा: कि (पहले), ई की: की (बाद में)। 4 शब्द बच्चे पढ़ें: का, गा, कि, की।",
+            "reassessment": {
+              "ask_hi": "'का', 'कि', 'की' पढ़ाओ",
+              "expected": "का कि की"
+            },
+            "time_min": 8,
+            "deferred": false,
+            "key": "L.G1.matra_basic",
+            "order": 2
+          },
+          {
+            "why_hi": "शब्द बनाना (अक्षरों और मात्राओं से) पर अभी अभ्यास चाहिए।",
+            "activity_id": "act_word_formation_build",
+            "teacher_script_hi": "क — म — ल दिखाएँ। बीच में आ की मात्रा लगाओ → कामल? नहीं। सही: कमल बिना मात्रा, काम आ के साथ। बच्चे 3 शब्द बनाएँ: का, कमल, कल।",
+            "reassessment": {
+              "ask_hi": "'क' में आ की मात्रा लगाओ",
+              "expected": "का"
+            },
+            "time_min": 7,
+            "deferred": false,
+            "key": "L.G2.word_formation",
+            "order": 3
+          }
+        ],
+        "whole_class_note_hi": "",
+        "today_observation_to_collect_hi": "आज के अभ्यास के बाद 2 बच्चों का सवाल जाँचें।",
+        "template": true
+      }
+    },
+    {
+      "id": "s4_single_child",
+      "groups": 1,
+      "total_minutes": 8,
+      "valid": true,
+      "issues": [],
+      "source": "fallback",
+      "plan": {
+        "groups": [
+          {
+            "why_hi": "दो-अंकीय घटाव (उधार के साथ) पर अभी अभ्यास चाहिए।",
+            "activity_id": "act_borrow_sticks",
+            "teacher_script_hi": "बोर्ड पर 52 और 28 लिखें। 52 के लिए 5 बंडल (हर बंडल 10) और 2 अलग तिलियाँ रखें। पूछें: 8 तिलियाँ कैसे निकालें जब सिर्फ 2 हैं? पूछें: एक बंडल खोलें — अब 4 बंडल और 12 तिलियाँ। 10 + 2 = 12। यही उधार है। अब 12 में से 8 निकालें → 4 बचीं। 4 बंडल − 2 बंडल = 2 बंडल यानी 20। उत्तर 24। हर बच्चा 63 − 27 ऐसे ही तिलियों से करे।",
+            "reassessment": {
+              "ask_hi": "45 − 18 = ?",
+              "expected": "27"
+            },
+            "time_min": 8,
+            "deferred": false,
+            "key": "N.G2.sub_2digit_borrow",
+            "order": 1
+          }
+        ],
+        "whole_class_note_hi": "",
+        "today_observation_to_collect_hi": "आज के अभ्यास के बाद 2 बच्चों का सवाल जाँचें।",
+        "template": true
+      }
+    },
+    {
+      "id": "s5_all_on_track",
+      "groups": 0,
+      "valid": true,
+      "issues": [],
+      "plan": {
+        "groups": [],
+        "whole_class_note_hi": ""
+      }
+    },
+    {
+      "id": "s6_whole_class",
+      "groups": 1,
+      "total_minutes": 8,
+      "valid": true,
+      "issues": [],
+      "source": "fallback",
+      "plan": {
+        "groups": [
+          {
+            "why_hi": "दो-अंकीय घटाव (उधार के साथ) पर अभी अभ्यास चाहिए।",
+            "activity_id": "act_borrow_sticks",
+            "teacher_script_hi": "बोर्ड पर 52 और 28 लिखें। 52 के लिए 5 बंडल (हर बंडल 10) और 2 अलग तिलियाँ रखें। पूछें: 8 तिलियाँ कैसे निकालें जब सिर्फ 2 हैं? पूछें: एक बंडल खोलें — अब 4 बंडल और 12 तिलियाँ। 10 + 2 = 12। यही उधार है। अब 12 में से 8 निकालें → 4 बचीं। 4 बंडल − 2 बंडल = 2 बंडल यानी 20। उत्तर 24। हर बच्चा 63 − 27 ऐसे ही तिलियों से करे।",
+            "reassessment": {
+              "ask_hi": "45 − 18 = ?",
+              "expected": "27"
+            },
+            "time_min": 8,
+            "deferred": false,
+            "key": "N.G2.sub_2digit_borrow",
+            "order": 1
+          }
+        ],
+        "whole_class_note_hi": "",
+        "today_observation_to_collect_hi": "आज के अभ्यास के बाद 2 बच्चों का सवाल जाँचें।",
+        "template": true
+      }
+    }
+  ]
+}

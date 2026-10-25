@@ -1,0 +1,40 @@
+# --- secrets
+.env
+backend/.env
+*.pem
+*.key
+
+# --- python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+backend/uploads/
+kaksha_dev.db
+*.sqlite3
+
+# --- flutter / dart
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+build/
+apps/*/build/
+apps/*/.dart_tool/
+*.iml
+.idea/
+apps/*/android/.gradle/
+apps/*/android/local.properties
+apps/*/android/key.properties
+*.jks
+*.keystore
+
+# --- os / editor
+.DS_Store
+*.log
+
+# --- built web bundles (regenerate with `make web`; the hosted demo is frozen separately)
+deploy/web/teacher/
+deploy/web/parent/
+
+# --- APKs (built artefacts; attach to the submission, do not commit)
+dist/*.apk

@@ -1,0 +1,43 @@
+# Local / demo stack: Postgres + API + the two built web apps (served by the API).
+#   docker compose up --build
+#   open http://localhost:8000
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: kaksha
+      POSTGRES_PASSWORD: kaksha
+      POSTGRES_DB: kaksha
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U kaksha"]
+      interval: 5s
+      retries: 10
+
+  api:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql+psycopg://kaksha:kaksha@db:5432/kaksha
+      JWT_SECRET: ${JWT_SECRET:-change-me-in-production}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      SARVAM_API_KEY: ${SARVAM_API_KEY:-}
+      MODEL_EXTRACT: ${MODEL_EXTRACT:-claude-haiku-4-5-20251001}
+      MODEL_PLAN: ${MODEL_PLAN:-claude-sonnet-4-5-20250929}
+      MODEL_TUTOR: ${MODEL_TUTOR:-claude-sonnet-4-5-20250929}
+      SEED_ON_STARTUP: "true"
+      CORS_ORIGINS: "*"
+    ports:
+      - "8000:8000"
+    # content and the built web apps are baked into the image; use volumes only for live editing:
+    # volumes:
+    #   - ./content:/content:ro
+    #   - ./deploy/web:/deploy/web:ro
+
+volumes:
+  pgdata:

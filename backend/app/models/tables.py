@@ -1,0 +1,209 @@
+"""Database tables. Every child-related row is reachable from a School (tenant)."""
+from __future__ import annotations
+
+from datetime import date, datetime, timezone
+
+from sqlalchemy import (
+    JSON, Boolean, Date, DateTime, Float, ForeignKey, Integer, String, Text, UniqueConstraint, Index,
+)
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+from app.db import Base
+
+
+def utcnow() -> datetime:
+    return datetime.now(timezone.utc)
+
+
+class School(Base):
+    __tablename__ = "schools"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(String(120))
+    code: Mapped[str] = mapped_column(String(32), unique=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow)
+
+
+class Teacher(Base):
+    __tablename__ = "teachers"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    school_id: Mapped[int] = mapped_column(ForeignKey("schools.id"))
+    name: Mapped[str] = mapped_column(String(80))
+    phone: Mapped[str | None] = mapped_column(String(20))
+    pin_hash: Mapped[str] = mapped_column(String(200))
+    language: Mapped[str] = mapped_column(String(8), default="hi")
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow)
+
+
+class Classroom(Base):
+    __tablename__ = "classes"
+    __table_args__ = (UniqueConstraint("school_id", "grade", "section"),)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    school_id: Mapped[int] = mapped_column(ForeignKey("schools.id"))
+    teacher_id: Mapped[int] = mapped_column(ForeignKey("teachers.id"))
+    grade: Mapped[int] = mapped_column(Integer)
+    section: Mapped[str] = mapped_column(String(8), default="A")
+    label: Mapped[str] = mapped_column(String(40))
+
+    @property
+    def name(self) -> str:
+        return self.label
+
+
+class Child(Base):
+    __tablename__ = "children"
+    __table_args__ = (UniqueConstraint("class_id", "roll_no"),)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    class_id: Mapped[int] = mapped_column(ForeignKey("classes.id"))
+    roll_no: Mapped[int] = mapped_column(Integer)
+    first_name: Mapped[str] = mapped_column(String(60))
+    consent_on: Mapped[date | None] = mapped_column(Date)
+    consent_source: Mapped[str | None] = mapped_column(String(80))
+    active: Mapped[bool] = mapped_column(Boolean, default=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow)
+
+
+class Roadmap(Base):
+    """An immutable, confirmed roadmap for a class + subject."""
+    __tablename__ = "roadmaps"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    school_id: Mapped[int] = mapped_column(ForeignKey("schools.id"))
+    class_id: Mapped[int] = mapped_column(ForeignKey("classes.id"))
+    subject: Mapped[str] = mapped_column(String(16))
+    version: Mapped[int] = mapped_column(Integer, default=1)
+    source: Mapped[str] = mapped_column(String(16), default="template")  # template|photo|import
+    confirmed_by: Mapped[int] = mapped_column(ForeignKey("teachers.id"))
+    confirmed_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow)
+    items: Mapped[list["RoadmapItem"]] = relationship(
+        order_by="RoadmapItem.position", cascade="all, delete-orphan", lazy="selectin"
+    )
+
+
+class RoadmapItem(Base):
+    __tablename__ = "roadmap_items"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    roadmap_id: Mapped[int] = mapped_column(ForeignKey("roadmaps.id"))
+    position: Mapped[int] = mapped_column(Integer)
+    chapter: Mapped[str] = mapped_column(String(120))
+    checkpoint_id: Mapped[str] = mapped_column(String(80), index=True)
+    custom_title: Mapped[str | None] = mapped_column(String(200))
+
+
+class CaptureSession(Base):
+    __tablename__ = "capture_sessions"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    school_id: Mapped[int] = mapped_column(ForeignKey("schools.id"))
+    teacher_id: Mapped[int] = mapped_column(ForeignKey("teachers.id"))
+    class_id: Mapped[int] = mapped_column(ForeignKey("classes.id"))
+    kind: Mapped[str] = mapped_column(String(24))  # note|photo|voice|tap|probe|home
+    input_ref: Mapped[str | None] = mapped_column(String(300))
+    input_text: Mapped[str | None] = mapped_column(Text)  # transcript (audio itself is never stored)
+    ai_status: Mapped[str] = mapped_column(String(20), default="pending")  # pending|ready|fallback|failed
+    fallback_used: Mapped[bool] = mapped_column(Boolean, default=False)
+    status: Mapped[str] = mapped_column(String(20), default="proposed")  # proposed|confirmed|discarded
+    payload: Mapped[dict] = mapped_column(JSON, default=dict)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow)
+
+
+class Evidence(Base):
+    __tablename__ = "evidence"
+    __table_args__ = (Index("ix_evidence_child_cp_at", "child_id", "checkpoint_id", "at"),)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    school_id: Mapped[int] = mapped_column(ForeignKey("schools.id"))
+    class_id: Mapped[int] = mapped_column(ForeignKey("classes.id"))
+    child_id: Mapped[int] = mapped_column(ForeignKey("children.id"))
+    checkpoint_id: Mapped[str] = mapped_column(String(80), index=True)
+    result: Mapped[str] = mapped_column(String(16))  # correct|partial|incorrect|unattempted
+    score: Mapped[float | None] = mapped_column(Float)
+    misconception: Mapped[str | None] = mapped_column(String(60))
+    source: Mapped[str] = mapped_column(String(24))
+    confidence: Mapped[float] = mapped_column(Float, default=1.0)
+    session_id: Mapped[int | None] = mapped_column(ForeignKey("capture_sessions.id"))
+    quote: Mapped[str | None] = mapped_column(String(300))
+    at: Mapped[datetime] = mapped_column(DateTime, default=utcnow)
+    status: Mapped[str] = mapped_column(String(12), default="confirmed")  # proposed|confirmed|rejected
+    supersedes_id: Mapped[int | None] = mapped_column(ForeignKey("evidence.id"), nullable=True)
+    created_by: Mapped[int | None] = mapped_column(ForeignKey("teachers.id"))
+
+
+class Attendance(Base):
+    __tablename__ = "attendance"
+    __table_args__ = (UniqueConstraint("child_id", "day"),)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    school_id: Mapped[int] = mapped_column(ForeignKey("schools.id"))
+    class_id: Mapped[int] = mapped_column(ForeignKey("classes.id"))
+    child_id: Mapped[int] = mapped_column(ForeignKey("children.id"))
+    day: Mapped[date] = mapped_column(Date)
+    present: Mapped[bool] = mapped_column(Boolean)
+
+
+class Plan(Base):
+    __tablename__ = "plans"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    school_id: Mapped[int] = mapped_column(ForeignKey("schools.id"))
+    class_id: Mapped[int] = mapped_column(ForeignKey("classes.id"))
+    subject: Mapped[str] = mapped_column(String(16))
+    for_date: Mapped[date] = mapped_column(Date)
+    generated_by: Mapped[str] = mapped_column(String(16))  # ai|fallback
+    payload: Mapped[dict] = mapped_column(JSON)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow)
+    __table_args__ = (UniqueConstraint("class_id", "subject", "for_date"),)
+
+
+class InterventionLog(Base):
+    __tablename__ = "intervention_logs"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    school_id: Mapped[int] = mapped_column(ForeignKey("schools.id"))
+    plan_id: Mapped[int] = mapped_column(ForeignKey("plans.id"))
+    group_key: Mapped[str] = mapped_column(String(80))
+    done_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow)
+    reassessed_at: Mapped[datetime | None] = mapped_column(DateTime)
+
+
+class ParentAccount(Base):
+    __tablename__ = "parent_accounts"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    school_id: Mapped[int] = mapped_column(ForeignKey("schools.id"))
+    child_id: Mapped[int] = mapped_column(ForeignKey("children.id"))
+    phone_hash: Mapped[str] = mapped_column(String(200))
+    pin_hash: Mapped[str] = mapped_column(String(200))
+    consent_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow)
+    language: Mapped[str] = mapped_column(String(8), default="hi")
+    __table_args__ = (UniqueConstraint("child_id"),)
+
+
+class HomeSession(Base):
+    __tablename__ = "home_sessions"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    school_id: Mapped[int] = mapped_column(ForeignKey("schools.id"))
+    child_id: Mapped[int] = mapped_column(ForeignKey("children.id"))
+    started_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow)
+    ended_at: Mapped[datetime | None] = mapped_column(DateTime)
+    offline: Mapped[bool] = mapped_column(Boolean, default=False)
+    summary_hi: Mapped[str | None] = mapped_column(Text)
+    evidence_count: Mapped[int] = mapped_column(Integer, default=0)
+
+
+class AiCall(Base):
+    __tablename__ = "ai_calls"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    school_id: Mapped[int | None] = mapped_column(ForeignKey("schools.id"))
+    feature: Mapped[str] = mapped_column(String(32))
+    model: Mapped[str] = mapped_column(String(64))
+    prompt_version: Mapped[str] = mapped_column(String(32))
+    input_tokens: Mapped[int] = mapped_column(Integer, default=0)
+    output_tokens: Mapped[int] = mapped_column(Integer, default=0)
+    latency_ms: Mapped[int] = mapped_column(Integer, default=0)
+    cost_inr: Mapped[float] = mapped_column(Float, default=0)
+    validation_status: Mapped[str] = mapped_column(String(16), default="ok")
+    error: Mapped[str | None] = mapped_column(String(300))
+    at: Mapped[datetime] = mapped_column(DateTime, default=utcnow)
+
+
+class UsageCounter(Base):
+    """Per-school daily AI budget counter (INR)."""
+    __tablename__ = "usage_counters"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    school_id: Mapped[int] = mapped_column(ForeignKey("schools.id"))
+    day: Mapped[date] = mapped_column(Date)
+    cost_inr: Mapped[float] = mapped_column(Float, default=0.0)
+    __table_args__ = (UniqueConstraint("school_id", "day"),)

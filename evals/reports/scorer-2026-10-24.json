@@ -1,0 +1,128 @@
+{
+  "date": "2026-10-24",
+  "items": 20,
+  "agreement": 1.0,
+  "kappa": 1.0,
+  "cases": [
+    {
+      "id": "v01",
+      "labels": [
+        "correct",
+        "correct",
+        "correct"
+      ],
+      "judged": [
+        "correct",
+        "correct",
+        "correct"
+      ],
+      "accuracy": 1.0
+    },
+    {
+      "id": "v02",
+      "labels": [
+        "close",
+        "correct",
+        "correct"
+      ],
+      "judged": [
+        "close",
+        "correct",
+        "correct"
+      ],
+      "accuracy": 0.833
+    },
+    {
+      "id": "v03",
+      "labels": [
+        "correct",
+        "correct",
+        "omitted"
+      ],
+      "judged": [
+        "correct",
+        "correct",
+        "omitted"
+      ],
+      "accuracy": 0.667
+    },
+    {
+      "id": "v04",
+      "labels": [
+        "correct",
+        "wrong",
+        "correct"
+      ],
+      "judged": [
+        "correct",
+        "wrong",
+        "correct"
+      ],
+      "accuracy": 0.667
+    },
+    {
+      "id": "v05",
+      "labels": [
+        "correct"
+      ],
+      "judged": [
+        "correct"
+      ],
+      "accuracy": 1.0
+    },
+    {
+      "id": "v06",
+      "labels": [
+        "wrong"
+      ],
+      "judged": [
+        "wrong"
+      ],
+      "accuracy": 0.0
+    },
+    {
+      "id": "v07",
+      "labels": [
+        "correct",
+        "close",
+        "close"
+      ],
+      "judged": [
+        "correct",
+        "close",
+        "close"
+      ],
+      "accuracy": 0.667
+    },
+    {
+      "id": "v08",
+      "labels": [
+        "correct"
+      ],
+      "judged": [
+        "correct"
+      ],
+      "accuracy": 1.0
+    },
+    {
+      "id": "v09",
+      "labels": [
+        "wrong"
+      ],
+      "judged": [
+        "wrong"
+      ],
+      "accuracy": 0.0
+    },
+    {
+      "id": "v10",
+      "labels": [
+        "omitted"
+      ],
+      "judged": [
+        "omitted"
+      ],
+      "accuracy": 0.0
+    }
+  ]
+}
