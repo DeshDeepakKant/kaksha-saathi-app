@@ -46,6 +46,16 @@ PRICING_INR = {
 }
 
 
+def _create(client, **kw):  # pragma: no cover - network
+    """messages.create, with API errors (bad model id, rate limit, outage) surfaced as LLMUnavailable
+    so every feature takes its deterministic fallback instead of a 500."""
+    import anthropic
+    try:
+        return client.messages.create(**kw)
+    except anthropic.APIError as e:
+        raise LLMUnavailable(f"{type(e).__name__}: {e}"[:300]) from e
+
+
 def _client():  # pragma: no cover - network
     import anthropic
     s = get_settings()
@@ -127,7 +137,7 @@ def structured(
     if _supports_temperature(client):
         kw["temperature"] = temperature
     for attempt in range(2 if retry_with_error else 1):
-        resp = client.messages.create(**kw)
+        resp = _create(client, **kw)
         in_tok += resp.usage.input_tokens
         out_tok += resp.usage.output_tokens
         block = next((b for b in resp.content if getattr(b, "type", None) == "tool_use"), None)
@@ -177,7 +187,7 @@ def simple_text(session: Session, *, feature: str, prompt_version: str, model: s
               messages=[{"role": "user", "content": user}])
     if _supports_temperature(client):
         kw["temperature"] = temperature
-    resp = client.messages.create(**kw)
+    resp = _create(client, **kw)
     text = "".join(b.text for b in resp.content if getattr(b, "type", None) == "text").strip()
     pin, pout = PRICING_INR[_model_tier(model)]
     cost = resp.usage.input_tokens / 1e6 * pin + resp.usage.output_tokens / 1e6 * pout

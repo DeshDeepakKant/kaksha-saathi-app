@@ -25,8 +25,8 @@ class Settings(BaseSettings):
 
     # --- models (single source of truth; prompts never hard-code an id)
     model_extract: str = "claude-haiku-4-5-20251001"
-    model_plan: str = "claude-sonnet-4-5-20250929"
-    model_tutor: str = "claude-sonnet-4-5-20250929"
+    model_plan: str = "claude-sonnet-5"
+    model_tutor: str = "claude-sonnet-5"
     anthropic_api_key: str = ""
 
     # --- speech

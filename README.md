@@ -130,7 +130,7 @@ app is a PWA + optional APK.
 
 | Service | Used for | Env var | Without it |
 |---|---|---|---|
-| Anthropic Claude (`claude-haiku-4-5`, `claude-sonnet-4-5`) | note/photo extraction, plan, tutor, safety | `ANTHROPIC_API_KEY` | deterministic rules + template planner + canned tutor lines; UI marks the degraded state |
+| Anthropic Claude (`claude-haiku-4-5`, `claude-sonnet-5`) | note/photo extraction, plan, tutor, safety | `ANTHROPIC_API_KEY` | deterministic rules + template planner + canned tutor lines; UI marks the degraded state |
 | Sarvam AI (ASR + TTS) | Hindi speech-to-text, model pronunciation | `SARVAM_API_KEY` | typed notes / tap only; no audio verification |
 | Postgres (optional) | production database | `DATABASE_URL` | SQLite file |
 | Object storage (optional) | work photos (7-day TTL) | — | local `uploads/` |
