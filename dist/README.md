@@ -2,7 +2,7 @@
 
 | File | What |
 |---|---|
-| `kaksha-teacher.apk` | Teacher app, release build, `API_BASE=https://demo.kakshasaathi.in` |
+| `kaksha-teacher.apk` | Teacher app, release build, `API_BASE=https://kaksha-saathi-558g.onrender.com` |
 | `kaksha-parent.apk` | Parent app, release build, same base |
 
 Rebuild against your own host:
