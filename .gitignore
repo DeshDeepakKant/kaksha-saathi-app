@@ -36,3 +36,7 @@ apps/*/android/key.properties
 
 # --- APKs (built artefacts; attach to the submission, do not commit)
 dist/*.apk
+
+# --- local-only key file: never commit (real keys live here; backend/.env.example is the placeholder template)
+/.env.example
+*.apk
