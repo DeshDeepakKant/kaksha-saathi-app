@@ -32,9 +32,7 @@ apps/*/android/key.properties
 .DS_Store
 *.log
 
-# --- built web bundles (regenerate with `make web`; the hosted demo is frozen separately)
-deploy/web/teacher/
-deploy/web/parent/
+# --- built web bundles are committed so Render can serve /teacher/ and /parent/ (regenerate with `make web`)
 
 # --- APKs (built artefacts; attach to the submission, do not commit)
 dist/*.apk

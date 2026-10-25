@@ -1,0 +1,20 @@
+# Render Blueprint: one free Docker web service (API + built web apps). Secrets are set in the dashboard.
+services:
+  - type: web
+    name: kaksha-saathi
+    runtime: docker
+    plan: free
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: .
+    healthCheckPath: /healthz
+    envVars:
+      - key: DATABASE_URL
+        value: sqlite:////tmp/kaksha.db
+      - key: SEED_ON_STARTUP
+        value: "true"
+      - key: JWT_SECRET
+        generateValue: true
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: CORS_ORIGINS
+        value: "*"
