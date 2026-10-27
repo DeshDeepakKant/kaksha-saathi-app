@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
@@ -28,8 +27,9 @@ class Api {
     final p = await SharedPreferences.getInstance();
     _token = p.getString('token');
     final cache = p.getString('cache');
-    if (cache != null && cache.isNotEmpty)
+    if (cache != null && cache.isNotEmpty) {
       _cacheStore.addAll(jsonDecode(cache) as Map<String, dynamic>);
+    }
   }
 
   Future<void> _save() async {
@@ -55,6 +55,8 @@ class Api {
       await _save();
       return data;
     } catch (e) {
+      // An expired session is not "offline": let the caller send the teacher back to login.
+      if (e is ApiError && e.status == 401) rethrow;
       if (_cacheStore.containsKey(path)) {
         final c = _cacheStore[path];
         if (c is Map<String, dynamic>) return {...c, 'offline': true};

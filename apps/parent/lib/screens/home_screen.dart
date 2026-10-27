@@ -29,10 +29,22 @@ class _HomeScreenState extends State<HomeScreen> {
     try {
       await Api.i.fetchChild();
       setState(() => _child = Api.i.profile);
+    } on ApiError catch (e) {
+      if (e.status == 401) {
+        await Api.i.logout();
+        if (mounted) {
+          Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (_) => const GateScreen()),
+            (_) => false,
+          );
+        }
+        return;
+      }
+      setState(() => _error = e.toString());
     } catch (e) {
       setState(() => _error = e.toString());
     } finally {
-      setState(() => _loading = false);
+      if (mounted) setState(() => _loading = false);
     }
     Api.i.fetchPack().catchError((_) {});
     Api.i.fetchHistory();

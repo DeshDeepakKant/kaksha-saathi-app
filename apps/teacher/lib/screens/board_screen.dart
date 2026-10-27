@@ -241,7 +241,7 @@ class _BoardScreenState extends State<BoardScreen> {
   );
 
   List<Widget> _content() {
-    if (_loading)
+    if (_loading) {
       return [
         Padding(
           padding: EdgeInsets.only(top: 60),
@@ -250,16 +250,19 @@ class _BoardScreenState extends State<BoardScreen> {
           ),
         ),
       ];
-    if (_error != null)
+    }
+    if (_error != null) {
       return [EmptyState(icon: Icons.error_outline, text: _error!)];
+    }
     final b = _board;
-    if (b == null)
+    if (b == null) {
       return [
         EmptyState(
           icon: Icons.school_outlined,
           text: tr('Class not found.', 'कक्षा नहीं मिली।'),
         ),
       ];
+    }
     final groups = (b['groups'] as List).cast<Map<String, dynamic>>();
     final onTrack = (b['on_track'] as List).cast<Map<String, dynamic>>();
     final unassessed = (b['unassessed'] as List).cast<Map<String, dynamic>>();

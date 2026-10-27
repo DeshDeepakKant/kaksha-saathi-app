@@ -244,7 +244,7 @@ class _GroupPlanScreenState extends State<GroupPlanScreen> {
               Text(
                 tr(
                   'Materials: ${act!['materials_hi']}',
-                  'सामग्री: ${act!['materials_hi']}',
+                  'सामग्री: ${act['materials_hi']}',
                 ),
                 style: const TextStyle(color: Ks.muted, fontSize: 14),
               ),
