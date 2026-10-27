@@ -9,7 +9,7 @@ import json
 from datetime import datetime, timedelta, timezone
 
 from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ValidationError
 from sqlalchemy import delete, select
 from sqlalchemy.orm import Session
 
@@ -43,12 +43,10 @@ def parent_consent(body: ConsentIn, db: Session = Depends(get_db)):
     school = db.scalar(select(School).where(School.code == body.school_code.upper().strip()))
     if not school:
         raise HTTPException(404, "school not found")
-    cls = db.scalar(select(Classroom).where(Classroom.school_id == school.id).join(Child, Child.class_id == Classroom.id)
-                    .where(Child.roll_no == body.child_roll))
-    child = db.scalar(select(Child).join(Classroom, Child.class_id == Classroom.id)
-                      .where(Classroom.school_id == school.id, Child.roll_no == body.child_roll))
-    if not child:
+    kids = _children_by_roll(db, school.id, body.child_roll)  # lowest class first, deterministic
+    if not kids:
         raise HTTPException(404, "child not found")
+    child = kids[0]
     if child.consent_on is None:
         raise HTTPException(403, "school has not recorded a parent consent form for this child yet")
     if db.scalar(select(ParentAccount).where(ParentAccount.child_id == child.id)):
@@ -72,14 +70,21 @@ def parent_login(body: ParentLoginIn, db: Session = Depends(get_db)):
     school = db.scalar(select(School).where(School.code == body.school_code.upper().strip()))
     if not school:
         raise HTTPException(401, "school not found")
-    child = db.scalar(select(Child).join(Classroom, Child.class_id == Classroom.id)
-                      .where(Classroom.school_id == school.id, Child.roll_no == body.child_roll))
-    if not child:
+    kids = _children_by_roll(db, school.id, body.child_roll)
+    if not kids:
         raise HTTPException(401, "child not found")
-    p = db.scalar(select(ParentAccount).where(ParentAccount.child_id == child.id))
-    if not p or p.phone_hash != hash_phone(body.parent_phone) or not verify_pin(body.pin, p.pin_hash):
-        raise HTTPException(401, "invalid credentials")
-    return {"token": make_token(str(p.id), "parent"), "child": _pub(child)}
+    phone = hash_phone(body.parent_phone)
+    for child in kids:
+        p = db.scalar(select(ParentAccount).where(ParentAccount.child_id == child.id))
+        if p and p.phone_hash == phone and verify_pin(body.pin, p.pin_hash):
+            return {"token": make_token(str(p.id), "parent"), "child": _pub(child)}
+    raise HTTPException(401, "invalid credentials")
+
+
+def _children_by_roll(db: Session, school_id: int, roll: int) -> list[Child]:
+    return list(db.scalars(select(Child).join(Classroom, Child.class_id == Classroom.id)
+                           .where(Classroom.school_id == school_id, Child.roll_no == roll)
+                           .order_by(Classroom.grade, Classroom.section)))
 
 
 def _pub(child: Child) -> dict:
@@ -126,6 +131,12 @@ def parent_pack(parent: ParentAccount = Depends(current_parent), db: Session = D
     return plan
 
 
+def _session_plan(db: Session, child: Child, before: datetime | None = None) -> dict:
+    """Plan from evidence recorded before the session, so home turns can't reshuffle it mid-session."""
+    st = ledger.child_statuses(db, [child.id], before=before)[child.id]
+    return tutor.build_plan(child.first_name, {cp: r.status for cp, r in st.items()}, get_content())
+
+
 class SessionStart(BaseModel):
     offline: bool = False
 
@@ -134,8 +145,7 @@ class SessionStart(BaseModel):
 def start_session(body: SessionStart | None = None, parent: ParentAccount = Depends(current_parent),
                   db: Session = Depends(get_db)):
     child = db.get(Child, parent.child_id)
-    st = ledger.child_statuses(db, [child.id])[child.id]
-    plan = tutor.build_plan(child.first_name, {cp: r.status for cp, r in st.items()}, get_content())
+    plan = _session_plan(db, child)
     s = HomeSession(school_id=parent.school_id, child_id=child.id, offline=bool(body and body.offline))
     db.add(s)
     db.flush()
@@ -162,21 +172,25 @@ async def session_turn(session_id: int, meta: str = Form(...), audio: UploadFile
         raise HTTPException(404, "session not found")
     child = db.get(Child, parent.child_id)
     cls = db.get(Classroom, child.class_id)
-    m = TurnMeta.model_validate_json(meta)
-    st = ledger.child_statuses(db, [child.id])[child.id]
-    plan = tutor.build_plan(child.first_name, {cp: r.status for cp, r in st.items()}, get_content())
+    try:
+        m = TurnMeta.model_validate_json(meta)
+    except ValidationError as e:
+        raise HTTPException(422, f"bad meta: {e.errors()[0]['msg']}")
+    plan = _session_plan(db, child, before=hs.started_at)
     if m.index < 0 or m.index >= len(plan["activities"]):
         raise HTTPException(422, "bad activity index")
-    act = tutor.activity_from_dict(plan["activities"][m.index])
+    # Judge the activity the child actually sees; the index only places it in the plan.
+    act = tutor.find_activity(m.activity_ref, get_content()) or tutor.activity_from_dict(plan["activities"][m.index])
     audio_bytes = await audio.read() if audio else b""
     validate_media(audio_bytes, None)
     transcript = m.transcript
     asr_status = "provided"
     if not transcript and audio_bytes:
-        transcript = get_asr().transcribe(audio_bytes, audio.filename or "turn.webm").text
-        asr_status = "asr"
-        if not transcript:
-            asr_status = "silent"
+        try:
+            transcript = get_asr().transcribe(audio_bytes, audio.filename or "turn.webm").text
+            asr_status = "asr" if transcript else "silent"
+        except Exception:  # ASR outage: judge as unheard rather than failing the turn
+            transcript, asr_status = "", "failed"
 
     # child-safety classification on anything the child said (online only)
     category = "learning"
@@ -185,7 +199,8 @@ async def session_turn(session_id: int, meta: str = Form(...), audio: UploadFile
     if category in ("distress", "personal"):
         return {"judged": "none", "line_hi": "यह बात किसी बड़े — मम्मी, पापा या अध्यापक — को बताइए।",
                 "line_status": "safety", "advance": False, "next_index": m.index, "next_activity": None,
-                "done": False, "record_evidence": False, "safety_flag": category, "asr": asr_status}
+                "done": False, "record_evidence": False, "safety_flag": category, "asr": asr_status,
+                "attempt": m.attempt, "activity": act.__dict__}
 
     turn = tutor.next_turn(db, child_name=child.first_name, plan=plan, index=m.index, attempt=m.attempt,
                            activity=act, transcript=transcript, tap=m.tap, school_id=parent.school_id,

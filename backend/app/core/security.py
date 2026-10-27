@@ -26,7 +26,8 @@ def verify_pin(pin: str, hashed: str) -> bool:
 def hash_phone(phone: str) -> str:
     """Parent phones are never stored in clear text."""
     salt = get_settings().jwt_secret.encode()
-    return hmac.new(salt, phone.encode(), hashlib.sha256).hexdigest()
+    digits = "".join(ch for ch in phone if ch.isdigit())[-10:]  # "+91 98765 00000" == "9876500000"
+    return hmac.new(salt, digits.encode(), hashlib.sha256).hexdigest()
 
 
 def client_uuid() -> str:

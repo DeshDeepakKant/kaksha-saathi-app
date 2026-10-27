@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart';
@@ -193,14 +194,14 @@ class _SessionScreenState extends State<SessionScreen> {
       final meta = {
         'index': _index,
         'attempt': _attempt,
-        'activity_ref': act['ref'],
+        'activity_ref': act['ref'] ?? '',
         if (tap != null) 'tap': tap,
         if (transcript != null) 'transcript': transcript,
         'offline': false,
       };
       final r = await Api.i.postMultipart(
         '/v1/parent/sessions/$_sessionId/turn',
-        {'meta': _json(meta)},
+        {'meta': jsonEncode(meta)},
         audio: (transcript != null) ? null : audio,
         field: 'audio',
       ) as Map<String, dynamic>;
@@ -222,11 +223,12 @@ class _SessionScreenState extends State<SessionScreen> {
     }
   }
 
-  static String _json(Map<String, dynamic> m) {
-    final parts = m.entries.map(
-      (e) => '"${e.key}":${e.value is String ? '"${e.value}"' : e.value}',
-    );
-    return '{${parts.join(',')}}';
+  /// Words and numbers are read aloud as shown; for questions and taps, `target` is the answer.
+  static String _shown(Map<String, dynamic> act) {
+    final type = act['type'] as String? ?? '';
+    return (type == 'say_word' || type == 'say_number')
+        ? (act['target'] ?? '').toString()
+        : (act['prompt_hi'] ?? '').toString();
   }
 
   void _applyTurn(Map<String, dynamic> r, Map<String, dynamic> act) {
@@ -447,8 +449,8 @@ class _SessionScreenState extends State<SessionScreen> {
                             if (act != null)
                               Text(
                                 tr(
-                                  'Say: ${act['target'] ?? act['prompt_hi']}',
-                                  'बोलिए: ${act['target'] ?? act['prompt_hi']}',
+                                  'Say: ${_shown(act)}',
+                                  'बोलिए: ${_shown(act)}',
                                 ),
                                 textAlign: TextAlign.center,
                                 style: const TextStyle(

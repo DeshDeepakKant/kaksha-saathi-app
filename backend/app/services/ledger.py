@@ -30,20 +30,25 @@ def class_children(db: Session, class_id: int) -> list[Child]:
                            .order_by(Child.roll_no)))
 
 
-def evidence_rows(db: Session, child_ids: list[int]) -> dict[int, dict[str, list[mastery.Ev]]]:
+def evidence_rows(db: Session, child_ids: list[int],
+                  before: datetime | None = None) -> dict[int, dict[str, list[mastery.Ev]]]:
     out: dict[int, dict[str, list[mastery.Ev]]] = {c: {} for c in child_ids}
     if not child_ids:
         return out
-    for e in db.scalars(select(Evidence).where(Evidence.child_id.in_(child_ids),
-                                               Evidence.status == "confirmed")):
+    q = select(Evidence).where(Evidence.child_id.in_(child_ids), Evidence.status == "confirmed")
+    if before is not None:
+        q = q.where(Evidence.at < before)
+    for e in db.scalars(q):
         out.setdefault(e.child_id, {}).setdefault(e.checkpoint_id, []).append(
             mastery.Ev(result=e.result, source=e.source, confidence=e.confidence, at=e.at, id=e.id,
                        misconception=e.misconception))
     return out
 
 
-def child_statuses(db: Session, child_ids: list[int], now: datetime | None = None) -> dict[int, dict[str, mastery.StatusResult]]:
-    rows = evidence_rows(db, child_ids)
+def child_statuses(db: Session, child_ids: list[int], now: datetime | None = None,
+                   before: datetime | None = None) -> dict[int, dict[str, mastery.StatusResult]]:
+    """`before` ignores evidence recorded at or after that moment (e.g. during a home session)."""
+    rows = evidence_rows(db, child_ids, before)
     return {cid: {cp: mastery.status_for(evs, now) for cp, evs in cps.items()} for cid, cps in rows.items()}
 
 
@@ -65,9 +70,10 @@ def build_groups(db: Session, cls: Classroom, subject: str, now: datetime | None
     absent = {cid for cid, present in att.items() if not present}
     # "needs assessment": absent today, or no evidence at all in this subject's roadmap
     roadmap = current_roadmap(db, cls.id, subject)
-    cps = set(roadmap_checkpoint_ids(roadmap))
+    cps = set(roadmap_checkpoint_ids(roadmap)) or {
+        i["checkpoint_id"] for i in get_content().template_roadmap(subject, cls.grade)}
     learning = {cid: {cp: s for cp, s in cps_.items() if cp in cps} for cid, cps_ in st_plain.items()}
-    needs = {cid for cid in learning if cid in absent}
+    needs = {cid for cid in learning if cid in absent or not learning[cid]}
     return group_class(get_content(), learning, needs), st, children, roadmap
 
 
@@ -131,18 +137,22 @@ def _member_rolls(groups: list[dict], key: str) -> list[int]:
 
 
 def child_profile(db: Session, child: Child, roadmap: Roadmap | None, content: Content,
-                  now: datetime | None = None) -> dict:
+                  now: datetime | None = None, subject: str | None = None, grade: int | None = None) -> dict:
     st = child_statuses(db, [child.id], now)[child.id]
     evs = evidence_rows(db, [child.id])[child.id]
     items = []
-    for it in (roadmap.items if roadmap else []):
-        cp = content.checkpoints.get(it.checkpoint_id)
-        r = st.get(it.checkpoint_id)
-        e = evs.get(it.checkpoint_id, [])
+    # No confirmed roadmap yet: use the template the teacher sees in the capture sheet.
+    rows = ([(i.checkpoint_id, i.chapter, i.custom_title) for i in roadmap.items] if roadmap else
+            [(i["checkpoint_id"], i["chapter"], None) for i in content.template_roadmap(subject, grade)]
+            if subject and grade else [])
+    for checkpoint_id, chapter, custom_title in rows:
+        cp = content.checkpoints.get(checkpoint_id)
+        r = st.get(checkpoint_id)
+        e = evs.get(checkpoint_id, [])
         misc = [x.misconception for x in e if x.misconception]
         items.append({
-            "checkpoint_id": it.checkpoint_id, "chapter": it.chapter,
-            "title_hi": cp.title_hi if cp else (it.custom_title or it.checkpoint_id),
+            "checkpoint_id": checkpoint_id, "chapter": chapter,
+            "title_hi": cp.title_hi if cp else (custom_title or checkpoint_id),
             "title_en": cp.title_en if cp else "",
             "status": r.status if r else "not_started",
             "confidence": r.confidence if r else 0.0,
@@ -153,7 +163,7 @@ def child_profile(db: Session, child: Child, roadmap: Roadmap | None, content: C
             "misconception_top": _top_misc(misc),
         })
     return {"child": {"id": child.id, "first_name": child.first_name, "roll_no": child.roll_no},
-            "subject": roadmap.subject if roadmap else None,
+            "subject": roadmap.subject if roadmap else subject,
             "items": items}
 
 

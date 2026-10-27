@@ -159,7 +159,9 @@ class Api {
       get('/v1/classes/$classId/plans/latest?subject=$subject');
   Future<dynamic> profile(int childId, String subject) =>
       get('/v1/children/$childId/profile?subject=$subject');
-  Future<dynamic> history(int childId) => get('/v1/children/$childId/history');
+  Future<dynamic> history(int childId, {String? subject}) => get(
+    '/v1/children/$childId/history${subject == null ? '' : '?subject=$subject'}',
+  );
   Future<dynamic> tap(int classId, List<Map<String, dynamic>> items) =>
       postJson('/v1/classes/$classId/captures/tap', {'items': items});
   Future<dynamic> checkpointTargets(String cpId) =>

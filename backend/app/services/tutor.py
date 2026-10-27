@@ -2,10 +2,11 @@
 
 A session is a sequence of activities built from the child's top gaps (confirmed at school)
 plus a couple of maintenance/enrichment items. Each activity is judged deterministically
-(tap → exact; speech → ASR + constrained match). Retries: 2, then move on. Never stuck.
+(tap → exact; speech → ASR + constrained match). Two tries, then move on. Never stuck.
 """
 from __future__ import annotations
 
+import itertools
 import re
 import unicodedata
 from dataclasses import dataclass, field
@@ -45,9 +46,9 @@ class Activity:
 def choose_focus(status_by_cp: dict[str, str], content: Content, max_items: int = 8) -> list[dict]:
     """Gap-first: needs_intervention, needs_practice, then a maintenance item from on_track."""
     order = {"needs_intervention": 0, "needs_practice": 1, "on_track": 2, "not_started": 3}
-    gaps = sorted([(order.get(s, 3), cp) for cp, s in status_by_cp.items() if s in ("needs_intervention", "needs_practice")],
+    gaps = sorted([(order.get(s, 3), cp, s) for cp, s in status_by_cp.items() if s in ("needs_intervention", "needs_practice")],
                   key=lambda x: (x[0], x[1]))
-    focus = [{"checkpoint_id": cp, "status": s, "reason": "gap"} for s, cp in gaps]
+    focus = [{"checkpoint_id": cp, "status": s, "reason": "gap"} for _, cp, s in gaps]
     on_track = [cp for cp, s in status_by_cp.items() if s == "on_track"]
     if on_track and len(focus) < max_items:
         focus.append({"checkpoint_id": sorted(on_track)[0], "status": "on_track", "reason": "maintenance"})
@@ -88,12 +89,31 @@ def activity_from_dict(item: dict) -> Activity:
 
 def _to_activity(item: dict) -> Activity:
     t = item["type"]
-    prompt = item.get("prompt_hi") or (f"बोलो: {item.get('target')}" if t == "say_word" else "बोलो")
+    target = str(item.get("target") or item.get("correct") or item.get("answer") or "")
+    prompt = item.get("prompt_hi") or (f"बोलो: {target}" if t in ("say_word", "say_number") else "बोलो")
     return Activity(ref=item["id"], item_id=item["id"], checkpoint_id=item["checkpoint_id"], type=t,
-                    prompt_hi=prompt, target=str(item.get("target") or item.get("correct") or item.get("answer") or ""),
+                    prompt_hi=prompt, target=target,
                     accept=[str(x) for x in item.get("accept", [])],
-                    options=list(item.get("options", [])), letters=list(item.get("letters", [])),
+                    options=list(item.get("options") or _order_options(item, target)),
+                    letters=list(item.get("letters", [])),
                     base=item.get("base", ""), tier=int(item.get("tier", 1)))
+
+
+def _order_options(item: dict, target: str) -> list[str]:
+    """tap_order items carry letters, not options; the app taps one whole answer, so offer candidates."""
+    letters = list(item.get("letters") or [])
+    if item.get("type") != "tap_order" or not letters:
+        return []
+    if item.get("base"):
+        return [item["base"] + l for l in letters]
+    words = ["".join(p) for p in itertools.permutations(letters)]
+    others = [w for w in dict.fromkeys(words) if w != target][:3]
+    return sorted([target, *others])
+
+
+def find_activity(ref: str, content: Content) -> Activity | None:
+    item = next((i for i in content.practice_items if i["id"] == ref), None)
+    return _to_activity(item) if item else None
 
 
 def _norm(s: str) -> str:
@@ -132,7 +152,7 @@ def next_turn(session: Session, *, child_name: str, plan: dict, index: int, atte
               offline: bool) -> dict:
     """One turn of the harness. Returns what the app should show/say and the outcome."""
     verdict = judge(activity, transcript=transcript, tap=tap)
-    attempts_left = attempt < MAX_ATTEMPTS
+    attempts_left = attempt + 1 < MAX_ATTEMPTS  # attempt is 0-based
     situation = "praise" if verdict == "correct" else ("feedback_wrong" if attempts_left else "comfort")
     if offline:
         line = features.FALLBACK_LINES[situation].format(prompt=activity.prompt_hi)

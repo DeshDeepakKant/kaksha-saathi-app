@@ -47,7 +47,10 @@ class _LevelScreenState extends State<LevelScreen> {
       ) as Map<String, dynamic>;
       List<dynamic> h = const [];
       try {
-        h = await Api.i.history(widget.childId) as List;
+        h = await Api.i.history(
+          widget.childId,
+          subject: widget.subject,
+        ) as List;
       } catch (_) {}
       setState(() {
         _profile = p;
