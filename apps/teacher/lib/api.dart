@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
@@ -28,8 +27,9 @@ class Api {
     final p = await SharedPreferences.getInstance();
     _token = p.getString('token');
     final cache = p.getString('cache');
-    if (cache != null && cache.isNotEmpty)
+    if (cache != null && cache.isNotEmpty) {
       _cacheStore.addAll(jsonDecode(cache) as Map<String, dynamic>);
+    }
   }
 
   Future<void> _save() async {
@@ -49,12 +49,14 @@ class Api {
       final r = await http
           .get(Uri.parse('$base$path'), headers: _headers)
           .timeout(const Duration(seconds: 30));
-      if (r.statusCode >= 400) throw ApiError(_detail(r), r.statusCode);
+      if (r.statusCode >= 400) throw _fail(r);
       final data = jsonDecode(utf8.decode(r.bodyBytes));
       _cacheStore[path] = data;
       await _save();
       return data;
     } catch (e) {
+      // An expired session is not "offline": let the caller send the teacher back to login.
+      if (e is ApiError && e.status == 401) rethrow;
       if (_cacheStore.containsKey(path)) {
         final c = _cacheStore[path];
         if (c is Map<String, dynamic>) return {...c, 'offline': true};
@@ -73,7 +75,7 @@ class Api {
             body: jsonEncode(body),
           )
           .timeout(const Duration(seconds: 120));
-      if (r.statusCode >= 400) throw ApiError(_detail(r), r.statusCode);
+      if (r.statusCode >= 400) throw _fail(r);
       return jsonDecode(utf8.decode(r.bodyBytes));
     } on ApiError {
       rethrow;
@@ -92,7 +94,7 @@ class Api {
     final r = await http
         .delete(Uri.parse('$base$path'), headers: _headers)
         .timeout(const Duration(seconds: 30));
-    if (r.statusCode >= 400) throw ApiError(_detail(r), r.statusCode);
+    if (r.statusCode >= 400) throw _fail(r);
     return jsonDecode(utf8.decode(r.bodyBytes));
   }
 
@@ -113,8 +115,19 @@ class Api {
     }
     final streamed = await req.send().timeout(const Duration(seconds: 180));
     final r = await http.Response.fromStream(streamed);
-    if (r.statusCode >= 400) throw ApiError(_detail(r), r.statusCode);
+    if (r.statusCode >= 400) throw _fail(r);
     return jsonDecode(utf8.decode(r.bodyBytes));
+  }
+
+  /// Called once when the server rejects the session (401); main.dart opens the login screen.
+  VoidCallback? onSessionExpired;
+
+  ApiError _fail(http.Response r) {
+    if (r.statusCode == 401 && _token != null) {
+      logout(); // clears the token first, so parallel 401s don't fire this twice
+      onSessionExpired?.call();
+    }
+    return ApiError(_detail(r), r.statusCode);
   }
 
   static String _detail(http.Response r) {

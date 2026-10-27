@@ -14,8 +14,15 @@ Future<void> main() async {
   SharedPreferences.setPrefix('ks_teacher.');
   await Lang.load();
   await Api.i.loadSession();
+  // A rejected session (expired token, or a token from another server) goes back to login.
+  Api.i.onSessionExpired = () => _nav.currentState?.pushAndRemoveUntil(
+    MaterialPageRoute(builder: (_) => const LoginScreen()),
+    (_) => false,
+  );
   runApp(const KakshaTeacherApp());
 }
+
+final _nav = GlobalKey<NavigatorState>();
 
 class KakshaTeacherApp extends StatelessWidget {
   const KakshaTeacherApp({super.key});
@@ -24,6 +31,7 @@ class KakshaTeacherApp extends StatelessWidget {
     return ValueListenableBuilder<String>(
       valueListenable: Lang.code,
       builder: (_, _, _) => MaterialApp(
+        navigatorKey: _nav,
         title: tr('Kaksha Saathi — Teacher', 'कक्षा साथी — शिक्षिका'),
         debugShowCheckedModeBanner: false,
         theme: Ks.theme(),

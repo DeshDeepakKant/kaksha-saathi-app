@@ -35,8 +35,9 @@ class Api {
     final pr = p.getString('profile');
     if (pr != null) profile = jsonDecode(pr) as Map<String, dynamic>;
     final pe = p.getString('pending');
-    if (pe != null)
+    if (pe != null) {
       pendingSessions = (jsonDecode(pe) as List).cast<Map<String, dynamic>>();
+    }
     final h = p.getString('history');
     if (h != null) history = jsonDecode(h) as List;
   }
@@ -94,10 +95,11 @@ class Api {
     final req = http.MultipartRequest('POST', Uri.parse('$base$path'));
     req.headers.addAll(_h);
     req.fields.addAll(fields);
-    if (audio != null)
+    if (audio != null) {
       req.files.add(
         http.MultipartFile.fromBytes(field, audio, filename: 'turn.wav'),
       );
+    }
     final r = await http.Response.fromStream(
       await req.send().timeout(const Duration(seconds: 90)),
     );
@@ -129,7 +131,9 @@ class Api {
       pack = await get('/v1/parent/pack') as Map<String, dynamic>;
       offline = false;
       await save();
-    } catch (_) {
+    } catch (e) {
+      // An expired session is not "offline": let the caller send the parent back to the gate.
+      if (e is ApiError && e.status == 401) rethrow;
       offline = pack != null;
       if (pack == null) rethrow;
     }

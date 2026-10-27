@@ -209,8 +209,8 @@ class _SessionScreenState extends State<SessionScreen> {
         'index': _index,
         'attempt': _attempt,
         'activity_ref': act['ref'] ?? '',
-        if (tap != null) 'tap': tap,
-        if (transcript != null) 'transcript': transcript,
+        'tap': ?tap,
+        'transcript': ?transcript,
         'offline': false,
       };
       final r = await Api.i.postMultipart(

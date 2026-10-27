@@ -1,7 +1,5 @@
 import 'dart:typed_data';
 
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -250,8 +248,9 @@ class _TapPanelState extends State<_TapPanel> {
 
   String? _guessCheckpoint(List<Map<String, dynamic>> items) {
     for (final it in items.reversed) {
-      if ((it['checkpoint_id'] as String?)?.isNotEmpty == true)
+      if ((it['checkpoint_id'] as String?)?.isNotEmpty == true) {
         return it['checkpoint_id'];
+      }
     }
     return null;
   }
