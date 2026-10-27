@@ -36,7 +36,7 @@ class Settings(BaseSettings):
     # --- budgets / limits
     daily_budget_inr_per_school: float = 250.0
     max_photo_bytes: int = 6 * 1024 * 1024
-    max_audio_bytes: int = 4 * 1024 * 1024
+    max_audio_bytes: int = 10 * 1024 * 1024  # uncompressed WAV: ~5 min at 16 kHz
     photo_ttl_days: int = 7
     audio_ttl_hours: int = 24
     # When true, AI proposals are auto-accepted ONLY if high-confidence + arithmetic-verified (numeracy).

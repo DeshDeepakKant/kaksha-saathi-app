@@ -35,7 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
       setState(() => _loading = false);
     }
     Api.i.fetchPack().catchError((_) {});
-    Api.i.fetchHistory();
+    Api.i.flushPending().whenComplete(Api.i.fetchHistory);
   }
 
   Future<void> _start() async {

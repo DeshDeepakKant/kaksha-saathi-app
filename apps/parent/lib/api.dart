@@ -20,7 +20,9 @@ class Api {
   Map<String, dynamic>? get child =>
       (profile?['child'] as Map?)?.cast<String, dynamic>();
   List<dynamic> history = const [];
-  List<Map<String, dynamic>> pendingEvidence = [];
+
+  /// Offline sessions waiting to upload (see [flushPending]).
+  List<Map<String, dynamic>> pendingSessions = [];
   bool offline = false;
 
   bool get signedIn => _token != null;
@@ -34,7 +36,7 @@ class Api {
     if (pr != null) profile = jsonDecode(pr) as Map<String, dynamic>;
     final pe = p.getString('pending');
     if (pe != null)
-      pendingEvidence = (jsonDecode(pe) as List).cast<Map<String, dynamic>>();
+      pendingSessions = (jsonDecode(pe) as List).cast<Map<String, dynamic>>();
     final h = p.getString('history');
     if (h != null) history = jsonDecode(h) as List;
   }
@@ -48,7 +50,7 @@ class Api {
     }
     if (pack != null) await p.setString('pack', jsonEncode(pack));
     if (profile != null) await p.setString('profile', jsonEncode(profile));
-    await p.setString('pending', jsonEncode(pendingEvidence));
+    await p.setString('pending', jsonEncode(pendingSessions));
     await p.setString('history', jsonEncode(history));
   }
 
@@ -94,7 +96,7 @@ class Api {
     req.fields.addAll(fields);
     if (audio != null)
       req.files.add(
-        http.MultipartFile.fromBytes(field, audio, filename: 'turn.webm'),
+        http.MultipartFile.fromBytes(field, audio, filename: 'turn.wav'),
       );
     final r = await http.Response.fromStream(
       await req.send().timeout(const Duration(seconds: 90)),
@@ -151,18 +153,30 @@ class Api {
     } catch (_) {}
   }
 
-  void queueEvidence(Map<String, dynamic> e) {
-    pendingEvidence.add(e);
+  void queueSession(Map<String, dynamic> session) {
+    pendingSessions.add(session);
     save();
   }
 
-  /// Sync whatever evidence was recorded offline. Best-effort; safe to call repeatedly.
+  /// Upload offline sessions. Best-effort and safe to call repeatedly: the server skips a
+  /// session it already has, and anything that fails on the network stays queued.
   Future<void> flushPending() async {
-    if (pendingEvidence.isEmpty) return;
-    // Offline sessions record evidence locally; the server recomputes it from the session
-    // when the app was online. Anything recorded in pure tap mode is replayed as home_tap.
-    pendingEvidence.clear();
+    if (pendingSessions.isEmpty) return;
+    final left = <Map<String, dynamic>>[];
+    for (final s in List.of(pendingSessions)) {
+      try {
+        await post('/v1/parent/sessions/sync', s);
+      } on ApiError catch (e) {
+        // 404/422 will never succeed; keep auth and server errors for the next try.
+        if (e.status != 404 && e.status != 422) left.add(s);
+      } catch (_) {
+        left.add(s);
+      }
+    }
+    final sent = left.length < pendingSessions.length;
+    pendingSessions = left;
     await save();
+    if (sent) await fetchHistory();
   }
 
   Future<void> logout() async {

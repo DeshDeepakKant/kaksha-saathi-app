@@ -26,6 +26,10 @@ class ASRProvider(Protocol):
     def tts(self, text: str, language: str = "hi") -> bytes: ...
 
 
+_MIME = {"wav": "audio/wav", "webm": "audio/webm", "m4a": "audio/mp4", "aac": "audio/aac",
+         "mp3": "audio/mpeg", "ogg": "audio/ogg"}
+
+
 class SarvamASR:
     name = "sarvam"
 
@@ -38,7 +42,7 @@ class SarvamASR:
                    keyterms: list[str] | None = None) -> Transcript:
         headers = {"api-subscription-key": self.key}
         data = {"model": "saarika:v2.5", "language_code": "hi-IN" if language == "hi" else "en-IN"}
-        files = {"file": (filename, audio, "application/octet-stream")}
+        files = {"file": (filename, audio, _MIME.get(filename.rsplit(".", 1)[-1].lower(), "application/octet-stream"))}
         with httpx.Client(timeout=60) as c:
             r = c.post(f"{self.base}/speech-to-text", headers=headers, data=data, files=files)
             r.raise_for_status()

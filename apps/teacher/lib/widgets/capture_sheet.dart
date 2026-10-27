@@ -400,7 +400,7 @@ class _NotePanelState extends State<_NotePanel> {
         fields: fields,
         file: audio == null ? null : Uint8List.fromList(audio),
         fieldName: 'audio',
-        filename: 'note.webm',
+        filename: 'note.wav',
       );
       setState(() {
         _resp = (r as Map).cast<String, dynamic>();
@@ -423,9 +423,16 @@ class _NotePanelState extends State<_NotePanel> {
     final resp = _resp!;
     final drafts = (resp['drafts'] as List).cast<Map<String, dynamic>>();
     final accepted = <Map<String, dynamic>>[];
+    final absentRolls = <int>[];
     for (var i = 0; i < drafts.length; i++) {
       final d = drafts[i];
       final dec = _decisions['$i'];
+      if (dec == 'absent' || d['status'] == 'absent') {
+        // absences go to the register, not the evidence ledger (which only takes results)
+        final roll = d['roll_no'];
+        if (roll is int && !absentRolls.contains(roll)) absentRolls.add(roll);
+        continue;
+      }
       if (dec == 'skip' || dec == null || d['checkpoint_id'] == null) continue;
       accepted.add({
         'child_id': d['child_id'],
@@ -440,6 +447,12 @@ class _NotePanelState extends State<_NotePanel> {
       await Api.i.postJson('/v1/captures/${resp['capture_id']}/confirm', {
         'accepted': accepted,
       });
+      if (absentRolls.isNotEmpty) {
+        try {
+          // merge so earlier absences today are kept; best-effort, never blocks the evidence
+          await Api.i.setAttendance(widget.classId, absentRolls, merge: true);
+        } catch (_) {}
+      }
       widget.onChanged();
       if (!mounted) return;
       Navigator.of(context).pop(true);

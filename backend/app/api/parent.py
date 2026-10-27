@@ -187,7 +187,7 @@ async def session_turn(session_id: int, meta: str = Form(...), audio: UploadFile
     asr_status = "provided"
     if not transcript and audio_bytes:
         try:
-            transcript = get_asr().transcribe(audio_bytes, audio.filename or "turn.webm").text
+            transcript = get_asr().transcribe(audio_bytes, audio.filename or "turn.wav").text
             asr_status = "asr" if transcript else "silent"
         except Exception:  # ASR outage: judge as unheard rather than failing the turn
             transcript, asr_status = "", "failed"
@@ -232,6 +232,62 @@ def end_session(session_id: int, summary: str | None = Form(None), parent: Paren
                                                      if s in get_content().checkpoints])
     hs.summary_hi = text
     return {"summary_hi": text, "summary_status": status, "evidence": hs.evidence_count}
+
+
+class OfflineItem(BaseModel):
+    activity_ref: str
+    tap: str | None = None  # last tap; spoken items done offline carry none
+
+
+class OfflineSync(BaseModel):
+    started_at: datetime
+    ended_at: datetime | None = None
+    session_id: int | None = None  # set when the session started online and lost the network
+    items: list[OfflineItem] = Field(default_factory=list, max_length=50)
+
+
+@router.post("/parent/sessions/sync")
+def sync_offline_session(body: OfflineSync, parent: ParentAccount = Depends(current_parent),
+                         db: Session = Depends(get_db)):
+    """Upload practice done offline. Taps are re-judged here; spoken items can't be verified
+    offline, so they count as practised (no evidence). Safe to retry: a synced session is skipped."""
+    child = db.get(Child, parent.child_id)
+    now = datetime.now(timezone.utc)
+    started = min(body.started_at.astimezone(timezone.utc), now).replace(tzinfo=None)
+    ended = min((body.ended_at or now).astimezone(timezone.utc), now)
+    if body.session_id is not None:
+        hs = db.get(HomeSession, body.session_id)
+        if not hs or hs.child_id != child.id:
+            raise HTTPException(404, "session not found")
+        if hs.ended_at is not None:
+            return {"synced": False, "session_id": hs.id, "evidence": hs.evidence_count}
+    else:
+        hs = db.scalar(select(HomeSession).where(HomeSession.child_id == child.id,
+                                                 HomeSession.started_at == started))
+        if hs:
+            return {"synced": False, "session_id": hs.id, "evidence": hs.evidence_count}
+        hs = HomeSession(school_id=parent.school_id, child_id=child.id, started_at=started, offline=True)
+        db.add(hs)
+        db.flush()
+    content = get_content()
+    struggles, practised = set(), []
+    for it in body.items:
+        act = tutor.find_activity(it.activity_ref, content)
+        if not act:
+            continue
+        practised.append(act.checkpoint_id)
+        if not act.type.startswith("tap") or it.tap is None:
+            continue
+        verdict = tutor.judge(act, transcript=None, tap=it.tap)
+        tutor.record_evidence(db, school_id=parent.school_id, class_id=child.class_id, child_id=child.id,
+                              activity=act, verdict=verdict, home_session_id=hs.id)
+        hs.evidence_count += 1
+        if verdict != "correct" and act.checkpoint_id in content.checkpoints:
+            struggles.add(content.checkpoints[act.checkpoint_id].title_hi)
+    hs.ended_at = ended
+    hs.summary_hi, _ = features.home_summary(db, school_id=parent.school_id, activities=practised,
+                                             struggles=sorted(struggles))
+    return {"synced": True, "session_id": hs.id, "evidence": hs.evidence_count}
 
 
 @router.get("/parent/history")

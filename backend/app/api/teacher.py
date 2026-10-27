@@ -152,10 +152,14 @@ def set_consent(child_id: int, source: str = Form(...), teacher: Teacher = Depen
 
 @router.post("/classes/{class_id}/attendance")
 def set_attendance(class_id: int, absent_rolls: list[int] = Body(..., embed=True), teacher: Teacher = Depends(current_teacher),
-                   db: Session = Depends(get_db), day: date | None = None):
+                   db: Session = Depends(get_db), day: date | None = None, merge: bool = False):
+    """Replace the day's register (everyone not listed is present). With `merge=true` only the listed
+    rolls are marked absent and other children's rows are left alone (voice notes report a few at a time)."""
     cls = owned_class(class_id, teacher, db)
     day = day or date.today()
     for ch in ledger.class_children(db, cls.id):
+        if merge and ch.roll_no not in absent_rolls:
+            continue
         row = db.scalar(select(Attendance).where(Attendance.child_id == ch.id, Attendance.day == day))
         present = ch.roll_no not in absent_rolls
         if row:

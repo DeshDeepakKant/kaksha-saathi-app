@@ -8,6 +8,7 @@ import 'package:record/record.dart';
 
 import '../api.dart';
 import '../theme.dart';
+import '../wav.dart';
 import '../speech_web.dart' if (dart.library.js_interop) '../speech_js.dart';
 import '../l10n.dart';
 
@@ -43,6 +44,9 @@ class _SessionScreenState extends State<SessionScreen> {
   final _lines = <String>[];
   String _emotion = '😊';
   String? _safety;
+  // Turns finished offline, uploaded via /parent/sessions/sync when the network is back.
+  final _offlineItems = <Map<String, dynamic>>[];
+  final DateTime _startedAt = DateTime.now().toUtc();
 
   @override
   void initState() {
@@ -74,7 +78,9 @@ class _SessionScreenState extends State<SessionScreen> {
     }
   }
 
-  void _loadPack() {
+  /// Switches to the downloaded pack. With [resumeRef], continues at that activity if the
+  /// pack has it; returns whether it did.
+  bool _loadPack({String? resumeRef}) {
     final pack = Api.i.pack;
     if (pack == null) {
       setState(
@@ -83,18 +89,25 @@ class _SessionScreenState extends State<SessionScreen> {
           'पहले एक बार इंटरनेट से अभ्यास डाउनलोड करें।',
         ),
       );
-      return;
+      return false;
     }
+    final acts = (pack['activities'] as List)
+        .map((a) => (a as Map).cast<String, dynamic>())
+        .toList();
+    final at = resumeRef == null
+        ? -1
+        : acts.indexWhere((a) => a['ref'] == resumeRef);
     setState(() {
       _plan = pack;
-      _total = (pack['activities'] as List).length;
-      _activity = (pack['activities'] as List).isEmpty
-          ? null
-          : (pack['activities'] as List).first as Map<String, dynamic>;
+      _total = acts.length;
+      _index = at < 0 ? 0 : at;
+      _attempt = at < 0 ? 0 : _attempt;
+      _activity = acts.isEmpty ? null : acts[_index];
       _line = _canned('intro', _activity?['prompt_hi'] ?? '');
       _offline = true;
     });
     _speak(_line);
+    return at >= 0;
   }
 
   String _canned(String sit, String prompt) {
@@ -138,7 +151,7 @@ class _SessionScreenState extends State<SessionScreen> {
       final stream = await _rec
           .startStream(
             const RecordConfig(
-              encoder: AudioEncoder.opus,
+              encoder: AudioEncoder.pcm16bits,
               sampleRate: 16000,
               numChannels: 1,
             ),
@@ -169,7 +182,8 @@ class _SessionScreenState extends State<SessionScreen> {
     try {
       await _rec.stop();
       await _sub?.cancel();
-      audio = _chunks.takeBytes();
+      final pcm = _chunks.takeBytes();
+      if (pcm.isNotEmpty) audio = wavFromPcm16(pcm);
     } catch (_) {}
     setState(() {
       _recording = false;
@@ -215,10 +229,13 @@ class _SessionScreenState extends State<SessionScreen> {
       );
       if (!_offlineReloaded) {
         _offlineReloaded = true;
-        _loadPack();
+        // Replay this turn only if the pack has the same activity; otherwise start it fresh.
+        final resumed = _loadPack(resumeRef: act['ref'] as String?);
         await Future.delayed(const Duration(milliseconds: 100));
         final a = _activity;
-        if (a != null) await _sendLocal(a, tap: tap, transcript: transcript);
+        if (resumed && a != null) {
+          await _sendLocal(a, tap: tap, transcript: transcript);
+        }
       }
     }
   }
@@ -278,6 +295,10 @@ class _SessionScreenState extends State<SessionScreen> {
       _emotion = ok ? '🎉' : '💪';
       _lines.add(_line);
       if (advance) {
+        _offlineItems.add({
+          'activity_ref': act['ref'] ?? '',
+          if (type.startsWith('tap') && tap != null) 'tap': tap,
+        });
         _done++;
         _index++;
         _attempt = 0;
@@ -299,6 +320,14 @@ class _SessionScreenState extends State<SessionScreen> {
         await Api.i.endSession(_sessionId!, null);
         await Api.i.fetchHistory();
       } catch (_) {}
+    }
+    if (_offlineItems.isNotEmpty) {
+      Api.i.queueSession({
+        'started_at': _startedAt.toIso8601String(),
+        'ended_at': DateTime.now().toUtc().toIso8601String(),
+        if (_sessionId != null) 'session_id': _sessionId,
+        'items': _offlineItems,
+      });
     }
     await Api.i.flushPending();
     if (!mounted) return;

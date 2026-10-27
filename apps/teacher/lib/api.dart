@@ -167,8 +167,14 @@ class Api {
   Future<dynamic> checkpointTargets(String cpId) =>
       get('/v1/checkpoints/$cpId/targets');
   Future<dynamic> probe(String cpId) => get('/v1/checkpoints/$cpId/probe');
-  Future<dynamic> setAttendance(int classId, List<int> absentRolls) => postJson(
-    '/v1/classes/$classId/attendance',
+
+  /// Replaces the day's register; with [merge] only marks [absentRolls] absent, leaving others as-is.
+  Future<dynamic> setAttendance(
+    int classId,
+    List<int> absentRolls, {
+    bool merge = false,
+  }) => postJson(
+    '/v1/classes/$classId/attendance${merge ? '?merge=true' : ''}',
     {'absent_rolls': absentRolls},
   );
   Future<dynamic> markDone(int planId, String groupKey) =>
