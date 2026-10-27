@@ -29,6 +29,7 @@ from app.models.tables import (
     RoadmapItem, School, Teacher,
 )
 from app.services import ledger
+from app.services.subjects import resolve_subject
 from app.services.content import get_content
 from app.services.mastery import RESULT_VALUES
 from app.services.resolver import resolve_names
@@ -42,17 +43,9 @@ def _now() -> datetime:
     return datetime.now(timezone.utc)
 
 
-SUBJECT_ALIASES = {"math": "numeracy", "maths": "numeracy", "ganit": "numeracy",
-                   "hindi": "literacy", "reading": "literacy"}
-
-
-def _subject(subject: str) -> str:
-    """Normalise a subject; an unknown one is a 422, not an empty board."""
-    s = (subject or "").strip().lower()
-    s = SUBJECT_ALIASES.get(s, s)
-    if s not in get_content().subjects:
-        raise HTTPException(422, f"unknown subject '{subject}' (use numeracy or literacy)")
-    return s
+def _subject(subject: str, db: Session, teacher: Teacher) -> str:
+    """Normalise a subject for this school; an unknown one is a 422, not an empty board."""
+    return resolve_subject(db, teacher.school_id, subject)
 
 
 def toast_lines() -> dict:
@@ -180,7 +173,7 @@ def roster(class_id: int, teacher: Teacher = Depends(current_teacher), db: Sessi
 @router.get("/classes/{class_id}/roadmap")
 def get_roadmap(class_id: int, subject: str, teacher: Teacher = Depends(current_teacher),
                 db: Session = Depends(get_db)):
-    subject = _subject(subject)
+    subject = _subject(subject, db, teacher)
     cls = owned_class(class_id, teacher, db)
     rm = ledger.current_roadmap(db, cls.id, subject)
     content = get_content()
@@ -208,7 +201,7 @@ class RoadmapConfirmIn(BaseModel):
 @router.post("/classes/{class_id}/roadmap")
 def confirm_roadmap(class_id: int, body: RoadmapConfirmIn, teacher: Teacher = Depends(current_teacher),
                     db: Session = Depends(get_db)):
-    body.subject = _subject(body.subject)
+    body.subject = _subject(body.subject, db, teacher)
     cls = owned_class(class_id, teacher, db)
     content = get_content()
     if not 3 <= len(body.items) <= 80:
@@ -232,7 +225,7 @@ def confirm_roadmap(class_id: int, body: RoadmapConfirmIn, teacher: Teacher = De
 async def draft_roadmap(class_id: int, subject: str = Form(...), image: UploadFile = File(...),
                         teacher: Teacher = Depends(current_teacher), db: Session = Depends(get_db)):
     """Index photo → DRAFT chapters matched to graph checkpoints (teacher edits before confirming)."""
-    subject = _subject(subject)
+    subject = _subject(subject, db, teacher)
     cls = owned_class(class_id, teacher, db)
     data = await image.read()
     validate_media(None, data)
@@ -280,7 +273,7 @@ def _cp_labels(content, ids: list[str]) -> list[dict]:
 async def capture_note(class_id: int, transcript: str | None = Form(None), audio: UploadFile | None = File(None),
                        subject: str = Form("numeracy"), teacher: Teacher = Depends(current_teacher),
                        db: Session = Depends(get_db)):
-    subject = _subject(subject)
+    subject = _subject(subject, db, teacher)
     cls = owned_class(class_id, teacher, db)
     audio_bytes = await audio.read() if audio else None
     validate_media(audio_bytes, None)
@@ -327,7 +320,7 @@ async def capture_note(class_id: int, transcript: str | None = Form(None), audio
 async def capture_photo(class_id: int, child_id: int = Form(...), image: UploadFile = File(...),
                         subject: str = Form("numeracy"), teacher: Teacher = Depends(current_teacher),
                         db: Session = Depends(get_db)):
-    subject = _subject(subject)
+    subject = _subject(subject, db, teacher)
     cls = owned_class(class_id, teacher, db)
     ch = owned_child(child_id, teacher, db)
     if ch.class_id != cls.id:
@@ -544,7 +537,7 @@ def ai_activity(teacher: Teacher = Depends(current_teacher), db: Session = Depen
 @router.post("/classes/{class_id}/plans")
 def make_plan(class_id: int, subject: str, for_date: date | None = None, force: bool = False,
               teacher: Teacher = Depends(current_teacher), db: Session = Depends(get_db)):
-    subject = _subject(subject)
+    subject = _subject(subject, db, teacher)
     cls = owned_class(class_id, teacher, db)
     plan = ledger.todays_plan(db, cls, subject, for_date or _now().date(), get_content(), force=force)
     return {"id": plan.id, "subject": plan.subject, "for_date": plan.for_date.isoformat(),
@@ -554,7 +547,7 @@ def make_plan(class_id: int, subject: str, for_date: date | None = None, force: 
 @router.get("/classes/{class_id}/plans/latest")
 def latest_plan(class_id: int, subject: str, teacher: Teacher = Depends(current_teacher),
                 db: Session = Depends(get_db)):
-    subject = _subject(subject)
+    subject = _subject(subject, db, teacher)
     cls = owned_class(class_id, teacher, db)
     plan = db.scalar(select(Plan).where(Plan.class_id == cls.id, Plan.subject == subject)
                      .order_by(Plan.for_date.desc()).limit(1))
@@ -577,7 +570,7 @@ def plan_group_done(plan_id: int, group_key: str, teacher: Teacher = Depends(cur
 @router.get("/classes/{class_id}/board")
 def class_board(class_id: int, subject: str, teacher: Teacher = Depends(current_teacher),
                 db: Session = Depends(get_db)):
-    subject = _subject(subject)
+    subject = _subject(subject, db, teacher)
     cls = owned_class(class_id, teacher, db)
     grouping, _st, children, _rm = ledger.build_groups(db, cls, subject)
     by_id = {c.id: c for c in children}
@@ -596,7 +589,7 @@ def class_board(class_id: int, subject: str, teacher: Teacher = Depends(current_
 @router.get("/children/{child_id}/profile")
 def profile(child_id: int, subject: str, teacher: Teacher = Depends(current_teacher),
             db: Session = Depends(get_db)):
-    subject = _subject(subject)
+    subject = _subject(subject, db, teacher)
     ch = owned_child(child_id, teacher, db)
     rm = ledger.current_roadmap(db, ch.class_id, subject)
     return ledger.child_profile(db, ch, rm, get_content(), subject=subject,
@@ -609,7 +602,7 @@ def child_history(child_id: int, limit: int = 40, subject: str | None = None,
     ch = owned_child(child_id, teacher, db)
     q = select(Evidence).where(Evidence.child_id == ch.id, Evidence.status == "confirmed")
     if subject:
-        subject = _subject(subject)
+        subject = _subject(subject, db, teacher)
         cps = get_content().checkpoints
         q = q.where(Evidence.checkpoint_id.in_([c for c, cp in cps.items() if cp.subject == subject]))
     rows = db.scalars(q.order_by(Evidence.at.desc()).limit(limit))

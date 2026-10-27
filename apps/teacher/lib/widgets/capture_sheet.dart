@@ -18,10 +18,18 @@ class CaptureSheet extends StatefulWidget {
     required this.classId,
     required this.subject,
     this.presetChildren,
+    this.presetCheckpointId,
+    this.presetChildIds,
   });
   final int classId;
   final String subject;
   final List<Map<String, dynamic>>? presetChildren;
+
+  /// Open on the tap tab with this lesson selected (plan card "Check now", profile "Add evidence").
+  final String? presetCheckpointId;
+
+  /// Only show these children in the tap grid (null = whole class).
+  final List<int>? presetChildIds;
   @override
   State<CaptureSheet> createState() => _CaptureSheetState();
 }

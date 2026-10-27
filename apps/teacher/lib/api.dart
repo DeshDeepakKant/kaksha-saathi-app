@@ -90,6 +90,15 @@ class Api {
     }
   }
 
+  /// Writes that should survive a lost connection (taps, probes, confirms, attendance).
+  /// Returns `{'queued': true}` when it was parked for later; server 4xx still throws.
+  /// Stub for now: sends immediately. The outbox work replaces the body.
+  Future<dynamic> postQueued(String path, Map<String, dynamic> body) =>
+      postJson(path, body);
+
+  /// Number of writes waiting in the outbox (drives the "N waiting to send" chip).
+  final ValueNotifier<int> pendingCount = ValueNotifier<int>(0);
+
   Future<dynamic> delete(String path) async {
     final r = await http
         .delete(Uri.parse('$base$path'), headers: _headers)
