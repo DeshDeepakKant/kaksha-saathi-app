@@ -37,6 +37,14 @@ class Content:
     practice_items: list[dict]
     probes: dict[str, dict]
     subjects: list[str] = field(default_factory=lambda: ["numeracy", "literacy"])
+    # Ids of teacher-created topics registered at runtime (see register_custom). They live in
+    # `checkpoints` so every existing code path works, but they belong to one school, so the
+    # generic listings below (template roadmap, for_grade) never include them.
+    custom_ids: set[str] = field(default_factory=set)
+
+    def register_custom(self, cp: Checkpoint) -> None:
+        self.checkpoints[cp.id] = cp
+        self.custom_ids.add(cp.id)
 
     # -- graph helpers
     def prereqs(self, cid: str) -> tuple[str, ...]:
@@ -67,7 +75,7 @@ class Content:
     def for_grade(self, subject: str, grade: int, window: int = 1) -> list[Checkpoint]:
         return sorted(
             (c for c in self.checkpoints.values()
-             if c.subject == subject and abs(c.grade - grade) <= window),
+             if c.subject == subject and abs(c.grade - grade) <= window and c.id not in self.custom_ids),
             key=lambda c: (c.grade, c.chapter, c.id),
         )
 
@@ -75,7 +83,7 @@ class Content:
         """Deterministic starting roadmap: all checkpoints up to the class grade (and one below)."""
         items, seen = [], set()
         for c in sorted(self.checkpoints.values(), key=lambda c: (c.grade, c.chapter, c.title_hi)):
-            if c.subject != subject or c.grade > grade:
+            if c.subject != subject or c.grade > grade or c.id in self.custom_ids:
                 continue
             chapter = c.chapter if c.grade == grade else f"{c.chapter} ({c.grade})"
             key = (chapter, c.id)
@@ -126,3 +134,38 @@ def get_content() -> Content:
     if not content.descendants_ok():
         raise RuntimeError("competency graph is invalid (missing prereq or cycle)")
     return content
+
+
+# ------------------------------------------------------------------ teacher-created topics (overlay)
+def checkpoint_from_row(row) -> Checkpoint:
+    """A `CustomCheckpoint` row as a plain checkpoint: no prerequisites, no misconceptions, no
+    practice items. The teacher marks it by tap, so that is the only assessment route."""
+    return Checkpoint(
+        id=row.id, subject=row.subject, grade=int(row.grade), domain="custom", chapter=row.chapter,
+        title_hi=row.title_hi, title_en=row.title_en, prereqs=(), misconceptions=(),
+        assess_via=("teacher_tap",), item_types=(), nipun_ref="", language="hi",
+    )
+
+
+def load_custom_checkpoints(content: Content | None = None, db=None) -> int:
+    """Register every school's custom checkpoints into `content` (the cached one by default).
+
+    Called from the app lifespan after `init_db()`. The registry is per process, so this relies on
+    a single uvicorn worker (a second worker would only see topics created after its own start).
+    """
+    from sqlalchemy import select
+
+    from app.db import SessionLocal
+    from app.models.tables import CustomCheckpoint
+
+    content = content if content is not None else get_content()
+    own = db is None
+    db = db or SessionLocal()
+    try:
+        rows = list(db.scalars(select(CustomCheckpoint)))
+    finally:
+        if own:
+            db.close()
+    for r in rows:
+        content.register_custom(checkpoint_from_row(r))
+    return len(rows)

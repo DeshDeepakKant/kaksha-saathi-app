@@ -207,3 +207,29 @@ class UsageCounter(Base):
     day: Mapped[date] = mapped_column(Date)
     cost_inr: Mapped[float] = mapped_column(Float, default=0.0)
     __table_args__ = (UniqueConstraint("school_id", "day"),)
+
+
+class CustomSubject(Base):
+    """A subject a school added itself (the built-ins `numeracy` and `literacy` are not stored)."""
+    __tablename__ = "custom_subjects"
+    __table_args__ = (UniqueConstraint("school_id", "key"),)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    school_id: Mapped[int] = mapped_column(ForeignKey("schools.id"), index=True)
+    key: Mapped[str] = mapped_column(String(16))
+    name_en: Mapped[str] = mapped_column(String(60))
+    name_hi: Mapped[str] = mapped_column(String(60))
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow)
+
+
+class CustomCheckpoint(Base):
+    """A topic a teacher typed in. Registered into the in-memory content as a real checkpoint."""
+    __tablename__ = "custom_checkpoints"
+    id: Mapped[str] = mapped_column(String(80), primary_key=True)  # "C<school>-<n>"
+    school_id: Mapped[int] = mapped_column(ForeignKey("schools.id"), index=True)
+    subject: Mapped[str] = mapped_column(String(16))
+    grade: Mapped[int] = mapped_column(Integer)
+    chapter: Mapped[str] = mapped_column(String(120))
+    title_en: Mapped[str] = mapped_column(String(120))
+    title_hi: Mapped[str] = mapped_column(String(120))
+    created_by: Mapped[int | None] = mapped_column(ForeignKey("teachers.id"))
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow)

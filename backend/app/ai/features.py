@@ -154,6 +154,11 @@ def plan_day(session: Session, *, school_id: int, grade: int, subject: str, day:
                             "blackboard_hi": a.get("blackboard_hi", ""),
                             "reassessment": a.get("reassessment", {})} for a in acts],
         })
+    if not any(allowed.values()):
+        # nothing reviewed to choose from (e.g. a teacher's custom topics): don't pay for a model call
+        from app.services.plan_templates import template_plan
+        return Proposal("plan", template_plan(groups, content), "fallback",
+                        note="Template plan (no reviewed activities for these lessons).")
     import json
     user = json.dumps({"class": {"grade": grade, "subject": subject, "date": day, "size": sum(len(g["members"]) for g in groups)},
                        "groups": cand_blocks, "constraints": {"total_minutes": total_minutes, "no_printer": True}},

@@ -10,11 +10,13 @@ class Ks {
   static const card = Colors.white;
   static const accent = Color(0xFF0F6B5C); // deep teal — primary action
   static const accentSoft = Color(0xFFE3F0EC);
-  static const amber = Color(0xFFE7A13B); // needs practice
+  // Status colours double as text/icon colour on their soft backgrounds, so each is dark enough for
+  // >= 4.5:1 on its *Soft pair (amber was #E7A13B, about 2:1; rose 3.9:1; green 4.4:1).
+  static const amber = Color(0xFF935C00); // needs practice
   static const amberSoft = Color(0xFFFCF0DC);
-  static const rose = Color(0xFFC4494A); // needs intervention
+  static const rose = Color(0xFFB23C3D); // needs intervention
   static const roseSoft = Color(0xFFFAE5E4);
-  static const green = Color(0xFF2E7D4F); // on track
+  static const green = Color(0xFF2A7449); // on track
   static const greenSoft = Color(0xFFE4F2E8);
   static const muted = Color(0xFF5C6B69);
   static const line = Color(0xFFE6E0D4);

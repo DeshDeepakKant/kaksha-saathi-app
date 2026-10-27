@@ -61,6 +61,57 @@ def attendance_today(db: Session, class_id: int, day: date) -> dict[int, bool]:
         select(Attendance).where(Attendance.class_id == class_id, Attendance.day == day))}
 
 
+def nipun_ref(content: Content, checkpoint_id: str | None) -> str:
+    cp = content.checkpoints.get(checkpoint_id or "")
+    return getattr(cp, "nipun_ref", "") or "" if cp else ""
+
+
+def class_roadmap_cps(db: Session, cls: Classroom, subject: str) -> list[str]:
+    """Checkpoints this class works on in `subject`: confirmed roadmap, else the template."""
+    return roadmap_checkpoint_ids(current_roadmap(db, cls.id, subject)) or [
+        i["checkpoint_id"] for i in get_content().template_roadmap(subject, cls.grade)]
+
+
+def group_snapshot(db: Session, cls: Classroom, subject: str, at: datetime | None = None):
+    """Each child's group key (None = on track / not assessed) and gap rank as of `at` (None = now).
+
+    Same grouping rules as the board, but attendance is ignored: a child who was absent is not "moved".
+    """
+    children = class_children(db, cls.id)
+    ids = [c.id for c in children]
+    st = statuses_plain(child_statuses(db, ids, now=at, before=at))
+    cps = set(class_roadmap_cps(db, cls, subject))
+    learning = {cid: {cp: s for cp, s in cps_.items() if cp in cps} for cid, cps_ in st.items()}
+    needs = {cid for cid in learning if not learning[cid]}
+    grouping = group_class(get_content(), learning, needs)
+    keys: dict[int, str | None] = {cid: None for cid in ids}
+    for g in grouping.groups:
+        for m in g.members:
+            keys[m] = g.key
+    return keys, {cid: gap.rank for cid, gap in grouping.gaps.items()}, children
+
+
+def status_timeline(db: Session, child: Child, cps: list[str], now: datetime, weeks: int) -> list[dict]:
+    """Status counts over `cps` at each of the last `weeks` week-ends (the last point is `now`)."""
+    cp_set = set(cps)
+    evs = {cp: rows for cp, rows in evidence_rows(db, [child.id])[child.id].items() if cp in cp_set}
+    points = []
+    for i in range(weeks):
+        back = weeks - 1 - i
+        day = now.date() - timedelta(days=7 * back)
+        at = now if back == 0 else datetime.combine(day + timedelta(days=1), datetime.min.time())
+        at_aware = mastery._aware(at)
+        counts = {"on_track": 0, "needs_practice": 0, "needs_intervention": 0}
+        for cp, rows in evs.items():
+            seen = [e for e in rows if mastery._aware(e.at) < at_aware]
+            st = mastery.status_for(seen, at).status if seen else "not_started"
+            if st in counts:
+                counts[st] += 1
+        points.append({"week_end": day.isoformat(), **counts,
+                       "assessed": sum(counts.values()), "total": len(cp_set)})
+    return points
+
+
 def build_groups(db: Session, cls: Classroom, subject: str, now: datetime | None = None):
     children = class_children(db, cls.id)
     st = child_statuses(db, [c.id for c in children], now)
@@ -107,13 +158,20 @@ def todays_plan(db: Session, cls: Classroom, subject: str, for_date: date, conte
         generated_by = "fallback"
     by_roll = {c.roll_no: {"first_name": c.first_name, "id": c.id} for c in children}
     rendered = [render_group(g, by_roll) for g in payload.get("groups", [])]
+    cp_of = {g["key"]: g["checkpoint_id"] for g in groups}
     for g in rendered:
         members = [by_roll[r] for r in (g.get("members") or _member_rolls(groups, g["key"])) if r in by_roll]
         g["members"] = members
+        g["nipun_ref"] = nipun_ref(content, cp_of.get(g["key"]))
         act = content.activities.get(g.get("activity_id"))
         g["activity"] = ({k: act.get(k) for k in ("id", "title_hi", "steps_hi", "materials_hi", "blackboard_hi",
                                                  "source_doc")} if act else None)
-    payload = {"groups": rendered, "assess_first": next((g for g in groups if g["unassessed"]), None),
+    assess = next((g for g in groups if g["unassessed"]), None)
+    if assess:  # members as {id, first_name} like every other group (the planner input keeps roll numbers)
+        assess = {**assess, "nipun_ref": "",
+                  "members": [{"id": c.id, "first_name": c.first_name} for c in children
+                              if c.roll_no in set(assess["members"])]}
+    payload = {"groups": rendered, "assess_first": assess,
                "whole_class_note_hi": payload.get("whole_class_note_hi", ""),
                "today_observation_to_collect_hi": payload.get("today_observation_to_collect_hi", ""),
                "generated_by": generated_by}
@@ -127,6 +185,21 @@ def todays_plan(db: Session, cls: Classroom, subject: str, for_date: date, conte
     db.add(plan)
     db.flush()
     return plan
+
+
+def upgrade_plan_payload(payload: dict, children: list[Child], content: Content) -> dict:
+    """Plans saved before the v2 contract: members of `assess_first` were roll numbers, groups had no
+    `nipun_ref`. Returns a copy in the current shape (no-op for current plans)."""
+    out = dict(payload or {})
+    a = out.get("assess_first")
+    if a:
+        by_roll = {c.roll_no: c for c in children}
+        members = [m if isinstance(m, dict) else {"id": by_roll[m].id, "first_name": by_roll[m].first_name}
+                   for m in a.get("members", []) if isinstance(m, dict) or m in by_roll]
+        out["assess_first"] = {**a, "nipun_ref": a.get("nipun_ref", ""), "members": members}
+    out["groups"] = [g if "nipun_ref" in g else {**g, "nipun_ref": nipun_ref(content, g.get("key"))}
+                     for g in out.get("groups", [])]
+    return out
 
 
 def _member_rolls(groups: list[dict], key: str) -> list[int]:
@@ -152,6 +225,7 @@ def child_profile(db: Session, child: Child, roadmap: Roadmap | None, content: C
         misc = [x.misconception for x in e if x.misconception]
         items.append({
             "checkpoint_id": checkpoint_id, "chapter": chapter,
+            "nipun_ref": nipun_ref(content, checkpoint_id),
             "title_hi": cp.title_hi if cp else (custom_title or checkpoint_id),
             "title_en": cp.title_en if cp else "",
             "status": r.status if r else "not_started",

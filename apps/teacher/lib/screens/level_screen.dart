@@ -4,6 +4,9 @@ import '../api.dart';
 import '../theme.dart';
 import '../tts.dart';
 import '../l10n.dart';
+import '../widgets/capture_sheet.dart';
+import '../widgets/read_aloud_sheet.dart';
+import '../widgets/trend_chart.dart';
 
 /// One child's learning map: status per checkpoint, evidence timeline, misconception hints,
 /// probe suggestion, and a one-tap 3-item probe.
@@ -26,6 +29,9 @@ class LevelScreen extends StatefulWidget {
 class _LevelScreenState extends State<LevelScreen> {
   Map<String, dynamic>? _profile;
   List<dynamic> _history = const [];
+  List<Map<String, dynamic>> _trend = const [];
+  final Map<String, List<String>> _targets =
+      {}; // lesson id -> words to read aloud
   bool _loading = true;
   String? _error;
 
@@ -35,32 +41,139 @@ class _LevelScreenState extends State<LevelScreen> {
     _load();
   }
 
-  Future<void> _load() async {
-    setState(() {
-      _loading = true;
-      _error = null;
-    });
+  /// [silent] keeps the current profile on screen (pull-to-refresh, after saving evidence).
+  Future<void> _load({bool silent = false}) async {
+    if (!silent) {
+      setState(() {
+        _loading = true;
+        _error = null;
+      });
+    }
     try {
-      final p = await Api.i.profile(
-        widget.childId,
-        widget.subject,
-      ) as Map<String, dynamic>;
-      List<dynamic> h = const [];
-      try {
-        h = await Api.i.history(
-          widget.childId,
-          subject: widget.subject,
-        ) as List;
-      } catch (_) {}
+      final results = await Future.wait<dynamic>([
+        Api.i.profile(widget.childId, widget.subject),
+        Api.i
+            .history(widget.childId, subject: widget.subject)
+            .catchError((_) => const []),
+        Api.i
+            .get(
+              '/v1/children/${widget.childId}/timeline?subject=${widget.subject}&weeks=6',
+            )
+            .catchError((_) => null),
+      ]);
+      if (!mounted) return;
+      final p = results[0] as Map<String, dynamic>;
+      final tl = results[2];
       setState(() {
         _profile = p;
-        _history = h;
+        _history = results[1] is List ? results[1] as List : const [];
+        _trend = tl is Map && tl['points'] is List
+            ? (tl['points'] as List).whereType<Map<String, dynamic>>().toList()
+            : const [];
+        _error = null;
+        _loading = false;
       });
+      _loadTargets(p);
     } catch (e) {
-      setState(() => _error = e.toString());
-    } finally {
-      setState(() => _loading = false);
+      if (!mounted) return;
+      setState(() {
+        // a failed silent refresh keeps the old profile; a first load shows the retry state
+        if (!silent || _profile == null) _error = e.toString();
+        _loading = false;
+      });
+      if (silent && _profile != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              tr(
+                'Could not refresh. Showing the last copy.',
+                'ताज़ा नहीं हो पाया। पिछली जानकारी दिख रही है।',
+              ),
+            ),
+          ),
+        );
+      }
     }
+  }
+
+  /// Which "needs attention" lessons have words to read aloud (decides the Reading check button).
+  Future<void> _loadTargets(Map<String, dynamic> p) async {
+    final ids = _needs((p['items'] as List).cast<Map<String, dynamic>>())
+        .take(4)
+        .map((i) => i['checkpoint_id'] as String);
+    for (final id in ids) {
+      if (_targets.containsKey(id)) continue;
+      try {
+        final r = await Api.i.checkpointTargets(id);
+        final words = r is Map && r['has_items'] == true
+            ? ((r['targets'] as List?) ?? const [])
+                  .map((t) => '$t'.trim())
+                  .where((t) => t.isNotEmpty && !t.contains('?'))
+                  .take(6)
+                  .toList()
+            : <String>[];
+        if (!mounted) return;
+        setState(() => _targets[id] = words);
+      } catch (_) {
+        if (!mounted) return;
+        _targets[id] = const []; // no button; not worth an error on the profile
+      }
+    }
+  }
+
+  List<Map<String, dynamic>> _needs(List<Map<String, dynamic>> items) =>
+      items
+          .where(
+            (i) =>
+                i['status'] == 'needs_intervention' ||
+                i['status'] == 'needs_practice',
+          )
+          .toList()
+        ..sort(
+          (a, b) => (a['status'] == 'needs_intervention' ? 0 : 1).compareTo(
+            b['status'] == 'needs_intervention' ? 0 : 1,
+          ),
+        );
+
+  Future<void> _addEvidence({String? checkpointId}) async {
+    final changed = await showModalBottomSheet<bool>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Ks.paper,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(22)),
+      ),
+      builder: (_) => CaptureSheet(
+        classId: widget.classId,
+        subject: widget.subject,
+        presetCheckpointId: checkpointId,
+        presetChildIds: [widget.childId],
+      ),
+    );
+    if (changed == true) _load(silent: true);
+  }
+
+  Future<void> _readAloud(Map<String, dynamic> item) async {
+    final cp = item['checkpoint_id'] as String;
+    final words = _targets[cp] ?? const <String>[];
+    if (words.isEmpty) return;
+    final saved = await showModalBottomSheet<bool>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Ks.paper,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(22)),
+      ),
+      builder: (_) => ReadAloudSheet(
+        classId: widget.classId,
+        childId: widget.childId,
+        childName: widget.childName,
+        checkpointId: cp,
+        title: cpTitle(item),
+        targets: words,
+      ),
+    );
+    if (saved == true) _load(silent: true);
   }
 
   Future<void> _probe(Map<String, dynamic> item) async {
@@ -82,6 +195,10 @@ class _LevelScreenState extends State<LevelScreen> {
     final p = probe['probe'] as Map<String, dynamic>?;
     final items = (p?['items'] as List?)?.cast<Map<String, dynamic>>() ?? [];
     if (!mounted) return;
+    // state lives here, outside the builder, so rebuilds don't reset the answer
+    var passed = 0;
+    var saving = false;
+    String? saveError;
     await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -91,7 +208,6 @@ class _LevelScreenState extends State<LevelScreen> {
       ),
       builder: (ctx) => StatefulBuilder(
         builder: (ctx, setSt) {
-          var passed = 0;
           return Padding(
             padding: EdgeInsets.fromLTRB(
               20,
@@ -171,24 +287,62 @@ class _LevelScreenState extends State<LevelScreen> {
                     ),
                   ],
                 ),
+                if (saveError != null)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10),
+                    child: Text(
+                      saveError!,
+                      style: const TextStyle(color: Ks.rose, fontSize: 14),
+                    ),
+                  ),
                 const SizedBox(height: 10),
                 FilledButton.icon(
-                  onPressed: items.isEmpty
+                  onPressed: items.isEmpty || saving
                       ? null
                       : () async {
-                          await Api.i.postJson(
-                            '/v1/classes/${widget.classId}/captures/probe?child_id=${widget.childId}&checkpoint_id=$cp&passed=$passed&total=${items.length}',
-                            {},
-                          );
-                          if (ctx.mounted) Navigator.of(ctx).pop();
-                          _load();
+                          setSt(() {
+                            saving = true;
+                            saveError = null;
+                          });
+                          try {
+                            final r = await Api.i.postQueued(
+                              '/v1/classes/${widget.classId}/captures/probe?child_id=${widget.childId}&checkpoint_id=$cp&passed=$passed&total=${items.length}',
+                              {},
+                            );
+                            if (ctx.mounted) Navigator.of(ctx).pop();
+                            if (!mounted) return;
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  r is Map && r['queued'] == true
+                                      ? tr(
+                                          'No internet. Saved on this phone and will send later.',
+                                          'इंटरनेट नहीं है। फ़ोन में रखा है, बाद में भेजा जाएगा।',
+                                        )
+                                      : tr('Check saved.', 'जाँच दर्ज हो गई।'),
+                                ),
+                              ),
+                            );
+                            _load(silent: true);
+                          } catch (e) {
+                            if (!ctx.mounted) return;
+                            setSt(() {
+                              saving = false;
+                              saveError = tr(
+                                'Could not save the check. Try again. ($e)',
+                                'जाँच दर्ज नहीं हो पाई। दोबारा कोशिश करें। ($e)',
+                              );
+                            });
+                          }
                         },
                   icon: const Icon(Icons.save_rounded),
                   label: Text(
-                    tr(
-                      'Save check ($passed/${items.length})',
-                      'जाँच दर्ज करें ($passed/${items.length})',
-                    ),
+                    saving
+                        ? tr('Saving…', 'दर्ज हो रहा है…')
+                        : tr(
+                            'Save check ($passed/${items.length})',
+                            'जाँच दर्ज करें ($passed/${items.length})',
+                          ),
                   ),
                 ),
               ],
@@ -205,39 +359,59 @@ class _LevelScreenState extends State<LevelScreen> {
       appBar: AppBar(
         title: Text(widget.childName),
         actions: [
-          IconButton(icon: const Icon(Icons.refresh_rounded), onPressed: _load),
+          IconButton(
+            tooltip: tr('Refresh', 'ताज़ा करें'),
+            icon: const Icon(Icons.refresh_rounded),
+            onPressed: _loading ? null : () => _load(),
+          ),
         ],
       ),
       body: _loading
           ? const Loading()
-          : _error != null
-          ? EmptyState(icon: Icons.error_outline, text: _error!)
-          : _body(),
+          : _error != null || _profile == null
+          ? _errorView()
+          : RefreshIndicator(
+              color: Ks.accent,
+              onRefresh: () => _load(silent: true),
+              child: _body(),
+            ),
     );
   }
+
+  Widget _errorView() => Center(
+    child: SingleChildScrollView(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          EmptyState(
+            icon: Icons.error_outline,
+            text: tr(
+              'Could not load ${widget.childName}\'s profile.\n${_error ?? ''}',
+              '${widget.childName} की प्रोफ़ाइल नहीं खुल पाई।\n${_error ?? ''}',
+            ),
+          ),
+          FilledButton.icon(
+            onPressed: () => _load(),
+            icon: const Icon(Icons.refresh_rounded),
+            label: Text(tr('Retry', 'दोबारा कोशिश करें')),
+          ),
+        ],
+      ),
+    ),
+  );
 
   Widget _body() {
     final p = _profile!;
     final items = (p['items'] as List).cast<Map<String, dynamic>>();
-    final needs =
-        items
-            .where(
-              (i) =>
-                  i['status'] == 'needs_intervention' ||
-                  i['status'] == 'needs_practice',
-            )
-            .toList()
-          ..sort(
-            (a, b) => (a['status'] == 'needs_intervention' ? 0 : 1).compareTo(
-              b['status'] == 'needs_intervention' ? 0 : 1,
-            ),
-          );
+    final needs = _needs(items);
+    final titles = {for (final i in items) i['checkpoint_id'] as String: i};
     final assessed = items.where((i) => i['status'] != 'not_started').length;
     final chapters = <String, List<Map<String, dynamic>>>{};
     for (final i in items) {
       (chapters[i['chapter'] as String? ?? tr('Other', 'अन्य')] ??= []).add(i);
     }
     return ListView(
+      physics: const AlwaysScrollableScrollPhysics(),
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
       children: [
         Row(
@@ -269,7 +443,9 @@ class _LevelScreenState extends State<LevelScreen> {
                   Text(
                     widget.subject == 'numeracy'
                         ? tr('Maths', 'गणित')
-                        : tr('Hindi', 'हिंदी'),
+                        : widget.subject == 'literacy'
+                        ? tr('Hindi', 'हिंदी')
+                        : widget.subject,
                     style: const TextStyle(color: Ks.muted),
                   ),
                 ],
@@ -277,7 +453,17 @@ class _LevelScreenState extends State<LevelScreen> {
             ),
           ],
         ),
+        const SizedBox(height: 12),
+        FilledButton.tonalIcon(
+          onPressed: () => _addEvidence(),
+          icon: const Icon(Icons.add_task_rounded),
+          label: Text(tr('Add evidence', 'साक्ष्य जोड़ें')),
+        ),
         const SizedBox(height: 14),
+        if (_trend.length >= 2) ...[
+          SectionTitle(tr('Progress over time', 'समय के साथ प्रगति')),
+          TrendCard(points: _trend),
+        ],
         if (needs.isNotEmpty) ...[
           SectionTitle(tr('Needs attention now', 'अभी ध्यान दें')),
           ...needs.take(4).map((i) => _focusCard(i)),
@@ -311,7 +497,7 @@ class _LevelScreenState extends State<LevelScreen> {
         if (_history.isNotEmpty) ...[
           SectionTitle(tr('Recent evidence', 'हाल के सबूत')),
           for (final h in _history.take(12))
-            _historyRow(h as Map<String, dynamic>),
+            _historyRow(h as Map<String, dynamic>, titles),
         ],
       ],
     );
@@ -354,6 +540,7 @@ class _LevelScreenState extends State<LevelScreen> {
                 StatusChip(i['status'], compact: true),
               ],
             ),
+            if (_nipun(i) != null) _nipunChip(i),
             if (misc != null)
               Padding(
                 padding: const EdgeInsets.only(top: 6),
@@ -377,15 +564,26 @@ class _LevelScreenState extends State<LevelScreen> {
                 ),
               ),
             const SizedBox(height: 8),
-            OutlinedButton.icon(
-              onPressed: () => _probe(i),
-              icon: const Icon(Icons.quiz_rounded, size: 18),
-              label: Text(
-                tr(
-                  'Check in 2 minutes (with questions)',
-                  '2 मिनट में जाँचें (प्रश्न सहित)',
+            Wrap(
+              spacing: 8,
+              children: [
+                OutlinedButton.icon(
+                  onPressed: () => _probe(i),
+                  icon: const Icon(Icons.quiz_rounded, size: 18),
+                  label: Text(
+                    tr(
+                      'Check in 2 minutes (with questions)',
+                      '2 मिनट में जाँचें (प्रश्न सहित)',
+                    ),
+                  ),
                 ),
-              ),
+                if ((_targets[i['checkpoint_id']] ?? const []).isNotEmpty)
+                  OutlinedButton.icon(
+                    onPressed: () => _readAloud(i),
+                    icon: const Icon(Icons.record_voice_over_rounded, size: 18),
+                    label: Text(tr('Reading check', 'पढ़ने की जाँच')),
+                  ),
+              ],
             ),
           ],
         ),
@@ -393,18 +591,64 @@ class _LevelScreenState extends State<LevelScreen> {
     );
   }
 
+  String? _nipun(Map<String, dynamic> i) {
+    final n = (i['nipun_ref'] as String?)?.trim();
+    return n == null || n.isEmpty ? null : n;
+  }
+
+  /// Small "NIPUN" reference chip (the national learning-outcome code for this lesson).
+  Widget _nipunChip(Map<String, dynamic> i) => Padding(
+    padding: const EdgeInsets.only(top: 4),
+    child: Align(
+      alignment: Alignment.centerLeft,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+        decoration: BoxDecoration(
+          color: Ks.accentSoft,
+          borderRadius: BorderRadius.circular(999),
+        ),
+        child: Text(
+          'NIPUN ${_nipun(i)}',
+          style: const TextStyle(
+            fontSize: 11,
+            color: Ks.accent,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
+    ),
+  );
+
   Widget _row(Map<String, dynamic> i) => Padding(
-    padding: const EdgeInsets.symmetric(vertical: 6),
+    padding: const EdgeInsets.symmetric(vertical: 4),
     child: Row(
       children: [
-        Expanded(child: Text(cpTitle(i), style: const TextStyle(fontSize: 15))),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(cpTitle(i), style: const TextStyle(fontSize: 15)),
+              if (_nipun(i) != null) _nipunChip(i),
+            ],
+          ),
+        ),
         const SizedBox(width: 8),
         StatusChip(i['status'], compact: true),
+        IconButton(
+          tooltip: tr('Check this', 'यह जाँचें'),
+          visualDensity: VisualDensity.compact,
+          icon: const Icon(Icons.add_task_rounded, size: 20, color: Ks.accent),
+          onPressed: () =>
+              _addEvidence(checkpointId: i['checkpoint_id'] as String),
+        ),
       ],
     ),
   );
 
-  Widget _historyRow(Map<String, dynamic> h) {
+  Widget _historyRow(
+    Map<String, dynamic> h,
+    Map<String, Map<String, dynamic>> lessons,
+  ) {
     final result = h['result'] as String? ?? '';
     final icon = result == 'correct'
         ? Icons.check_rounded
@@ -414,6 +658,8 @@ class _LevelScreenState extends State<LevelScreen> {
         : (result == 'partial' ? Ks.amber : Ks.rose);
     final at = DateTime.tryParse(h['at'] as String? ?? '')?.toLocal();
     final when = at == null ? '' : '${at.day}/${at.month}';
+    final id = h['checkpoint_id'] as String? ?? '';
+    final lesson = lessons[id];
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 3),
       child: Row(
@@ -422,7 +668,7 @@ class _LevelScreenState extends State<LevelScreen> {
           const SizedBox(width: 8),
           Expanded(
             child: Text(
-              _shortCp(h['checkpoint_id'] as String? ?? ''),
+              lesson != null ? cpTitle(lesson) : _shortCp(id),
               style: const TextStyle(fontSize: 14),
             ),
           ),
@@ -446,7 +692,7 @@ class _LevelScreenState extends State<LevelScreen> {
         'home_voice': tr('Home', 'घर'),
         'home_tap': tr('Home', 'घर'),
       }[s] ??
-      s;
+      tr('Other', 'अन्य');
   String _miscHi(String m) =>
       {
         'smaller_minus_larger': tr(

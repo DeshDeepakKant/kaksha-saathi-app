@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -14,12 +16,16 @@ Future<void> main() async {
   SharedPreferences.setPrefix('ks_teacher.');
   await Lang.load();
   await Api.i.loadSession();
+  // Send anything parked while offline in a previous run (no-op when the queue is empty).
+  unawaited(Api.i.flushOutbox());
   // A rejected session (expired token, or a token from another server) goes back to login.
   Api.i.onSessionExpired = () => _nav.currentState?.pushAndRemoveUntil(
     MaterialPageRoute(builder: (_) => const LoginScreen()),
     (_) => false,
   );
   runApp(const KakshaTeacherApp());
+  // Retry parked writes about once a minute while the app is open.
+  Api.i.startOutboxTimer();
 }
 
 final _nav = GlobalKey<NavigatorState>();

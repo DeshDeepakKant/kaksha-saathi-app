@@ -9,16 +9,17 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
-from app.api import parent, teacher
+from app.api import parent, setup, teacher
 from app.config import get_settings
 from app.db import init_db
-from app.services.content import get_content
+from app.services.content import get_content, load_custom_checkpoints
 
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
     init_db()
     get_content()  # fail fast on bad content
+    load_custom_checkpoints()  # teacher-made topics become real checkpoints (single-worker registry)
     if get_settings().seed_on_startup:
         from app.seed import seed_if_empty
         seed_if_empty()  # demo school on a fresh database only
@@ -64,6 +65,7 @@ def readyz():
 
 
 app.include_router(teacher.router)
+app.include_router(setup.router)
 app.include_router(parent.router)
 
 # Mounted AFTER every route: serves the landing page at "/" and the two Flutter web builds.

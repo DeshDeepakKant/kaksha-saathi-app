@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
@@ -5,19 +6,38 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'l10n.dart';
+import 'outbox.dart';
 
 /// API base. Override at build time:
 ///   flutter build web --dart-define=API_BASE=https://host
 /// Defaults: web → same origin; Android emulator → host machine.
 class Api {
-  Api._();
+  Api._([http.Client? client, Outbox? outbox])
+    : _client = client ?? http.Client(),
+      _outbox = outbox ?? Outbox();
   static final Api i = Api._();
+
+  /// For unit tests: inject a fake HTTP client (and optionally a small-cap outbox).
+  @visibleForTesting
+  factory Api.forTest(http.Client client, {Outbox? outbox}) =>
+      Api._(client, outbox);
+
+  final http.Client _client;
+  final Outbox _outbox;
+
+  /// Pauses before the one automatic GET retry, and the first-attempt timeout for queued writes.
+  /// Fields (not consts) so tests can shrink them.
+  @visibleForTesting
+  Duration retryDelay = const Duration(seconds: 3);
+  @visibleForTesting
+  Duration queuedTimeout = const Duration(seconds: 30);
   static const _define = String.fromEnvironment('API_BASE');
   late final String base = _define.isNotEmpty
       ? _define
       : (kIsWeb ? Uri.base.origin : 'http://10.0.2.2:8000');
 
   String? _token;
+  String? _teacherId; // owner stamp for outbox entries
   Map<String, dynamic>? me;
   final _cacheStore = <String, dynamic>{};
 
@@ -26,6 +46,8 @@ class Api {
   Future<void> loadSession() async {
     final p = await SharedPreferences.getInstance();
     _token = p.getString('token');
+    _teacherId = p.getString('teacher_id');
+    await _outbox.load(); // updates pendingCount
     final cache = p.getString('cache');
     if (cache != null && cache.isNotEmpty) {
       _cacheStore.addAll(jsonDecode(cache) as Map<String, dynamic>);
@@ -35,6 +57,7 @@ class Api {
   Future<void> _save() async {
     final p = await SharedPreferences.getInstance();
     if (_token != null) await p.setString('token', _token!);
+    if (_teacherId != null) await p.setString('teacher_id', _teacherId!);
     await p.setString('cache', jsonEncode(_cacheStore));
   }
 
@@ -44,15 +67,16 @@ class Api {
 
   /// GET with offline fallback: if the request fails, the last successful copy is returned
   /// with `offline: true` added (so screens can tell the teacher what is stale).
+  /// Render's free server sleeps and takes up to ~40 s to wake, so the timeout is 45 s and a
+  /// timeout or 502/503/504 is retried once after a short pause.
   Future<dynamic> get(String path) async {
     try {
-      final r = await http
-          .get(Uri.parse('$base$path'), headers: _headers)
-          .timeout(const Duration(seconds: 30));
+      final r = await _getRaw(path);
       if (r.statusCode >= 400) throw _fail(r);
       final data = jsonDecode(utf8.decode(r.bodyBytes));
       _cacheStore[path] = data;
       await _save();
+      _kickOutbox();
       return data;
     } catch (e) {
       // An expired session is not "offline": let the caller send the teacher back to login.
@@ -66,41 +90,169 @@ class Api {
     }
   }
 
+  static bool _isGateway(int status) =>
+      status == 502 || status == 503 || status == 504;
+
+  Future<http.Response> _getRaw(String path) async {
+    for (var attempt = 0; ; attempt++) {
+      try {
+        final r = await _client
+            .get(Uri.parse('$base$path'), headers: _headers)
+            .timeout(const Duration(seconds: 45));
+        if (attempt == 0 && _isGateway(r.statusCode)) {
+          await Future<void>.delayed(retryDelay);
+          continue;
+        }
+        return r;
+      } on TimeoutException {
+        if (attempt > 0) rethrow;
+        await Future<void>.delayed(retryDelay);
+      }
+    }
+  }
+
+  Future<http.Response> _postRaw(
+    String path,
+    Map<String, dynamic> body,
+    Duration timeout,
+  ) => _client
+      .post(
+        Uri.parse('$base$path'),
+        headers: {..._headers, 'content-type': 'application/json'},
+        body: jsonEncode(body),
+      )
+      .timeout(timeout);
+
   Future<dynamic> postJson(String path, Map<String, dynamic> body) async {
     try {
-      final r = await http
-          .post(
-            Uri.parse('$base$path'),
-            headers: {..._headers, 'content-type': 'application/json'},
-            body: jsonEncode(body),
-          )
-          .timeout(const Duration(seconds: 120));
+      final r = await _postRaw(path, body, const Duration(seconds: 120));
       if (r.statusCode >= 400) throw _fail(r);
+      _kickOutbox();
       return jsonDecode(utf8.decode(r.bodyBytes));
     } on ApiError {
       rethrow;
     } catch (_) {
-      throw ApiError(
-        tr(
-          'No internet. Try again when the network is back.',
-          'इंटरनेट नहीं है। नेटवर्क वापस आने पर दोबारा कोशिश करें।',
-        ),
-        0,
-      );
+      throw ApiError.network();
     }
   }
 
+  // ---- offline outbox
+
   /// Writes that should survive a lost connection (taps, probes, confirms, attendance).
-  /// Returns `{'queued': true}` when it was parked for later; server 4xx still throws.
-  /// Stub for now: sends immediately. The outbox work replaces the body.
-  Future<dynamic> postQueued(String path, Map<String, dynamic> body) =>
-      postJson(path, body);
+  /// Tries the request now; on a network failure/timeout, 401, 408/429 or 5xx it is parked in
+  /// the outbox (persisted) and `{'queued': true}` is returned. Other 4xx still throw.
+  /// If older writes are already waiting, they go first so the order is kept.
+  ///
+  /// Replay safety (the server may have processed a request whose reply was lost):
+  ///  - `/captures/tap`: a `client_uuid` is added to the body; the backend de-duplicates on it.
+  ///  - `/captures/probe`: a `client_uuid` query param is appended to the path; the backend
+  ///    de-duplicates on it. The extended path is what gets parked, so replays reuse the id.
+  ///  - `/captures/{id}/confirm`: safe, a second send gets 409 "already handled", which is dropped.
+  ///  - `/attendance`: safe (sets a value); `setAttendance` pins `day` so a late replay hits the right date.
+  ///  - `/plans/{id}/groups/{key}/done`: safe, idempotent on the server.
+  Future<dynamic> postQueued(String path, Map<String, dynamic> body) async {
+    final b = Map<String, dynamic>.of(body);
+    final uri = Uri.parse(path);
+    if (uri.path.endsWith('/captures/tap') && b['client_uuid'] == null) {
+      b['client_uuid'] = newClientUuid();
+    }
+    if (uri.path.endsWith('/captures/probe') &&
+        !uri.queryParameters.containsKey('client_uuid')) {
+      path = '$path${uri.hasQuery ? '&' : '?'}client_uuid=${newClientUuid()}';
+    }
+    final entry = OutboxEntry(
+      id: newClientUuid(),
+      path: path,
+      body: b,
+      createdAt: DateTime.now().millisecondsSinceEpoch,
+      owner: _teacherId ?? '',
+    );
+    if (!_outbox.isEmpty) {
+      await flushOutbox();
+      if (!_outbox.isEmpty) {
+        await _outbox.add(entry);
+        return {'queued': true};
+      }
+    }
+    http.Response r;
+    try {
+      r = await _postRaw(path, b, queuedTimeout);
+    } catch (_) {
+      await _outbox.add(entry);
+      return {'queued': true};
+    }
+    if (r.statusCode < 400) {
+      _kickOutbox();
+      return jsonDecode(utf8.decode(r.bodyBytes));
+    }
+    final err = _fail(r); // 401 also sends the teacher back to login
+    if (_classify(r.statusCode) == OutboxResult.retry) {
+      await _outbox.add(entry);
+      return {'queued': true};
+    }
+    throw err;
+  }
 
   /// Number of writes waiting in the outbox (drives the "N waiting to send" chip).
-  final ValueNotifier<int> pendingCount = ValueNotifier<int>(0);
+  ValueNotifier<int> get pendingCount => _outbox.pending;
+
+  static OutboxResult _classify(int status) {
+    if (status < 400) return OutboxResult.sent;
+    // 401: the session expired; keep the write for after the teacher signs in again.
+    if (status == 401 || status == 408 || status == 429 || status >= 500) {
+      return OutboxResult.retry;
+    }
+    return OutboxResult.drop;
+  }
+
+  Future<OutboxResult> _replay(OutboxEntry e) async {
+    if (_token == null) return OutboxResult.retry;
+    // Never send one teacher's parked writes under another teacher's login.
+    if (e.owner != (_teacherId ?? '')) return OutboxResult.drop;
+    http.Response r;
+    try {
+      r = await _postRaw(e.path, e.body, queuedTimeout);
+    } catch (_) {
+      return OutboxResult.retry;
+    }
+    final res = _classify(r.statusCode);
+    if (r.statusCode == 401) _fail(r);
+    // A 500 that never clears is a server bug, not a cold start: give up after a few tries so
+    // it cannot block the queue forever. (Gateway errors and network failures never count.)
+    final poison =
+        r.statusCode >= 500 && !_isGateway(r.statusCode) && e.attempts + 1 >= 8;
+    return res == OutboxResult.retry && poison ? OutboxResult.drop : res;
+  }
+
+  /// Replays the outbox in order. Stops at the first network failure or retryable error; drops an
+  /// entry the server refuses (4xx). Safe to call any time; only one run at a time.
+  Future<void> flushOutbox() async {
+    if (!loggedIn || _outbox.isEmpty) return;
+    try {
+      await _outbox.flush(_replay);
+    } catch (_) {}
+  }
+
+  Timer? _kick;
+  Timer? _ticker;
+
+  /// After a successful request the network is clearly up: flush soon (debounced).
+  void _kickOutbox() {
+    if (_outbox.isEmpty || _outbox.flushing || _kick != null) return;
+    _kick = Timer(const Duration(seconds: 2), () {
+      _kick = null;
+      unawaited(flushOutbox());
+    });
+  }
+
+  /// Retry parked writes every [every] while the app runs (main.dart starts this).
+  void startOutboxTimer({Duration every = const Duration(seconds: 60)}) {
+    _ticker?.cancel();
+    _ticker = Timer.periodic(every, (_) => unawaited(flushOutbox()));
+  }
 
   Future<dynamic> delete(String path) async {
-    final r = await http
+    final r = await _client
         .delete(Uri.parse('$base$path'), headers: _headers)
         .timeout(const Duration(seconds: 30));
     if (r.statusCode >= 400) throw _fail(r);
@@ -122,9 +274,12 @@ class Api {
         http.MultipartFile.fromBytes(fieldName, file, filename: filename),
       );
     }
-    final streamed = await req.send().timeout(const Duration(seconds: 180));
+    final streamed = await _client
+        .send(req)
+        .timeout(const Duration(seconds: 180));
     final r = await http.Response.fromStream(streamed);
     if (r.statusCode >= 400) throw _fail(r);
+    _kickOutbox();
     return jsonDecode(utf8.decode(r.bodyBytes));
   }
 
@@ -140,11 +295,12 @@ class Api {
   }
 
   static String _detail(http.Response r) {
+    Object? detail;
     try {
       final j = jsonDecode(utf8.decode(r.bodyBytes));
-      if (j is Map && j['detail'] != null) return j['detail'].toString();
+      if (j is Map) detail = j['detail'];
     } catch (_) {}
-    return 'HTTP ${r.statusCode}';
+    return ApiError.friendly(r.statusCode, detail);
   }
 
   Future<Map<String, dynamic>> login(String code, String pin) async {
@@ -153,15 +309,27 @@ class Api {
       'pin': pin,
     }) as Map<String, dynamic>;
     _token = r['token'] as String;
+    final t = r['teacher'];
+    _teacherId = (t is Map && t['id'] != null) ? '${t['id']}' : '';
+    // Writes parked by a different teacher never go out under this login.
+    await _outbox.removeWhere((e) => e.owner != _teacherId);
     await _save();
     return r;
   }
 
   Future<Map<String, dynamic>> fetchMe() async {
     me = await get('/v1/me') as Map<String, dynamic>;
+    if (_teacherId == null && me!['id'] != null) {
+      _teacherId = '${me!['id']}';
+      await _save();
+    }
     return me!;
   }
 
+  /// Clears the session and cached reads. The outbox is deliberately KEPT: a 401 (expired token)
+  /// also lands here and must not eat the teacher's unsent taps. Each entry is stamped with its
+  /// teacher id, and [login] drops entries from a different teacher, so nothing is ever sent
+  /// under someone else's login.
   Future<void> logout() async {
     _token = null;
     _cacheStore.clear();
@@ -175,10 +343,23 @@ class Api {
   Future<dynamic> roster(int classId) => get('/v1/classes/$classId/roster');
   Future<dynamic> board(int classId, String subject) =>
       get('/v1/classes/$classId/board?subject=$subject');
-  Future<dynamic> plan(int classId, String subject, {bool force = false}) =>
-      postJson('/v1/classes/$classId/plans?subject=$subject&force=$force', {});
-  Future<dynamic> latestPlan(int classId, String subject) =>
-      get('/v1/classes/$classId/plans/latest?subject=$subject');
+
+  /// [forDate] (yyyy-mm-dd) plans for another day; omitted means today.
+  Future<dynamic> plan(
+    int classId,
+    String subject, {
+    bool force = false,
+    String? forDate,
+  }) => postJson(
+    '/v1/classes/$classId/plans?subject=$subject&force=$force'
+    '${forDate == null ? '' : '&for_date=$forDate'}',
+    {},
+  );
+  Future<dynamic> latestPlan(int classId, String subject, {String? forDate}) =>
+      get(
+        '/v1/classes/$classId/plans/latest?subject=$subject'
+        '${forDate == null ? '' : '&for_date=$forDate'}',
+      );
   Future<dynamic> profile(int childId, String subject) =>
       get('/v1/children/$childId/profile?subject=$subject');
   Future<dynamic> history(int childId, {String? subject}) => get(
@@ -195,10 +376,17 @@ class Api {
     int classId,
     List<int> absentRolls, {
     bool merge = false,
-  }) => postJson(
-    '/v1/classes/$classId/attendance${merge ? '?merge=true' : ''}',
-    {'absent_rolls': absentRolls},
-  );
+  }) {
+    // Pin the day: a parked write replayed after midnight must still mark the day it was taken.
+    final n = DateTime.now();
+    final day =
+        '${n.year}-${n.month.toString().padLeft(2, '0')}-${n.day.toString().padLeft(2, '0')}';
+    return postQueued(
+      '/v1/classes/$classId/attendance?day=$day${merge ? '&merge=true' : ''}',
+      {'absent_rolls': absentRolls},
+    );
+  }
+
   Future<dynamic> markDone(int planId, String groupKey) =>
       postJson('/v1/plans/$planId/groups/$groupKey/done', {});
   Future<dynamic> aiActivity() => get('/v1/ai_activity');
@@ -207,8 +395,58 @@ class Api {
 
 class ApiError implements Exception {
   ApiError(this.message, this.status);
+
+  /// The request never reached the server (no internet, timeout).
+  factory ApiError.network() => ApiError(
+    tr(
+      'No internet. Try again when the network is back.',
+      'इंटरनेट नहीं है। नेटवर्क वापस आने पर दोबारा कोशिश करें।',
+    ),
+    0,
+  );
+
   final String message;
   final int status;
+
+  /// Short, teacher-readable text for a failed response. [detail] is FastAPI's `detail`: a string,
+  /// or a list of validation objects `{loc, msg, type}` on 422.
+  static String friendly(int status, Object? detail) {
+    if (status == 502 || status == 503 || status == 504) {
+      return tr(
+        'Server is waking up, try again in a minute',
+        'सर्वर चालू हो रहा है, एक मिनट बाद दोबारा कोशिश करें',
+      );
+    }
+    if (status >= 500) {
+      return tr(
+        'Server problem, please try again',
+        'सर्वर में समस्या है, कृपया दोबारा कोशिश करें',
+      );
+    }
+    if (detail is String && detail.isNotEmpty) return detail;
+    if (detail is List && detail.isNotEmpty) {
+      final parts = <String>[];
+      for (final d in detail.take(3)) {
+        if (d is Map) {
+          final loc = d['loc'];
+          final field = loc is List
+              ? loc.whereType<String>().where(
+                  (x) => x != 'body' && x != 'query',
+                )
+              : const <String>[];
+          final msg = '${d['msg'] ?? ''}'.trim();
+          parts.add(field.isEmpty ? msg : '${field.last}: $msg');
+        } else {
+          parts.add('$d');
+        }
+      }
+      return '${tr('Please check the details', 'कृपया जानकारी जाँचें')}: '
+          '${parts.where((x) => x.isNotEmpty).join('; ')}';
+    }
+    if (detail != null) return detail.toString();
+    return tr('Request failed ($status)', 'अनुरोध सफल नहीं हुआ ($status)');
+  }
+
   @override
-  String toString() => message;
+  String toString() => status >= 500 ? friendly(status, null) : message;
 }
