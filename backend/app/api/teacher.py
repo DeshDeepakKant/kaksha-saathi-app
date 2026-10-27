@@ -21,7 +21,7 @@ from sqlalchemy.orm import Session
 
 from app.ai import features
 from app.ai.llm import budget_remaining
-from app.api.deps import current_teacher, owned_child, owned_class, validate_media
+from app.api.deps import current_teacher, image_media_type, owned_child, owned_class, validate_media
 from app.core.security import make_token, verify_pin
 from app.db import get_db
 from app.models.tables import (
@@ -247,10 +247,12 @@ async def draft_roadmap(class_id: int, subject: str = Form(...), image: UploadFi
     validate_media(None, data)
     content = get_content()
     p = features.draft_roadmap(db, school_id=cls.school_id, image=data,
-                               media_type=image.content_type or "image/jpeg", subject=subject, grade=cls.grade)
+                               media_type=image_media_type(data), subject=subject, grade=cls.grade)
     items = []
     for ch in p.payload.get("chapters", []):
-        items.append({"chapter": ch["title"], "checkpoint_id": None, "custom_title": ch["title"],
+        # a chapter with no sub-topics is itself a topic: match it to an existing lesson when possible
+        match = None if ch["subtopics"] else _match_checkpoint(content, ch["title"], subject, cls.grade)
+        items.append({"chapter": ch["title"], "checkpoint_id": match, "custom_title": None if match else ch["title"],
                       "position": len(items)})
         for sub in ch["subtopics"]:
             match = _match_checkpoint(content, sub["text"], subject, cls.grade)
@@ -347,7 +349,7 @@ async def capture_photo(class_id: int, child_id: int = Form(...), image: UploadF
     rm = ledger.current_roadmap(db, cls.id, subject)
     cids = ledger.roadmap_checkpoint_ids(rm) or [c.id for c in content.for_grade(subject, cls.grade)]
     p = features.analyze_photo(db, school_id=cls.school_id, image=data,
-                               media_type=image.content_type or "image/jpeg", checkpoint_ids=cids, content=content)
+                               media_type=image_media_type(data), checkpoint_ids=cids, content=content)
     page = p.payload.get("page", {})
     if p.ai_status == "ready" and not page.get("legible", True):
         return {"capture_id": None, "ai_status": "retake", "reason": "illegible",

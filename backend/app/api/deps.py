@@ -67,3 +67,21 @@ def validate_media(audio: bytes | None, image: bytes | None):
         raise HTTPException(413, "audio too large")
     if image and len(image) > s.max_photo_bytes:
         raise HTTPException(413, "photo too large")
+
+
+_IMAGE_MAGIC = ((b"\xff\xd8\xff", "image/jpeg"), (b"\x89PNG\r\n\x1a\n", "image/png"),
+                (b"GIF87a", "image/gif"), (b"GIF89a", "image/gif"))
+
+
+def image_media_type(data: bytes) -> str:
+    """The real type of an uploaded photo, from its first bytes.
+
+    Phones upload photos as `application/octet-stream`, and Claude rejects an image block with that
+    media type, so the declared content type is never trusted. Unsupported formats (e.g. HEIC) are a 422.
+    """
+    for magic, mt in _IMAGE_MAGIC:
+        if data.startswith(magic):
+            return mt
+    if data[:4] == b"RIFF" and data[8:12] == b"WEBP":
+        return "image/webp"
+    raise HTTPException(422, "photo must be a JPEG, PNG, GIF or WebP image")
