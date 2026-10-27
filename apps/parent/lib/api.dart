@@ -57,7 +57,7 @@ class Api {
 
   Map<String, String> get _h => {'Authorization': 'Bearer ${_token ?? ''}'};
 
-  Future<dynamic> _read(http.Response r) {
+  dynamic _read(http.Response r) {
     if (r.statusCode >= 400) {
       String d = 'HTTP ${r.statusCode}';
       try {

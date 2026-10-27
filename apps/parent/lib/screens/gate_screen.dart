@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 import '../api.dart';
 import '../theme.dart';
@@ -58,12 +61,19 @@ class _GateScreenState extends State<GateScreen> {
               )
             : e.message,
       );
-    } catch (_) {
+    } catch (e) {
+      // Only a real network failure is "could not connect"; anything else is a bug, not the parent's wifi.
+      final network = e is TimeoutException || e is http.ClientException;
       setState(
-        () => _error = tr(
-          'Could not connect to the server. Check your internet.',
-          'सर्वर से नहीं जुड़ सके। इंटरनेट जाँचें।',
-        ),
+        () => _error = network
+            ? tr(
+                'Could not connect to the server. Check your internet.',
+                'सर्वर से नहीं जुड़ सके। इंटरनेट जाँचें।',
+              )
+            : tr(
+                'Something went wrong. Please try again.',
+                'कुछ गड़बड़ हुई। फिर से कोशिश करें।',
+              ),
       );
     } finally {
       if (mounted) setState(() => _busy = false);
