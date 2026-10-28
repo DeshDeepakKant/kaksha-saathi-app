@@ -157,7 +157,7 @@ def set_attendance(class_id: int, absent_rolls: list[int] = Body(..., embed=True
     """Replace the day's register (everyone not listed is present). With `merge=true` only the listed
     rolls are marked absent and other children's rows are left alone (voice notes report a few at a time)."""
     cls = owned_class(class_id, teacher, db)
-    day = day or date.today()
+    day = day or ledger.school_today()
     for ch in ledger.class_children(db, cls.id):
         if merge and ch.roll_no not in absent_rolls:
             continue
@@ -627,7 +627,7 @@ def make_plan(class_id: int, subject: str, for_date: date | None = None, force: 
     subject = _subject(subject, db, teacher)
     cls = owned_class(class_id, teacher, db)
     content = get_content()
-    plan = ledger.todays_plan(db, cls, subject, for_date or _now().date(), content, force=force)
+    plan = ledger.todays_plan(db, cls, subject, for_date or ledger.school_today(), content, force=force)
     payload = ledger.upgrade_plan_payload(plan.payload, ledger.class_children(db, cls.id), content)
     return {"id": plan.id, "subject": plan.subject, "for_date": plan.for_date.isoformat(),
             "generated_by": plan.generated_by, **payload}
@@ -668,7 +668,7 @@ def class_board(class_id: int, subject: str, teacher: Teacher = Depends(current_
     grouping, _st, children, _rm = ledger.build_groups(db, cls, subject)
     by_id = {c.id: c for c in children}
     content = get_content()
-    absent = sorted(cid for cid, present in ledger.attendance_today(db, cls.id, _now().date()).items()
+    absent = sorted(cid for cid, present in ledger.attendance_today(db, cls.id, ledger.school_today()).items()
                     if not present and cid in by_id)
 
     def pub(ids):
@@ -723,7 +723,7 @@ def class_moved(class_id: int, subject: str, hours: int = Query(24, ge=1, le=24 
 def get_attendance(class_id: int, day: date | None = None, teacher: Teacher = Depends(current_teacher),
                    db: Session = Depends(get_db)):
     cls = owned_class(class_id, teacher, db)
-    day = day or _now().date()
+    day = day or ledger.school_today()
     children = {c.id: c for c in ledger.class_children(db, cls.id)}
     absent = sorted(children[cid].roll_no for cid, present in ledger.attendance_today(db, cls.id, day).items()
                     if not present and cid in children)

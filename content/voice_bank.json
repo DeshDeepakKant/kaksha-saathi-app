@@ -1,0 +1,9343 @@
+{
+ "version": 1,
+ "note": "Reviewed fallback item bank for the 30-minute voice session (docs/voice_session_contract.md). Served only when reviewed is true. Item shape = contract Item plus bank-only keys grade (lowest class), sounds (letters/sounds practised) and reviewed. Validated by app/ai/voice_schemas.item_problems in tests/test_voice_tutor.py.",
+ "items": [
+  {
+   "id": "vb-hi-let-001",
+   "stage": "letter",
+   "kind": "read_letter",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.swar",
+   "prompt": "यह कौन सा अक्षर है? बोलो।",
+   "display": {
+    "text": "अ"
+   },
+   "target": "अ",
+   "accept": [
+    "अ"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [
+    "अ"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-let-002",
+   "stage": "letter",
+   "kind": "read_letter",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.swar",
+   "prompt": "इस अक्षर को ज़ोर से पढ़ो।",
+   "display": {
+    "text": "आ"
+   },
+   "target": "आ",
+   "accept": [
+    "आ"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [
+    "आ"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-let-003",
+   "stage": "letter",
+   "kind": "read_letter",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.swar",
+   "prompt": "ध्यान से देखो। यह अक्षर बोलो।",
+   "display": {
+    "text": "इ"
+   },
+   "target": "इ",
+   "accept": [
+    "इ"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 2,
+   "grade": 1,
+   "sounds": [
+    "इ"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-let-004",
+   "stage": "letter",
+   "kind": "read_letter",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.swar",
+   "prompt": "इस अक्षर का नाम बताओ।",
+   "display": {
+    "text": "ई"
+   },
+   "target": "ई",
+   "accept": [
+    "ई"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 2,
+   "grade": 1,
+   "sounds": [
+    "ई"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-let-005",
+   "stage": "letter",
+   "kind": "read_letter",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.swar",
+   "prompt": "चलो, यह अक्षर पढ़कर सुनाओ।",
+   "display": {
+    "text": "उ"
+   },
+   "target": "उ",
+   "accept": [
+    "उ"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 2,
+   "grade": 1,
+   "sounds": [
+    "उ"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-let-006",
+   "stage": "letter",
+   "kind": "read_letter",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.swar",
+   "prompt": "यह कौन सा अक्षर है? बोलो।",
+   "display": {
+    "text": "ए"
+   },
+   "target": "ए",
+   "accept": [
+    "ए"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 2,
+   "grade": 1,
+   "sounds": [
+    "ए"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-let-007",
+   "stage": "letter",
+   "kind": "read_letter",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.swar",
+   "prompt": "इस अक्षर को ज़ोर से पढ़ो।",
+   "display": {
+    "text": "ओ"
+   },
+   "target": "ओ",
+   "accept": [
+    "ओ"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 2,
+   "grade": 1,
+   "sounds": [
+    "ओ"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-let-008",
+   "stage": "letter",
+   "kind": "read_letter",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.swar",
+   "prompt": "ध्यान से देखो। यह अक्षर बोलो।",
+   "display": {
+    "text": "ऋ"
+   },
+   "target": "ऋ",
+   "accept": [
+    "ऋ",
+    "रि"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 3,
+   "grade": 1,
+   "sounds": [
+    "ऋ"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-let-009",
+   "stage": "letter",
+   "kind": "read_letter",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.vyanjan",
+   "prompt": "इस अक्षर का नाम बताओ।",
+   "display": {
+    "text": "क"
+   },
+   "target": "क",
+   "accept": [
+    "क",
+    "का"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [
+    "क"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-let-010",
+   "stage": "letter",
+   "kind": "read_letter",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.vyanjan",
+   "prompt": "{name}, यह कौन सा अक्षर है?",
+   "display": {
+    "text": "ख"
+   },
+   "target": "ख",
+   "accept": [
+    "ख",
+    "खा"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 3,
+   "grade": 1,
+   "sounds": [
+    "ख"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-let-011",
+   "stage": "letter",
+   "kind": "read_letter",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.vyanjan",
+   "prompt": "यह कौन सा अक्षर है? बोलो।",
+   "display": {
+    "text": "म"
+   },
+   "target": "म",
+   "accept": [
+    "म",
+    "मा"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [
+    "म"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-let-012",
+   "stage": "letter",
+   "kind": "read_letter",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.vyanjan",
+   "prompt": "इस अक्षर को ज़ोर से पढ़ो।",
+   "display": {
+    "text": "ल"
+   },
+   "target": "ल",
+   "accept": [
+    "ल",
+    "ला"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [
+    "ल"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-let-013",
+   "stage": "letter",
+   "kind": "read_letter",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.vyanjan",
+   "prompt": "ध्यान से देखो। यह अक्षर बोलो।",
+   "display": {
+    "text": "र"
+   },
+   "target": "र",
+   "accept": [
+    "र",
+    "रा"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [
+    "र"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-let-014",
+   "stage": "letter",
+   "kind": "read_letter",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.vyanjan",
+   "prompt": "इस अक्षर का नाम बताओ।",
+   "display": {
+    "text": "स"
+   },
+   "target": "स",
+   "accept": [
+    "स",
+    "सा"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [
+    "स"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-let-015",
+   "stage": "letter",
+   "kind": "read_letter",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.vyanjan",
+   "prompt": "चलो, यह अक्षर पढ़कर सुनाओ।",
+   "display": {
+    "text": "श"
+   },
+   "target": "श",
+   "accept": [
+    "श",
+    "शा"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 3,
+   "grade": 1,
+   "sounds": [
+    "श"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-let-016",
+   "stage": "letter",
+   "kind": "read_letter",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.vyanjan",
+   "prompt": "यह कौन सा अक्षर है? बोलो।",
+   "display": {
+    "text": "ष"
+   },
+   "target": "ष",
+   "accept": [
+    "ष",
+    "षा"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 3,
+   "grade": 1,
+   "sounds": [
+    "ष"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-let-017",
+   "stage": "letter",
+   "kind": "read_letter",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.vyanjan",
+   "prompt": "इस अक्षर को ज़ोर से पढ़ो।",
+   "display": {
+    "text": "ब"
+   },
+   "target": "ब",
+   "accept": [
+    "ब",
+    "बा"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [
+    "ब"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-let-018",
+   "stage": "letter",
+   "kind": "read_letter",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.vyanjan",
+   "prompt": "ध्यान से देखो। यह अक्षर बोलो।",
+   "display": {
+    "text": "व"
+   },
+   "target": "व",
+   "accept": [
+    "व",
+    "वा"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 3,
+   "grade": 1,
+   "sounds": [
+    "व"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-let-019",
+   "stage": "letter",
+   "kind": "read_letter",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.vyanjan",
+   "prompt": "इस अक्षर का नाम बताओ।",
+   "display": {
+    "text": "ड"
+   },
+   "target": "ड",
+   "accept": [
+    "ड",
+    "डा"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 2,
+   "grade": 1,
+   "sounds": [
+    "ड"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-let-020",
+   "stage": "letter",
+   "kind": "read_letter",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.vyanjan",
+   "prompt": "{name}, यह कौन सा अक्षर है?",
+   "display": {
+    "text": "ड़"
+   },
+   "target": "ड़",
+   "accept": [
+    "ड़",
+    "ड़ा"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 3,
+   "grade": 1,
+   "sounds": [
+    "ड़"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-let-021",
+   "stage": "letter",
+   "kind": "read_letter",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.vyanjan",
+   "prompt": "यह कौन सा अक्षर है? बोलो।",
+   "display": {
+    "text": "ढ"
+   },
+   "target": "ढ",
+   "accept": [
+    "ढ",
+    "ढा"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 2,
+   "grade": 1,
+   "sounds": [
+    "ढ"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-let-022",
+   "stage": "letter",
+   "kind": "read_letter",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.vyanjan",
+   "prompt": "इस अक्षर को ज़ोर से पढ़ो।",
+   "display": {
+    "text": "ढ़"
+   },
+   "target": "ढ़",
+   "accept": [
+    "ढ़",
+    "ढ़ा"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 3,
+   "grade": 1,
+   "sounds": [
+    "ढ़"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-let-023",
+   "stage": "letter",
+   "kind": "read_letter",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.vyanjan",
+   "prompt": "ध्यान से देखो। यह अक्षर बोलो।",
+   "display": {
+    "text": "न"
+   },
+   "target": "न",
+   "accept": [
+    "न",
+    "ना"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [
+    "न"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-let-024",
+   "stage": "letter",
+   "kind": "read_letter",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.vyanjan",
+   "prompt": "इस अक्षर का नाम बताओ।",
+   "display": {
+    "text": "ण"
+   },
+   "target": "ण",
+   "accept": [
+    "ण",
+    "णा"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 3,
+   "grade": 1,
+   "sounds": [
+    "ण"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-let-025",
+   "stage": "letter",
+   "kind": "read_letter",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.vyanjan",
+   "prompt": "चलो, यह अक्षर पढ़कर सुनाओ।",
+   "display": {
+    "text": "क्ष"
+   },
+   "target": "क्ष",
+   "accept": [
+    "क्ष",
+    "क्षा"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 3,
+   "grade": 1,
+   "sounds": [
+    "क्ष"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-let-026",
+   "stage": "letter",
+   "kind": "read_letter",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.vyanjan",
+   "prompt": "यह कौन सा अक्षर है? बोलो।",
+   "display": {
+    "text": "त्र"
+   },
+   "target": "त्र",
+   "accept": [
+    "त्र",
+    "त्रा"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 3,
+   "grade": 1,
+   "sounds": [
+    "त्र"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-let-027",
+   "stage": "letter",
+   "kind": "read_letter",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.vyanjan",
+   "prompt": "इस अक्षर को ज़ोर से पढ़ो।",
+   "display": {
+    "text": "ज्ञ"
+   },
+   "target": "ज्ञ",
+   "accept": [
+    "ज्ञ",
+    "ज्ञा"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 3,
+   "grade": 1,
+   "sounds": [
+    "ज्ञ"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-let-028",
+   "stage": "letter",
+   "kind": "say_sound",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.phonological",
+   "prompt": "सुनो, गाय। गाय शब्द किस अक्षर से शुरू होता है?",
+   "display": {
+    "text": "गाय"
+   },
+   "target": "ग",
+   "accept": [
+    "ग",
+    "गा"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [
+    "ग"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-let-029",
+   "stage": "letter",
+   "kind": "say_sound",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.phonological",
+   "prompt": "पानी शब्द की पहली आवाज़ कौन सी है? बोलो।",
+   "display": {
+    "text": "पानी"
+   },
+   "target": "प",
+   "accept": [
+    "प",
+    "पा"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [
+    "प"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-let-030",
+   "stage": "letter",
+   "kind": "say_sound",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.phonological",
+   "prompt": "यह शब्द है रोटी। यह किस अक्षर से शुरू होता है?",
+   "display": {
+    "text": "रोटी"
+   },
+   "target": "र",
+   "accept": [
+    "र",
+    "रा"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [
+    "र"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-let-031",
+   "stage": "letter",
+   "kind": "say_sound",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.phonological",
+   "prompt": "सुनो, नदी। इसका पहला अक्षर बोलो।",
+   "display": {
+    "text": "नदी"
+   },
+   "target": "न",
+   "accept": [
+    "न",
+    "ना"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [
+    "न"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-let-032",
+   "stage": "letter",
+   "kind": "say_sound",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.phonological",
+   "prompt": "{name}, दूध शब्द का पहला अक्षर कौन सा है?",
+   "display": {
+    "text": "दूध"
+   },
+   "target": "द",
+   "accept": [
+    "द",
+    "दा"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 2,
+   "grade": 1,
+   "sounds": [
+    "द"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-let-033",
+   "stage": "letter",
+   "kind": "say_sound",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.phonological",
+   "prompt": "तोता शब्द की पहली आवाज़ कौन सी है? बोलो।",
+   "display": {
+    "text": "तोता"
+   },
+   "target": "त",
+   "accept": [
+    "त",
+    "ता"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 2,
+   "grade": 1,
+   "sounds": [
+    "त"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-let-034",
+   "stage": "letter",
+   "kind": "say_sound",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.phonological",
+   "prompt": "यह शब्द है जहाज़। यह किस अक्षर से शुरू होता है?",
+   "display": {
+    "text": "जहाज़"
+   },
+   "target": "ज",
+   "accept": [
+    "ज",
+    "जा"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 2,
+   "grade": 1,
+   "sounds": [
+    "ज"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-let-035",
+   "stage": "letter",
+   "kind": "say_sound",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.phonological",
+   "prompt": "सुनो, धूप। इसका पहला अक्षर बोलो।",
+   "display": {
+    "text": "धूप"
+   },
+   "target": "ध",
+   "accept": [
+    "ध",
+    "धा"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 3,
+   "grade": 1,
+   "sounds": [
+    "ध"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-let-036",
+   "stage": "letter",
+   "kind": "say_sound",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.phonological",
+   "prompt": "सुनो, थाली। थाली शब्द किस अक्षर से शुरू होता है?",
+   "display": {
+    "text": "थाली"
+   },
+   "target": "थ",
+   "accept": [
+    "थ",
+    "था"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 3,
+   "grade": 1,
+   "sounds": [
+    "थ"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-let-037",
+   "stage": "letter",
+   "kind": "say_sound",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.phonological",
+   "prompt": "{name}, घर शब्द का पहला अक्षर कौन सा है?",
+   "display": {
+    "text": "घर"
+   },
+   "target": "घ",
+   "accept": [
+    "घ",
+    "घा"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 3,
+   "grade": 1,
+   "sounds": [
+    "घ"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-let-038",
+   "stage": "letter",
+   "kind": "say_sound",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.phonological",
+   "prompt": "यह शब्द है झूला। यह किस अक्षर से शुरू होता है?",
+   "display": {
+    "text": "झूला"
+   },
+   "target": "झ",
+   "accept": [
+    "झ",
+    "झा"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 3,
+   "grade": 1,
+   "sounds": [
+    "झ"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-let-039",
+   "stage": "letter",
+   "kind": "say_sound",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.phonological",
+   "prompt": "सुनो, फल। इसका पहला अक्षर बोलो।",
+   "display": {
+    "text": "फल"
+   },
+   "target": "फ",
+   "accept": [
+    "फ",
+    "फा"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 3,
+   "grade": 1,
+   "sounds": [
+    "फ"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-wb-001",
+   "stage": "word_build",
+   "kind": "build_word",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.blend_no_matra",
+   "prompt": "इन टुकड़ों को जोड़कर एक शब्द बोलो।",
+   "display": {
+    "tiles": [
+     "घ",
+     "र"
+    ]
+   },
+   "target": "घर",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [
+    "घ",
+    "र"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-wb-002",
+   "stage": "word_build",
+   "kind": "build_word",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.blend_no_matra",
+   "prompt": "अक्षरों को मिलाओ और पूरा शब्द बोलो।",
+   "display": {
+    "tiles": [
+     "क",
+     "म",
+     "ल"
+    ]
+   },
+   "target": "कमल",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [
+    "क",
+    "म",
+    "ल"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-wb-003",
+   "stage": "word_build",
+   "kind": "build_word",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.blend_no_matra",
+   "prompt": "इन अक्षरों को एक साथ पढ़ो। कौन सा शब्द बना?",
+   "display": {
+    "tiles": [
+     "न",
+     "म",
+     "क"
+    ]
+   },
+   "target": "नमक",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [
+    "न",
+    "म",
+    "क"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-wb-004",
+   "stage": "word_build",
+   "kind": "build_word",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.blend_no_matra",
+   "prompt": "इन टुकड़ों को मिलाकर पढ़ो। शब्द बोलो।",
+   "display": {
+    "tiles": [
+     "ब",
+     "त",
+     "ख"
+    ]
+   },
+   "target": "बतख",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [
+    "ब",
+    "त",
+    "ख"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-wb-005",
+   "stage": "word_build",
+   "kind": "build_word",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.blend_no_matra",
+   "prompt": "इन टुकड़ों को जोड़कर एक शब्द बोलो।",
+   "display": {
+    "tiles": [
+     "स",
+     "ड़",
+     "क"
+    ]
+   },
+   "target": "सड़क",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [
+    "स",
+    "ड़",
+    "क"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-wb-006",
+   "stage": "word_build",
+   "kind": "build_word",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.blend_no_matra",
+   "prompt": "अक्षरों को मिलाओ और पूरा शब्द बोलो।",
+   "display": {
+    "tiles": [
+     "म",
+     "ट",
+     "र"
+    ]
+   },
+   "target": "मटर",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [
+    "म",
+    "ट",
+    "र"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-wb-007",
+   "stage": "word_build",
+   "kind": "build_word",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.blend_no_matra",
+   "prompt": "इन अक्षरों को एक साथ पढ़ो। कौन सा शब्द बना?",
+   "display": {
+    "tiles": [
+     "क",
+     "ल",
+     "म"
+    ]
+   },
+   "target": "कलम",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [
+    "क",
+    "ल",
+    "म"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-wb-008",
+   "stage": "word_build",
+   "kind": "build_word",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.blend_no_matra",
+   "prompt": "इन टुकड़ों को मिलाकर पढ़ो। शब्द बोलो।",
+   "display": {
+    "tiles": [
+     "फ",
+     "ल"
+    ]
+   },
+   "target": "फल",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [
+    "फ",
+    "ल"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-wb-009",
+   "stage": "word_build",
+   "kind": "build_word",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.blend_no_matra",
+   "prompt": "इन टुकड़ों को जोड़कर एक शब्द बोलो।",
+   "display": {
+    "tiles": [
+     "प",
+     "ल",
+     "क"
+    ]
+   },
+   "target": "पलक",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [
+    "प",
+    "ल",
+    "क"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-wb-010",
+   "stage": "word_build",
+   "kind": "build_word",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.matra_basic",
+   "prompt": "{name}, इन टुकड़ों से कौन सा शब्द बनता है? बोलो।",
+   "display": {
+    "tiles": [
+     "कि",
+     "ता",
+     "ब"
+    ]
+   },
+   "target": "किताब",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 2,
+   "grade": 1,
+   "sounds": [
+    "कि",
+    "ता",
+    "ब"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-wb-011",
+   "stage": "word_build",
+   "kind": "build_word",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.matra_basic",
+   "prompt": "इन अक्षरों को एक साथ पढ़ो। कौन सा शब्द बना?",
+   "display": {
+    "tiles": [
+     "पा",
+     "नी"
+    ]
+   },
+   "target": "पानी",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 2,
+   "grade": 1,
+   "sounds": [
+    "पा",
+    "नी"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-wb-012",
+   "stage": "word_build",
+   "kind": "build_word",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.matra_basic",
+   "prompt": "इन टुकड़ों को मिलाकर पढ़ो। शब्द बोलो।",
+   "display": {
+    "tiles": [
+     "म",
+     "छ",
+     "ली"
+    ]
+   },
+   "target": "मछली",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 2,
+   "grade": 1,
+   "sounds": [
+    "म",
+    "छ",
+    "ली"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-wb-013",
+   "stage": "word_build",
+   "kind": "build_word",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.matra_basic",
+   "prompt": "इन टुकड़ों को जोड़कर एक शब्द बोलो।",
+   "display": {
+    "tiles": [
+     "रो",
+     "टी"
+    ]
+   },
+   "target": "रोटी",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 2,
+   "grade": 1,
+   "sounds": [
+    "रो",
+    "टी"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-wb-014",
+   "stage": "word_build",
+   "kind": "build_word",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.matra_basic",
+   "prompt": "अक्षरों को मिलाओ और पूरा शब्द बोलो।",
+   "display": {
+    "tiles": [
+     "ब",
+     "क",
+     "री"
+    ]
+   },
+   "target": "बकरी",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 2,
+   "grade": 1,
+   "sounds": [
+    "ब",
+    "क",
+    "री"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-wb-015",
+   "stage": "word_build",
+   "kind": "build_word",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.matra_basic",
+   "prompt": "इन अक्षरों को एक साथ पढ़ो। कौन सा शब्द बना?",
+   "display": {
+    "tiles": [
+     "के",
+     "ला"
+    ]
+   },
+   "target": "केला",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 2,
+   "grade": 1,
+   "sounds": [
+    "के",
+    "ला"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-wb-016",
+   "stage": "word_build",
+   "kind": "build_word",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.matra_basic",
+   "prompt": "इन टुकड़ों को मिलाकर पढ़ो। शब्द बोलो।",
+   "display": {
+    "tiles": [
+     "मे",
+     "ला"
+    ]
+   },
+   "target": "मेला",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 2,
+   "grade": 1,
+   "sounds": [
+    "मे",
+    "ला"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-wb-017",
+   "stage": "word_build",
+   "kind": "build_word",
+   "lang": "hi",
+   "checkpoint_id": "L.G2.word_formation",
+   "prompt": "इन टुकड़ों को जोड़कर एक शब्द बोलो।",
+   "display": {
+    "tiles": [
+     "गु",
+     "ड़ि",
+     "या"
+    ]
+   },
+   "target": "गुड़िया",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 2,
+   "grade": 1,
+   "sounds": [
+    "गु",
+    "ड़ि",
+    "या"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-wb-018",
+   "stage": "word_build",
+   "kind": "build_word",
+   "lang": "hi",
+   "checkpoint_id": "L.G2.word_formation",
+   "prompt": "अक्षरों को मिलाओ और पूरा शब्द बोलो।",
+   "display": {
+    "tiles": [
+     "खि",
+     "लौ",
+     "ना"
+    ]
+   },
+   "target": "खिलौना",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 2,
+   "grade": 1,
+   "sounds": [
+    "खि",
+    "लौ",
+    "ना"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-wb-019",
+   "stage": "word_build",
+   "kind": "build_word",
+   "lang": "hi",
+   "checkpoint_id": "L.G2.word_formation",
+   "prompt": "इन अक्षरों को एक साथ पढ़ो। कौन सा शब्द बना?",
+   "display": {
+    "tiles": [
+     "ट",
+     "मा",
+     "ट",
+     "र"
+    ]
+   },
+   "target": "टमाटर",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 2,
+   "grade": 1,
+   "sounds": [
+    "ट",
+    "मा",
+    "र"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-wb-020",
+   "stage": "word_build",
+   "kind": "build_word",
+   "lang": "hi",
+   "checkpoint_id": "L.G2.conjuncts",
+   "prompt": "{name}, इन टुकड़ों से कौन सा शब्द बनता है? बोलो।",
+   "display": {
+    "tiles": [
+     "प",
+     "त्ता"
+    ]
+   },
+   "target": "पत्ता",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 3,
+   "grade": 2,
+   "sounds": [
+    "त्ता"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-wb-021",
+   "stage": "word_build",
+   "kind": "build_word",
+   "lang": "hi",
+   "checkpoint_id": "L.G2.conjuncts",
+   "prompt": "इन टुकड़ों को जोड़कर एक शब्द बोलो।",
+   "display": {
+    "tiles": [
+     "ब",
+     "च्चा"
+    ]
+   },
+   "target": "बच्चा",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 3,
+   "grade": 2,
+   "sounds": [
+    "च्चा"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-wb-022",
+   "stage": "word_build",
+   "kind": "build_word",
+   "lang": "hi",
+   "checkpoint_id": "L.G2.conjuncts",
+   "prompt": "अक्षरों को मिलाओ और पूरा शब्द बोलो।",
+   "display": {
+    "tiles": [
+     "स्कू",
+     "ल"
+    ]
+   },
+   "target": "स्कूल",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 3,
+   "grade": 2,
+   "sounds": [
+    "स्कू"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-wb-023",
+   "stage": "word_build",
+   "kind": "build_word",
+   "lang": "hi",
+   "checkpoint_id": "L.G2.conjuncts",
+   "prompt": "इन अक्षरों को एक साथ पढ़ो। कौन सा शब्द बना?",
+   "display": {
+    "tiles": [
+     "कु",
+     "त्ता"
+    ]
+   },
+   "target": "कुत्ता",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 3,
+   "grade": 2,
+   "sounds": [
+    "त्ता"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-wb-024",
+   "stage": "word_build",
+   "kind": "build_word",
+   "lang": "hi",
+   "checkpoint_id": "L.G2.conjuncts",
+   "prompt": "इन टुकड़ों को मिलाकर पढ़ो। शब्द बोलो।",
+   "display": {
+    "tiles": [
+     "च",
+     "क्की"
+    ]
+   },
+   "target": "चक्की",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 3,
+   "grade": 2,
+   "sounds": [
+    "क्की"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-wb-025",
+   "stage": "word_build",
+   "kind": "build_word",
+   "lang": "hi",
+   "checkpoint_id": "L.G2.conjuncts",
+   "prompt": "इन टुकड़ों को जोड़कर एक शब्द बोलो।",
+   "display": {
+    "tiles": [
+     "बि",
+     "ल्ली"
+    ]
+   },
+   "target": "बिल्ली",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 3,
+   "grade": 2,
+   "sounds": [
+    "ल्ली"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-wb-026",
+   "stage": "word_build",
+   "kind": "build_word",
+   "lang": "hi",
+   "checkpoint_id": "L.G2.conjuncts",
+   "prompt": "अक्षरों को मिलाओ और पूरा शब्द बोलो।",
+   "display": {
+    "tiles": [
+     "र",
+     "स्सी"
+    ]
+   },
+   "target": "रस्सी",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 3,
+   "grade": 2,
+   "sounds": [
+    "स्सी"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-wb-027",
+   "stage": "word_build",
+   "kind": "build_word",
+   "lang": "hi",
+   "checkpoint_id": "L.G2.conjuncts",
+   "prompt": "इन अक्षरों को एक साथ पढ़ो। कौन सा शब्द बना?",
+   "display": {
+    "tiles": [
+     "प",
+     "त्थ",
+     "र"
+    ]
+   },
+   "target": "पत्थर",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 3,
+   "grade": 2,
+   "sounds": [
+    "त्थ"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-wb-028",
+   "stage": "word_build",
+   "kind": "build_word",
+   "lang": "hi",
+   "checkpoint_id": "L.G2.conjuncts",
+   "prompt": "इन टुकड़ों को मिलाकर पढ़ो। शब्द बोलो।",
+   "display": {
+    "tiles": [
+     "च",
+     "म्म",
+     "च"
+    ]
+   },
+   "target": "चम्मच",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 3,
+   "grade": 2,
+   "sounds": [
+    "म्म"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-wb-029",
+   "stage": "word_build",
+   "kind": "build_word",
+   "lang": "hi",
+   "checkpoint_id": "L.G2.conjuncts",
+   "prompt": "इन टुकड़ों को जोड़कर एक शब्द बोलो।",
+   "display": {
+    "tiles": [
+     "ल",
+     "ड्डू"
+    ]
+   },
+   "target": "लड्डू",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 3,
+   "grade": 2,
+   "sounds": [
+    "ड्डू"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-wr-001",
+   "stage": "word_read",
+   "kind": "read_word",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.read_matra_words",
+   "prompt": "यह शब्द पढ़ो।",
+   "display": {
+    "text": "माला"
+   },
+   "target": "माला",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [
+    "मा",
+    "ला"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-wr-002",
+   "stage": "word_read",
+   "kind": "read_word",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.read_matra_words",
+   "prompt": "इस शब्द को ज़ोर से पढ़ो।",
+   "display": {
+    "text": "दाल"
+   },
+   "target": "दाल",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [
+    "दा",
+    "ल"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-wr-003",
+   "stage": "word_read",
+   "kind": "read_word",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.read_matra_words",
+   "prompt": "ध्यान से देखो और यह शब्द बोलो।",
+   "display": {
+    "text": "नाक"
+   },
+   "target": "नाक",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [
+    "ना",
+    "क"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-wr-004",
+   "stage": "word_read",
+   "kind": "read_word",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.read_matra_words",
+   "prompt": "यह शब्द पढ़कर सुनाओ।",
+   "display": {
+    "text": "बादल"
+   },
+   "target": "बादल",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [
+    "बा",
+    "द",
+    "ल"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-wr-005",
+   "stage": "word_read",
+   "kind": "read_word",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.read_matra_words",
+   "prompt": "यह शब्द पढ़ो।",
+   "display": {
+    "text": "गाजर"
+   },
+   "target": "गाजर",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [
+    "गा",
+    "ज",
+    "र"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-wr-006",
+   "stage": "word_read",
+   "kind": "read_word",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.read_matra_words",
+   "prompt": "इस शब्द को ज़ोर से पढ़ो।",
+   "display": {
+    "text": "चाबी"
+   },
+   "target": "चाबी",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [
+    "चा",
+    "बी"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-wr-007",
+   "stage": "word_read",
+   "kind": "read_word",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.read_matra_words",
+   "prompt": "ध्यान से देखो और यह शब्द बोलो।",
+   "display": {
+    "text": "किसान"
+   },
+   "target": "किसान",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [
+    "कि",
+    "सा",
+    "न"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-wr-008",
+   "stage": "word_read",
+   "kind": "read_word",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.read_matra_words",
+   "prompt": "यह शब्द पढ़कर सुनाओ।",
+   "display": {
+    "text": "हाथी"
+   },
+   "target": "हाथी",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [
+    "हा",
+    "थी"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-wr-009",
+   "stage": "word_read",
+   "kind": "read_word",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.read_matra_words",
+   "prompt": "यह शब्द पढ़ो।",
+   "display": {
+    "text": "नीला"
+   },
+   "target": "नीला",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [
+    "नी",
+    "ला"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-wr-010",
+   "stage": "word_read",
+   "kind": "read_word",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.read_matra_words",
+   "prompt": "{name}, यह कौन सा शब्द है? पढ़कर बताओ।",
+   "display": {
+    "text": "मकान"
+   },
+   "target": "मकान",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [
+    "म",
+    "का",
+    "न"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-wr-011",
+   "stage": "word_read",
+   "kind": "read_word",
+   "lang": "hi",
+   "checkpoint_id": "L.G2.all_matras",
+   "prompt": "ध्यान से देखो और यह शब्द बोलो।",
+   "display": {
+    "text": "फूल"
+   },
+   "target": "फूल",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 2,
+   "grade": 2,
+   "sounds": [
+    "फू",
+    "ल"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-wr-012",
+   "stage": "word_read",
+   "kind": "read_word",
+   "lang": "hi",
+   "checkpoint_id": "L.G2.all_matras",
+   "prompt": "यह शब्द पढ़कर सुनाओ।",
+   "display": {
+    "text": "गुलाब"
+   },
+   "target": "गुलाब",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 2,
+   "grade": 2,
+   "sounds": [
+    "गु",
+    "ला",
+    "ब"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-wr-013",
+   "stage": "word_read",
+   "kind": "read_word",
+   "lang": "hi",
+   "checkpoint_id": "L.G2.all_matras",
+   "prompt": "यह शब्द पढ़ो।",
+   "display": {
+    "text": "मोर"
+   },
+   "target": "मोर",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 2,
+   "grade": 2,
+   "sounds": [
+    "मो",
+    "र"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-wr-014",
+   "stage": "word_read",
+   "kind": "read_word",
+   "lang": "hi",
+   "checkpoint_id": "L.G2.all_matras",
+   "prompt": "इस शब्द को ज़ोर से पढ़ो।",
+   "display": {
+    "text": "पेड़"
+   },
+   "target": "पेड़",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 2,
+   "grade": 2,
+   "sounds": [
+    "पे",
+    "ड़"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-wr-015",
+   "stage": "word_read",
+   "kind": "read_word",
+   "lang": "hi",
+   "checkpoint_id": "L.G2.all_matras",
+   "prompt": "ध्यान से देखो और यह शब्द बोलो।",
+   "display": {
+    "text": "बैल"
+   },
+   "target": "बैल",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 2,
+   "grade": 2,
+   "sounds": [
+    "बै",
+    "ल"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-wr-016",
+   "stage": "word_read",
+   "kind": "read_word",
+   "lang": "hi",
+   "checkpoint_id": "L.G2.all_matras",
+   "prompt": "यह शब्द पढ़कर सुनाओ।",
+   "display": {
+    "text": "नौका"
+   },
+   "target": "नौका",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 2,
+   "grade": 2,
+   "sounds": [
+    "नौ",
+    "का"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-wr-017",
+   "stage": "word_read",
+   "kind": "read_word",
+   "lang": "hi",
+   "checkpoint_id": "L.G2.all_matras",
+   "prompt": "यह शब्द पढ़ो।",
+   "display": {
+    "text": "पतंग"
+   },
+   "target": "पतंग",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 2,
+   "grade": 2,
+   "sounds": [
+    "प",
+    "तं",
+    "ग"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-wr-018",
+   "stage": "word_read",
+   "kind": "read_word",
+   "lang": "hi",
+   "checkpoint_id": "L.G2.all_matras",
+   "prompt": "इस शब्द को ज़ोर से पढ़ो।",
+   "display": {
+    "text": "चाँद"
+   },
+   "target": "चाँद",
+   "accept": [
+    "चांद"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 2,
+   "grade": 2,
+   "sounds": [
+    "चाँ",
+    "द"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-wr-019",
+   "stage": "word_read",
+   "kind": "read_word",
+   "lang": "hi",
+   "checkpoint_id": "L.G2.all_matras",
+   "prompt": "ध्यान से देखो और यह शब्द बोलो।",
+   "display": {
+    "text": "सेब"
+   },
+   "target": "सेब",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 2,
+   "grade": 2,
+   "sounds": [
+    "से",
+    "ब"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-wr-020",
+   "stage": "word_read",
+   "kind": "read_word",
+   "lang": "hi",
+   "checkpoint_id": "L.G2.all_matras",
+   "prompt": "{name}, यह कौन सा शब्द है? पढ़कर बताओ।",
+   "display": {
+    "text": "घोड़ा"
+   },
+   "target": "घोड़ा",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 2,
+   "grade": 2,
+   "sounds": [
+    "घो",
+    "ड़ा"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-wr-021",
+   "stage": "word_read",
+   "kind": "read_word",
+   "lang": "hi",
+   "checkpoint_id": "L.G2.all_matras",
+   "prompt": "यह शब्द पढ़ो।",
+   "display": {
+    "text": "ऊँट"
+   },
+   "target": "ऊँट",
+   "accept": [
+    "ऊंट"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 2,
+   "grade": 2,
+   "sounds": [
+    "ऊँ",
+    "ट"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-wr-022",
+   "stage": "word_read",
+   "kind": "read_word",
+   "lang": "hi",
+   "checkpoint_id": "L.G2.conjuncts",
+   "prompt": "इस शब्द को ज़ोर से पढ़ो।",
+   "display": {
+    "text": "गन्ना"
+   },
+   "target": "गन्ना",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 3,
+   "grade": 2,
+   "sounds": [
+    "न्ना"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-wr-023",
+   "stage": "word_read",
+   "kind": "read_word",
+   "lang": "hi",
+   "checkpoint_id": "L.G2.conjuncts",
+   "prompt": "ध्यान से देखो और यह शब्द बोलो।",
+   "display": {
+    "text": "मिट्टी"
+   },
+   "target": "मिट्टी",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 3,
+   "grade": 2,
+   "sounds": [
+    "ट्टी"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-wr-024",
+   "stage": "word_read",
+   "kind": "read_word",
+   "lang": "hi",
+   "checkpoint_id": "L.G2.conjuncts",
+   "prompt": "यह शब्द पढ़कर सुनाओ।",
+   "display": {
+    "text": "सब्ज़ी"
+   },
+   "target": "सब्ज़ी",
+   "accept": [
+    "सब्जी"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 3,
+   "grade": 2,
+   "sounds": [
+    "ब्ज़ी"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-wr-025",
+   "stage": "word_read",
+   "kind": "read_word",
+   "lang": "hi",
+   "checkpoint_id": "L.G2.conjuncts",
+   "prompt": "यह शब्द पढ़ो।",
+   "display": {
+    "text": "पुस्तक"
+   },
+   "target": "पुस्तक",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 3,
+   "grade": 2,
+   "sounds": [
+    "स्त"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-wr-026",
+   "stage": "word_read",
+   "kind": "read_word",
+   "lang": "hi",
+   "checkpoint_id": "L.G2.conjuncts",
+   "prompt": "इस शब्द को ज़ोर से पढ़ो।",
+   "display": {
+    "text": "कक्षा"
+   },
+   "target": "कक्षा",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 3,
+   "grade": 2,
+   "sounds": [
+    "क्षा"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-wr-027",
+   "stage": "word_read",
+   "kind": "read_word",
+   "lang": "hi",
+   "checkpoint_id": "L.G2.conjuncts",
+   "prompt": "ध्यान से देखो और यह शब्द बोलो।",
+   "display": {
+    "text": "मित्र"
+   },
+   "target": "मित्र",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 3,
+   "grade": 2,
+   "sounds": [
+    "त्र"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-wr-028",
+   "stage": "word_read",
+   "kind": "read_word",
+   "lang": "hi",
+   "checkpoint_id": "L.G2.conjuncts",
+   "prompt": "यह शब्द पढ़कर सुनाओ।",
+   "display": {
+    "text": "विद्यालय"
+   },
+   "target": "विद्यालय",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 3,
+   "grade": 2,
+   "sounds": [
+    "द्या"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-wr-029",
+   "stage": "word_read",
+   "kind": "read_word",
+   "lang": "hi",
+   "checkpoint_id": "L.G2.conjuncts",
+   "prompt": "यह शब्द पढ़ो।",
+   "display": {
+    "text": "छुट्टी"
+   },
+   "target": "छुट्टी",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 3,
+   "grade": 2,
+   "sounds": [
+    "ट्टी"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-wr-030",
+   "stage": "word_read",
+   "kind": "read_word",
+   "lang": "hi",
+   "checkpoint_id": "L.G2.conjuncts",
+   "prompt": "{name}, यह कौन सा शब्द है? पढ़कर बताओ।",
+   "display": {
+    "text": "मक्खन"
+   },
+   "target": "मक्खन",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 3,
+   "grade": 2,
+   "sounds": [
+    "क्ख"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-sb-001",
+   "stage": "sentence_build",
+   "kind": "make_sentence",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.oral_vocab",
+   "prompt": "इन शब्दों से एक वाक्य बोलो।",
+   "display": {
+    "words": [
+     "गाय",
+     "दूध"
+    ]
+   },
+   "target": null,
+   "accept": [
+    "गाय दूध देती है।"
+   ],
+   "required_words": [
+    "गाय",
+    "दूध"
+   ],
+   "keywords": [],
+   "max_record_s": 10,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-sb-002",
+   "stage": "sentence_build",
+   "kind": "make_sentence",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.oral_vocab",
+   "prompt": "इन शब्दों को लेकर एक छोटा सा वाक्य बनाओ।",
+   "display": {
+    "words": [
+     "लाल",
+     "सेब"
+    ]
+   },
+   "target": null,
+   "accept": [
+    "मुझे लाल सेब पसंद है।"
+   ],
+   "required_words": [
+    "लाल",
+    "सेब"
+   ],
+   "keywords": [],
+   "max_record_s": 10,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-sb-003",
+   "stage": "sentence_build",
+   "kind": "make_sentence",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.oral_vocab",
+   "prompt": "इन सब शब्दों को एक वाक्य में बोलो।",
+   "display": {
+    "words": [
+     "आम",
+     "पेड़"
+    ]
+   },
+   "target": null,
+   "accept": [
+    "पेड़ पर आम लगे हैं।"
+   ],
+   "required_words": [
+    "आम",
+    "पेड़"
+   ],
+   "keywords": [],
+   "max_record_s": 10,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-sb-004",
+   "stage": "sentence_build",
+   "kind": "make_sentence",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.oral_vocab",
+   "prompt": "इन शब्दों को जोड़कर एक वाक्य सुनाओ।",
+   "display": {
+    "words": [
+     "सुबह",
+     "सूरज"
+    ]
+   },
+   "target": null,
+   "accept": [
+    "सुबह सूरज निकलता है।"
+   ],
+   "required_words": [
+    "सुबह",
+    "सूरज"
+   ],
+   "keywords": [],
+   "max_record_s": 10,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-sb-005",
+   "stage": "sentence_build",
+   "kind": "make_sentence",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.oral_vocab",
+   "prompt": "इन शब्दों से एक वाक्य बोलो।",
+   "display": {
+    "words": [
+     "नदी",
+     "पानी"
+    ]
+   },
+   "target": null,
+   "accept": [
+    "नदी में पानी है।"
+   ],
+   "required_words": [
+    "नदी",
+    "पानी"
+   ],
+   "keywords": [],
+   "max_record_s": 10,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-sb-006",
+   "stage": "sentence_build",
+   "kind": "make_sentence",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.oral_vocab",
+   "prompt": "इन शब्दों को लेकर एक छोटा सा वाक्य बनाओ।",
+   "display": {
+    "words": [
+     "बिल्ली",
+     "दूध"
+    ]
+   },
+   "target": null,
+   "accept": [
+    "बिल्ली दूध पीती है।"
+   ],
+   "required_words": [
+    "बिल्ली",
+    "दूध"
+   ],
+   "keywords": [],
+   "max_record_s": 10,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-sb-007",
+   "stage": "sentence_build",
+   "kind": "make_sentence",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.oral_vocab",
+   "prompt": "इन सब शब्दों को एक वाक्य में बोलो।",
+   "display": {
+    "words": [
+     "मछली",
+     "पानी"
+    ]
+   },
+   "target": null,
+   "accept": [
+    "मछली पानी में रहती है।"
+   ],
+   "required_words": [
+    "मछली",
+    "पानी"
+   ],
+   "keywords": [],
+   "max_record_s": 10,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-sb-008",
+   "stage": "sentence_build",
+   "kind": "make_sentence",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.oral_vocab",
+   "prompt": "इन शब्दों को जोड़कर एक वाक्य सुनाओ।",
+   "display": {
+    "words": [
+     "चिड़िया",
+     "पेड़"
+    ]
+   },
+   "target": null,
+   "accept": [
+    "चिड़िया पेड़ पर बैठी है।"
+   ],
+   "required_words": [
+    "चिड़िया",
+    "पेड़"
+   ],
+   "keywords": [],
+   "max_record_s": 10,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-sb-009",
+   "stage": "sentence_build",
+   "kind": "make_sentence",
+   "lang": "hi",
+   "checkpoint_id": "L.G3.sentence_formation",
+   "prompt": "इन शब्दों से एक वाक्य बोलो।",
+   "display": {
+    "words": [
+     "बाज़ार",
+     "फल"
+    ]
+   },
+   "target": null,
+   "accept": [
+    "हम बाज़ार से फल लाए।"
+   ],
+   "required_words": [
+    "बाज़ार",
+    "फल"
+   ],
+   "keywords": [],
+   "max_record_s": 10,
+   "difficulty": 2,
+   "grade": 2,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-sb-010",
+   "stage": "sentence_build",
+   "kind": "make_sentence",
+   "lang": "hi",
+   "checkpoint_id": "L.G3.sentence_formation",
+   "prompt": "{name}, इन शब्दों से अपना एक वाक्य बनाकर बोलो।",
+   "display": {
+    "words": [
+     "खेत",
+     "किसान"
+    ]
+   },
+   "target": null,
+   "accept": [
+    "किसान खेत में काम करता है।"
+   ],
+   "required_words": [
+    "खेत",
+    "किसान"
+   ],
+   "keywords": [],
+   "max_record_s": 10,
+   "difficulty": 2,
+   "grade": 2,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-sb-011",
+   "stage": "sentence_build",
+   "kind": "make_sentence",
+   "lang": "hi",
+   "checkpoint_id": "L.G3.sentence_formation",
+   "prompt": "इन सब शब्दों को एक वाक्य में बोलो।",
+   "display": {
+    "words": [
+     "बारिश",
+     "छाता"
+    ]
+   },
+   "target": null,
+   "accept": [
+    "बारिश में छाता खोलो।"
+   ],
+   "required_words": [
+    "बारिश",
+    "छाता"
+   ],
+   "keywords": [],
+   "max_record_s": 10,
+   "difficulty": 2,
+   "grade": 2,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-sb-012",
+   "stage": "sentence_build",
+   "kind": "make_sentence",
+   "lang": "hi",
+   "checkpoint_id": "L.G3.sentence_formation",
+   "prompt": "इन शब्दों को जोड़कर एक वाक्य सुनाओ।",
+   "display": {
+    "words": [
+     "स्कूल",
+     "बस्ता"
+    ]
+   },
+   "target": null,
+   "accept": [
+    "राजू बस्ता लेकर स्कूल जाता है।"
+   ],
+   "required_words": [
+    "स्कूल",
+    "बस्ता"
+   ],
+   "keywords": [],
+   "max_record_s": 10,
+   "difficulty": 2,
+   "grade": 2,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-sb-013",
+   "stage": "sentence_build",
+   "kind": "make_sentence",
+   "lang": "hi",
+   "checkpoint_id": "L.G3.sentence_formation",
+   "prompt": "इन शब्दों से एक वाक्य बोलो।",
+   "display": {
+    "words": [
+     "रविवार",
+     "छुट्टी"
+    ]
+   },
+   "target": null,
+   "accept": [
+    "रविवार को छुट्टी होती है।"
+   ],
+   "required_words": [
+    "रविवार",
+    "छुट्टी"
+   ],
+   "keywords": [],
+   "max_record_s": 10,
+   "difficulty": 2,
+   "grade": 2,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-sb-014",
+   "stage": "sentence_build",
+   "kind": "make_sentence",
+   "lang": "hi",
+   "checkpoint_id": "L.G3.sentence_formation",
+   "prompt": "इन शब्दों को लेकर एक छोटा सा वाक्य बनाओ।",
+   "display": {
+    "words": [
+     "नानी",
+     "खीर"
+    ]
+   },
+   "target": null,
+   "accept": [
+    "नानी ने मेरे लिए खीर बनाई।"
+   ],
+   "required_words": [
+    "नानी",
+    "खीर"
+   ],
+   "keywords": [],
+   "max_record_s": 10,
+   "difficulty": 2,
+   "grade": 2,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-sb-015",
+   "stage": "sentence_build",
+   "kind": "make_sentence",
+   "lang": "hi",
+   "checkpoint_id": "L.G3.sentence_formation",
+   "prompt": "इन सब शब्दों को एक वाक्य में बोलो।",
+   "display": {
+    "words": [
+     "थाली",
+     "रोटी",
+     "दाल"
+    ]
+   },
+   "target": null,
+   "accept": [
+    "थाली में रोटी और दाल है।"
+   ],
+   "required_words": [
+    "थाली",
+    "रोटी",
+    "दाल"
+   ],
+   "keywords": [],
+   "max_record_s": 10,
+   "difficulty": 2,
+   "grade": 2,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-sb-016",
+   "stage": "sentence_build",
+   "kind": "make_sentence",
+   "lang": "hi",
+   "checkpoint_id": "L.G3.sentence_formation",
+   "prompt": "इन शब्दों को जोड़कर एक वाक्य सुनाओ।",
+   "display": {
+    "words": [
+     "हरा",
+     "तोता"
+    ]
+   },
+   "target": null,
+   "accept": [
+    "हरा तोता पेड़ पर बैठा है।"
+   ],
+   "required_words": [
+    "हरा",
+    "तोता"
+   ],
+   "keywords": [],
+   "max_record_s": 10,
+   "difficulty": 2,
+   "grade": 2,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-sb-017",
+   "stage": "sentence_build",
+   "kind": "make_sentence",
+   "lang": "hi",
+   "checkpoint_id": "L.G3.sentence_formation",
+   "prompt": "इन शब्दों से एक वाक्य बोलो।",
+   "display": {
+    "words": [
+     "शाम",
+     "मैदान"
+    ]
+   },
+   "target": null,
+   "accept": [
+    "शाम को बच्चे मैदान में खेलते हैं।"
+   ],
+   "required_words": [
+    "शाम",
+    "मैदान"
+   ],
+   "keywords": [],
+   "max_record_s": 10,
+   "difficulty": 2,
+   "grade": 2,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-sb-018",
+   "stage": "sentence_build",
+   "kind": "make_sentence",
+   "lang": "hi",
+   "checkpoint_id": "L.G3.sentence_formation",
+   "prompt": "इन शब्दों को लेकर एक छोटा सा वाक्य बनाओ।",
+   "display": {
+    "words": [
+     "बारिश",
+     "खेत",
+     "किसान"
+    ]
+   },
+   "target": null,
+   "accept": [
+    "बारिश से किसान के खेत हरे हो गए।"
+   ],
+   "required_words": [
+    "बारिश",
+    "खेत",
+    "किसान"
+   ],
+   "keywords": [],
+   "max_record_s": 10,
+   "difficulty": 3,
+   "grade": 3,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-sb-019",
+   "stage": "sentence_build",
+   "kind": "make_sentence",
+   "lang": "hi",
+   "checkpoint_id": "L.G3.sentence_formation",
+   "prompt": "इन सब शब्दों को एक वाक्य में बोलो।",
+   "display": {
+    "words": [
+     "सुबह",
+     "स्कूल",
+     "दोस्त"
+    ]
+   },
+   "target": null,
+   "accept": [
+    "सुबह राजू अपने दोस्त के साथ स्कूल जाता है।"
+   ],
+   "required_words": [
+    "सुबह",
+    "स्कूल",
+    "दोस्त"
+   ],
+   "keywords": [],
+   "max_record_s": 10,
+   "difficulty": 3,
+   "grade": 3,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-sb-020",
+   "stage": "sentence_build",
+   "kind": "make_sentence",
+   "lang": "hi",
+   "checkpoint_id": "L.G3.sentence_formation",
+   "prompt": "{name}, इन शब्दों से अपना एक वाक्य बनाकर बोलो।",
+   "display": {
+    "words": [
+     "दीदी",
+     "बाज़ार",
+     "आम"
+    ]
+   },
+   "target": null,
+   "accept": [
+    "दीदी बाज़ार से आम लाई।"
+   ],
+   "required_words": [
+    "दीदी",
+    "बाज़ार",
+    "आम"
+   ],
+   "keywords": [],
+   "max_record_s": 10,
+   "difficulty": 3,
+   "grade": 3,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-sb-021",
+   "stage": "sentence_build",
+   "kind": "make_sentence",
+   "lang": "hi",
+   "checkpoint_id": "L.G3.sentence_formation",
+   "prompt": "इन शब्दों से एक वाक्य बोलो।",
+   "display": {
+    "words": [
+     "नदी",
+     "नाव",
+     "मछली"
+    ]
+   },
+   "target": null,
+   "accept": [
+    "नदी में नाव चलती है और मछली तैरती है।"
+   ],
+   "required_words": [
+    "नदी",
+    "नाव",
+    "मछली"
+   ],
+   "keywords": [],
+   "max_record_s": 10,
+   "difficulty": 3,
+   "grade": 3,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-sb-022",
+   "stage": "sentence_build",
+   "kind": "make_sentence",
+   "lang": "hi",
+   "checkpoint_id": "L.G3.sentence_formation",
+   "prompt": "इन शब्दों को लेकर एक छोटा सा वाक्य बनाओ।",
+   "display": {
+    "words": [
+     "पेड़",
+     "छाया",
+     "गर्मी"
+    ]
+   },
+   "target": null,
+   "accept": [
+    "गर्मी में हम पेड़ की छाया में बैठते हैं।"
+   ],
+   "required_words": [
+    "पेड़",
+    "छाया",
+    "गर्मी"
+   ],
+   "keywords": [],
+   "max_record_s": 10,
+   "difficulty": 3,
+   "grade": 3,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-sb-023",
+   "stage": "sentence_build",
+   "kind": "make_sentence",
+   "lang": "hi",
+   "checkpoint_id": "L.G3.sentence_formation",
+   "prompt": "इन सब शब्दों को एक वाक्य में बोलो।",
+   "display": {
+    "words": [
+     "आसमान",
+     "रात",
+     "तारे"
+    ]
+   },
+   "target": null,
+   "accept": [
+    "रात को आसमान में तारे चमकते हैं।"
+   ],
+   "required_words": [
+    "आसमान",
+    "रात",
+    "तारे"
+   ],
+   "keywords": [],
+   "max_record_s": 10,
+   "difficulty": 3,
+   "grade": 3,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-sb-024",
+   "stage": "sentence_build",
+   "kind": "make_sentence",
+   "lang": "hi",
+   "checkpoint_id": "L.G3.sentence_formation",
+   "prompt": "इन शब्दों को जोड़कर एक वाक्य सुनाओ।",
+   "display": {
+    "words": [
+     "गाय",
+     "घास",
+     "खेत"
+    ]
+   },
+   "target": null,
+   "accept": [
+    "गाय खेत में घास खाती है।"
+   ],
+   "required_words": [
+    "गाय",
+    "घास",
+    "खेत"
+   ],
+   "keywords": [],
+   "max_record_s": 10,
+   "difficulty": 3,
+   "grade": 3,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-sb-025",
+   "stage": "sentence_build",
+   "kind": "make_sentence",
+   "lang": "hi",
+   "checkpoint_id": "L.G3.sentence_formation",
+   "prompt": "इन शब्दों से एक वाक्य बोलो।",
+   "display": {
+    "words": [
+     "दादी",
+     "कहानी",
+     "रात"
+    ]
+   },
+   "target": null,
+   "accept": [
+    "रात को दादी हमें कहानी सुनाती है।"
+   ],
+   "required_words": [
+    "दादी",
+    "कहानी",
+    "रात"
+   ],
+   "keywords": [],
+   "max_record_s": 10,
+   "difficulty": 3,
+   "grade": 3,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-sb-026",
+   "stage": "sentence_build",
+   "kind": "make_sentence",
+   "lang": "hi",
+   "checkpoint_id": "L.G3.sentence_formation",
+   "prompt": "इन शब्दों को लेकर एक छोटा सा वाक्य बनाओ।",
+   "display": {
+    "words": [
+     "त्योहार",
+     "मिठाई",
+     "घर"
+    ]
+   },
+   "target": null,
+   "accept": [
+    "त्योहार पर घर में मिठाई बनती है।"
+   ],
+   "required_words": [
+    "त्योहार",
+    "मिठाई",
+    "घर"
+   ],
+   "keywords": [],
+   "max_record_s": 10,
+   "difficulty": 3,
+   "grade": 3,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-rd-001",
+   "stage": "reading",
+   "kind": "read_sentence",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.read_short_sentences",
+   "prompt": "यह वाक्य पढ़ो।",
+   "display": {
+    "text": "यह मेरा घर है।"
+   },
+   "target": "यह मेरा घर है।",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 8,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-rd-002",
+   "stage": "reading",
+   "kind": "read_sentence",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.read_short_sentences",
+   "prompt": "इस वाक्य को ज़ोर से पढ़ो।",
+   "display": {
+    "text": "गाय घास खाती है।"
+   },
+   "target": "गाय घास खाती है।",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 8,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-rd-003",
+   "stage": "reading",
+   "kind": "read_sentence",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.read_short_sentences",
+   "prompt": "धीरे-धीरे, साफ़ आवाज़ में यह वाक्य पढ़ो।",
+   "display": {
+    "text": "राजू पानी पीता है।"
+   },
+   "target": "राजू पानी पीता है।",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 8,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-rd-004",
+   "stage": "reading",
+   "kind": "read_sentence",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.read_short_sentences",
+   "prompt": "यह वाक्य पढ़कर सुनाओ।",
+   "display": {
+    "text": "आम मीठा है।"
+   },
+   "target": "आम मीठा है।",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 8,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-rd-005",
+   "stage": "reading",
+   "kind": "read_sentence",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.read_short_sentences",
+   "prompt": "यह वाक्य पढ़ो।",
+   "display": {
+    "text": "मेरी किताब नई है।"
+   },
+   "target": "मेरी किताब नई है।",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 8,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-rd-006",
+   "stage": "reading",
+   "kind": "read_sentence",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.read_short_sentences",
+   "prompt": "इस वाक्य को ज़ोर से पढ़ो।",
+   "display": {
+    "text": "चिड़िया उड़ रही है।"
+   },
+   "target": "चिड़िया उड़ रही है।",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 8,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-rd-007",
+   "stage": "reading",
+   "kind": "read_sentence",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.read_short_sentences",
+   "prompt": "धीरे-धीरे, साफ़ आवाज़ में यह वाक्य पढ़ो।",
+   "display": {
+    "text": "माँ रोटी बना रही है।"
+   },
+   "target": "माँ रोटी बना रही है।",
+   "accept": [
+    "मां रोटी बना रही है।"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 8,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-rd-008",
+   "stage": "reading",
+   "kind": "read_sentence",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.read_short_sentences",
+   "prompt": "यह वाक्य पढ़कर सुनाओ।",
+   "display": {
+    "text": "बिल्ली कहाँ है?"
+   },
+   "target": "बिल्ली कहाँ है?",
+   "accept": [
+    "बिल्ली कहां है?"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 8,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-rd-009",
+   "stage": "reading",
+   "kind": "read_sentence",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.read_short_sentences",
+   "prompt": "यह वाक्य पढ़ो।",
+   "display": {
+    "text": "मीना रोज़ सुबह स्कूल जाती है।"
+   },
+   "target": "मीना रोज़ सुबह स्कूल जाती है।",
+   "accept": [
+    "मीना रोज सुबह स्कूल जाती है।"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 8,
+   "difficulty": 2,
+   "grade": 2,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-rd-010",
+   "stage": "reading",
+   "kind": "read_sentence",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.read_short_sentences",
+   "prompt": "{name}, यह वाक्य पढ़कर सुनाओ।",
+   "display": {
+    "text": "बारिश में बच्चे खुश होकर नाचते हैं।"
+   },
+   "target": "बारिश में बच्चे खुश होकर नाचते हैं।",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 8,
+   "difficulty": 2,
+   "grade": 2,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-rd-011",
+   "stage": "reading",
+   "kind": "read_sentence",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.read_short_sentences",
+   "prompt": "धीरे-धीरे, साफ़ आवाज़ में यह वाक्य पढ़ो।",
+   "display": {
+    "text": "किसान खेत में गेहूँ बोता है।"
+   },
+   "target": "किसान खेत में गेहूँ बोता है।",
+   "accept": [
+    "किसान खेत में गेहूं बोता है।"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 8,
+   "difficulty": 2,
+   "grade": 2,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-rd-012",
+   "stage": "reading",
+   "kind": "read_sentence",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.read_short_sentences",
+   "prompt": "यह वाक्य पढ़कर सुनाओ।",
+   "display": {
+    "text": "दादी हमें रात को कहानी सुनाती है।"
+   },
+   "target": "दादी हमें रात को कहानी सुनाती है।",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 8,
+   "difficulty": 2,
+   "grade": 2,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-rd-013",
+   "stage": "reading",
+   "kind": "read_sentence",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.read_short_sentences",
+   "prompt": "यह वाक्य पढ़ो।",
+   "display": {
+    "text": "पेड़ पर एक लाल चिड़िया बैठी है।"
+   },
+   "target": "पेड़ पर एक लाल चिड़िया बैठी है।",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 8,
+   "difficulty": 2,
+   "grade": 2,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-rd-014",
+   "stage": "reading",
+   "kind": "read_sentence",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.read_short_sentences",
+   "prompt": "इस वाक्य को ज़ोर से पढ़ो।",
+   "display": {
+    "text": "क्या तुम मेरे साथ खेलोगे?"
+   },
+   "target": "क्या तुम मेरे साथ खेलोगे?",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 8,
+   "difficulty": 2,
+   "grade": 2,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-rd-015",
+   "stage": "reading",
+   "kind": "read_sentence",
+   "lang": "hi",
+   "checkpoint_id": "L.G1.read_short_sentences",
+   "prompt": "धीरे-धीरे, साफ़ आवाज़ में यह वाक्य पढ़ो।",
+   "display": {
+    "text": "सोनू ने बाज़ार से केले खरीदे।"
+   },
+   "target": "सोनू ने बाज़ार से केले खरीदे।",
+   "accept": [
+    "सोनू ने बाजार से केले खरीदे।"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 8,
+   "difficulty": 2,
+   "grade": 2,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-rd-016",
+   "stage": "reading",
+   "kind": "read_sentence",
+   "lang": "hi",
+   "checkpoint_id": "L.G2.fluency_45_60",
+   "prompt": "यह वाक्य पढ़कर सुनाओ।",
+   "display": {
+    "text": "गर्मी की छुट्टियों में हम नानी के गाँव जाते हैं।"
+   },
+   "target": "गर्मी की छुट्टियों में हम नानी के गाँव जाते हैं।",
+   "accept": [
+    "गर्मी की छुट्टियों में हम नानी के गांव जाते हैं।"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 8,
+   "difficulty": 3,
+   "grade": 2,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-rd-017",
+   "stage": "reading",
+   "kind": "read_sentence",
+   "lang": "hi",
+   "checkpoint_id": "L.G2.fluency_45_60",
+   "prompt": "यह वाक्य पढ़ो।",
+   "display": {
+    "text": "मेले में रंग-बिरंगे गुब्बारे और मीठी जलेबी मिलती है।"
+   },
+   "target": "मेले में रंग-बिरंगे गुब्बारे और मीठी जलेबी मिलती है।",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 8,
+   "difficulty": 3,
+   "grade": 2,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-rd-018",
+   "stage": "reading",
+   "kind": "read_sentence",
+   "lang": "hi",
+   "checkpoint_id": "L.G2.fluency_45_60",
+   "prompt": "इस वाक्य को ज़ोर से पढ़ो।",
+   "display": {
+    "text": "नदी के किनारे बच्चे मिट्टी के घर बना रहे हैं।"
+   },
+   "target": "नदी के किनारे बच्चे मिट्टी के घर बना रहे हैं।",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 8,
+   "difficulty": 3,
+   "grade": 2,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-rd-019",
+   "stage": "reading",
+   "kind": "read_sentence",
+   "lang": "hi",
+   "checkpoint_id": "L.G2.fluency_45_60",
+   "prompt": "धीरे-धीरे, साफ़ आवाज़ में यह वाक्य पढ़ो।",
+   "display": {
+    "text": "त्योहार पर हम घर को रंगोली से सजाते हैं।"
+   },
+   "target": "त्योहार पर हम घर को रंगोली से सजाते हैं।",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 8,
+   "difficulty": 3,
+   "grade": 2,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-rd-020",
+   "stage": "reading",
+   "kind": "read_sentence",
+   "lang": "hi",
+   "checkpoint_id": "L.G2.fluency_45_60",
+   "prompt": "{name}, यह वाक्य पढ़कर सुनाओ।",
+   "display": {
+    "text": "गीता ने अपने छोटे भाई को पढ़ना सिखाया।"
+   },
+   "target": "गीता ने अपने छोटे भाई को पढ़ना सिखाया।",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 8,
+   "difficulty": 3,
+   "grade": 2,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-rd-021",
+   "stage": "reading",
+   "kind": "read_sentence",
+   "lang": "hi",
+   "checkpoint_id": "L.G2.fluency_45_60",
+   "prompt": "यह वाक्य पढ़ो।",
+   "display": {
+    "text": "आसमान में काले बादल देखकर मोर नाचने लगा।"
+   },
+   "target": "आसमान में काले बादल देखकर मोर नाचने लगा।",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 8,
+   "difficulty": 3,
+   "grade": 2,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-rd-022",
+   "stage": "reading",
+   "kind": "read_sentence",
+   "lang": "hi",
+   "checkpoint_id": "L.G2.fluency_45_60",
+   "prompt": "इस वाक्य को ज़ोर से पढ़ो।",
+   "display": {
+    "text": "क्या तुमने कभी सुबह-सुबह चिड़ियों का गाना सुना है?"
+   },
+   "target": "क्या तुमने कभी सुबह-सुबह चिड़ियों का गाना सुना है?",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 8,
+   "difficulty": 3,
+   "grade": 2,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-rd-023",
+   "stage": "reading",
+   "kind": "read_sentence",
+   "lang": "hi",
+   "checkpoint_id": "L.G2.fluency_45_60",
+   "prompt": "धीरे-धीरे, साफ़ आवाज़ में यह वाक्य पढ़ो।",
+   "display": {
+    "text": "हमारे विद्यालय के बगीचे में बहुत सुंदर फूल खिले हैं।"
+   },
+   "target": "हमारे विद्यालय के बगीचे में बहुत सुंदर फूल खिले हैं।",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 8,
+   "difficulty": 3,
+   "grade": 2,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-hi-rd-024",
+   "stage": "reading",
+   "kind": "read_paragraph",
+   "lang": "hi",
+   "checkpoint_id": "L.G2.fluency_45_60",
+   "prompt": "यह कहानी ध्यान से ज़ोर से पढ़ो।",
+   "display": {
+    "text": "मीना के पास एक छोटी बिल्ली है। बिल्ली का रंग भूरा है। वह रोज़ दूध पीती है। मीना उसके साथ खेलती है। बिल्ली को धूप में सोना अच्छा लगता है। मीना अपनी बिल्ली से बहुत प्यार करती है।"
+   },
+   "target": "मीना के पास एक छोटी बिल्ली है। बिल्ली का रंग भूरा है। वह रोज़ दूध पीती है। मीना उसके साथ खेलती है। बिल्ली को धूप में सोना अच्छा लगता है। मीना अपनी बिल्ली से बहुत प्यार करती है।",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 57,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": [
+    {
+     "id": "vb-hi-rd-024-q1",
+     "stage": "reading",
+     "kind": "answer_question",
+     "lang": "hi",
+     "checkpoint_id": "L.G2.comprehension_literal",
+     "prompt": "मीना की बिल्ली का रंग कैसा है?",
+     "display": {
+      "question": "मीना की बिल्ली का रंग कैसा है?"
+     },
+     "target": "भूरा",
+     "accept": [
+      "भूरा रंग"
+     ],
+     "required_words": [],
+     "keywords": [
+      "भूरा"
+     ],
+     "max_record_s": 10,
+     "difficulty": 1,
+     "grade": 1,
+     "sounds": [],
+     "reviewed": true,
+     "source": "bank",
+     "followups": []
+    },
+    {
+     "id": "vb-hi-rd-024-q2",
+     "stage": "reading",
+     "kind": "answer_question",
+     "lang": "hi",
+     "checkpoint_id": "L.G2.comprehension_literal",
+     "prompt": "बिल्ली रोज़ क्या पीती है?",
+     "display": {
+      "question": "बिल्ली रोज़ क्या पीती है?"
+     },
+     "target": "दूध",
+     "accept": [
+      "दूध पीती है"
+     ],
+     "required_words": [],
+     "keywords": [
+      "दूध"
+     ],
+     "max_record_s": 10,
+     "difficulty": 1,
+     "grade": 1,
+     "sounds": [],
+     "reviewed": true,
+     "source": "bank",
+     "followups": []
+    }
+   ]
+  },
+  {
+   "id": "vb-hi-rd-025",
+   "stage": "reading",
+   "kind": "read_paragraph",
+   "lang": "hi",
+   "checkpoint_id": "L.G2.fluency_45_60",
+   "prompt": "यह छोटी कहानी पढ़कर सुनाओ।",
+   "display": {
+    "text": "राजू सुबह जल्दी उठता है। वह मुँह धोकर नाश्ता करता है। फिर वह बस्ता लेकर स्कूल जाता है। स्कूल में वह अपने दोस्तों से मिलता है। राजू को पढ़ना और खेलना दोनों पसंद हैं।"
+   },
+   "target": "राजू सुबह जल्दी उठता है। वह मुँह धोकर नाश्ता करता है। फिर वह बस्ता लेकर स्कूल जाता है। स्कूल में वह अपने दोस्तों से मिलता है। राजू को पढ़ना और खेलना दोनों पसंद हैं।",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 51,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": [
+    {
+     "id": "vb-hi-rd-025-q1",
+     "stage": "reading",
+     "kind": "answer_question",
+     "lang": "hi",
+     "checkpoint_id": "L.G2.comprehension_literal",
+     "prompt": "राजू बस्ता लेकर कहाँ जाता है?",
+     "display": {
+      "question": "राजू बस्ता लेकर कहाँ जाता है?"
+     },
+     "target": "स्कूल",
+     "accept": [
+      "विद्यालय"
+     ],
+     "required_words": [],
+     "keywords": [
+      "स्कूल"
+     ],
+     "max_record_s": 10,
+     "difficulty": 1,
+     "grade": 1,
+     "sounds": [],
+     "reviewed": true,
+     "source": "bank",
+     "followups": []
+    },
+    {
+     "id": "vb-hi-rd-025-q2",
+     "stage": "reading",
+     "kind": "answer_question",
+     "lang": "hi",
+     "checkpoint_id": "L.G2.comprehension_literal",
+     "prompt": "राजू कब उठता है?",
+     "display": {
+      "question": "राजू कब उठता है?"
+     },
+     "target": "सुबह जल्दी",
+     "accept": [
+      "सुबह"
+     ],
+     "required_words": [],
+     "keywords": [
+      "सुबह",
+      "जल्दी"
+     ],
+     "max_record_s": 10,
+     "difficulty": 1,
+     "grade": 1,
+     "sounds": [],
+     "reviewed": true,
+     "source": "bank",
+     "followups": []
+    }
+   ]
+  },
+  {
+   "id": "vb-hi-rd-026",
+   "stage": "reading",
+   "kind": "read_paragraph",
+   "lang": "hi",
+   "checkpoint_id": "L.G2.fluency_45_60",
+   "prompt": "{name}, यह कहानी पढ़ो। पढ़ने के बाद मेरे सवालों का जवाब देना।",
+   "display": {
+    "text": "हमारे गाँव में एक बड़ा पेड़ है। उस पेड़ पर आम लगते हैं। गर्मी में बच्चे पेड़ की छाया में खेलते हैं। पेड़ पर तोते भी रहते हैं। सब बच्चे इस पेड़ को प्यार करते हैं।"
+   },
+   "target": "हमारे गाँव में एक बड़ा पेड़ है। उस पेड़ पर आम लगते हैं। गर्मी में बच्चे पेड़ की छाया में खेलते हैं। पेड़ पर तोते भी रहते हैं। सब बच्चे इस पेड़ को प्यार करते हैं।",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 54,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": [
+    {
+     "id": "vb-hi-rd-026-q1",
+     "stage": "reading",
+     "kind": "answer_question",
+     "lang": "hi",
+     "checkpoint_id": "L.G2.comprehension_literal",
+     "prompt": "उस पेड़ पर कौन सा फल लगता है?",
+     "display": {
+      "question": "उस पेड़ पर कौन सा फल लगता है?"
+     },
+     "target": "आम",
+     "accept": [],
+     "required_words": [],
+     "keywords": [
+      "आम"
+     ],
+     "max_record_s": 10,
+     "difficulty": 1,
+     "grade": 1,
+     "sounds": [],
+     "reviewed": true,
+     "source": "bank",
+     "followups": []
+    },
+    {
+     "id": "vb-hi-rd-026-q2",
+     "stage": "reading",
+     "kind": "answer_question",
+     "lang": "hi",
+     "checkpoint_id": "L.G2.comprehension_literal",
+     "prompt": "पेड़ पर कौन से पक्षी रहते हैं?",
+     "display": {
+      "question": "पेड़ पर कौन से पक्षी रहते हैं?"
+     },
+     "target": "तोते",
+     "accept": [
+      "तोता"
+     ],
+     "required_words": [],
+     "keywords": [
+      "तोते"
+     ],
+     "max_record_s": 10,
+     "difficulty": 1,
+     "grade": 1,
+     "sounds": [],
+     "reviewed": true,
+     "source": "bank",
+     "followups": []
+    }
+   ]
+  },
+  {
+   "id": "vb-hi-rd-027",
+   "stage": "reading",
+   "kind": "read_paragraph",
+   "lang": "hi",
+   "checkpoint_id": "L.G2.fluency_45_60",
+   "prompt": "यह कहानी ध्यान से ज़ोर से पढ़ो।",
+   "display": {
+    "text": "आज गाँव में मेला लगा है। सोनू अपने दादाजी के साथ मेले में गया। वहाँ बहुत भीड़ थी। सोनू ने बड़े झूले की सवारी की। दादाजी ने उसे एक लाल गुब्बारा दिलाया। फिर दोनों ने गरम जलेबी खाई। शाम को सोनू खुशी-खुशी घर लौटा।"
+   },
+   "target": "आज गाँव में मेला लगा है। सोनू अपने दादाजी के साथ मेले में गया। वहाँ बहुत भीड़ थी। सोनू ने बड़े झूले की सवारी की। दादाजी ने उसे एक लाल गुब्बारा दिलाया। फिर दोनों ने गरम जलेबी खाई। शाम को सोनू खुशी-खुशी घर लौटा।",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 66,
+   "difficulty": 2,
+   "grade": 2,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": [
+    {
+     "id": "vb-hi-rd-027-q1",
+     "stage": "reading",
+     "kind": "answer_question",
+     "lang": "hi",
+     "checkpoint_id": "L.G2.comprehension_literal",
+     "prompt": "सोनू किसके साथ मेले में गया?",
+     "display": {
+      "question": "सोनू किसके साथ मेले में गया?"
+     },
+     "target": "दादाजी",
+     "accept": [
+      "दादाजी के साथ",
+      "दादा"
+     ],
+     "required_words": [],
+     "keywords": [
+      "दादाजी"
+     ],
+     "max_record_s": 10,
+     "difficulty": 2,
+     "grade": 2,
+     "sounds": [],
+     "reviewed": true,
+     "source": "bank",
+     "followups": []
+    },
+    {
+     "id": "vb-hi-rd-027-q2",
+     "stage": "reading",
+     "kind": "answer_question",
+     "lang": "hi",
+     "checkpoint_id": "L.G2.comprehension_literal",
+     "prompt": "सोनू को क्या दिलाया गया?",
+     "display": {
+      "question": "सोनू को क्या दिलाया गया?"
+     },
+     "target": "लाल गुब्बारा",
+     "accept": [
+      "गुब्बारा"
+     ],
+     "required_words": [],
+     "keywords": [
+      "गुब्बारा"
+     ],
+     "max_record_s": 10,
+     "difficulty": 2,
+     "grade": 2,
+     "sounds": [],
+     "reviewed": true,
+     "source": "bank",
+     "followups": []
+    }
+   ]
+  },
+  {
+   "id": "vb-hi-rd-028",
+   "stage": "reading",
+   "kind": "read_paragraph",
+   "lang": "hi",
+   "checkpoint_id": "L.G2.fluency_45_60",
+   "prompt": "यह छोटी कहानी पढ़कर सुनाओ।",
+   "display": {
+    "text": "गीता की कक्षा में आज पौधे लगाने का दिन था। सब बच्चे अपने घर से एक छोटा पौधा लाए। गीता गेंदे का पौधा लाई। अध्यापिका ने बच्चों को गड्ढा खोदना सिखाया। बच्चों ने पौधे लगाए और उनमें पानी डाला। अब गीता रोज़ अपने पौधे को पानी देती है।"
+   },
+   "target": "गीता की कक्षा में आज पौधे लगाने का दिन था। सब बच्चे अपने घर से एक छोटा पौधा लाए। गीता गेंदे का पौधा लाई। अध्यापिका ने बच्चों को गड्ढा खोदना सिखाया। बच्चों ने पौधे लगाए और उनमें पानी डाला। अब गीता रोज़ अपने पौधे को पानी देती है।",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 72,
+   "difficulty": 2,
+   "grade": 2,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": [
+    {
+     "id": "vb-hi-rd-028-q1",
+     "stage": "reading",
+     "kind": "answer_question",
+     "lang": "hi",
+     "checkpoint_id": "L.G2.comprehension_literal",
+     "prompt": "गीता किस फूल का पौधा लाई?",
+     "display": {
+      "question": "गीता किस फूल का पौधा लाई?"
+     },
+     "target": "गेंदा",
+     "accept": [
+      "गेंदे का पौधा",
+      "गेंदे"
+     ],
+     "required_words": [],
+     "keywords": [
+      "गेंदे"
+     ],
+     "max_record_s": 10,
+     "difficulty": 2,
+     "grade": 2,
+     "sounds": [],
+     "reviewed": true,
+     "source": "bank",
+     "followups": []
+    },
+    {
+     "id": "vb-hi-rd-028-q2",
+     "stage": "reading",
+     "kind": "answer_question",
+     "lang": "hi",
+     "checkpoint_id": "L.G2.comprehension_literal",
+     "prompt": "गीता रोज़ अपने पौधे को क्या देती है?",
+     "display": {
+      "question": "गीता रोज़ अपने पौधे को क्या देती है?"
+     },
+     "target": "पानी",
+     "accept": [
+      "पानी देती है"
+     ],
+     "required_words": [],
+     "keywords": [
+      "पानी"
+     ],
+     "max_record_s": 10,
+     "difficulty": 2,
+     "grade": 2,
+     "sounds": [],
+     "reviewed": true,
+     "source": "bank",
+     "followups": []
+    }
+   ]
+  },
+  {
+   "id": "vb-hi-rd-029",
+   "stage": "reading",
+   "kind": "read_paragraph",
+   "lang": "hi",
+   "checkpoint_id": "L.G2.fluency_45_60",
+   "prompt": "{name}, यह कहानी पढ़ो। पढ़ने के बाद मेरे सवालों का जवाब देना।",
+   "display": {
+    "text": "बरसात का मौसम आ गया। आसमान में काले बादल छा गए। फिर ज़ोर से बारिश होने लगी। खेतों में पानी भर गया। किसान बहुत खुश हुए। बच्चों ने कागज़ की नावें बनाईं और पानी में चलाईं। मेंढक टर्र-टर्र करने लगे।"
+   },
+   "target": "बरसात का मौसम आ गया। आसमान में काले बादल छा गए। फिर ज़ोर से बारिश होने लगी। खेतों में पानी भर गया। किसान बहुत खुश हुए। बच्चों ने कागज़ की नावें बनाईं और पानी में चलाईं। मेंढक टर्र-टर्र करने लगे।",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 60,
+   "difficulty": 2,
+   "grade": 2,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": [
+    {
+     "id": "vb-hi-rd-029-q1",
+     "stage": "reading",
+     "kind": "answer_question",
+     "lang": "hi",
+     "checkpoint_id": "L.G2.comprehension_literal",
+     "prompt": "बच्चों ने कागज़ से क्या बनाया?",
+     "display": {
+      "question": "बच्चों ने कागज़ से क्या बनाया?"
+     },
+     "target": "नावें",
+     "accept": [
+      "नाव",
+      "कागज़ की नाव"
+     ],
+     "required_words": [],
+     "keywords": [
+      "नाव"
+     ],
+     "max_record_s": 10,
+     "difficulty": 2,
+     "grade": 2,
+     "sounds": [],
+     "reviewed": true,
+     "source": "bank",
+     "followups": []
+    },
+    {
+     "id": "vb-hi-rd-029-q2",
+     "stage": "reading",
+     "kind": "answer_question",
+     "lang": "hi",
+     "checkpoint_id": "L.G2.comprehension_literal",
+     "prompt": "आसमान में कैसे बादल छा गए?",
+     "display": {
+      "question": "आसमान में कैसे बादल छा गए?"
+     },
+     "target": "काले बादल",
+     "accept": [
+      "काले"
+     ],
+     "required_words": [],
+     "keywords": [
+      "काले"
+     ],
+     "max_record_s": 10,
+     "difficulty": 2,
+     "grade": 2,
+     "sounds": [],
+     "reviewed": true,
+     "source": "bank",
+     "followups": []
+    }
+   ]
+  },
+  {
+   "id": "vb-hi-rd-030",
+   "stage": "reading",
+   "kind": "read_paragraph",
+   "lang": "hi",
+   "checkpoint_id": "L.G3.fluency_60",
+   "prompt": "यह कहानी ध्यान से ज़ोर से पढ़ो।",
+   "display": {
+    "text": "रविवार को राजू और उसकी बहन मीना नानी के घर गए। नानी का घर नदी के किनारे एक छोटे गाँव में है। नानी ने उनके लिए गरम-गरम पूड़ियाँ और आलू की सब्ज़ी बनाई। खाने के बाद दोनों बच्चे नदी किनारे घूमने गए। वहाँ उन्होंने मछलियाँ और बत्तखें देखीं। शाम को नानी ने उन्हें एक मज़ेदार कहानी सुनाई। रात को दोनों थककर जल्दी सो गए।"
+   },
+   "target": "रविवार को राजू और उसकी बहन मीना नानी के घर गए। नानी का घर नदी के किनारे एक छोटे गाँव में है। नानी ने उनके लिए गरम-गरम पूड़ियाँ और आलू की सब्ज़ी बनाई। खाने के बाद दोनों बच्चे नदी किनारे घूमने गए। वहाँ उन्होंने मछलियाँ और बत्तखें देखीं। शाम को नानी ने उन्हें एक मज़ेदार कहानी सुनाई। रात को दोनों थककर जल्दी सो गए।",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 90,
+   "difficulty": 3,
+   "grade": 3,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": [
+    {
+     "id": "vb-hi-rd-030-q1",
+     "stage": "reading",
+     "kind": "answer_question",
+     "lang": "hi",
+     "checkpoint_id": "L.G2.comprehension_literal",
+     "prompt": "नानी का घर कहाँ है?",
+     "display": {
+      "question": "नानी का घर कहाँ है?"
+     },
+     "target": "नदी के किनारे",
+     "accept": [
+      "नदी किनारे",
+      "गाँव में"
+     ],
+     "required_words": [],
+     "keywords": [
+      "नदी",
+      "किनारे"
+     ],
+     "max_record_s": 10,
+     "difficulty": 3,
+     "grade": 3,
+     "sounds": [],
+     "reviewed": true,
+     "source": "bank",
+     "followups": []
+    },
+    {
+     "id": "vb-hi-rd-030-q2",
+     "stage": "reading",
+     "kind": "answer_question",
+     "lang": "hi",
+     "checkpoint_id": "L.G3.comprehension_inferential",
+     "prompt": "बच्चे रात को जल्दी क्यों सो गए?",
+     "display": {
+      "question": "बच्चे रात को जल्दी क्यों सो गए?"
+     },
+     "target": "वे थक गए थे",
+     "accept": [
+      "थक गए थे",
+      "थककर"
+     ],
+     "required_words": [],
+     "keywords": [
+      "थक"
+     ],
+     "max_record_s": 10,
+     "difficulty": 3,
+     "grade": 3,
+     "sounds": [],
+     "reviewed": true,
+     "source": "bank",
+     "followups": []
+    }
+   ]
+  },
+  {
+   "id": "vb-hi-rd-031",
+   "stage": "reading",
+   "kind": "read_paragraph",
+   "lang": "hi",
+   "checkpoint_id": "L.G3.fluency_60",
+   "prompt": "यह छोटी कहानी पढ़कर सुनाओ।",
+   "display": {
+    "text": "मीना के स्कूल में खेल-दिवस था। सुबह से ही मैदान में बहुत चहल-पहल थी। मीना दौड़ में भाग ले रही थी। दौड़ शुरू हुई तो वह तेज़ी से भागी। बीच में उसकी सहेली गीता गिर गई। मीना रुकी और उसने गीता को उठाकर उसकी मदद की। दोनों साथ-साथ दौड़ीं और आखिर में पहुँचीं। बच्चों ने ताली बजाकर उनकी तारीफ़ की।"
+   },
+   "target": "मीना के स्कूल में खेल-दिवस था। सुबह से ही मैदान में बहुत चहल-पहल थी। मीना दौड़ में भाग ले रही थी। दौड़ शुरू हुई तो वह तेज़ी से भागी। बीच में उसकी सहेली गीता गिर गई। मीना रुकी और उसने गीता को उठाकर उसकी मदद की। दोनों साथ-साथ दौड़ीं और आखिर में पहुँचीं। बच्चों ने ताली बजाकर उनकी तारीफ़ की।",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 90,
+   "difficulty": 3,
+   "grade": 3,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": [
+    {
+     "id": "vb-hi-rd-031-q1",
+     "stage": "reading",
+     "kind": "answer_question",
+     "lang": "hi",
+     "checkpoint_id": "L.G2.comprehension_literal",
+     "prompt": "मीना की सहेली का नाम क्या है?",
+     "display": {
+      "question": "मीना की सहेली का नाम क्या है?"
+     },
+     "target": "गीता",
+     "accept": [],
+     "required_words": [],
+     "keywords": [
+      "गीता"
+     ],
+     "max_record_s": 10,
+     "difficulty": 3,
+     "grade": 3,
+     "sounds": [],
+     "reviewed": true,
+     "source": "bank",
+     "followups": []
+    },
+    {
+     "id": "vb-hi-rd-031-q2",
+     "stage": "reading",
+     "kind": "answer_question",
+     "lang": "hi",
+     "checkpoint_id": "L.G3.comprehension_inferential",
+     "prompt": "बच्चों ने ताली क्यों बजाई?",
+     "display": {
+      "question": "बच्चों ने ताली क्यों बजाई?"
+     },
+     "target": "मीना ने गीता की मदद की",
+     "accept": [
+      "मदद की",
+      "गीता को उठाया"
+     ],
+     "required_words": [],
+     "keywords": [
+      "मदद",
+      "उठाकर"
+     ],
+     "max_record_s": 10,
+     "difficulty": 3,
+     "grade": 3,
+     "sounds": [],
+     "reviewed": true,
+     "source": "bank",
+     "followups": []
+    }
+   ]
+  },
+  {
+   "id": "vb-hi-rd-032",
+   "stage": "reading",
+   "kind": "read_paragraph",
+   "lang": "hi",
+   "checkpoint_id": "L.G3.fluency_60",
+   "prompt": "{name}, यह कहानी पढ़ो। पढ़ने के बाद मेरे सवालों का जवाब देना।",
+   "display": {
+    "text": "किसान हरिया रोज़ सुबह अपने खेत पर जाता था। इस साल उसने खेत में गेहूँ बोया। वह पौधों को समय पर पानी देता था और खरपतवार निकालता था। कुछ महीनों में गेहूँ की बालियाँ सुनहरी हो गईं। हरिया ने फ़सल काटी और अनाज बाज़ार में बेचा। उस पैसे से उसने अपने बच्चों के लिए नई किताबें और कपड़े खरीदे। पूरा परिवार बहुत खुश हुआ।"
+   },
+   "target": "किसान हरिया रोज़ सुबह अपने खेत पर जाता था। इस साल उसने खेत में गेहूँ बोया। वह पौधों को समय पर पानी देता था और खरपतवार निकालता था। कुछ महीनों में गेहूँ की बालियाँ सुनहरी हो गईं। हरिया ने फ़सल काटी और अनाज बाज़ार में बेचा। उस पैसे से उसने अपने बच्चों के लिए नई किताबें और कपड़े खरीदे। पूरा परिवार बहुत खुश हुआ।",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 90,
+   "difficulty": 3,
+   "grade": 3,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": [
+    {
+     "id": "vb-hi-rd-032-q1",
+     "stage": "reading",
+     "kind": "answer_question",
+     "lang": "hi",
+     "checkpoint_id": "L.G2.comprehension_literal",
+     "prompt": "हरिया ने खेत में क्या बोया?",
+     "display": {
+      "question": "हरिया ने खेत में क्या बोया?"
+     },
+     "target": "गेहूँ",
+     "accept": [
+      "गेहूं"
+     ],
+     "required_words": [],
+     "keywords": [
+      "गेहूँ"
+     ],
+     "max_record_s": 10,
+     "difficulty": 3,
+     "grade": 3,
+     "sounds": [],
+     "reviewed": true,
+     "source": "bank",
+     "followups": []
+    },
+    {
+     "id": "vb-hi-rd-032-q2",
+     "stage": "reading",
+     "kind": "answer_question",
+     "lang": "hi",
+     "checkpoint_id": "L.G3.comprehension_inferential",
+     "prompt": "हरिया को नई किताबें खरीदने के पैसे कहाँ से मिले?",
+     "display": {
+      "question": "हरिया को नई किताबें खरीदने के पैसे कहाँ से मिले?"
+     },
+     "target": "अनाज बेचकर",
+     "accept": [
+      "फ़सल बेचकर",
+      "बाज़ार में अनाज बेचकर"
+     ],
+     "required_words": [],
+     "keywords": [
+      "अनाज",
+      "बेच",
+      "फ़सल"
+     ],
+     "max_record_s": 10,
+     "difficulty": 3,
+     "grade": 3,
+     "sounds": [],
+     "reviewed": true,
+     "source": "bank",
+     "followups": []
+    }
+   ]
+  },
+  {
+   "id": "vb-en-let-001",
+   "stage": "letter",
+   "kind": "read_letter",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "What letter is this? Say its name or its sound.",
+   "display": {
+    "text": "a"
+   },
+   "target": "a",
+   "accept": [
+    "a",
+    "ay",
+    "ah",
+    "aa"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [
+    "a"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-let-002",
+   "stage": "letter",
+   "kind": "read_letter",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Look at this letter. Can you say it?",
+   "display": {
+    "text": "s"
+   },
+   "target": "s",
+   "accept": [
+    "s",
+    "es",
+    "ess",
+    "ss",
+    "sss"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [
+    "s"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-let-003",
+   "stage": "letter",
+   "kind": "read_letter",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "{name}, what letter is this?",
+   "display": {
+    "text": "t"
+   },
+   "target": "t",
+   "accept": [
+    "t",
+    "tee",
+    "tea",
+    "tuh"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [
+    "t"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-let-004",
+   "stage": "letter",
+   "kind": "read_letter",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Say this letter out loud.",
+   "display": {
+    "text": "o"
+   },
+   "target": "o",
+   "accept": [
+    "o",
+    "oh",
+    "aw"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [
+    "o"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-let-005",
+   "stage": "letter",
+   "kind": "read_letter",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Look carefully. What letter do you see?",
+   "display": {
+    "text": "r"
+   },
+   "target": "r",
+   "accept": [
+    "r",
+    "are",
+    "ar",
+    "ruh"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 2,
+   "grade": 1,
+   "sounds": [
+    "r"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-let-006",
+   "stage": "letter",
+   "kind": "read_letter",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "What letter is this? Say its name or its sound.",
+   "display": {
+    "text": "f"
+   },
+   "target": "f",
+   "accept": [
+    "f",
+    "ef",
+    "eff",
+    "ff",
+    "fuh"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 2,
+   "grade": 1,
+   "sounds": [
+    "f"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-let-007",
+   "stage": "letter",
+   "kind": "read_letter",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Look at this letter. Can you say it?",
+   "display": {
+    "text": "g"
+   },
+   "target": "g",
+   "accept": [
+    "g",
+    "gee",
+    "guh"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 2,
+   "grade": 1,
+   "sounds": [
+    "g"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-let-008",
+   "stage": "letter",
+   "kind": "read_letter",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "{name}, what letter is this?",
+   "display": {
+    "text": "h"
+   },
+   "target": "h",
+   "accept": [
+    "h",
+    "aitch",
+    "huh"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 2,
+   "grade": 1,
+   "sounds": [
+    "h"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-let-009",
+   "stage": "letter",
+   "kind": "read_letter",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Say this letter out loud.",
+   "display": {
+    "text": "l"
+   },
+   "target": "l",
+   "accept": [
+    "l",
+    "el",
+    "ell",
+    "luh"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 2,
+   "grade": 1,
+   "sounds": [
+    "l"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-let-010",
+   "stage": "letter",
+   "kind": "read_letter",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Look carefully. What letter do you see?",
+   "display": {
+    "text": "j"
+   },
+   "target": "j",
+   "accept": [
+    "j",
+    "jay",
+    "juh"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 2,
+   "grade": 1,
+   "sounds": [
+    "j"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-let-011",
+   "stage": "letter",
+   "kind": "read_letter",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "What letter is this? Say its name or its sound.",
+   "display": {
+    "text": "b"
+   },
+   "target": "b",
+   "accept": [
+    "b",
+    "bee",
+    "be",
+    "buh"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 3,
+   "grade": 1,
+   "sounds": [
+    "b"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-let-012",
+   "stage": "letter",
+   "kind": "read_letter",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Look at this letter. Can you say it?",
+   "display": {
+    "text": "d"
+   },
+   "target": "d",
+   "accept": [
+    "d",
+    "dee",
+    "duh"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 3,
+   "grade": 1,
+   "sounds": [
+    "d"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-let-013",
+   "stage": "letter",
+   "kind": "read_letter",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "{name}, what letter is this?",
+   "display": {
+    "text": "p"
+   },
+   "target": "p",
+   "accept": [
+    "p",
+    "pee",
+    "pea",
+    "puh"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 3,
+   "grade": 1,
+   "sounds": [
+    "p"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-let-014",
+   "stage": "letter",
+   "kind": "read_letter",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Say this letter out loud.",
+   "display": {
+    "text": "q"
+   },
+   "target": "q",
+   "accept": [
+    "q",
+    "queue",
+    "cue",
+    "kwuh"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 3,
+   "grade": 1,
+   "sounds": [
+    "q"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-let-015",
+   "stage": "letter",
+   "kind": "read_letter",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Look carefully. What letter do you see?",
+   "display": {
+    "text": "m"
+   },
+   "target": "m",
+   "accept": [
+    "m",
+    "em",
+    "mm",
+    "muh"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 3,
+   "grade": 1,
+   "sounds": [
+    "m"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-let-016",
+   "stage": "letter",
+   "kind": "read_letter",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "What letter is this? Say its name or its sound.",
+   "display": {
+    "text": "n"
+   },
+   "target": "n",
+   "accept": [
+    "n",
+    "en",
+    "nn",
+    "nuh"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 3,
+   "grade": 1,
+   "sounds": [
+    "n"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-let-017",
+   "stage": "letter",
+   "kind": "read_letter",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Look at this letter. Can you say it?",
+   "display": {
+    "text": "v"
+   },
+   "target": "v",
+   "accept": [
+    "v",
+    "vee",
+    "vuh"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 3,
+   "grade": 1,
+   "sounds": [
+    "v"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-let-018",
+   "stage": "letter",
+   "kind": "read_letter",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "{name}, what letter is this?",
+   "display": {
+    "text": "w"
+   },
+   "target": "w",
+   "accept": [
+    "w",
+    "double u",
+    "double you",
+    "wuh"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 3,
+   "grade": 1,
+   "sounds": [
+    "w"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-let-019",
+   "stage": "letter",
+   "kind": "read_letter",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Say this letter out loud.",
+   "display": {
+    "text": "u"
+   },
+   "target": "u",
+   "accept": [
+    "u",
+    "you",
+    "uh"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 3,
+   "grade": 1,
+   "sounds": [
+    "u"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-let-020",
+   "stage": "letter",
+   "kind": "read_letter",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Look carefully. What letter do you see?",
+   "display": {
+    "text": "i"
+   },
+   "target": "i",
+   "accept": [
+    "i",
+    "eye",
+    "ih"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 3,
+   "grade": 1,
+   "sounds": [
+    "i"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-let-021",
+   "stage": "letter",
+   "kind": "read_letter",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "What letter is this? Say its name or its sound.",
+   "display": {
+    "text": "e"
+   },
+   "target": "e",
+   "accept": [
+    "e",
+    "ee",
+    "eh"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 3,
+   "grade": 1,
+   "sounds": [
+    "e"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-let-022",
+   "stage": "letter",
+   "kind": "read_letter",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "These two letters make one sound. What sound is it?",
+   "display": {
+    "text": "sh"
+   },
+   "target": "sh",
+   "accept": [
+    "sh",
+    "shh"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 3,
+   "grade": 1,
+   "sounds": [
+    "sh"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-let-023",
+   "stage": "letter",
+   "kind": "read_letter",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "These two letters make one sound. What sound is it?",
+   "display": {
+    "text": "ch"
+   },
+   "target": "ch",
+   "accept": [
+    "ch",
+    "chuh"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 3,
+   "grade": 1,
+   "sounds": [
+    "ch"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-let-024",
+   "stage": "letter",
+   "kind": "read_letter",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "These two letters make one sound. What sound is it?",
+   "display": {
+    "text": "th"
+   },
+   "target": "th",
+   "accept": [
+    "th",
+    "thuh"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 3,
+   "grade": 1,
+   "sounds": [
+    "th"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-let-025",
+   "stage": "letter",
+   "kind": "say_sound",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Listen to this word, sun. What sound does sun start with?",
+   "display": {
+    "text": "sun"
+   },
+   "target": "s",
+   "accept": [
+    "s",
+    "es",
+    "ess",
+    "ss",
+    "sss"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [
+    "s"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-let-026",
+   "stage": "letter",
+   "kind": "say_sound",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "map. What is the first sound in map?",
+   "display": {
+    "text": "map"
+   },
+   "target": "m",
+   "accept": [
+    "m",
+    "em",
+    "mm",
+    "muh"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [
+    "m"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-let-027",
+   "stage": "letter",
+   "kind": "say_sound",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Say the first sound of this word, ten.",
+   "display": {
+    "text": "ten"
+   },
+   "target": "t",
+   "accept": [
+    "t",
+    "tee",
+    "tea",
+    "tuh"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [
+    "t"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-let-028",
+   "stage": "letter",
+   "kind": "say_sound",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "{name}, listen to ant. Which sound comes first?",
+   "display": {
+    "text": "ant"
+   },
+   "target": "a",
+   "accept": [
+    "a",
+    "ay",
+    "ah",
+    "aa"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [
+    "a"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-let-029",
+   "stage": "letter",
+   "kind": "say_sound",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Listen to this word, pen. What sound does pen start with?",
+   "display": {
+    "text": "pen"
+   },
+   "target": "p",
+   "accept": [
+    "p",
+    "pee",
+    "pea",
+    "puh"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [
+    "p"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-let-030",
+   "stage": "letter",
+   "kind": "say_sound",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "fish. What is the first sound in fish?",
+   "display": {
+    "text": "fish"
+   },
+   "target": "f",
+   "accept": [
+    "f",
+    "ef",
+    "eff",
+    "ff",
+    "fuh"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 2,
+   "grade": 1,
+   "sounds": [
+    "f"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-let-031",
+   "stage": "letter",
+   "kind": "say_sound",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Say the first sound of this word, hat.",
+   "display": {
+    "text": "hat"
+   },
+   "target": "h",
+   "accept": [
+    "h",
+    "aitch",
+    "huh"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 2,
+   "grade": 1,
+   "sounds": [
+    "h"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-let-032",
+   "stage": "letter",
+   "kind": "say_sound",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "{name}, listen to leg. Which sound comes first?",
+   "display": {
+    "text": "leg"
+   },
+   "target": "l",
+   "accept": [
+    "l",
+    "el",
+    "ell",
+    "luh"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 2,
+   "grade": 1,
+   "sounds": [
+    "l"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-let-033",
+   "stage": "letter",
+   "kind": "say_sound",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Listen to this word, red. What sound does red start with?",
+   "display": {
+    "text": "red"
+   },
+   "target": "r",
+   "accept": [
+    "r",
+    "are",
+    "ar",
+    "ruh"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 2,
+   "grade": 1,
+   "sounds": [
+    "r"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-let-034",
+   "stage": "letter",
+   "kind": "say_sound",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "goat. What is the first sound in goat?",
+   "display": {
+    "text": "goat"
+   },
+   "target": "g",
+   "accept": [
+    "g",
+    "gee",
+    "guh"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 2,
+   "grade": 1,
+   "sounds": [
+    "g"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-let-035",
+   "stage": "letter",
+   "kind": "say_sound",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Say the first sound of this word, net.",
+   "display": {
+    "text": "net"
+   },
+   "target": "n",
+   "accept": [
+    "n",
+    "en",
+    "nn",
+    "nuh"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 2,
+   "grade": 1,
+   "sounds": [
+    "n"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-let-036",
+   "stage": "letter",
+   "kind": "say_sound",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "{name}, listen to bat. Which sound comes first?",
+   "display": {
+    "text": "bat"
+   },
+   "target": "b",
+   "accept": [
+    "b",
+    "bee",
+    "be",
+    "buh"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 2,
+   "grade": 1,
+   "sounds": [
+    "b"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-let-037",
+   "stage": "letter",
+   "kind": "say_sound",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Listen to this word, dog. What sound does dog start with?",
+   "display": {
+    "text": "dog"
+   },
+   "target": "d",
+   "accept": [
+    "d",
+    "dee",
+    "duh"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 2,
+   "grade": 1,
+   "sounds": [
+    "d"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-let-038",
+   "stage": "letter",
+   "kind": "say_sound",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "ship. What is the first sound in ship?",
+   "display": {
+    "text": "ship"
+   },
+   "target": "sh",
+   "accept": [
+    "sh",
+    "shh"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 3,
+   "grade": 1,
+   "sounds": [
+    "sh"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-let-039",
+   "stage": "letter",
+   "kind": "say_sound",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Say the first sound of this word, chair.",
+   "display": {
+    "text": "chair"
+   },
+   "target": "ch",
+   "accept": [
+    "ch",
+    "chuh"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 3,
+   "grade": 1,
+   "sounds": [
+    "ch"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-let-040",
+   "stage": "letter",
+   "kind": "say_sound",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "{name}, listen to thumb. Which sound comes first?",
+   "display": {
+    "text": "thumb"
+   },
+   "target": "th",
+   "accept": [
+    "th",
+    "thuh"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 3,
+   "grade": 1,
+   "sounds": [
+    "th"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-let-041",
+   "stage": "letter",
+   "kind": "say_sound",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Listen to this word, van. What sound does van start with?",
+   "display": {
+    "text": "van"
+   },
+   "target": "v",
+   "accept": [
+    "v",
+    "vee",
+    "vuh"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 3,
+   "grade": 1,
+   "sounds": [
+    "v"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-let-042",
+   "stage": "letter",
+   "kind": "say_sound",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "web. What is the first sound in web?",
+   "display": {
+    "text": "web"
+   },
+   "target": "w",
+   "accept": [
+    "w",
+    "double u",
+    "double you",
+    "wuh"
+   ],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 4,
+   "difficulty": 3,
+   "grade": 1,
+   "sounds": [
+    "w"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-wb-001",
+   "stage": "word_build",
+   "kind": "build_word",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Join these sounds and say the word.",
+   "display": {
+    "tiles": [
+     "c",
+     "a",
+     "t"
+    ]
+   },
+   "target": "cat",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [
+    "a"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-wb-002",
+   "stage": "word_build",
+   "kind": "build_word",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Put the sounds together. What word do they make?",
+   "display": {
+    "tiles": [
+     "p",
+     "e",
+     "n"
+    ]
+   },
+   "target": "pen",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [
+    "e"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-wb-003",
+   "stage": "word_build",
+   "kind": "build_word",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "{name}, blend these sounds and say the word.",
+   "display": {
+    "tiles": [
+     "s",
+     "u",
+     "n"
+    ]
+   },
+   "target": "sun",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [
+    "u"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-wb-004",
+   "stage": "word_build",
+   "kind": "build_word",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Say each sound, then say the whole word.",
+   "display": {
+    "tiles": [
+     "b",
+     "u",
+     "s"
+    ]
+   },
+   "target": "bus",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [
+    "u"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-wb-005",
+   "stage": "word_build",
+   "kind": "build_word",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Read the parts slowly, then say the word fast.",
+   "display": {
+    "tiles": [
+     "h",
+     "e",
+     "n"
+    ]
+   },
+   "target": "hen",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [
+    "e"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-wb-006",
+   "stage": "word_build",
+   "kind": "build_word",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Join these sounds and say the word.",
+   "display": {
+    "tiles": [
+     "p",
+     "i",
+     "g"
+    ]
+   },
+   "target": "pig",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [
+    "i"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-wb-007",
+   "stage": "word_build",
+   "kind": "build_word",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Put the sounds together. What word do they make?",
+   "display": {
+    "tiles": [
+     "c",
+     "u",
+     "p"
+    ]
+   },
+   "target": "cup",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [
+    "u"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-wb-008",
+   "stage": "word_build",
+   "kind": "build_word",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "{name}, blend these sounds and say the word.",
+   "display": {
+    "tiles": [
+     "b",
+     "a",
+     "g"
+    ]
+   },
+   "target": "bag",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [
+    "a"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-wb-009",
+   "stage": "word_build",
+   "kind": "build_word",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Say each sound, then say the whole word.",
+   "display": {
+    "tiles": [
+     "n",
+     "e",
+     "t"
+    ]
+   },
+   "target": "net",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [
+    "e"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-wb-010",
+   "stage": "word_build",
+   "kind": "build_word",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Read the parts slowly, then say the word fast.",
+   "display": {
+    "tiles": [
+     "j",
+     "a",
+     "m"
+    ]
+   },
+   "target": "jam",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [
+    "a"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-wb-011",
+   "stage": "word_build",
+   "kind": "build_word",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Join these sounds and say the word.",
+   "display": {
+    "tiles": [
+     "sh",
+     "i",
+     "p"
+    ]
+   },
+   "target": "ship",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 2,
+   "grade": 1,
+   "sounds": [
+    "sh"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-wb-012",
+   "stage": "word_build",
+   "kind": "build_word",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Put the sounds together. What word do they make?",
+   "display": {
+    "tiles": [
+     "ch",
+     "i",
+     "n"
+    ]
+   },
+   "target": "chin",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 2,
+   "grade": 1,
+   "sounds": [
+    "ch"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-wb-013",
+   "stage": "word_build",
+   "kind": "build_word",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "{name}, blend these sounds and say the word.",
+   "display": {
+    "tiles": [
+     "fr",
+     "o",
+     "g"
+    ]
+   },
+   "target": "frog",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 2,
+   "grade": 1,
+   "sounds": [
+    "fr"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-wb-014",
+   "stage": "word_build",
+   "kind": "build_word",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Say each sound, then say the whole word.",
+   "display": {
+    "tiles": [
+     "m",
+     "i",
+     "lk"
+    ]
+   },
+   "target": "milk",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 2,
+   "grade": 1,
+   "sounds": [
+    "lk"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-wb-015",
+   "stage": "word_build",
+   "kind": "build_word",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Read the parts slowly, then say the word fast.",
+   "display": {
+    "tiles": [
+     "f",
+     "i",
+     "sh"
+    ]
+   },
+   "target": "fish",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 2,
+   "grade": 1,
+   "sounds": [
+    "sh"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-wb-016",
+   "stage": "word_build",
+   "kind": "build_word",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Join these sounds and say the word.",
+   "display": {
+    "tiles": [
+     "dr",
+     "u",
+     "m"
+    ]
+   },
+   "target": "drum",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 2,
+   "grade": 1,
+   "sounds": [
+    "dr"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-wb-017",
+   "stage": "word_build",
+   "kind": "build_word",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Put the sounds together. What word do they make?",
+   "display": {
+    "tiles": [
+     "t",
+     "e",
+     "nt"
+    ]
+   },
+   "target": "tent",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 2,
+   "grade": 1,
+   "sounds": [
+    "nt"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-wb-018",
+   "stage": "word_build",
+   "kind": "build_word",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "{name}, blend these sounds and say the word.",
+   "display": {
+    "tiles": [
+     "cr",
+     "a",
+     "b"
+    ]
+   },
+   "target": "crab",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 2,
+   "grade": 1,
+   "sounds": [
+    "cr"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-wb-019",
+   "stage": "word_build",
+   "kind": "build_word",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Say each sound, then say the whole word.",
+   "display": {
+    "tiles": [
+     "d",
+     "u",
+     "ck"
+    ]
+   },
+   "target": "duck",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 2,
+   "grade": 1,
+   "sounds": [
+    "ck"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-wb-020",
+   "stage": "word_build",
+   "kind": "build_word",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Read the parts slowly, then say the word fast.",
+   "display": {
+    "tiles": [
+     "b",
+     "a",
+     "th"
+    ]
+   },
+   "target": "bath",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 2,
+   "grade": 1,
+   "sounds": [
+    "th"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-wb-021",
+   "stage": "word_build",
+   "kind": "build_word",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Join these sounds and say the word.",
+   "display": {
+    "tiles": [
+     "rab",
+     "bit"
+    ]
+   },
+   "target": "rabbit",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 3,
+   "grade": 2,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-wb-022",
+   "stage": "word_build",
+   "kind": "build_word",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Put the sounds together. What word do they make?",
+   "display": {
+    "tiles": [
+     "bas",
+     "ket"
+    ]
+   },
+   "target": "basket",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 3,
+   "grade": 2,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-wb-023",
+   "stage": "word_build",
+   "kind": "build_word",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "{name}, blend these sounds and say the word.",
+   "display": {
+    "tiles": [
+     "gar",
+     "den"
+    ]
+   },
+   "target": "garden",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 3,
+   "grade": 2,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-wb-024",
+   "stage": "word_build",
+   "kind": "build_word",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Say each sound, then say the whole word.",
+   "display": {
+    "tiles": [
+     "win",
+     "dow"
+    ]
+   },
+   "target": "window",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 3,
+   "grade": 2,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-wb-025",
+   "stage": "word_build",
+   "kind": "build_word",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Read the parts slowly, then say the word fast.",
+   "display": {
+    "tiles": [
+     "sun",
+     "set"
+    ]
+   },
+   "target": "sunset",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 3,
+   "grade": 2,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-wb-026",
+   "stage": "word_build",
+   "kind": "build_word",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Join these sounds and say the word.",
+   "display": {
+    "tiles": [
+     "pic",
+     "nic"
+    ]
+   },
+   "target": "picnic",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 3,
+   "grade": 2,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-wb-027",
+   "stage": "word_build",
+   "kind": "build_word",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Put the sounds together. What word do they make?",
+   "display": {
+    "tiles": [
+     "pen",
+     "cil"
+    ]
+   },
+   "target": "pencil",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 3,
+   "grade": 2,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-wb-028",
+   "stage": "word_build",
+   "kind": "build_word",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "{name}, blend these sounds and say the word.",
+   "display": {
+    "tiles": [
+     "kit",
+     "ten"
+    ]
+   },
+   "target": "kitten",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 3,
+   "grade": 2,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-wb-029",
+   "stage": "word_build",
+   "kind": "build_word",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Say each sound, then say the whole word.",
+   "display": {
+    "tiles": [
+     "le",
+     "mon"
+    ]
+   },
+   "target": "lemon",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 3,
+   "grade": 2,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-wr-001",
+   "stage": "word_read",
+   "kind": "read_word",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Read this word.",
+   "display": {
+    "text": "the"
+   },
+   "target": "the",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-wr-002",
+   "stage": "word_read",
+   "kind": "read_word",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Can you read this word for me?",
+   "display": {
+    "text": "is"
+   },
+   "target": "is",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-wr-003",
+   "stage": "word_read",
+   "kind": "read_word",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "{name}, what word is this?",
+   "display": {
+    "text": "and"
+   },
+   "target": "and",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-wr-004",
+   "stage": "word_read",
+   "kind": "read_word",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Look at the word and say it.",
+   "display": {
+    "text": "dog"
+   },
+   "target": "dog",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [
+    "o"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-wr-005",
+   "stage": "word_read",
+   "kind": "read_word",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Read this word out loud.",
+   "display": {
+    "text": "red"
+   },
+   "target": "red",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [
+    "e"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-wr-006",
+   "stage": "word_read",
+   "kind": "read_word",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Read this word.",
+   "display": {
+    "text": "sit"
+   },
+   "target": "sit",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [
+    "i"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-wr-007",
+   "stage": "word_read",
+   "kind": "read_word",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Can you read this word for me?",
+   "display": {
+    "text": "big"
+   },
+   "target": "big",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [
+    "i"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-wr-008",
+   "stage": "word_read",
+   "kind": "read_word",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "{name}, what word is this?",
+   "display": {
+    "text": "hot"
+   },
+   "target": "hot",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [
+    "o"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-wr-009",
+   "stage": "word_read",
+   "kind": "read_word",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Look at the word and say it.",
+   "display": {
+    "text": "run"
+   },
+   "target": "run",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [
+    "u"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-wr-010",
+   "stage": "word_read",
+   "kind": "read_word",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Read this word out loud.",
+   "display": {
+    "text": "can"
+   },
+   "target": "can",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [
+    "a"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-wr-011",
+   "stage": "word_read",
+   "kind": "read_word",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Read this word.",
+   "display": {
+    "text": "tree"
+   },
+   "target": "tree",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 2,
+   "grade": 1,
+   "sounds": [
+    "ee"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-wr-012",
+   "stage": "word_read",
+   "kind": "read_word",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Can you read this word for me?",
+   "display": {
+    "text": "rain"
+   },
+   "target": "rain",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 2,
+   "grade": 1,
+   "sounds": [
+    "ai"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-wr-013",
+   "stage": "word_read",
+   "kind": "read_word",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "{name}, what word is this?",
+   "display": {
+    "text": "boat"
+   },
+   "target": "boat",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 2,
+   "grade": 1,
+   "sounds": [
+    "oa"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-wr-014",
+   "stage": "word_read",
+   "kind": "read_word",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Look at the word and say it.",
+   "display": {
+    "text": "kite"
+   },
+   "target": "kite",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 2,
+   "grade": 1,
+   "sounds": [
+    "i"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-wr-015",
+   "stage": "word_read",
+   "kind": "read_word",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Read this word out loud.",
+   "display": {
+    "text": "cake"
+   },
+   "target": "cake",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 2,
+   "grade": 1,
+   "sounds": [
+    "a"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-wr-016",
+   "stage": "word_read",
+   "kind": "read_word",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Read this word.",
+   "display": {
+    "text": "train"
+   },
+   "target": "train",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 2,
+   "grade": 1,
+   "sounds": [
+    "tr",
+    "ai"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-wr-017",
+   "stage": "word_read",
+   "kind": "read_word",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Can you read this word for me?",
+   "display": {
+    "text": "goat"
+   },
+   "target": "goat",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 2,
+   "grade": 1,
+   "sounds": [
+    "oa"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-wr-018",
+   "stage": "word_read",
+   "kind": "read_word",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "{name}, what word is this?",
+   "display": {
+    "text": "sheep"
+   },
+   "target": "sheep",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 2,
+   "grade": 1,
+   "sounds": [
+    "sh",
+    "ee"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-wr-019",
+   "stage": "word_read",
+   "kind": "read_word",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Look at the word and say it.",
+   "display": {
+    "text": "chair"
+   },
+   "target": "chair",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 2,
+   "grade": 1,
+   "sounds": [
+    "ch"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-wr-020",
+   "stage": "word_read",
+   "kind": "read_word",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Read this word out loud.",
+   "display": {
+    "text": "star"
+   },
+   "target": "star",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 2,
+   "grade": 1,
+   "sounds": [
+    "st"
+   ],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-wr-021",
+   "stage": "word_read",
+   "kind": "read_word",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Read this word.",
+   "display": {
+    "text": "mango"
+   },
+   "target": "mango",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 3,
+   "grade": 2,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-wr-022",
+   "stage": "word_read",
+   "kind": "read_word",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Can you read this word for me?",
+   "display": {
+    "text": "market"
+   },
+   "target": "market",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 3,
+   "grade": 2,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-wr-023",
+   "stage": "word_read",
+   "kind": "read_word",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "{name}, what word is this?",
+   "display": {
+    "text": "farmer"
+   },
+   "target": "farmer",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 3,
+   "grade": 2,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-wr-024",
+   "stage": "word_read",
+   "kind": "read_word",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Look at the word and say it.",
+   "display": {
+    "text": "teacher"
+   },
+   "target": "teacher",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 3,
+   "grade": 2,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-wr-025",
+   "stage": "word_read",
+   "kind": "read_word",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Read this word out loud.",
+   "display": {
+    "text": "river"
+   },
+   "target": "river",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 3,
+   "grade": 2,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-wr-026",
+   "stage": "word_read",
+   "kind": "read_word",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Read this word.",
+   "display": {
+    "text": "water"
+   },
+   "target": "water",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 3,
+   "grade": 2,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-wr-027",
+   "stage": "word_read",
+   "kind": "read_word",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Can you read this word for me?",
+   "display": {
+    "text": "flower"
+   },
+   "target": "flower",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 3,
+   "grade": 2,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-wr-028",
+   "stage": "word_read",
+   "kind": "read_word",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "{name}, what word is this?",
+   "display": {
+    "text": "sister"
+   },
+   "target": "sister",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 3,
+   "grade": 2,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-wr-029",
+   "stage": "word_read",
+   "kind": "read_word",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Look at the word and say it.",
+   "display": {
+    "text": "paper"
+   },
+   "target": "paper",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 3,
+   "grade": 2,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-wr-030",
+   "stage": "word_read",
+   "kind": "read_word",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Read this word out loud.",
+   "display": {
+    "text": "tiger"
+   },
+   "target": "tiger",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 3,
+   "grade": 2,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-wr-031",
+   "stage": "word_read",
+   "kind": "read_word",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Read this word.",
+   "display": {
+    "text": "monkey"
+   },
+   "target": "monkey",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 5,
+   "difficulty": 3,
+   "grade": 2,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-sb-001",
+   "stage": "sentence_build",
+   "kind": "make_sentence",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Make a sentence with these words.",
+   "display": {
+    "words": [
+     "cow",
+     "milk"
+    ]
+   },
+   "target": null,
+   "accept": [
+    "The cow gives milk every day."
+   ],
+   "required_words": [
+    "cow",
+    "milk"
+   ],
+   "keywords": [],
+   "max_record_s": 10,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-sb-002",
+   "stage": "sentence_build",
+   "kind": "make_sentence",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Can you say a sentence using these words?",
+   "display": {
+    "words": [
+     "red",
+     "ball"
+    ]
+   },
+   "target": null,
+   "accept": [
+    "I have a red ball at home."
+   ],
+   "required_words": [
+    "red",
+    "ball"
+   ],
+   "keywords": [],
+   "max_record_s": 10,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-sb-003",
+   "stage": "sentence_build",
+   "kind": "make_sentence",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "{name}, use these words in one sentence.",
+   "display": {
+    "words": [
+     "big",
+     "tree"
+    ]
+   },
+   "target": null,
+   "accept": [
+    "The big tree is near my house."
+   ],
+   "required_words": [
+    "big",
+    "tree"
+   ],
+   "keywords": [],
+   "max_record_s": 10,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-sb-004",
+   "stage": "sentence_build",
+   "kind": "make_sentence",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Say one sentence that has all these words.",
+   "display": {
+    "words": [
+     "sun",
+     "hot"
+    ]
+   },
+   "target": null,
+   "accept": [
+    "The sun is hot today."
+   ],
+   "required_words": [
+    "sun",
+    "hot"
+   ],
+   "keywords": [],
+   "max_record_s": 10,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-sb-005",
+   "stage": "sentence_build",
+   "kind": "make_sentence",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Join these words into a sentence and say it.",
+   "display": {
+    "words": [
+     "blue",
+     "sky"
+    ]
+   },
+   "target": null,
+   "accept": [
+    "The blue sky is very pretty."
+   ],
+   "required_words": [
+    "blue",
+    "sky"
+   ],
+   "keywords": [],
+   "max_record_s": 10,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-sb-006",
+   "stage": "sentence_build",
+   "kind": "make_sentence",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Make a sentence with these words.",
+   "display": {
+    "words": [
+     "hen",
+     "egg"
+    ]
+   },
+   "target": null,
+   "accept": [
+    "Our hen lays one egg every day."
+   ],
+   "required_words": [
+    "hen",
+    "egg"
+   ],
+   "keywords": [],
+   "max_record_s": 10,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-sb-007",
+   "stage": "sentence_build",
+   "kind": "make_sentence",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Can you say a sentence using these words?",
+   "display": {
+    "words": [
+     "school",
+     "bus"
+    ]
+   },
+   "target": null,
+   "accept": [
+    "I go to school by bus every day."
+   ],
+   "required_words": [
+    "school",
+    "bus"
+   ],
+   "keywords": [],
+   "max_record_s": 10,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-sb-008",
+   "stage": "sentence_build",
+   "kind": "make_sentence",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "{name}, use these words in one sentence.",
+   "display": {
+    "words": [
+     "mango",
+     "sweet"
+    ]
+   },
+   "target": null,
+   "accept": [
+    "This mango is sweet and juicy."
+   ],
+   "required_words": [
+    "mango",
+    "sweet"
+   ],
+   "keywords": [],
+   "max_record_s": 10,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-sb-009",
+   "stage": "sentence_build",
+   "kind": "make_sentence",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Say one sentence that has all these words.",
+   "display": {
+    "words": [
+     "green",
+     "leaf"
+    ]
+   },
+   "target": null,
+   "accept": [
+    "I see a green leaf on the ground."
+   ],
+   "required_words": [
+    "green",
+    "leaf"
+   ],
+   "keywords": [],
+   "max_record_s": 10,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-sb-010",
+   "stage": "sentence_build",
+   "kind": "make_sentence",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Join these words into a sentence and say it.",
+   "display": {
+    "words": [
+     "kite",
+     "sky"
+    ]
+   },
+   "target": null,
+   "accept": [
+    "My kite flies high in the sky today."
+   ],
+   "required_words": [
+    "kite",
+    "sky"
+   ],
+   "keywords": [],
+   "max_record_s": 10,
+   "difficulty": 2,
+   "grade": 2,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-sb-011",
+   "stage": "sentence_build",
+   "kind": "make_sentence",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Make a sentence with these words.",
+   "display": {
+    "words": [
+     "rain",
+     "road",
+     "wet"
+    ]
+   },
+   "target": null,
+   "accept": [
+    "The rain makes the road wet and muddy."
+   ],
+   "required_words": [
+    "rain",
+    "road",
+    "wet"
+   ],
+   "keywords": [],
+   "max_record_s": 10,
+   "difficulty": 2,
+   "grade": 2,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-sb-012",
+   "stage": "sentence_build",
+   "kind": "make_sentence",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Can you say a sentence using these words?",
+   "display": {
+    "words": [
+     "mother",
+     "roti"
+    ]
+   },
+   "target": null,
+   "accept": [
+    "My mother makes hot roti for us."
+   ],
+   "required_words": [
+    "mother",
+    "roti"
+   ],
+   "keywords": [],
+   "max_record_s": 10,
+   "difficulty": 2,
+   "grade": 2,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-sb-013",
+   "stage": "sentence_build",
+   "kind": "make_sentence",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "{name}, use these words in one sentence.",
+   "display": {
+    "words": [
+     "boy",
+     "bicycle"
+    ]
+   },
+   "target": null,
+   "accept": [
+    "The boy rides his bicycle to school."
+   ],
+   "required_words": [
+    "boy",
+    "bicycle"
+   ],
+   "keywords": [],
+   "max_record_s": 10,
+   "difficulty": 2,
+   "grade": 2,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-sb-014",
+   "stage": "sentence_build",
+   "kind": "make_sentence",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Say one sentence that has all these words.",
+   "display": {
+    "words": [
+     "farmer",
+     "field"
+    ]
+   },
+   "target": null,
+   "accept": [
+    "The farmer works in the field all day."
+   ],
+   "required_words": [
+    "farmer",
+    "field"
+   ],
+   "keywords": [],
+   "max_record_s": 10,
+   "difficulty": 2,
+   "grade": 2,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-sb-015",
+   "stage": "sentence_build",
+   "kind": "make_sentence",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Join these words into a sentence and say it.",
+   "display": {
+    "words": [
+     "bird",
+     "nest",
+     "tree"
+    ]
+   },
+   "target": null,
+   "accept": [
+    "The bird has a nest in the tree today."
+   ],
+   "required_words": [
+    "bird",
+    "nest",
+    "tree"
+   ],
+   "keywords": [],
+   "max_record_s": 10,
+   "difficulty": 2,
+   "grade": 2,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-sb-016",
+   "stage": "sentence_build",
+   "kind": "make_sentence",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Make a sentence with these words.",
+   "display": {
+    "words": [
+     "river",
+     "cold"
+    ]
+   },
+   "target": null,
+   "accept": [
+    "The river water is cold in the morning."
+   ],
+   "required_words": [
+    "river",
+    "cold"
+   ],
+   "keywords": [],
+   "max_record_s": 10,
+   "difficulty": 2,
+   "grade": 2,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-sb-017",
+   "stage": "sentence_build",
+   "kind": "make_sentence",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Can you say a sentence using these words?",
+   "display": {
+    "words": [
+     "teacher",
+     "book"
+    ]
+   },
+   "target": null,
+   "accept": [
+    "Our teacher reads a book to us."
+   ],
+   "required_words": [
+    "teacher",
+    "book"
+   ],
+   "keywords": [],
+   "max_record_s": 10,
+   "difficulty": 2,
+   "grade": 2,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-sb-018",
+   "stage": "sentence_build",
+   "kind": "make_sentence",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "{name}, use these words in one sentence.",
+   "display": {
+    "words": [
+     "market",
+     "fruit"
+    ]
+   },
+   "target": null,
+   "accept": [
+    "We buy fruit at the market on Sunday."
+   ],
+   "required_words": [
+    "market",
+    "fruit"
+   ],
+   "keywords": [],
+   "max_record_s": 10,
+   "difficulty": 2,
+   "grade": 2,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-sb-019",
+   "stage": "sentence_build",
+   "kind": "make_sentence",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Say one sentence that has all these words.",
+   "display": {
+    "words": [
+     "umbrella",
+     "rain",
+     "dry"
+    ]
+   },
+   "target": null,
+   "accept": [
+    "My umbrella keeps me dry in the rain today."
+   ],
+   "required_words": [
+    "umbrella",
+    "rain",
+    "dry"
+   ],
+   "keywords": [],
+   "max_record_s": 10,
+   "difficulty": 3,
+   "grade": 3,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-sb-020",
+   "stage": "sentence_build",
+   "kind": "make_sentence",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Join these words into a sentence and say it.",
+   "display": {
+    "words": [
+     "hungry",
+     "mango",
+     "tree"
+    ]
+   },
+   "target": null,
+   "accept": [
+    "The hungry monkey eats a mango in the tree today."
+   ],
+   "required_words": [
+    "hungry",
+    "mango",
+    "tree"
+   ],
+   "keywords": [],
+   "max_record_s": 10,
+   "difficulty": 3,
+   "grade": 3,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-sb-021",
+   "stage": "sentence_build",
+   "kind": "make_sentence",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Make a sentence with these words.",
+   "display": {
+    "words": [
+     "late",
+     "bus",
+     "school"
+    ]
+   },
+   "target": null,
+   "accept": [
+    "I was late for school because the bus was slow."
+   ],
+   "required_words": [
+    "late",
+    "bus",
+    "school"
+   ],
+   "keywords": [],
+   "max_record_s": 10,
+   "difficulty": 3,
+   "grade": 3,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-sb-022",
+   "stage": "sentence_build",
+   "kind": "make_sentence",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Can you say a sentence using these words?",
+   "display": {
+    "words": [
+     "sun",
+     "hot",
+     "water"
+    ]
+   },
+   "target": null,
+   "accept": [
+    "The sun is hot so I drink water and rest."
+   ],
+   "required_words": [
+    "sun",
+    "hot",
+    "water"
+   ],
+   "keywords": [],
+   "max_record_s": 10,
+   "difficulty": 3,
+   "grade": 3,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-sb-023",
+   "stage": "sentence_build",
+   "kind": "make_sentence",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "{name}, use these words in one sentence.",
+   "display": {
+    "words": [
+     "happy",
+     "fair",
+     "balloon"
+    ]
+   },
+   "target": null,
+   "accept": [
+    "The happy girl got a balloon at the fair today."
+   ],
+   "required_words": [
+    "happy",
+    "fair",
+    "balloon"
+   ],
+   "keywords": [],
+   "max_record_s": 10,
+   "difficulty": 3,
+   "grade": 3,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-sb-024",
+   "stage": "sentence_build",
+   "kind": "make_sentence",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Say one sentence that has all these words.",
+   "display": {
+    "words": [
+     "cow",
+     "grass",
+     "farmer"
+    ]
+   },
+   "target": null,
+   "accept": [
+    "The farmer gives grass to the cow every morning."
+   ],
+   "required_words": [
+    "cow",
+    "grass",
+    "farmer"
+   ],
+   "keywords": [],
+   "max_record_s": 10,
+   "difficulty": 3,
+   "grade": 3,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-sb-025",
+   "stage": "sentence_build",
+   "kind": "make_sentence",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Join these words into a sentence and say it.",
+   "display": {
+    "words": [
+     "dark",
+     "lamp",
+     "read"
+    ]
+   },
+   "target": null,
+   "accept": [
+    "I read by the lamp because it is dark outside."
+   ],
+   "required_words": [
+    "dark",
+    "lamp",
+    "read"
+   ],
+   "keywords": [],
+   "max_record_s": 10,
+   "difficulty": 3,
+   "grade": 3,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-sb-026",
+   "stage": "sentence_build",
+   "kind": "make_sentence",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Make a sentence with these words.",
+   "display": {
+    "words": [
+     "kite",
+     "wind",
+     "high"
+    ]
+   },
+   "target": null,
+   "accept": [
+    "My kite goes high when the wind is strong."
+   ],
+   "required_words": [
+    "kite",
+    "wind",
+    "high"
+   ],
+   "keywords": [],
+   "max_record_s": 10,
+   "difficulty": 3,
+   "grade": 3,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-sb-027",
+   "stage": "sentence_build",
+   "kind": "make_sentence",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Can you say a sentence using these words?",
+   "display": {
+    "words": [
+     "thirsty",
+     "cup",
+     "water"
+    ]
+   },
+   "target": null,
+   "accept": [
+    "A thirsty girl drinks a cup of water slowly."
+   ],
+   "required_words": [
+    "thirsty",
+    "cup",
+    "water"
+   ],
+   "keywords": [],
+   "max_record_s": 10,
+   "difficulty": 3,
+   "grade": 3,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-sb-028",
+   "stage": "sentence_build",
+   "kind": "make_sentence",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "{name}, use these words in one sentence.",
+   "display": {
+    "words": [
+     "friend",
+     "book",
+     "school"
+    ]
+   },
+   "target": null,
+   "accept": [
+    "My friend brings a book to school every day."
+   ],
+   "required_words": [
+    "friend",
+    "book",
+    "school"
+   ],
+   "keywords": [],
+   "max_record_s": 10,
+   "difficulty": 3,
+   "grade": 3,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-rd-001",
+   "stage": "reading",
+   "kind": "read_sentence",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Read this sentence.",
+   "display": {
+    "text": "I see a cat."
+   },
+   "target": "I see a cat.",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 8,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-rd-002",
+   "stage": "reading",
+   "kind": "read_sentence",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Can you read this sentence out loud?",
+   "display": {
+    "text": "The sun is hot."
+   },
+   "target": "The sun is hot.",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 8,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-rd-003",
+   "stage": "reading",
+   "kind": "read_sentence",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "{name}, please read this sentence.",
+   "display": {
+    "text": "I can run fast."
+   },
+   "target": "I can run fast.",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 8,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-rd-004",
+   "stage": "reading",
+   "kind": "read_sentence",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Read this slowly and clearly.",
+   "display": {
+    "text": "The cow is big."
+   },
+   "target": "The cow is big.",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 8,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-rd-005",
+   "stage": "reading",
+   "kind": "read_sentence",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Read this sentence.",
+   "display": {
+    "text": "I have a red pen."
+   },
+   "target": "I have a red pen.",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 8,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-rd-006",
+   "stage": "reading",
+   "kind": "read_sentence",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Can you read this sentence out loud?",
+   "display": {
+    "text": "Is the dog on the mat?"
+   },
+   "target": "Is the dog on the mat?",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 8,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-rd-007",
+   "stage": "reading",
+   "kind": "read_sentence",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "{name}, please read this sentence.",
+   "display": {
+    "text": "Meena has a bag."
+   },
+   "target": "Meena has a bag.",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 8,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-rd-008",
+   "stage": "reading",
+   "kind": "read_sentence",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Read this slowly and clearly.",
+   "display": {
+    "text": "The kite is high in the sky."
+   },
+   "target": "The kite is high in the sky.",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 8,
+   "difficulty": 2,
+   "grade": 1,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-rd-009",
+   "stage": "reading",
+   "kind": "read_sentence",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Read this sentence.",
+   "display": {
+    "text": "We go to school by bus."
+   },
+   "target": "We go to school by bus.",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 8,
+   "difficulty": 2,
+   "grade": 1,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-rd-010",
+   "stage": "reading",
+   "kind": "read_sentence",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Can you read this sentence out loud?",
+   "display": {
+    "text": "My mother makes hot roti."
+   },
+   "target": "My mother makes hot roti.",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 8,
+   "difficulty": 2,
+   "grade": 1,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-rd-011",
+   "stage": "reading",
+   "kind": "read_sentence",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "{name}, please read this sentence.",
+   "display": {
+    "text": "The green parrot sits on the tree."
+   },
+   "target": "The green parrot sits on the tree.",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 8,
+   "difficulty": 2,
+   "grade": 2,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-rd-012",
+   "stage": "reading",
+   "kind": "read_sentence",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Read this slowly and clearly.",
+   "display": {
+    "text": "Raju rides his bicycle to the market."
+   },
+   "target": "Raju rides his bicycle to the market.",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 8,
+   "difficulty": 2,
+   "grade": 2,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-rd-013",
+   "stage": "reading",
+   "kind": "read_sentence",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Read this sentence.",
+   "display": {
+    "text": "Can you see the rain clouds?"
+   },
+   "target": "Can you see the rain clouds?",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 8,
+   "difficulty": 2,
+   "grade": 2,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-rd-014",
+   "stage": "reading",
+   "kind": "read_sentence",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Can you read this sentence out loud?",
+   "display": {
+    "text": "The farmer has two big cows."
+   },
+   "target": "The farmer has two big cows.",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 8,
+   "difficulty": 2,
+   "grade": 2,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-rd-015",
+   "stage": "reading",
+   "kind": "read_sentence",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "{name}, please read this sentence.",
+   "display": {
+    "text": "The children played near the river after school."
+   },
+   "target": "The children played near the river after school.",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 8,
+   "difficulty": 3,
+   "grade": 2,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-rd-016",
+   "stage": "reading",
+   "kind": "read_sentence",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Read this slowly and clearly.",
+   "display": {
+    "text": "Asha bought sweet mangoes from the busy market."
+   },
+   "target": "Asha bought sweet mangoes from the busy market.",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 8,
+   "difficulty": 3,
+   "grade": 2,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-rd-017",
+   "stage": "reading",
+   "kind": "read_sentence",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Read this sentence.",
+   "display": {
+    "text": "We fly bright kites at the village fair."
+   },
+   "target": "We fly bright kites at the village fair.",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 8,
+   "difficulty": 3,
+   "grade": 2,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-rd-018",
+   "stage": "reading",
+   "kind": "read_sentence",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Can you read this sentence out loud?",
+   "display": {
+    "text": "Grandmother tells us a story every night."
+   },
+   "target": "Grandmother tells us a story every night.",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 8,
+   "difficulty": 3,
+   "grade": 2,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-rd-019",
+   "stage": "reading",
+   "kind": "read_sentence",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "{name}, please read this sentence.",
+   "display": {
+    "text": "The little calf drinks milk from its mother."
+   },
+   "target": "The little calf drinks milk from its mother.",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 8,
+   "difficulty": 3,
+   "grade": 2,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-rd-020",
+   "stage": "reading",
+   "kind": "read_sentence",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Read this slowly and clearly.",
+   "display": {
+    "text": "Why is the road wet this morning?"
+   },
+   "target": "Why is the road wet this morning?",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 8,
+   "difficulty": 3,
+   "grade": 2,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": []
+  },
+  {
+   "id": "vb-en-rd-021",
+   "stage": "reading",
+   "kind": "read_paragraph",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Read this little story out loud.",
+   "display": {
+    "text": "Sonu has a red kite. He goes to the roof with his sister. The wind is strong. The kite goes up and up. Sonu and his sister laugh. They are very happy."
+   },
+   "target": "Sonu has a red kite. He goes to the roof with his sister. The wind is strong. The kite goes up and up. Sonu and his sister laugh. They are very happy.",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 48,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": [
+    {
+     "id": "vb-en-rd-021-q1",
+     "stage": "reading",
+     "kind": "answer_question",
+     "lang": "en",
+     "checkpoint_id": null,
+     "prompt": "What colour is Sonu's kite?",
+     "display": {
+      "question": "What colour is Sonu's kite?"
+     },
+     "target": "red",
+     "accept": [
+      "it is red",
+      "a red kite"
+     ],
+     "required_words": [],
+     "keywords": [
+      "red"
+     ],
+     "max_record_s": 10,
+     "difficulty": 1,
+     "grade": 1,
+     "sounds": [],
+     "reviewed": true,
+     "source": "bank",
+     "followups": []
+    },
+    {
+     "id": "vb-en-rd-021-q2",
+     "stage": "reading",
+     "kind": "answer_question",
+     "lang": "en",
+     "checkpoint_id": null,
+     "prompt": "Where does Sonu go with his sister?",
+     "display": {
+      "question": "Where does Sonu go with his sister?"
+     },
+     "target": "to the roof",
+     "accept": [
+      "the roof",
+      "roof"
+     ],
+     "required_words": [],
+     "keywords": [
+      "roof"
+     ],
+     "max_record_s": 10,
+     "difficulty": 1,
+     "grade": 1,
+     "sounds": [],
+     "reviewed": true,
+     "source": "bank",
+     "followups": []
+    }
+   ]
+  },
+  {
+   "id": "vb-en-rd-022",
+   "stage": "reading",
+   "kind": "read_paragraph",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "{name}, please read this story to me.",
+   "display": {
+    "text": "Meena has a white cow. The cow lives near the house. Every morning Meena gives the cow green grass. The cow gives milk. Meena drinks a glass of warm milk. She loves her cow."
+   },
+   "target": "Meena has a white cow. The cow lives near the house. Every morning Meena gives the cow green grass. The cow gives milk. Meena drinks a glass of warm milk. She loves her cow.",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 51,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": [
+    {
+     "id": "vb-en-rd-022-q1",
+     "stage": "reading",
+     "kind": "answer_question",
+     "lang": "en",
+     "checkpoint_id": null,
+     "prompt": "What colour is Meena's cow?",
+     "display": {
+      "question": "What colour is Meena's cow?"
+     },
+     "target": "white",
+     "accept": [
+      "it is white",
+      "a white cow"
+     ],
+     "required_words": [],
+     "keywords": [
+      "white"
+     ],
+     "max_record_s": 10,
+     "difficulty": 1,
+     "grade": 1,
+     "sounds": [],
+     "reviewed": true,
+     "source": "bank",
+     "followups": []
+    },
+    {
+     "id": "vb-en-rd-022-q2",
+     "stage": "reading",
+     "kind": "answer_question",
+     "lang": "en",
+     "checkpoint_id": null,
+     "prompt": "What does Meena give the cow every morning?",
+     "display": {
+      "question": "What does Meena give the cow every morning?"
+     },
+     "target": "green grass",
+     "accept": [
+      "grass"
+     ],
+     "required_words": [],
+     "keywords": [
+      "grass"
+     ],
+     "max_record_s": 10,
+     "difficulty": 1,
+     "grade": 1,
+     "sounds": [],
+     "reviewed": true,
+     "source": "bank",
+     "followups": []
+    }
+   ]
+  },
+  {
+   "id": "vb-en-rd-023",
+   "stage": "reading",
+   "kind": "read_paragraph",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Let us read a story. Read it slowly and clearly.",
+   "display": {
+    "text": "Raju goes to the market with his father. They take the bus. At the market Raju sees mangoes and bananas. His father buys six mangoes. Raju carries the bag home."
+   },
+   "target": "Raju goes to the market with his father. They take the bus. At the market Raju sees mangoes and bananas. His father buys six mangoes. Raju carries the bag home.",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 45,
+   "difficulty": 1,
+   "grade": 1,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": [
+    {
+     "id": "vb-en-rd-023-q1",
+     "stage": "reading",
+     "kind": "answer_question",
+     "lang": "en",
+     "checkpoint_id": null,
+     "prompt": "How do Raju and his father go to the market?",
+     "display": {
+      "question": "How do Raju and his father go to the market?"
+     },
+     "target": "by bus",
+     "accept": [
+      "bus",
+      "they take the bus"
+     ],
+     "required_words": [],
+     "keywords": [
+      "bus"
+     ],
+     "max_record_s": 10,
+     "difficulty": 1,
+     "grade": 1,
+     "sounds": [],
+     "reviewed": true,
+     "source": "bank",
+     "followups": []
+    },
+    {
+     "id": "vb-en-rd-023-q2",
+     "stage": "reading",
+     "kind": "answer_question",
+     "lang": "en",
+     "checkpoint_id": null,
+     "prompt": "What does his father buy?",
+     "display": {
+      "question": "What does his father buy?"
+     },
+     "target": "mangoes",
+     "accept": [
+      "six mangoes",
+      "mango"
+     ],
+     "required_words": [],
+     "keywords": [
+      "mangoes"
+     ],
+     "max_record_s": 10,
+     "difficulty": 1,
+     "grade": 1,
+     "sounds": [],
+     "reviewed": true,
+     "source": "bank",
+     "followups": []
+    }
+   ]
+  },
+  {
+   "id": "vb-en-rd-024",
+   "stage": "reading",
+   "kind": "read_paragraph",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Read this little story out loud.",
+   "display": {
+    "text": "It is a sunny day in the village. Asha and her brother walk to the river with Grandfather. The water is cool and clear. They sit under a big tree because the sun is hot. They eat roti and share a mango. In the evening they walk home slowly."
+   },
+   "target": "It is a sunny day in the village. Asha and her brother walk to the river with Grandfather. The water is cool and clear. They sit under a big tree because the sun is hot. They eat roti and share a mango. In the evening they walk home slowly.",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 74,
+   "difficulty": 2,
+   "grade": 2,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": [
+    {
+     "id": "vb-en-rd-024-q1",
+     "stage": "reading",
+     "kind": "answer_question",
+     "lang": "en",
+     "checkpoint_id": null,
+     "prompt": "Where do Asha and her brother walk?",
+     "display": {
+      "question": "Where do Asha and her brother walk?"
+     },
+     "target": "to the river",
+     "accept": [
+      "the river",
+      "river"
+     ],
+     "required_words": [],
+     "keywords": [
+      "river"
+     ],
+     "max_record_s": 10,
+     "difficulty": 2,
+     "grade": 2,
+     "sounds": [],
+     "reviewed": true,
+     "source": "bank",
+     "followups": []
+    },
+    {
+     "id": "vb-en-rd-024-q2",
+     "stage": "reading",
+     "kind": "answer_question",
+     "lang": "en",
+     "checkpoint_id": null,
+     "prompt": "Why do they sit under the tree?",
+     "display": {
+      "question": "Why do they sit under the tree?"
+     },
+     "target": "because the sun is hot",
+     "accept": [
+      "the sun is hot",
+      "it is hot"
+     ],
+     "required_words": [],
+     "keywords": [
+      "sun",
+      "hot"
+     ],
+     "max_record_s": 10,
+     "difficulty": 2,
+     "grade": 2,
+     "sounds": [],
+     "reviewed": true,
+     "source": "bank",
+     "followups": []
+    }
+   ]
+  },
+  {
+   "id": "vb-en-rd-025",
+   "stage": "reading",
+   "kind": "read_paragraph",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "{name}, please read this story to me.",
+   "display": {
+    "text": "Today there is a fair in our town. Sonu goes with his mother and sister. He sees a big wheel, toy shops and sweet stalls. His sister wants a pink balloon. Sonu uses his coins to buy it for her. She smiles and gives him a hug."
+   },
+   "target": "Today there is a fair in our town. Sonu goes with his mother and sister. He sees a big wheel, toy shops and sweet stalls. His sister wants a pink balloon. Sonu uses his coins to buy it for her. She smiles and gives him a hug.",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 70,
+   "difficulty": 2,
+   "grade": 2,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": [
+    {
+     "id": "vb-en-rd-025-q1",
+     "stage": "reading",
+     "kind": "answer_question",
+     "lang": "en",
+     "checkpoint_id": null,
+     "prompt": "What does Sonu's sister want?",
+     "display": {
+      "question": "What does Sonu's sister want?"
+     },
+     "target": "a pink balloon",
+     "accept": [
+      "pink balloon",
+      "balloon"
+     ],
+     "required_words": [],
+     "keywords": [
+      "balloon"
+     ],
+     "max_record_s": 10,
+     "difficulty": 2,
+     "grade": 2,
+     "sounds": [],
+     "reviewed": true,
+     "source": "bank",
+     "followups": []
+    },
+    {
+     "id": "vb-en-rd-025-q2",
+     "stage": "reading",
+     "kind": "answer_question",
+     "lang": "en",
+     "checkpoint_id": null,
+     "prompt": "How does Sonu get the gift for his sister?",
+     "display": {
+      "question": "How does Sonu get the gift for his sister?"
+     },
+     "target": "he uses his coins",
+     "accept": [
+      "with his coins",
+      "he buys it",
+      "coins"
+     ],
+     "required_words": [],
+     "keywords": [
+      "coins",
+      "buy"
+     ],
+     "max_record_s": 10,
+     "difficulty": 2,
+     "grade": 2,
+     "sounds": [],
+     "reviewed": true,
+     "source": "bank",
+     "followups": []
+    }
+   ]
+  },
+  {
+   "id": "vb-en-rd-026",
+   "stage": "reading",
+   "kind": "read_paragraph",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Let us read a story. Read it slowly and clearly.",
+   "display": {
+    "text": "Every morning Meena helps her grandmother in the garden. They water the plants and pull out the weeds. Meena likes the tomato plants best. Soon the tomatoes turn red. Grandmother says the plants grow well because Meena gives them water every day."
+   },
+   "target": "Every morning Meena helps her grandmother in the garden. They water the plants and pull out the weeds. Meena likes the tomato plants best. Soon the tomatoes turn red. Grandmother says the plants grow well because Meena gives them water every day.",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 63,
+   "difficulty": 2,
+   "grade": 2,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": [
+    {
+     "id": "vb-en-rd-026-q1",
+     "stage": "reading",
+     "kind": "answer_question",
+     "lang": "en",
+     "checkpoint_id": null,
+     "prompt": "Who does Meena help in the garden?",
+     "display": {
+      "question": "Who does Meena help in the garden?"
+     },
+     "target": "her grandmother",
+     "accept": [
+      "grandmother",
+      "grandma"
+     ],
+     "required_words": [],
+     "keywords": [
+      "grandmother"
+     ],
+     "max_record_s": 10,
+     "difficulty": 2,
+     "grade": 2,
+     "sounds": [],
+     "reviewed": true,
+     "source": "bank",
+     "followups": []
+    },
+    {
+     "id": "vb-en-rd-026-q2",
+     "stage": "reading",
+     "kind": "answer_question",
+     "lang": "en",
+     "checkpoint_id": null,
+     "prompt": "Why do the plants grow well?",
+     "display": {
+      "question": "Why do the plants grow well?"
+     },
+     "target": "because Meena gives them water",
+     "accept": [
+      "she gives them water",
+      "she waters them",
+      "water"
+     ],
+     "required_words": [],
+     "keywords": [
+      "water"
+     ],
+     "max_record_s": 10,
+     "difficulty": 2,
+     "grade": 2,
+     "sounds": [],
+     "reviewed": true,
+     "source": "bank",
+     "followups": []
+    }
+   ]
+  },
+  {
+   "id": "vb-en-rd-027",
+   "stage": "reading",
+   "kind": "read_paragraph",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Read this little story out loud.",
+   "display": {
+    "text": "Raju lives in a small village near a big field. His father is a farmer. In June the first rain comes and the dry earth smells sweet. Raju helps his father plant rice in the wet field. The work is hard, but Raju sings songs to make it fun. After some months the rice plants are tall and green."
+   },
+   "target": "Raju lives in a small village near a big field. His father is a farmer. In June the first rain comes and the dry earth smells sweet. Raju helps his father plant rice in the wet field. The work is hard, but Raju sings songs to make it fun. After some months the rice plants are tall and green.",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 88,
+   "difficulty": 3,
+   "grade": 3,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": [
+    {
+     "id": "vb-en-rd-027-q1",
+     "stage": "reading",
+     "kind": "answer_question",
+     "lang": "en",
+     "checkpoint_id": null,
+     "prompt": "What does Raju's father do?",
+     "display": {
+      "question": "What does Raju's father do?"
+     },
+     "target": "he is a farmer",
+     "accept": [
+      "farmer",
+      "a farmer"
+     ],
+     "required_words": [],
+     "keywords": [
+      "farmer"
+     ],
+     "max_record_s": 10,
+     "difficulty": 3,
+     "grade": 3,
+     "sounds": [],
+     "reviewed": true,
+     "source": "bank",
+     "followups": []
+    },
+    {
+     "id": "vb-en-rd-027-q2",
+     "stage": "reading",
+     "kind": "answer_question",
+     "lang": "en",
+     "checkpoint_id": null,
+     "prompt": "How does Raju make the hard work fun?",
+     "display": {
+      "question": "How does Raju make the hard work fun?"
+     },
+     "target": "he sings songs",
+     "accept": [
+      "by singing",
+      "singing songs",
+      "he sings"
+     ],
+     "required_words": [],
+     "keywords": [
+      "sings",
+      "songs"
+     ],
+     "max_record_s": 10,
+     "difficulty": 3,
+     "grade": 3,
+     "sounds": [],
+     "reviewed": true,
+     "source": "bank",
+     "followups": []
+    }
+   ]
+  },
+  {
+   "id": "vb-en-rd-028",
+   "stage": "reading",
+   "kind": "read_paragraph",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "{name}, please read this story to me.",
+   "display": {
+    "text": "On Saturday our school had a sports day. The children ran races and played games in the big ground. Asha was in the long race. She was slow at the start, but she did not stop. She did not win, but everyone clapped for her. Her teacher said that trying your best is the real win."
+   },
+   "target": "On Saturday our school had a sports day. The children ran races and played games in the big ground. Asha was in the long race. She was slow at the start, but she did not stop. She did not win, but everyone clapped for her. Her teacher said that trying your best is the real win.",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 84,
+   "difficulty": 3,
+   "grade": 3,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": [
+    {
+     "id": "vb-en-rd-028-q1",
+     "stage": "reading",
+     "kind": "answer_question",
+     "lang": "en",
+     "checkpoint_id": null,
+     "prompt": "Which race was Asha in?",
+     "display": {
+      "question": "Which race was Asha in?"
+     },
+     "target": "the long race",
+     "accept": [
+      "long race",
+      "long"
+     ],
+     "required_words": [],
+     "keywords": [
+      "long"
+     ],
+     "max_record_s": 10,
+     "difficulty": 3,
+     "grade": 3,
+     "sounds": [],
+     "reviewed": true,
+     "source": "bank",
+     "followups": []
+    },
+    {
+     "id": "vb-en-rd-028-q2",
+     "stage": "reading",
+     "kind": "answer_question",
+     "lang": "en",
+     "checkpoint_id": null,
+     "prompt": "Why did everyone clap for Asha?",
+     "display": {
+      "question": "Why did everyone clap for Asha?"
+     },
+     "target": "because she did not stop",
+     "accept": [
+      "she did her best",
+      "she tried her best",
+      "she kept going"
+     ],
+     "required_words": [],
+     "keywords": [
+      "stop",
+      "best"
+     ],
+     "max_record_s": 10,
+     "difficulty": 3,
+     "grade": 3,
+     "sounds": [],
+     "reviewed": true,
+     "source": "bank",
+     "followups": []
+    }
+   ]
+  },
+  {
+   "id": "vb-en-rd-029",
+   "stage": "reading",
+   "kind": "read_paragraph",
+   "lang": "en",
+   "checkpoint_id": null,
+   "prompt": "Let us read a story. Read it slowly and clearly.",
+   "display": {
+    "text": "Sonu's family has a small tea shop near the bus stand. Every evening Sonu sits there with his mother and reads his books. Many people stop at the shop to drink tea and eat hot snacks. One day an old man forgot his umbrella on the bench. Sonu ran after him and gave it back. The man smiled and said Sonu was a very honest boy."
+   },
+   "target": "Sonu's family has a small tea shop near the bus stand. Every evening Sonu sits there with his mother and reads his books. Many people stop at the shop to drink tea and eat hot snacks. One day an old man forgot his umbrella on the bench. Sonu ran after him and gave it back. The man smiled and said Sonu was a very honest boy.",
+   "accept": [],
+   "required_words": [],
+   "keywords": [],
+   "max_record_s": 90,
+   "difficulty": 3,
+   "grade": 3,
+   "sounds": [],
+   "reviewed": true,
+   "source": "bank",
+   "followups": [
+    {
+     "id": "vb-en-rd-029-q1",
+     "stage": "reading",
+     "kind": "answer_question",
+     "lang": "en",
+     "checkpoint_id": null,
+     "prompt": "What did the old man forget?",
+     "display": {
+      "question": "What did the old man forget?"
+     },
+     "target": "his umbrella",
+     "accept": [
+      "umbrella",
+      "an umbrella"
+     ],
+     "required_words": [],
+     "keywords": [
+      "umbrella"
+     ],
+     "max_record_s": 10,
+     "difficulty": 3,
+     "grade": 3,
+     "sounds": [],
+     "reviewed": true,
+     "source": "bank",
+     "followups": []
+    },
+    {
+     "id": "vb-en-rd-029-q2",
+     "stage": "reading",
+     "kind": "answer_question",
+     "lang": "en",
+     "checkpoint_id": null,
+     "prompt": "Why did the man call Sonu an honest boy?",
+     "display": {
+      "question": "Why did the man call Sonu an honest boy?"
+     },
+     "target": "because Sonu gave the umbrella back",
+     "accept": [
+      "he gave it back",
+      "he returned the umbrella",
+      "he gave back the umbrella"
+     ],
+     "required_words": [],
+     "keywords": [
+      "gave",
+      "back"
+     ],
+     "max_record_s": 10,
+     "difficulty": 3,
+     "grade": 3,
+     "sounds": [],
+     "reviewed": true,
+     "source": "bank",
+     "followups": []
+    }
+   ]
+  }
+ ]
+}

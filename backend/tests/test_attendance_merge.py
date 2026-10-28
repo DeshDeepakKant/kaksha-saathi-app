@@ -5,6 +5,7 @@ from sqlalchemy import select
 
 from app.db import SessionLocal
 from app.models.tables import Attendance, Child
+from app.services.ledger import school_today
 
 
 def _register(class_id: int = 1) -> dict[int, bool]:
@@ -12,7 +13,7 @@ def _register(class_id: int = 1) -> dict[int, bool]:
     with SessionLocal() as db:
         rows = db.execute(select(Child.roll_no, Attendance.present)
                           .join(Attendance, Attendance.child_id == Child.id)
-                          .where(Attendance.class_id == class_id, Attendance.day == date.today())).all()
+                          .where(Attendance.class_id == class_id, Attendance.day == school_today())).all()
     return {roll: present for roll, present in rows}
 
 

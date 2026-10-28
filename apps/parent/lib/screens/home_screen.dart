@@ -5,6 +5,7 @@ import '../theme.dart';
 import 'gate_screen.dart';
 import 'history_screen.dart';
 import 'session_screen.dart';
+import 'voice_session_screen.dart';
 import '../l10n.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -191,6 +192,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                   const SizedBox(height: 18),
+                  _voiceCard(),
+                  const SizedBox(height: 14),
                   _startCard(),
                   const SizedBox(height: 12),
                   Text(
@@ -205,6 +208,71 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
     );
   }
+
+  Future<void> _startVoice() async {
+    try {
+      await Navigator.of(context)
+          .push(MaterialPageRoute(builder: (_) => const VoiceSessionScreen()));
+    } catch (_) {}
+    _load();
+  }
+
+  /// Entry to the 30-minute voice session (docs/voice_session_contract.md).
+  Widget _voiceCard() => Card(
+    color: Ks.accent,
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+    clipBehavior: Clip.antiAlias,
+    child: InkWell(
+      onTap: _startVoice,
+      child: Padding(
+        padding: const EdgeInsets.all(18),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                const Text('🦉', style: TextStyle(fontSize: 40)),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    tr(
+                      '30-minute voice session with Saathi',
+                      'साथी के साथ 30 मिनट का आवाज़ सत्र',
+                    ),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 21,
+                      fontWeight: FontWeight.w700,
+                      height: 1.3,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Text(
+              tr(
+                'Saathi talks with your child, listens, and moves from letters to reading. You get a report at the end.',
+                'साथी बच्चे से बात करता है, सुनता है, और अक्षरों से पढ़ने तक ले जाता है। आख़िर में आपको रिपोर्ट मिलती है।',
+              ),
+              style: const TextStyle(color: Colors.white, fontSize: 15),
+            ),
+            const SizedBox(height: 14),
+            FilledButton.icon(
+              onPressed: _startVoice,
+              style: FilledButton.styleFrom(
+                backgroundColor: Colors.white,
+                foregroundColor: Ks.accent,
+                minimumSize: const Size.fromHeight(60),
+              ),
+              icon: const Icon(Icons.record_voice_over_rounded, size: 26),
+              label: Text(tr('Start voice session', 'आवाज़ सत्र शुरू करें')),
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
 
   Widget _startCard() {
     final off = Api.i.offline;

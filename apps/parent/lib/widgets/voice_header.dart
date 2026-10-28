@@ -1,0 +1,155 @@
+import 'dart:async';
+
+import 'package:flutter/material.dart';
+
+import '../api_voice.dart';
+import '../l10n.dart';
+import '../theme.dart';
+
+/// Elapsed / remaining time toward the target, extrapolated locally from the last server value.
+/// Ticks on its own so the session screen does not rebuild every second.
+class VoiceClock extends StatefulWidget {
+  const VoiceClock({
+    super.key,
+    required this.elapsedS,
+    required this.since,
+    required this.targetMinutes,
+    this.running = true,
+  });
+  final double elapsedS;
+  final DateTime since;
+  final int targetMinutes;
+
+  /// False while paused: shows [elapsedS] as is.
+  final bool running;
+
+  /// Seconds elapsed now, given the last server value and when it arrived.
+  static double now(double elapsedS, DateTime since) =>
+      elapsedS + DateTime.now().difference(since).inMilliseconds / 1000;
+
+  @override
+  State<VoiceClock> createState() => _VoiceClockState();
+}
+
+class _VoiceClockState extends State<VoiceClock> {
+  Timer? _t;
+
+  @override
+  void initState() {
+    super.initState();
+    _t = Timer.periodic(const Duration(seconds: 1), (_) {
+      if (mounted) setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    _t?.cancel();
+    super.dispose();
+  }
+
+  static String _mmss(double s) {
+    final v = s.clamp(0, 99 * 60).round();
+    return '${v ~/ 60}:${(v % 60).toString().padLeft(2, '0')}';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final target = widget.targetMinutes * 60.0;
+    final e = widget.running
+        ? VoiceClock.now(widget.elapsedS, widget.since)
+        : widget.elapsedS;
+    final left = target - e;
+    return Semantics(
+      label: tr(
+        '${_mmss(e)} done, ${_mmss(left)} left',
+        '${_mmss(e)} हुए, ${_mmss(left)} बाकी',
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.timer_outlined, size: 20, color: Ks.accent),
+          const SizedBox(width: 6),
+          Text(
+            '${_mmss(e)} / ${_mmss(target)}',
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w700,
+              color: Ks.ink,
+              fontFeatures: [FontFeature.tabularFigures()],
+            ),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            flex: 2,
+            child: LinearProgressIndicator(
+              value: target <= 0 ? 0 : (e / target).clamp(0.0, 1.0),
+              minHeight: 8,
+              borderRadius: BorderRadius.circular(99),
+              color: Ks.accent,
+              backgroundColor: Ks.accentSoft,
+            ),
+          ),
+          const SizedBox(width: 10),
+          Flexible(
+            child: Text(
+              left > 0
+                  ? tr('${_mmss(left)} left', '${_mmss(left)} बाकी')
+                  : tr('Time up', 'समय पूरा'),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(fontSize: 14, color: Ks.muted),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// The reading ladder with the current stage highlighted.
+class VoiceLadder extends StatelessWidget {
+  const VoiceLadder({super.key, required this.stage});
+  final String? stage;
+
+  @override
+  Widget build(BuildContext context) {
+    final at = voiceStages.indexOf(stage ?? '');
+    return Row(
+      children: [
+        for (var i = 0; i < voiceStages.length; i++)
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.only(
+                right: i == voiceStages.length - 1 ? 0 : 4,
+              ),
+              child: Column(
+                children: [
+                  Container(
+                    height: 8,
+                    decoration: BoxDecoration(
+                      color: i < at
+                          ? Ks.green
+                          : (i == at ? Ks.accent : Ks.line),
+                      borderRadius: BorderRadius.circular(99),
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    voiceStageLabel(voiceStages[i]),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 11.5,
+                      color: i == at ? Ks.accent : Ks.muted,
+                      fontWeight: i == at ? FontWeight.w700 : FontWeight.w400,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+}

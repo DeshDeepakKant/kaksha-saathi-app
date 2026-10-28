@@ -7,6 +7,7 @@ import '../l10n.dart';
 import '../widgets/capture_sheet.dart';
 import '../widgets/read_aloud_sheet.dart';
 import '../widgets/trend_chart.dart';
+import '../widgets/voice_sessions_card.dart';
 
 /// One child's learning map: status per checkpoint, evidence timeline, misconception hints,
 /// probe suggestion, and a one-tap 3-item probe.
@@ -34,6 +35,8 @@ class _LevelScreenState extends State<LevelScreen> {
       {}; // lesson id -> words to read aloud
   bool _loading = true;
   String? _error;
+  // bumped on every successful load so the voice sessions card refetches
+  int _loads = 0;
 
   @override
   void initState() {
@@ -72,6 +75,7 @@ class _LevelScreenState extends State<LevelScreen> {
             : const [];
         _error = null;
         _loading = false;
+        _loads++;
       });
       _loadTargets(p);
     } catch (e) {
@@ -478,6 +482,14 @@ class _LevelScreenState extends State<LevelScreen> {
                 ),
               ),
             ),
+          ),
+        if (widget.subject != 'numeracy')
+          VoiceSessionsCard(
+            childId: widget.childId,
+            childName: widget.childName,
+            classId: widget.classId,
+            reloadToken: _loads,
+            onEvidenceSaved: () => _load(silent: true),
           ),
         SectionTitle(tr('Full map', 'पूरा नक्शा')),
         for (final ch in chapters.entries) ...[

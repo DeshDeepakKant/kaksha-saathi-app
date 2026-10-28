@@ -123,3 +123,23 @@ Item `target`/`accept`/`keywords` are never sent to the app for `build_word`, `a
   screen (TTS speaks Saathi, auto-listens with end-of-speech detection, big display of the current
   item, live transcript, timer, pause/stop) -> report screen; past sessions list.
 - Teacher app: child profile gets a "Voice sessions" card -> report screen with transcript.
+
+## Notes from integration (2026-10-29)
+- **No waiting on Claude mid-session.** Turns refill an empty stage queue from the reviewed bank
+  instantly (`generate_items(use_ai=False)`); Claude generates the next batch for the stage (and the
+  stage above) on a background thread, used by later refills. Measured: start < 0.1 s, turn median
+  0.02 s, p90 3 s (Claude-written hints at try 3+), max ~5 s.
+- **Report narrative is written after the session.** `end` returns at once with the templated
+  narrative and `narrative_status: "pending"`; a background thread swaps in Claude's text
+  (`"ai"`) or marks it `"fallback"`. Apps show whatever is stored; re-opening shows the AI text.
+  With no key the status is `"fallback"` straight away.
+- **Additive fields:** Turn `item_result`; Session `remaining_s`, `attempts_left`, `done`,
+  `safety_flag`; Report `end_reason`, `safety_flags`, `mistakes[].errors_hi`, `fluency.best_wcpm`;
+  answer_question items carry `context` (the paragraph). Error types also include `not_blended`
+  and `not_a_sentence`.
+- **Judging tolerance:** sound-alike spellings (ज़/ज, nukta letters, anusvara/chandrabindu,
+  to/two/too) count as correct, because the recogniser can't tell them apart; ड़/ड, ढ़/ढ are close.
+  "Pronunciation" is judged from what the recogniser wrote down, not from the audio.
+- **English evidence** is written only to the school's English-subject topics (there are no
+  built-in English checkpoints).
+- **Privacy:** `DELETE /parent/child/data` also deletes the child's voice sessions and transcripts.

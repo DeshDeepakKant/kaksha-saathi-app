@@ -16,6 +16,18 @@ from app.services.grouping import group_class
 from app.services.plan_templates import render_group
 
 
+# Schools run on Indian time: before 05:30 IST the UTC date is still "yesterday".
+IST = timezone(timedelta(hours=5, minutes=30))
+
+
+def school_today(now: datetime | None = None) -> date:
+    """Today's date for the school register and board (IST), whatever the server's timezone."""
+    n = now or datetime.now(timezone.utc)
+    if n.tzinfo is None:
+        n = n.replace(tzinfo=timezone.utc)
+    return n.astimezone(IST).date()
+
+
 def current_roadmap(db: Session, class_id: int, subject: str) -> Roadmap | None:
     return db.scalar(select(Roadmap).where(Roadmap.class_id == class_id, Roadmap.subject == subject)
                      .order_by(Roadmap.version.desc()).limit(1))
@@ -116,7 +128,7 @@ def build_groups(db: Session, cls: Classroom, subject: str, now: datetime | None
     children = class_children(db, cls.id)
     st = child_statuses(db, [c.id for c in children], now)
     st_plain = statuses_plain(st)
-    today = (now or datetime.now(timezone.utc)).date()
+    today = school_today(now)
     att = attendance_today(db, cls.id, today)
     absent = {cid for cid, present in att.items() if not present}
     # "needs assessment": absent today, or no evidence at all in this subject's roadmap

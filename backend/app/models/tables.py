@@ -233,3 +233,46 @@ class CustomCheckpoint(Base):
     title_hi: Mapped[str] = mapped_column(String(120))
     created_by: Mapped[int | None] = mapped_column(ForeignKey("teachers.id"))
     created_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow)
+
+
+class VoiceSession(Base):
+    """A 30-minute voice learning session (see docs/voice_session_contract.md).
+
+    `state` is the engine's whole working memory (ladder stage, item queues, current item, try,
+    streaks, weak sounds, timer), so a turn survives a restart. `report` is written once, at the end.
+    """
+    __tablename__ = "voice_sessions"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    school_id: Mapped[int] = mapped_column(ForeignKey("schools.id"), index=True)
+    child_id: Mapped[int] = mapped_column(ForeignKey("children.id"), index=True)
+    lang: Mapped[str] = mapped_column(String(4), default="hi")
+    status: Mapped[str] = mapped_column(String(12), default="active")  # active|ended
+    stage: Mapped[str] = mapped_column(String(20), default="letter")
+    started_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow)
+    ended_at: Mapped[datetime | None] = mapped_column(DateTime)
+    end_reason: Mapped[str | None] = mapped_column(String(16))  # time_up|parent_stop|abandoned
+    elapsed_s: Mapped[float] = mapped_column(Float, default=0.0)
+    safety_flag: Mapped[str | None] = mapped_column(String(16))  # last distress/personal flag, if any
+    state: Mapped[dict] = mapped_column(JSON, default=dict)
+    report: Mapped[dict | None] = mapped_column(JSON)
+
+
+class VoiceTurn(Base):
+    """One transcript line of a voice session (Saathi or the child).
+
+    The child's row of each turn also keeps the turn's full response under its `client_turn_id`,
+    so a retried upload returns the stored answer instead of judging twice. Rows with empty text
+    (silence, skips, safety-redacted speech) are kept for that purpose but not shown in transcripts.
+    """
+    __tablename__ = "voice_turns"
+    __table_args__ = (UniqueConstraint("session_id", "client_turn_id"),)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    session_id: Mapped[int] = mapped_column(ForeignKey("voice_sessions.id"), index=True)
+    role: Mapped[str] = mapped_column(String(8))  # tutor|child
+    text: Mapped[str] = mapped_column(Text, default="")
+    item_id: Mapped[str | None] = mapped_column(String(80))
+    verdict: Mapped[str | None] = mapped_column(String(12))  # correct|close|wrong|silent|skipped|flagged
+    words: Mapped[list | None] = mapped_column(JSON)
+    client_turn_id: Mapped[str | None] = mapped_column(String(64))
+    response: Mapped[dict | None] = mapped_column(JSON)
+    at: Mapped[datetime] = mapped_column(DateTime, default=utcnow)

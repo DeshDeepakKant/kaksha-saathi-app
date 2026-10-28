@@ -17,7 +17,8 @@ from app.ai import features
 from app.api.deps import current_parent, validate_media
 from app.core.security import hash_phone, hash_pin, make_token, verify_pin
 from app.db import get_db
-from app.models.tables import Child, Classroom, Evidence, HomeSession, ParentAccount, School
+from app.models.tables import (Child, Classroom, Evidence, HomeSession, ParentAccount, School, VoiceSession,
+                               VoiceTurn)
 from app.services import ledger, tutor
 from app.services.mastery import find_gap
 from app.services.content import get_content
@@ -303,6 +304,9 @@ def parent_delete(parent: ParentAccount = Depends(current_parent), db: Session =
     db.execute(delete(Evidence).where(Evidence.child_id == parent.child_id,
                                       Evidence.source.in_(("home_voice", "home_tap"))))
     db.execute(delete(HomeSession).where(HomeSession.child_id == parent.child_id))
+    voice_ids = select(VoiceSession.id).where(VoiceSession.child_id == parent.child_id)
+    db.execute(delete(VoiceTurn).where(VoiceTurn.session_id.in_(voice_ids)))
+    db.execute(delete(VoiceSession).where(VoiceSession.child_id == parent.child_id))
     return {"deleted": True}
 
 

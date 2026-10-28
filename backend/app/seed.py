@@ -15,9 +15,11 @@ from app.core.security import hash_phone, hash_pin
 from app.db import SessionLocal, init_db
 from app.models.tables import (
     AiCall, Attendance, CaptureSession, Child, Classroom, Evidence, HomeSession, InterventionLog, ParentAccount,
-    Plan, Roadmap, RoadmapItem, School, Teacher, UsageCounter, utcnow,
+    Plan, Roadmap, RoadmapItem, School, Teacher, UsageCounter, utcnow, CustomCheckpoint, CustomSubject,
+    VoiceSession, VoiceTurn,
 )
 from app.services.content import get_content
+from app.services.ledger import school_today
 
 DEMO_CODE = "DEMO"
 TEACHER_PIN = "1234"
@@ -57,6 +59,11 @@ def seed() -> dict:
                 db.execute(delete(Evidence).where(Evidence.child_id.in_(ids)))
                 db.execute(delete(Attendance).where(Attendance.child_id.in_(ids)))
                 db.execute(delete(HomeSession).where(HomeSession.child_id.in_(ids)))
+            voice = select(VoiceSession.id).where(VoiceSession.school_id == old.id)
+            db.execute(delete(VoiceTurn).where(VoiceTurn.session_id.in_(voice)))
+            db.execute(delete(VoiceSession).where(VoiceSession.school_id == old.id))
+            db.execute(delete(CustomCheckpoint).where(CustomCheckpoint.school_id == old.id))
+            db.execute(delete(CustomSubject).where(CustomSubject.school_id == old.id))
             db.execute(delete(Plan).where(Plan.school_id == old.id))
             db.execute(delete(RoadmapItem).where(RoadmapItem.roadmap_id.in_(
                 select(Roadmap.id).where(Roadmap.school_id == old.id))))
@@ -148,7 +155,7 @@ def seed() -> dict:
             # one absent day (no evidence), as real life
         # marks: a couple of absent rows today for two children
         for k in kids2[:2]:
-            db.add(Attendance(school_id=sch.id, class_id=cls2.id, child_id=k.id, day=date.today(), present=False))
+            db.add(Attendance(school_id=sch.id, class_id=cls2.id, child_id=k.id, day=school_today(), present=False))
 
         # --- class 3A: lighter history
         kids3 = list(db.scalars(select(Child).where(Child.class_id == cls3.id).order_by(Child.roll_no)))

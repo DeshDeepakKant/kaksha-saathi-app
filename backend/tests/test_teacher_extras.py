@@ -13,6 +13,7 @@ from app.models.tables import (
     Attendance, CaptureSession, Child, Classroom, Evidence, InterventionLog, Plan, Roadmap, RoadmapItem, School,
     Teacher,
 )
+from app.services.ledger import school_today
 
 BORROW = "N.G2.sub_2digit_borrow"
 
@@ -184,12 +185,12 @@ def test_timeline_bad_input(client, teacher_headers, zclass):
 def test_attendance_get_and_board_absent(client, teacher_headers, zclass):
     cid, kids = zclass["class_id"], zclass["kids"]
     empty = client.get(f"/v1/classes/{cid}/attendance", headers=teacher_headers).json()
-    assert empty == {"day": date.today().isoformat(), "absent_rolls": [], "present": 5}
+    assert empty == {"day": school_today().isoformat(), "absent_rolls": [], "present": 5}
     assert client.post(f"/v1/classes/{cid}/attendance", json={"absent_rolls": [2, 5]},
                        headers=teacher_headers).status_code == 200
     j = client.get(f"/v1/classes/{cid}/attendance", headers=teacher_headers).json()
     assert j["absent_rolls"] == [2, 5] and j["present"] == 3
-    old = (date.today() - timedelta(days=3)).isoformat()
+    old = (school_today() - timedelta(days=3)).isoformat()
     assert client.get(f"/v1/classes/{cid}/attendance?day={old}", headers=teacher_headers).json() == {
         "day": old, "absent_rolls": [], "present": 5}
     board = client.get(f"/v1/classes/{cid}/board?subject=numeracy", headers=teacher_headers).json()
