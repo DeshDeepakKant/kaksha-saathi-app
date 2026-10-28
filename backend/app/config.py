@@ -4,6 +4,7 @@ from __future__ import annotations
 from functools import lru_cache
 from pathlib import Path
 
+from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 BACKEND_DIR = Path(__file__).resolve().parent.parent
@@ -41,6 +42,16 @@ class Settings(BaseSettings):
     audio_ttl_hours: int = 24
     # When true, AI proposals are auto-accepted ONLY if high-confidence + arithmetic-verified (numeracy).
     auto_accept_high_confidence: bool = False
+
+    @field_validator("database_url")
+    @classmethod
+    def _psycopg_driver(cls, v: str) -> str:
+        # Hosted Postgres (Neon, Render) hands out postgres:// or postgresql:// URLs, which
+        # SQLAlchemy maps to psycopg2. We ship psycopg 3, so name that driver explicitly.
+        for prefix in ("postgres://", "postgresql://"):
+            if v.startswith(prefix):
+                return "postgresql+psycopg://" + v[len(prefix):]
+        return v
 
     @property
     def cors_list(self) -> list[str]:
