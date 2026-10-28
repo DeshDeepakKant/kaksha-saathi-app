@@ -1,0 +1,792 @@
+{
+ "version": "v1-2026-10-29",
+ "note": "Parent-facing tips, one per misconception id in competency_graph.json. explain_*: what the child does, in plain words; game_*: a 1-minute home game with household things; example: a tiny concrete case. reviewed=false entries are not served to parents until a mentor checks them.",
+ "tips": [
+  {
+   "id": "skips_numbers",
+   "checkpoint_ids": [
+    "N.G1.count_to_20"
+   ],
+   "explain_hi": "बच्चा गिनते समय कोई संख्या छोड़ देता है, जैसे 12 के बाद सीधे 14 बोल देता है।",
+   "explain_en": "The child skips a number while counting, for example saying 14 straight after 12.",
+   "game_hi": "कंकड़ रखते हुए या सीढ़ी चढ़ते हुए साथ में ज़ोर से गिनें; आप जानबूझकर एक संख्या छोड़ें और बच्चा पकड़कर बताए कि कौन-सी छूटी।",
+   "game_en": "Count out loud together while laying down stones or climbing steps; skip a number on purpose and let the child catch which one you missed.",
+   "example": "11, 12, 14, 15 ✗ (13 छूट गया)",
+   "reviewed": true
+  },
+  {
+   "id": "restarts_after_ten",
+   "checkpoint_ids": [
+    "N.G1.count_to_20"
+   ],
+   "explain_hi": "बच्चा 10 तक ठीक गिनता है, पर उसके बाद फिर से 1, 2, 3 बोलने लगता है।",
+   "explain_en": "The child counts correctly up to 10 but then starts again from 1, 2, 3.",
+   "game_hi": "20 कंकड़ लें, 10 गिनकर एक ढेर बनाएँ, फिर अगले कंकड़ों पर साथ में बोलें 'ग्यारह, बारह, तेरह…' और 20 तक पहुँचें।",
+   "game_en": "Take 20 stones, count 10 into one heap, then keep going together on the next stones, 'eleven, twelve, thirteen…', all the way to 20.",
+   "example": "… 9, 10, 1, 2 ✗ (सही 11, 12)",
+   "reviewed": true
+  },
+  {
+   "id": "mirror_written_numeral",
+   "checkpoint_ids": [
+    "N.G1.numerals_to_9"
+   ],
+   "explain_hi": "बच्चा कुछ अंक उल्टे लिखता है, जैसे 3 या 7 को शीशे में दिखने जैसा उल्टा बना देता है।",
+   "explain_en": "The child writes some numbers back to front, like a 3 or a 7 as it looks in a mirror.",
+   "game_hi": "फ़र्श पर चॉक से बड़ा 3 बनाएँ; बच्चा उस पर उँगली फेरे, फिर पास में अपना 3 बनाकर मिलाए कि मुँह एक ही तरफ़ है।",
+   "game_en": "Draw a big 3 on the floor with chalk; the child traces it with a finger, then draws their own 3 next to it and checks that both face the same way.",
+   "example": "3 → Ɛ ✗ (उल्टा)",
+   "reviewed": true
+  },
+  {
+   "id": "confuses_6_9",
+   "checkpoint_ids": [
+    "N.G1.numerals_to_9"
+   ],
+   "explain_hi": "बच्चा 6 और 9 में गड़बड़ कर देता है और एक को दूसरा पढ़ लेता है।",
+   "explain_en": "The child mixes up 6 and 9, reading one as the other.",
+   "game_hi": "रस्सी या धागे से 6 और 9 बनाएँ और बोलें '6 का गोला नीचे, 9 का गोला ऊपर'; आप जो अंक बोलें, बच्चा वही उठाए।",
+   "game_en": "Make a 6 and a 9 with a piece of string and say '6 has its circle at the bottom, 9 has it at the top'; the child picks up whichever one you call out.",
+   "example": "6 → नौ ✗ (सही छह)",
+   "reviewed": true
+  },
+  {
+   "id": "reads_21_as_twelve",
+   "checkpoint_ids": [
+    "N.G1.read_write_to_99"
+   ],
+   "explain_hi": "बच्चा दो अंकों वाली संख्या उल्टी पढ़ता है, जैसे 21 को 'बारह' पढ़ देता है।",
+   "explain_en": "The child reads a two-digit number backwards, for example reading 21 as 'twelve'.",
+   "game_hi": "कैलेंडर या नोट पर लिखी संख्या दिखाएँ; बच्चा पहले बाएँ वाले अंक पर उँगली रखे — 21 में 2 मतलब 'बीस', फिर 1, यानी 'इक्कीस'।",
+   "game_en": "Show a number on a calendar or a currency note; the child first puts a finger on the left digit — in 21 the 2 means 'twenty', then the 1, so 'twenty-one'.",
+   "example": "21 → बारह ✗ (सही इक्कीस)",
+   "reviewed": true
+  },
+  {
+   "id": "compares_digit_count_only",
+   "checkpoint_ids": [
+    "N.G1.compare_to_99"
+   ],
+   "explain_hi": "बच्चा बस यह देखता है कि संख्या में कितने अंक हैं, इसलिए जब दोनों संख्याएँ दो अंकों की हों तो बड़ी वाली नहीं पहचान पाता।",
+   "explain_en": "The child only looks at how many digits a number has, so when both numbers have two digits the child cannot tell which is bigger.",
+   "game_hi": "दो पर्चियों पर 38 और 52 लिखें; बच्चा पहले बाएँ वाले अंक (3 और 5) देखकर बड़ी संख्या वाली पर्ची उठाए, फिर अपनी बारी में आपसे पूछे।",
+   "game_en": "Write 38 and 52 on two slips of paper; the child looks at the left digits first (3 and 5) and picks the bigger number, then makes a pair to quiz you.",
+   "example": "38 या 52 में बड़ा? → 38 ✗ (सही 52)",
+   "reviewed": false
+  },
+  {
+   "id": "counts_on_fingers_only",
+   "checkpoint_ids": [
+    "N.G1.add_single"
+   ],
+   "explain_hi": "बच्चा हर जोड़ के लिए 1 से अंगुलियाँ गिनता है, जैसे 2 + 7 में भी 1 से 9 तक गिनता है।",
+   "explain_en": "The child counts every sum on fingers from 1, even for 2 + 7, counting all the way from 1 to 9.",
+   "game_hi": "'आगे गिनो' खेल: 7 चम्मच का ढेर रखकर 'सात' बोलें, फिर 2 चम्मच और रखते हुए 'आठ, नौ' — बच्चा बड़ी संख्या मन में रखकर आगे गिनना सीखे।",
+   "game_en": "'Count on' game: put down a heap of 7 spoons and say 'seven', then add 2 more saying 'eight, nine' — the child learns to keep the big number in mind and count on.",
+   "example": "2 + 7 → 1, 2, 3 … 9 तक हर बार गिनना",
+   "reviewed": true
+  },
+  {
+   "id": "adds_digits_separately",
+   "checkpoint_ids": [
+    "N.G1.add_single",
+    "N.G2.add_2digit_no_carry"
+   ],
+   "explain_hi": "बच्चा संख्या के सारे अंक एक साथ जोड़ देता है, जैसे 23 + 14 में 2 + 3 + 1 + 4 = 10 बता देता है।",
+   "explain_en": "The child adds all the digits together, for example 23 + 14 becomes 2 + 3 + 1 + 4 = 10.",
+   "game_hi": "झाड़ू की सींकों के 10-10 के गट्ठर बनाएँ; 23 + 14 में गट्ठर गट्ठरों के साथ और खुली सींकें खुली सींकों के साथ रखकर गिनें।",
+   "game_en": "Tie broom straws into bundles of 10; for 23 + 14 put bundles with bundles and loose straws with loose straws, then count.",
+   "example": "23 + 14 → 10 ✗ (सही 37)",
+   "reviewed": false
+  },
+  {
+   "id": "adds_instead_of_subtracts",
+   "checkpoint_ids": [
+    "N.G1.sub_single"
+   ],
+   "explain_hi": "बच्चा घटाने वाले सवाल में भी जोड़ देता है, जैसे 7 − 3 का उत्तर 10 बताता है।",
+   "explain_en": "The child adds even when the sum asks to take away, for example answering 10 for 7 − 3.",
+   "game_hi": "थाली में 7 कंकड़ रखें, 3 आप उठा लें और पूछें 'अब ज़्यादा हुए या कम?', फिर बच्चा बचे हुए कंकड़ गिने।",
+   "game_en": "Put 7 stones on a plate, take 3 away and ask 'are there more now or fewer?', then let the child count what is left.",
+   "example": "7 − 3 → 10 ✗ (सही 4)",
+   "reviewed": true
+  },
+  {
+   "id": "always_puts_bigger_first",
+   "checkpoint_ids": [
+    "N.G1.sub_single"
+   ],
+   "explain_hi": "बच्चा घटाव में संख्याओं का क्रम नहीं देखता और हमेशा बड़ी संख्या पहले रख लेता है, जैसे 3 − 5 को भी 5 − 3 मान लेता है।",
+   "explain_en": "The child ignores the order in a subtraction and always puts the bigger number first, for example treating 3 − 5 as 5 − 3.",
+   "game_hi": "बच्चे को 3 कंकड़ दें और कहें 'इनमें से 5 निकालो' — वह करके देखे कि नहीं निकलते; फिर 5 कंकड़ में से 3 निकालकर बचे हुए गिने।",
+   "game_en": "Give the child 3 stones and say 'take 5 away' — they find out it can't be done; then take 3 away from 5 stones and count what is left.",
+   "example": "3 − 5 → 2 ✗ (3 में से 5 नहीं निकलते)",
+   "reviewed": false
+  },
+  {
+   "id": "confuses_triangle_square",
+   "checkpoint_ids": [
+    "N.G1.shapes_basic"
+   ],
+   "explain_hi": "बच्चा तिकोने (त्रिभुज) और चौकोर (वर्ग) आकार को पहचानने में गड़बड़ करता है।",
+   "explain_en": "The child mixes up triangles and squares.",
+   "game_hi": "घर में तिकोनी और चौकोर चीज़ें ढूँढें — समोसा, तिकोना पराठा, खिड़की, रुमाल — और हर चीज़ के कोने गिनें: 3 कोने तिकोना, 4 कोने चौकोर।",
+   "game_en": "Hunt for triangle and square things at home — a samosa, a folded paratha, a window, a handkerchief — and count the corners: 3 corners is a triangle, 4 is a square.",
+   "example": "रुमाल (चौकोर) → तिकोना ✗",
+   "reviewed": true
+  },
+  {
+   "id": "repeats_last_element",
+   "checkpoint_ids": [
+    "N.G1.patterns"
+   ],
+   "explain_hi": "पैटर्न आगे बढ़ाते समय बच्चा आख़िरी चीज़ ही दोहरा देता है, जैसे चम्मच-कटोरी-चम्मच-कटोरी के बाद फिर कटोरी रख देता है।",
+   "explain_en": "When continuing a pattern, the child just repeats the last item, for example putting a bowl after spoon-bowl-spoon-bowl.",
+   "game_hi": "चम्मच, कटोरी, चम्मच, कटोरी की लाइन बनाकर साथ में बोलें; बच्चा अगली दो चीज़ें रखे, फिर अपनी लाइन बनाकर आपसे पूरी करवाए।",
+   "game_en": "Lay out spoon, bowl, spoon, bowl and say it together; the child adds the next two items, then makes a new line for you to finish.",
+   "example": "चम्मच, कटोरी, चम्मच, कटोरी → कटोरी ✗ (सही चम्मच)",
+   "reviewed": true
+  },
+  {
+   "id": "treats_digits_as_separate",
+   "checkpoint_ids": [
+    "N.G2.place_value_99",
+    "N.G2.place_value_999"
+   ],
+   "explain_hi": "बच्चा संख्या के अंकों को अलग-अलग गिनता है, जैसे 34 में 3 को 'तीन' समझता है, 'तीस' नहीं।",
+   "explain_en": "The child treats each digit on its own, for example thinking the 3 in 34 means 'three', not 'thirty'.",
+   "game_hi": "झाड़ू की सींकों के 10-10 के गट्ठर बनाएँ; 34 के लिए बच्चा 3 गट्ठर और 4 खुली सींकें रखे और बोले '3 गट्ठर मतलब तीस'।",
+   "game_en": "Tie broom straws into bundles of 10; for 34 the child puts out 3 bundles and 4 loose straws and says '3 bundles means thirty'.",
+   "example": "34 में 3 = तीन ✗ (सही तीस)",
+   "reviewed": true
+  },
+  {
+   "id": "no_zero_placeholder",
+   "checkpoint_ids": [
+    "N.G2.place_value_99"
+   ],
+   "explain_hi": "बच्चा संख्या लिखते समय शून्य छोड़ देता है, जैसे 'चालीस' को 40 की जगह 4 लिखता है।",
+   "explain_en": "The child leaves out the zero when writing a number, for example writing 'forty' as 4 instead of 40.",
+   "game_hi": "सींकों के 4 गट्ठर रखें और कोई खुली सींक नहीं; पूछें 'खुली कितनी?' — 'कोई नहीं' को 0 लिखते हैं, इसलिए 4 गट्ठर = 40।",
+   "game_en": "Put out 4 bundles of straws and no loose ones; ask 'how many loose?' — 'none' is written 0, so 4 bundles is 40.",
+   "example": "चालीस → 4 ✗ (सही 40)",
+   "reviewed": true
+  },
+  {
+   "id": "forgets_carry",
+   "checkpoint_ids": [
+    "N.G2.add_2digit_carry",
+    "N.G3.add_sub_3digit"
+   ],
+   "explain_hi": "जोड़ते समय इकाई का जोड़ 10 से ज़्यादा हो जाए तो बच्चा हासिल वाला 1 आगे जोड़ना भूल जाता है, जैसे 28 + 15 = 33 लिखता है।",
+   "explain_en": "When the ones add up to more than 10, the child forgets to carry the 1 over, for example writing 28 + 15 = 33.",
+   "game_hi": "सींकों से 28 + 15 करें; खुली सींकें 10 से ज़्यादा हो जाएँ तो बच्चा 10 का नया गट्ठर बाँधकर बाक़ी गट्ठरों में मिलाए।",
+   "game_en": "Do 28 + 15 with straws; when the loose straws go past 10, the child ties a new bundle of 10 and puts it with the other bundles.",
+   "example": "28 + 15 → 33 ✗ (सही 43)",
+   "reviewed": true
+  },
+  {
+   "id": "carries_to_wrong_column",
+   "checkpoint_ids": [
+    "N.G2.add_2digit_carry"
+   ],
+   "explain_hi": "हासिल लेते समय बच्चा उल्टा कर देता है — 13 में से 1 नीचे लिख देता है और 3 को आगे ले जाता है।",
+   "explain_en": "When carrying, the child does it the wrong way round — writes the 1 of 13 below and carries the 3.",
+   "game_hi": "सींकों से जोड़ें: 13 खुली सींकों में से 10 का गट्ठर बाँधकर बाईं ओर गट्ठरों के पास रखें, बची 3 खुली सींकें दाईं ओर ही रहें।",
+   "game_en": "Add with straws: from 13 loose straws tie a bundle of 10 and move it left to the bundles; the 3 loose straws stay on the right.",
+   "example": "28 + 15 → 61 ✗ (सही 43)",
+   "reviewed": false
+  },
+  {
+   "id": "smaller_minus_larger",
+   "checkpoint_ids": [
+    "N.G2.sub_2digit_no_borrow",
+    "N.G2.sub_2digit_borrow",
+    "N.G3.add_sub_3digit"
+   ],
+   "explain_hi": "बच्चा घटाते समय हमेशा बड़ी संख्या में से छोटी घटा देता है, जैसे 52 − 17 में 7 − 2 कर देता है।",
+   "explain_en": "When subtracting, the child always takes the smaller digit from the bigger one, for example doing 7 − 2 in 52 − 17.",
+   "game_hi": "सींकों से 52 बनाएँ (5 गट्ठर, 2 खुली) और 7 खुली सींकें निकालने को कहें; बच्चा देखे कि 2 में से 7 नहीं निकलतीं, इसलिए पहले एक गट्ठर खोलना होगा।",
+   "game_en": "Make 52 with straws (5 bundles, 2 loose) and ask for 7 loose straws; the child sees 7 can't come out of 2, so a bundle must be opened first.",
+   "example": "52 − 17 → 45 ✗ (सही 35)",
+   "reviewed": true
+  },
+  {
+   "id": "borrow_from_wrong_column",
+   "checkpoint_ids": [
+    "N.G2.sub_2digit_borrow"
+   ],
+   "explain_hi": "उधार लेते समय बच्चा 1 दहाई ऊपर वाली संख्या से नहीं, नीचे वाली संख्या से कम कर देता है।",
+   "explain_en": "When borrowing, the child takes the ten away from the bottom number instead of the top number.",
+   "game_hi": "उधार हमेशा ऊपर वाली संख्या से आता है: सींकों से 52 बनाएँ, उसी का एक गट्ठर खोलें और नीचे वाली संख्या (28) को न छुएँ।",
+   "game_en": "The borrow always comes from the top number: make 52 with straws, open one of its own bundles, and leave the bottom number (28) alone.",
+   "example": "52 − 28 → 44 ✗ (सही 24)",
+   "reviewed": false
+  },
+  {
+   "id": "ignores_zero_borrow",
+   "checkpoint_ids": [
+    "N.G2.sub_2digit_borrow"
+   ],
+   "explain_hi": "ऊपर वाली संख्या में इकाई की जगह 0 हो, जैसे 40 − 17, तो बच्चा उधार नहीं लेता और 0 − 7 को 0 या 7 लिख देता है।",
+   "explain_en": "When the top number ends in 0, like 40 − 17, the child does not borrow and writes 0 − 7 as 0 or 7.",
+   "game_hi": "सींकों के 4 गट्ठर रखें, खुली कोई नहीं; 7 खुली सींकें निकालनी हों तो बच्चा एक गट्ठर खोले — अब 10 खुली हैं, उनमें से 7 निकाले।",
+   "game_en": "Put out 4 bundles of straws and no loose ones; to take 7 loose straws the child opens a bundle — now there are 10 loose — and takes 7.",
+   "example": "40 − 17 → 37 या 30 ✗ (सही 23)",
+   "reviewed": true
+  },
+  {
+   "id": "forgets_to_reduce_ten",
+   "checkpoint_ids": [
+    "N.G2.sub_2digit_borrow"
+   ],
+   "explain_hi": "बच्चा उधार तो ले लेता है, पर जिस दहाई से उधार लिया उसे 1 कम करना भूल जाता है, जैसे 52 − 28 = 34 लिखता है।",
+   "explain_en": "The child borrows but forgets to make the tens one less, for example writing 52 − 28 = 34.",
+   "game_hi": "सींकों से 52 बनाएँ और एक गट्ठर खोलें; बच्चा खोला हुआ गट्ठर हटाकर गिने और बोले '5 नहीं, अब 4 गट्ठर बचे'।",
+   "game_en": "Make 52 with straws and open a bundle; the child takes the opened bundle out of the count and says 'not 5, now 4 bundles'.",
+   "example": "52 − 28 → 34 ✗ (सही 24)",
+   "reviewed": true
+  },
+  {
+   "id": "gaps_between_units",
+   "checkpoint_ids": [
+    "N.G2.measure_length"
+   ],
+   "explain_hi": "चप्पल या बित्ते से नापते समय बच्चा बीच में जगह छोड़ देता है, इसलिए नाप कम आता है।",
+   "explain_en": "When measuring with a chappal or hand-span, the child leaves gaps in between, so the measurement comes out too small.",
+   "game_hi": "चप्पल को एक के आगे एक बिना जगह छोड़े रखकर चारपाई नापें; फिर जगह छोड़कर नापें और देखें कि गिनती बदल गई।",
+   "game_en": "Measure a cot by placing a chappal end to end with no gaps; then try again leaving gaps and see how the count changes.",
+   "example": "चारपाई = 4 चप्पल ✗ (बिना जगह छोड़े 6)",
+   "reviewed": true
+  },
+  {
+   "id": "wrong_unit_start",
+   "checkpoint_ids": [
+    "N.G2.measure_length"
+   ],
+   "explain_hi": "नापते समय बच्चा पहली चप्पल या बित्ता चीज़ के किनारे से सटाकर नहीं रखता, थोड़ा आगे से शुरू करता है।",
+   "explain_en": "When measuring, the child does not start the first chappal or hand-span at the very edge of the object.",
+   "game_hi": "बेलन से चौकी या दरवाज़ा नापें; पहला बेलन ठीक किनारे से मिलाकर रखना है — बच्चा हर बार पहले किनारा जाँचे, फिर गिने।",
+   "game_en": "Measure a low stool or a door with a rolling pin; the first one must line up exactly with the edge — the child checks the edge every time before counting.",
+   "example": "पहला बित्ता किनारे से आगे रखा ✗",
+   "reviewed": true
+  },
+  {
+   "id": "uses_wrong_operation",
+   "checkpoint_ids": [
+    "N.G2.word_problems"
+   ],
+   "explain_hi": "कहानी वाले सवाल में बच्चा जोड़ की जगह घटा देता है या घटाने की जगह जोड़ देता है।",
+   "explain_en": "In a story sum, the child subtracts when it should add, or adds when it should subtract.",
+   "game_hi": "रसोई में छोटी कहानी बोलें — 'थाली में 5 रोटियाँ थीं, दादी ने 2 खा लीं' — बच्चा रोटियाँ हटाकर देखे कि कम हुईं या ज़्यादा, फिर बताए जोड़ना है या घटाना।",
+   "game_en": "Tell a tiny kitchen story — '5 rotis on the plate, Grandma ate 2' — the child moves the rotis to see if there are fewer or more, then says whether to add or take away.",
+   "example": "5 रोटी, 2 खा लीं, कितनी बचीं? → 7 ✗ (सही 3)",
+   "reviewed": true
+  },
+  {
+   "id": "ignores_question_asked",
+   "checkpoint_ids": [
+    "N.G2.word_problems"
+   ],
+   "explain_hi": "कहानी वाले सवाल में बच्चा दिखी हुई संख्याओं से कुछ भी कर देता है और यह नहीं सुनता कि असल में क्या पूछा गया है।",
+   "explain_en": "In a story sum, the child does something with the numbers without listening to what is actually being asked.",
+   "game_hi": "एक छोटी कहानी सुनाएँ और उत्तर देने से पहले बच्चा सवाल दोहराए — 'क्या पूछा है?' — फिर उत्तर दे; अगली बार बच्चा कहानी सुनाए और आप दोहराएँ।",
+   "game_en": "Tell a short story sum and have the child repeat the question first — 'what is being asked?' — before answering; next time the child tells the story and you repeat.",
+   "example": "6 टॉफ़ी थीं, 2 दे दीं, कितनी दीं? → 4 ✗ (सही 2)",
+   "reviewed": true
+  },
+  {
+   "id": "adds_instead_of_multiplies",
+   "checkpoint_ids": [
+    "N.G3.mult_concept"
+   ],
+   "explain_hi": "जहाँ कई बार बराबर चीज़ें हों, वहाँ बच्चा गुणा की जगह बस दोनों संख्याएँ जोड़ देता है, जैसे 3 थाली में 4-4 लड्डू को 7 बताता है।",
+   "explain_en": "When there are equal groups, the child just adds the two numbers instead of multiplying, for example 3 plates of 4 laddoos becomes 7.",
+   "game_hi": "3 कटोरियों में 4-4 कंकड़ रखें और साथ में गिनें: 4, 8, 12 — बोलें 'तीन बार चार, बारह'।",
+   "game_en": "Put 4 stones in each of 3 bowls and count together: 4, 8, 12 — say 'three times four is twelve'.",
+   "example": "3 थाली × 4 लड्डू → 7 ✗ (सही 12)",
+   "reviewed": true
+  },
+  {
+   "id": "confuses_3x4_with_3_plus_4",
+   "checkpoint_ids": [
+    "N.G3.mult_concept"
+   ],
+   "explain_hi": "बच्चा गुणा (×) के निशान को जोड़ (+) समझ लेता है, जैसे 3 × 4 का उत्तर 7 बताता है।",
+   "explain_en": "The child reads the times sign (×) as plus (+), for example answering 7 for 3 × 4.",
+   "game_hi": "× का मतलब 'बार' बताएँ: 3 × 4 = 'चार, तीन बार'; 4 ताली, 4 ताली, 4 ताली बजाएँ और बच्चा कुल तालियाँ गिने: 12।",
+   "game_en": "Explain that × means 'times': 3 × 4 is 'four, three times'; clap 4, 4 and 4 and let the child count all the claps: 12.",
+   "example": "3 × 4 → 7 ✗ (सही 12)",
+   "reviewed": true
+  },
+  {
+   "id": "off_by_one_in_table",
+   "checkpoint_ids": [
+    "N.G3.tables_2_5"
+   ],
+   "explain_hi": "पहाड़ा बोलते समय बच्चा एक कदम आगे या पीछे हो जाता है, जैसे 3 × 6 का उत्तर 21 बता देता है।",
+   "explain_en": "When saying a times table, the child slips one step ahead or behind, for example answering 21 for 3 × 6.",
+   "game_hi": "3 का पहाड़ा बोलते हुए हर लाइन पर एक उँगली खोलें; 3 × 6 पर रुकें और 6 खुली उँगलियाँ देखकर उत्तर बताएँ।",
+   "game_en": "Say the 3 times table and open one finger for each line; stop at 3 × 6 and look at the 6 open fingers to give the answer.",
+   "example": "3 × 6 → 21 ✗ (सही 18)",
+   "reviewed": true
+  },
+  {
+   "id": "skips_a_multiple",
+   "checkpoint_ids": [
+    "N.G3.tables_2_5"
+   ],
+   "explain_hi": "पहाड़ा बोलते समय बच्चा बीच की कोई संख्या छोड़ देता है, जैसे 4, 8, 12 के बाद सीधे 20 बोलता है।",
+   "explain_en": "When saying a times table, the child skips a number in the middle, for example jumping from 4, 8, 12 straight to 20.",
+   "game_hi": "4-4 कंकड़ के ढेर लगाते जाएँ और हर ढेर पर कुल बोलें: 4, 8, 12, 16…; बच्चा हर ढेर छूकर बोले।",
+   "game_en": "Keep making heaps of 4 stones and say the total at each heap: 4, 8, 12, 16…; the child touches each heap as they say it.",
+   "example": "4, 8, 12, 20 ✗ (16 छूट गया)",
+   "reviewed": true
+  },
+  {
+   "id": "shares_unequally",
+   "checkpoint_ids": [
+    "N.G3.division_sharing"
+   ],
+   "explain_hi": "बाँटते समय बच्चा सबको बराबर नहीं देता, किसी को ज़्यादा और किसी को कम दे देता है।",
+   "explain_en": "When sharing, the child does not give everyone the same — some get more, some get less.",
+   "game_hi": "12 मूँगफली या कंकड़ 3 कटोरियों में 'एक तुम्हें, एक तुम्हें, एक तुम्हें' करके बाँटें; आख़िर में गिनकर देखें कि सबके बराबर हैं।",
+   "game_en": "Share 12 peanuts or stones into 3 bowls, 'one for you, one for you, one for you'; at the end count to check everyone has the same.",
+   "example": "12 लड्डू 3 को → 5, 4, 3 ✗ (सही 4-4)",
+   "reviewed": true
+  },
+  {
+   "id": "reverses_divisor_dividend",
+   "checkpoint_ids": [
+    "N.G3.division_sharing"
+   ],
+   "explain_hi": "बाँटने के सवाल में बच्चा उलझ जाता है कि कितनी चीज़ें बाँटनी हैं और कितनों में, जैसे '12 रोटी 3 लोगों में' को '3 रोटी 12 लोगों में' समझ लेता है।",
+   "explain_en": "In a sharing sum, the child mixes up how many things are shared and among how many, for example treating '12 rotis among 3 people' as '3 rotis among 12'.",
+   "game_hi": "12 चम्मच हाथ में लें और 3 कटोरियाँ ज़मीन पर रखें; बच्चा पहले बोले 'क्या बाँट रहे हैं, किसमें बाँट रहे हैं', फिर बाँटकर गिने।",
+   "game_en": "Hold 12 spoons and put 3 bowls on the floor; the child first says 'what are we sharing, and into what', then shares and counts.",
+   "example": "12 ÷ 3 को 3 ÷ 12 समझना ✗ (सही 4)",
+   "reviewed": true
+  },
+  {
+   "id": "counts_symbols_not_values",
+   "checkpoint_ids": [
+    "N.G3.data_handling"
+   ],
+   "explain_hi": "चित्र वाले चार्ट में जहाँ एक चित्र 2 या 5 चीज़ों के बराबर हो, बच्चा बस चित्र गिन लेता है।",
+   "explain_en": "In a picture chart where one picture stands for 2 or 5 things, the child just counts the pictures.",
+   "game_hi": "एक कंकड़ = 2 रोटी मान लें; 3 कंकड़ रखकर पूछें कितनी रोटियाँ — बच्चा हर कंकड़ पर 'दो और' जोड़ते हुए गिने: 2, 4, 6।",
+   "game_en": "Let one stone stand for 2 rotis; put out 3 stones and ask how many rotis — the child counts 'two more' for each stone: 2, 4, 6.",
+   "example": "3 चित्र (हर चित्र = 2) → 3 ✗ (सही 6)",
+   "reviewed": true
+  },
+  {
+   "id": "confuses_similar_sounds",
+   "checkpoint_ids": [
+    "L.G1.phonological"
+   ],
+   "explain_hi": "बच्चा मिलती-जुलती आवाज़ों में फ़र्क़ नहीं सुन पाता, जैसे 'बाल' और 'पाल' को एक जैसा सुनता है।",
+   "explain_en": "The child cannot hear the difference between similar sounds, for example 'baal' and 'paal' sound the same to them.",
+   "game_hi": "दो शब्द बोलें — 'बाल-पाल', 'दाल-दाल', 'कान-कान', 'तार-दार' — एक जैसे हों तो बच्चा ताली बजाए, अलग हों तो पैर थपथपाए।",
+   "game_en": "Say two words — 'baal-paal', 'daal-daal', 'kaan-kaan', 'taar-daar' — the child claps if they are the same and taps a foot if they are different.",
+   "example": "बाल → पाल",
+   "reviewed": true
+  },
+  {
+   "id": "confuses_short_long_vowel",
+   "checkpoint_ids": [
+    "L.G1.swar"
+   ],
+   "explain_hi": "बच्चा छोटे और बड़े स्वर में गड़बड़ करता है, जैसे 'इ' और 'ई' या 'उ' और 'ऊ' को एक जैसा बोलता है।",
+   "explain_en": "The child mixes up short and long vowels, for example saying 'i' and 'ee' or 'u' and 'oo' the same way.",
+   "game_hi": "छोटा स्वर ('इ', 'उ') झट से बोलें तो बच्चा छोटी ताली बजाए, बड़ा स्वर ('ईईई', 'ऊऊऊ') खींचकर बोलें तो दोनों हाथ फैलाए।",
+   "game_en": "Say a short vowel ('i', 'u') quickly and the child gives a small clap; stretch a long vowel ('eeee', 'oooo') and the child spreads both arms wide.",
+   "example": "ई → इ",
+   "reviewed": true
+  },
+  {
+   "id": "confuses_rav_ra_with_vowel",
+   "checkpoint_ids": [
+    "L.G1.swar"
+   ],
+   "explain_hi": "बच्चा स्वर 'ऋ' को व्यंजन 'र' समझ लेता है।",
+   "explain_en": "The child confuses the vowel letter 'ऋ' (ri) with the consonant 'र' (ra).",
+   "game_hi": "फ़र्श पर चॉक से 'ऋ' और 'र' लिखें; आप 'ऋषि' बोलें तो बच्चा ऋ पर कूदे, 'रथ' या 'रस्सी' बोलें तो र पर।",
+   "game_en": "Write 'ऋ' and 'र' on the floor with chalk; say 'rishi' and the child jumps on ऋ, say 'rath' or 'rassi' and the child jumps on र.",
+   "example": "ऋषि → रषि ✗",
+   "reviewed": false
+  },
+  {
+   "id": "confuses_sa_sha",
+   "checkpoint_ids": [
+    "L.G1.vyanjan"
+   ],
+   "explain_hi": "बच्चा 'स' और 'श' में फ़र्क़ नहीं कर पाता, जैसे 'शेर' को 'सेर' पढ़ता है।",
+   "explain_en": "The child cannot tell 'sa' and 'sha' apart, for example reading 'sher' (lion) as 'ser'.",
+   "game_hi": "'स' के लिए साँप जैसी 'स्स्स' और 'श' के लिए चुप कराने वाली 'श्श्श' आवाज़ निकालें; साबुन, शेर, सेब, शाम बोलें और बच्चा बताए 'साँप' या 'चुप'।",
+   "game_en": "Make a snake 'sss' for 'sa' and a hush 'shhh' for 'sha'; say saabun, sher, seb, shaam and the child says 'snake' or 'hush' for each.",
+   "example": "शेर → सेर",
+   "reviewed": true
+  },
+  {
+   "id": "confuses_na_na_dot",
+   "checkpoint_ids": [
+    "L.G1.vyanjan"
+   ],
+   "explain_hi": "बच्चा 'न' और 'ण' में गड़बड़ करता है, दोनों को एक जैसा पढ़ता या लिखता है।",
+   "explain_en": "The child mixes up the two letters 'न' and 'ण', reading or writing one for the other.",
+   "game_hi": "दो पर्चियों पर 'न' और 'ण' लिखें; आप 'नाक' या 'नल' बोलें तो बच्चा न वाली पर्ची उठाए, 'बाण' या 'गणेश' बोलें तो ण वाली।",
+   "game_en": "Write 'न' and 'ण' on two slips; say 'naak' or 'nal' and the child picks up न, say 'baan' or 'Ganesh' and the child picks up ण.",
+   "example": "बाण → बान",
+   "reviewed": false
+  },
+  {
+   "id": "confuses_da_dha",
+   "checkpoint_ids": [
+    "L.G1.vyanjan"
+   ],
+   "explain_hi": "बच्चा 'द' और 'ध' में फ़र्क़ नहीं कर पाता, जैसे 'धान' को 'दान' पढ़ता है।",
+   "explain_en": "The child cannot tell 'da' and 'dha' apart, for example reading 'dhaan' (paddy) as 'daan'.",
+   "game_hi": "मुँह के आगे हथेली रखकर बोलें — 'ध' पर हवा का झोंका लगता है, 'द' पर नहीं; दाल, दूध, धागा, धूप बोलकर बच्चा हवा महसूस करे।",
+   "game_en": "Hold a palm in front of the mouth — 'dha' gives a puff of air, 'da' does not; say daal, doodh, dhaaga, dhoop and let the child feel the air.",
+   "example": "धान → दान",
+   "reviewed": true
+  },
+  {
+   "id": "reads_letters_separately",
+   "checkpoint_ids": [
+    "L.G1.blend_no_matra"
+   ],
+   "explain_hi": "बच्चा शब्द जोड़कर नहीं पढ़ता, अक्षर अलग-अलग बोलकर रुक जाता है, जैसे 'कमल' को 'क-म-ल' बोलता है।",
+   "explain_en": "The child does not blend a word, stopping after saying each letter separately, for example 'ka-ma-la' for 'kamal'.",
+   "game_hi": "रबर की तरह शब्द खींचें: 'क…म…ल' धीरे, फिर झट से 'कमल!'; बच्चा भी पहले खींचकर फिर एक साँस में बोले — घर, नल, जल से खेलें।",
+   "game_en": "Stretch a word like a rubber band: 'ka…ma…la' slowly, then snap 'kamal!'; the child stretches it too, then says it in one breath — play with ghar, nal, jal.",
+   "example": "कमल → क… म… ल",
+   "reviewed": true
+  },
+  {
+   "id": "reorders_syllables",
+   "checkpoint_ids": [
+    "L.G1.blend_no_matra"
+   ],
+   "explain_hi": "बच्चा अक्षरों का क्रम बदलकर पढ़ता है, जैसे 'नमक' को 'मनक' पढ़ता है।",
+   "explain_en": "The child reads the letters in the wrong order, for example reading 'namak' as 'manak'.",
+   "game_hi": "फ़र्श पर चॉक से तीन खाने बनाकर न, म, क लिखें; बच्चा बाएँ से दाएँ हर खाने पर कूदते हुए अक्षर बोले, फिर पूरा शब्द।",
+   "game_en": "Draw three boxes on the floor with chalk and write न, म, क; the child hops left to right saying each letter, then says the whole word.",
+   "example": "नमक → मनक",
+   "reviewed": true
+  },
+  {
+   "id": "confuses_i_ii_matra",
+   "checkpoint_ids": [
+    "L.G1.matra_basic"
+   ],
+   "explain_hi": "बच्चा छोटी इ (ि) और बड़ी ई (ी) की मात्रा में गड़बड़ करता है, जैसे 'दिन' को 'दीन' पढ़ता है।",
+   "explain_en": "The child mixes up the short 'i' and long 'ee' matras, for example reading 'din' as 'deen'.",
+   "game_hi": "छोटी इ पर छोटी छलाँग, बड़ी ई पर लंबी छलाँग: आप कि, की, दिन, दीदी बोलें और बच्चा उसी हिसाब से कूदे।",
+   "game_en": "Short hop for the short 'i', long jump for the long 'ee': say ki, kee, din, didi and the child jumps to match.",
+   "example": "दिन → दीन",
+   "reviewed": true
+  },
+  {
+   "id": "misplaces_matra",
+   "checkpoint_ids": [
+    "L.G1.matra_basic"
+   ],
+   "explain_hi": "बच्चा मात्रा अक्षर की गलत तरफ़ लगाता है, जैसे 'कि' लिखते समय ि की मात्रा क के बाद लगा देता है।",
+   "explain_en": "The child puts the matra on the wrong side of the letter, for example placing the 'i' matra after क when writing 'कि'.",
+   "game_hi": "फ़र्श पर चॉक से 'क' लिखें; बच्चा 'कि' के लिए मात्रा क के बाईं ओर और 'की' के लिए दाईं ओर लगाए, फिर दोनों पढ़े।",
+   "game_en": "Write 'क' on the floor with chalk; the child adds the matra on the left for 'कि' (ki) and on the right for 'की' (kee), then reads both.",
+   "example": "कि → क के बाद ि लगाना ✗",
+   "reviewed": true
+  },
+  {
+   "id": "ignores_matra",
+   "checkpoint_ids": [
+    "L.G1.read_matra_words"
+   ],
+   "explain_hi": "बच्चा मात्रा छोड़कर पढ़ता है, जैसे 'काम' को 'कम' पढ़ता है।",
+   "explain_en": "The child skips the matra when reading, for example reading 'kaam' as 'kam'.",
+   "game_hi": "पर्चियों पर कम/काम और जल/जाल लिखें; बच्चा पढ़े और आप मतलब पूछें — 'जाल' से मछली पकड़ते हैं, 'जल' पीते हैं।",
+   "game_en": "Write kam/kaam and jal/jaal on slips; the child reads them and you ask the meaning — a 'jaal' catches fish, 'jal' is water we drink.",
+   "example": "काम → कम",
+   "reviewed": true
+  },
+  {
+   "id": "confuses_matra_position",
+   "checkpoint_ids": [
+    "L.G1.read_matra_words"
+   ],
+   "explain_hi": "पढ़ते समय बच्चा मात्रा की जगह से उलझ जाता है, जैसे 'कि' में ि पहले दिखने से 'इक' पढ़ देता है।",
+   "explain_en": "The child gets confused by where the matra sits, for example reading 'कि' as 'ik' because the matra comes before the letter.",
+   "game_hi": "पर्चियों पर कि, पि, मि लिखें; बच्चा पहले अक्षर पर उँगली रखकर उसकी आवाज़ बोले, फिर मात्रा जोड़कर पूरा पढ़े।",
+   "game_en": "Write कि, पि, मि on slips; the child puts a finger on the letter, says its sound first, then adds the matra and reads it.",
+   "example": "कि → इक ✗ (सही 'कि')",
+   "reviewed": true
+  },
+  {
+   "id": "points_word_by_word",
+   "checkpoint_ids": [
+    "L.G1.read_short_sentences"
+   ],
+   "explain_hi": "बच्चा हर शब्द पर उँगली रखकर रुक-रुककर पढ़ता है, इसलिए वाक्य का मतलब छूट जाता है।",
+   "explain_en": "The child stops at every word while pointing to it, so the meaning of the sentence gets lost.",
+   "game_hi": "आप एक छोटा वाक्य उँगली सरकाते हुए बात करने की तरह पढ़ें, फिर बच्चा उसी तरह उँगली सरकाते हुए बिना रुके पढ़े — 3 बार, हर बार थोड़ा तेज़।",
+   "game_en": "Read a short sentence aloud while sliding your finger smoothly, like talking; the child then reads it the same way without stopping — 3 times, a little faster each time.",
+   "example": "हम … घर … जा … रहे … हैं",
+   "reviewed": false
+  },
+  {
+   "id": "loses_place",
+   "checkpoint_ids": [
+    "L.G1.read_short_sentences"
+   ],
+   "explain_hi": "पढ़ते-पढ़ते बच्चा भूल जाता है कि वह कहाँ था, और लाइन छोड़ देता है या दोबारा पढ़ लेता है।",
+   "explain_en": "While reading, the child loses track of the place and skips a line or reads it again.",
+   "game_hi": "पढ़ते समय लाइन के नीचे कागज़ की पट्टी या पेन रखें; बच्चा हर लाइन पूरी होने पर पट्टी एक लाइन नीचे खिसकाए।",
+   "game_en": "Put a strip of paper or a pen under the line being read; the child slides it down one line each time a line is finished.",
+   "example": "पहली लाइन के बाद तीसरी लाइन पढ़ना ✗",
+   "reviewed": true
+  },
+  {
+   "id": "mirror_written_letter",
+   "checkpoint_ids": [
+    "L.G1.write_aksharas"
+   ],
+   "explain_hi": "बच्चा कुछ अक्षर उल्टे लिखता है, जैसे 'ज' या 'स' को शीशे में दिखने जैसा बना देता है।",
+   "explain_en": "The child writes some letters back to front, like a 'ज' or 'स' as it looks in a mirror.",
+   "game_hi": "आँगन में चॉक से बड़ा 'ज' बनाएँ; बच्चा पहले उस पर चलकर और उँगली फेरकर बनाए, फिर पास में खुद लिखकर मिलाए।",
+   "game_en": "Draw a big 'ज' in the courtyard with chalk; the child walks along it and traces it with a finger, then writes one next to it and compares.",
+   "example": "ज → उल्टा ज ✗",
+   "reviewed": true
+  },
+  {
+   "id": "omits_phoneme",
+   "checkpoint_ids": [
+    "L.G1.write_aksharas"
+   ],
+   "explain_hi": "लिखते समय बच्चा शब्द की कोई आवाज़ छोड़ देता है, जैसे 'कमल' को 'कल' लिखता है।",
+   "explain_en": "When writing, the child leaves out a sound of the word, for example writing 'kamal' as 'kal'.",
+   "game_hi": "शब्द बोलते हुए हर आवाज़ पर एक ताली बजाएँ — 'क-म-ल' मतलब 3 ताली — फिर बच्चा लिखे और गिने कि 3 अक्षर हैं या नहीं।",
+   "game_en": "Clap once for each sound as you say a word — 'ka-ma-la' is 3 claps — then the child writes it and counts that there are 3 letters.",
+   "example": "कमल → कल",
+   "reviewed": true
+  },
+  {
+   "id": "confuses_u_uu",
+   "checkpoint_ids": [
+    "L.G2.all_matras"
+   ],
+   "explain_hi": "बच्चा छोटे उ (ु) और बड़े ऊ (ू) की मात्रा में गड़बड़ करता है, जैसे 'फूल' को 'फुल' पढ़ता है।",
+   "explain_en": "The child mixes up the short 'u' and long 'oo' matras, for example reading 'phool' as 'phul'.",
+   "game_hi": "ऊ वाले शब्द (फूल, दूध, झूला) खींचकर बोलें और बच्चा दोनों हाथ ऊपर फैलाए; उ वाले शब्द (गुड़, पुल) पर छोटी ताली बजाए।",
+   "game_en": "Stretch the 'oo' words (phool, doodh, jhoola) and the child stretches both arms up; for the short 'u' words (gud, pul) the child gives a small clap.",
+   "example": "फूल → फुल",
+   "reviewed": true
+  },
+  {
+   "id": "confuses_e_ai",
+   "checkpoint_ids": [
+    "L.G2.all_matras"
+   ],
+   "explain_hi": "बच्चा ए (े) और ऐ (ै) की मात्रा में गड़बड़ करता है, जैसे 'पैसा' को 'पेसा' पढ़ता है।",
+   "explain_en": "The child mixes up the 'e' and 'ai' matras, for example reading 'paisa' as 'pesa'.",
+   "game_hi": "ऊपर एक डंडी = ए (जैसे 'मेला'), दो डंडी = ऐ (जैसे 'पैसा'); आप शब्द बोलें और बच्चा एक या दो उँगली उठाए।",
+   "game_en": "One stroke on top is 'e' (as in 'mela'), two strokes is 'ai' (as in 'paisa'); you say a word and the child holds up one or two fingers.",
+   "example": "पैसा → पेसा",
+   "reviewed": true
+  },
+  {
+   "id": "confuses_o_au",
+   "checkpoint_ids": [
+    "L.G2.all_matras"
+   ],
+   "explain_hi": "बच्चा ओ (ो) और औ (ौ) की मात्रा में गड़बड़ करता है, जैसे 'कौआ' को 'कोआ' पढ़ता है।",
+   "explain_en": "The child mixes up the 'o' and 'au' matras, for example reading 'kauaa' (crow) as 'koaa'.",
+   "game_hi": "आप मोर, रोटी, कौआ, सौ जैसे शब्द बोलें; 'ओ' वाले पर बच्चा एक उँगली उठाए, 'औ' वाले पर दो उँगलियाँ।",
+   "game_en": "Say words like mor, roti, kauaa, sau; the child holds up one finger for an 'o' word and two fingers for an 'au' word.",
+   "example": "कौआ → कोआ",
+   "reviewed": true
+  },
+  {
+   "id": "wrong_matra_order",
+   "checkpoint_ids": [
+    "L.G2.word_formation"
+   ],
+   "explain_hi": "शब्द बनाते समय बच्चा मात्रा गलत अक्षर पर लगा देता है, जैसे 'काम' की जगह 'कमा' बना देता है।",
+   "explain_en": "When building a word, the child puts the matra on the wrong letter, for example making 'kamaa' instead of 'kaam'.",
+   "game_hi": "पर्चियों पर क, म और आ की मात्रा (ा) लिखें; बच्चा 'काम' और 'कमा' दोनों बनाकर पढ़े और बताए कि मात्रा की जगह बदलने से शब्द कैसे बदला।",
+   "game_en": "Write क, म and the 'aa' matra (ा) on slips; the child builds both 'kaam' and 'kamaa', reads them, and says how moving the matra changed the word.",
+   "example": "काम → कमा",
+   "reviewed": true
+  },
+  {
+   "id": "drops_final_vowel",
+   "checkpoint_ids": [
+    "L.G2.word_formation"
+   ],
+   "explain_hi": "बच्चा शब्द के आख़िर की मात्रा छोड़ देता है, जैसे 'रोटी' को 'रोट' लिखता है।",
+   "explain_en": "The child drops the matra at the end of a word, for example writing 'roti' as 'rot'.",
+   "game_hi": "शब्द बोलते हुए आख़िरी आवाज़ पर ज़ोर से ताली बजाएँ — 'रो-टी!' — बच्चा बताए कि आख़िर में कौन-सी आवाज़ है, फिर लिखकर वही मात्रा जाँचे।",
+   "game_en": "Say a word and clap hard on the last sound — 'ro-TEE!' — the child says what the last sound is, then writes it and checks that matra is there.",
+   "example": "रोटी → रोट",
+   "reviewed": true
+  },
+  {
+   "id": "splits_conjunct",
+   "checkpoint_ids": [
+    "L.G2.conjuncts"
+   ],
+   "explain_hi": "बच्चा आधे अक्षर वाले जुड़े अक्षर को तोड़कर पढ़ता है, जैसे 'प्यार' को 'पयार' पढ़ता है।",
+   "explain_en": "The child breaks up joined (half) letters, for example reading 'pyaar' as 'payaar'.",
+   "game_hi": "'प्यार' में आधा 'प्' झट से 'यार' से मिलाकर बोलें और बच्चा दो उँगलियाँ जोड़कर एक कर दे; पत्ता, बच्चा, क्या से खेलें।",
+   "game_en": "Say 'pyaar' by gluing the half 'p' quickly onto 'yaar' while the child presses two fingers together into one; play with patta, bachcha, kya.",
+   "example": "प्यार → पयार",
+   "reviewed": true
+  },
+  {
+   "id": "confuses_ksha_chha",
+   "checkpoint_ids": [
+    "L.G2.conjuncts"
+   ],
+   "explain_hi": "बच्चा 'क्ष' और 'छ' को एक जैसा पढ़ता या लिखता है, जैसे 'कक्षा' को 'कछा' पढ़ता है।",
+   "explain_en": "The child reads or writes 'ksha' and 'chha' the same way, for example reading 'kaksha' as 'kachha'.",
+   "game_hi": "क्ष बोलते समय पहले हल्की 'क्' फिर 'श' — 'क्-श'; आप कक्षा, रक्षा, छाता, छत बोलें और बच्चा बताए किसमें 'क्ष' है।",
+   "game_en": "Say 'ksha' as a light 'k' then 'sha' — 'k-sha'; say kaksha, raksha, chhaata, chhat and the child says which ones have 'ksha'.",
+   "example": "कक्षा → कछा",
+   "reviewed": true
+  },
+  {
+   "id": "word_by_word_reading",
+   "checkpoint_ids": [
+    "L.G2.fluency_45_60"
+   ],
+   "explain_hi": "बच्चा हर शब्द के बाद रुककर पढ़ता है, बोलने की तरह बहते हुए नहीं पढ़ पाता।",
+   "explain_en": "The child pauses after every word and cannot yet read smoothly, the way we speak.",
+   "game_hi": "एक छोटा वाक्य आप बात करने की तरह पढ़ें, फिर बच्चा उसी तरह दोहराए — तीन बार, हर बार थोड़ा तेज़; घर का कोई बड़ा बच्चा भी पढ़कर सुना सकता है।",
+   "game_en": "Read a short sentence the way you talk, then the child repeats it the same way — three times, a little faster each time; an older child at home can do the reading too.",
+   "example": "राम … घर … जाता … है",
+   "reviewed": true
+  },
+  {
+   "id": "substitutes_words",
+   "checkpoint_ids": [
+    "L.G2.fluency_45_60",
+    "L.G3.fluency_60"
+   ],
+   "explain_hi": "पढ़ते समय बच्चा लिखे हुए शब्द की जगह कोई दूसरा शब्द बोल देता है, जैसे 'घर' की जगह 'मकान'।",
+   "explain_en": "When reading, the child says a different word from the one written, for example 'makaan' instead of 'ghar'.",
+   "game_hi": "'जासूस' खेल: आप पढ़ते समय जानबूझकर एक शब्द बदल दें, बच्चा उँगली रखकर देखे और पकड़े; फिर बच्चा पढ़े और आप पकड़ें।",
+   "game_en": "'Detective' game: while reading, you change one word on purpose and the child follows with a finger to catch it; then the child reads and you catch.",
+   "example": "घर → मकान ✗",
+   "reviewed": true
+  },
+  {
+   "id": "answers_from_guessing",
+   "checkpoint_ids": [
+    "L.G2.comprehension_literal"
+   ],
+   "explain_hi": "कहानी पर सवाल पूछें तो बच्चा पढ़ी-सुनी बात से नहीं, अंदाज़े से उत्तर दे देता है।",
+   "explain_en": "When asked about a story, the child answers with a guess instead of using what was read or heard.",
+   "game_hi": "छोटी बात सुनाएँ — 'मीना के पास लाल बकरी है' — और पूछें 'बकरी किस रंग की है?'; उत्तर के बाद बच्चा बताए कि कहानी में कहाँ सुना।",
+   "game_en": "Tell a tiny story — 'Meena has a red goat' — and ask 'what colour is the goat?'; after answering, the child says where in the story they heard it.",
+   "example": "मीना बाज़ार गई, कहाँ गई? → स्कूल ✗",
+   "reviewed": true
+  },
+  {
+   "id": "misses_explicit_fact",
+   "checkpoint_ids": [
+    "L.G2.comprehension_literal"
+   ],
+   "explain_hi": "कहानी में साफ़-साफ़ बताई गई बात (कौन, कहाँ, कितने) बच्चा पकड़ नहीं पाता।",
+   "explain_en": "The child misses facts that are clearly stated in a story (who, where, how many).",
+   "game_hi": "खाने के बाद 3 वाक्य की कहानी सुनाएँ और 'कौन? कहाँ? कितने?' वाले 3 सवाल पूछें; हर सही उत्तर के बाद बच्चा आपसे एक सवाल पूछे।",
+   "game_en": "After a meal, tell a 3-sentence story and ask 3 questions — who? where? how many?; after each right answer the child asks you one.",
+   "example": "गाय ने 3 रोटी खाईं, कितनी? → पता नहीं ✗",
+   "reviewed": true
+  },
+  {
+   "id": "missing_matra",
+   "checkpoint_ids": [
+    "L.G2.write_words_sentences"
+   ],
+   "explain_hi": "लिखते समय बच्चा मात्राएँ छोड़ देता है, जैसे 'पानी' को 'पनी' लिखता है।",
+   "explain_en": "When writing, the child leaves out matras, for example writing 'paani' as 'pani'.",
+   "game_hi": "बच्चे का लिखा वाक्य साथ में ठीक वैसा ही पढ़ें जैसा लिखा है; जहाँ शब्द अजीब सुनाई दे ('पनी'), वहाँ बच्चा खुद मात्रा ढूँढकर लगाए।",
+   "game_en": "Read the child's sentence aloud exactly as written; wherever a word sounds odd ('pani'), the child finds and adds the missing matra.",
+   "example": "पानी → पनी",
+   "reviewed": true
+  },
+  {
+   "id": "spaces_between_syllables",
+   "checkpoint_ids": [
+    "L.G2.write_words_sentences"
+   ],
+   "explain_hi": "बच्चा एक ही शब्द के टुकड़े अलग-अलग लिख देता है, जैसे 'कमल' को 'क मल' लिखता है।",
+   "explain_en": "The child writes one word in separate pieces, for example 'kamal' as 'ka mal'.",
+   "game_hi": "एक शब्द = एक ताली: 'कमल' एक साँस में बोलें और एक ताली बजाएँ; फिर बच्चा लिखे और जाँचे कि शब्द के अंदर जगह न हो, शब्दों के बीच हो।",
+   "game_en": "One word, one clap: say 'kamal' in one breath with one clap; then the child writes it and checks there is no gap inside the word, only between words.",
+   "example": "कमल → क मल",
+   "reviewed": true
+  },
+  {
+   "id": "wrong_word_order",
+   "checkpoint_ids": [
+    "L.G3.sentence_formation"
+   ],
+   "explain_hi": "बच्चा बोलते समय वाक्य के शब्द आगे-पीछे कर देता है, जैसे 'हम रोटी खाते हैं' को 'रोटी हैं हम खाते' बोलता है।",
+   "explain_en": "When speaking, the child mixes up the order of words, for example 'roti hain hum khaate' instead of 'hum roti khaate hain'.",
+   "game_hi": "चार चप्पलों पर एक-एक शब्द बोलकर रखें — 'हम', 'रोटी', 'खाते', 'हैं' — फिर मिला दें; बच्चा चप्पलें सही क्रम में लगाकर वाक्य बोले।",
+   "game_en": "Put down four chappals, saying one word for each — 'hum', 'roti', 'khaate', 'hain' — then mix them up; the child puts them back in order and says the sentence.",
+   "example": "रोटी हैं हम खाते ✗ (सही: हम रोटी खाते हैं)",
+   "reviewed": true
+  },
+  {
+   "id": "incomplete_sentence",
+   "checkpoint_ids": [
+    "L.G3.sentence_formation"
+   ],
+   "explain_hi": "बच्चा बोलते समय वाक्य अधूरा छोड़ देता है, जैसे 'आज खाने में…' कहकर रुक जाता है।",
+   "explain_en": "The child leaves sentences unfinished when speaking, for example stopping after 'today for dinner…'.",
+   "game_hi": "'वाक्य पूरा करो' खेल: आप आधा वाक्य बोलें — 'आज खाने में…' — बच्चा पूरा करे; फिर बच्चा आधा बोले और आप पूरा करें।",
+   "game_en": "'Finish the sentence' game: you say half a sentence — 'today for dinner…' — and the child finishes it; then the child starts one and you finish.",
+   "example": "आज खाने में… ✗ (पूरा: आज खाने में दाल है।)",
+   "reviewed": true
+  },
+  {
+   "id": "answers_literally",
+   "checkpoint_ids": [
+    "L.G3.comprehension_inferential"
+   ],
+   "explain_hi": "बच्चा बस वही दोहराता है जो कहानी में कहा गया, 'क्यों' या 'आगे क्या होगा' जैसे सवाल पर सोचकर उत्तर नहीं देता।",
+   "explain_en": "The child only repeats what the story says and does not think through 'why' or 'what next' questions.",
+   "game_hi": "रोज़ की बातों पर 'क्यों' पूछें — 'दादी ने कपड़े अंदर क्यों रखे?' — बच्चा अंदाज़ा लगाए और बताए कि उसे कैसे पता चला।",
+   "game_en": "Ask 'why' about everyday things — 'why did Grandma bring the clothes inside?' — the child makes a guess and says how they know.",
+   "example": "राजू छाता लेकर निकला, क्यों? → 'छाता लिया' ✗ (सही: बारिश हो रही थी)",
+   "reviewed": true
+  },
+  {
+   "id": "copies_prompt",
+   "checkpoint_ids": [
+    "L.G3.write_expression"
+   ],
+   "explain_hi": "अपने मन से लिखने की जगह बच्चा सवाल या बोर्ड की लाइन ही उतार देता है।",
+   "explain_en": "Instead of writing their own ideas, the child copies the question or the line from the board.",
+   "game_hi": "पहले बोलकर: 'तुम्हें कौन-सा खेल पसंद है?' — बच्चा अपनी बात बोले, जैसे 'मुझे गिल्ली-डंडा पसंद है', फिर वही बात अपने शब्दों में लिखे।",
+   "game_en": "Talk first: 'which game do you like?' — the child says their own answer, like 'I like gilli-danda', then writes that same idea in their own words.",
+   "example": "तुम्हें कौन-सा खेल पसंद है? → वही सवाल लिख दिया ✗",
+   "reviewed": true
+  },
+  {
+   "id": "short_answer",
+   "checkpoint_ids": [
+    "L.G3.write_expression"
+   ],
+   "explain_hi": "बच्चा एक-दो शब्द में उत्तर देकर रुक जाता है, पूरा वाक्य नहीं बनाता।",
+   "explain_en": "The child stops at a one- or two-word answer and does not make a full sentence.",
+   "game_hi": "'और बताओ' खेल: बच्चा एक शब्द बोले तो आप पूछें 'कैसा? क्यों?'; हर नई बात पर एक कंकड़ मिले, 3 कंकड़ होते ही पूरा वाक्य बोले।",
+   "game_en": "'Tell me more' game: when the child says one word, ask 'what kind? why?'; each new detail earns a stone, and at 3 stones the child says the whole sentence.",
+   "example": "क्या पसंद है? → 'आम' (पूरा: मुझे आम पसंद है क्योंकि वह मीठा है।)",
+   "reviewed": true
+  }
+ ]
+}

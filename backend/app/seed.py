@@ -176,6 +176,21 @@ def seed() -> dict:
                                ended_at=now - timedelta(days=d, hours=-1), evidence_count=7,
                                summary_hi="घर पर 7 गतिविधियाँ कीं।\nमात्रा वाले शब्दों पर अभ्यास चाहिए।"))
 
+        # --- the demo child's recent school story, so the parent app has something true to show:
+        # early skills learned over three weeks (journey stars + growth), one learned 3 days ago
+        # (celebration), matras getting better (a "getting better" moment), absent yesterday (catch-up)
+        kid = demo_child.id
+        for cp, days in (("N.G1.count_to_20", (20, 13, 6)), ("N.G1.add_single", (16, 9, 4)),
+                         ("L.G1.swar", (11, 4)), ("L.G1.vyanjan", (10, 3))):
+            for d in days:
+                _ev(db, sch.id, cls2.id, kid, cp, "correct", "teacher_tap", now - timedelta(days=d, hours=2), 1.0)
+        for d, res in ((15, "incorrect"), (10, "partial"), (5, "correct"), (3, "correct"), (1, "correct")):
+            _ev(db, sch.id, cls2.id, kid, "N.G1.sub_single", res, "teacher_tap", now - timedelta(days=d, hours=2), 1.0)
+        for d, res in ((6, "partial"), (2, "correct")):
+            _ev(db, sch.id, cls2.id, kid, "L.G1.matra_basic", res, "teacher_tap", now - timedelta(days=d, hours=1), 1.0)
+        db.add(Attendance(school_id=sch.id, class_id=cls2.id, child_id=kid,
+                          day=school_today() - timedelta(days=1), present=False))
+
         db.commit()
         return {"school_code": DEMO_CODE, "teacher_pin": TEACHER_PIN, "parent_pin": PARENT_PIN,
                 "parent_phone": PARENT_PHONE, "parent_child_roll": rahul.roll_no,
