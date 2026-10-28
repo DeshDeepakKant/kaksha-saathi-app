@@ -114,6 +114,7 @@ def parent_child(parent: ParentAccount = Depends(current_parent), db: Session = 
 
 def _streak(db: Session, child_id: int) -> int:
     days = {s.started_at.date() for s in db.scalars(select(HomeSession).where(HomeSession.child_id == child_id))}
+    days |= {v.started_at.date() for v in db.scalars(select(VoiceSession).where(VoiceSession.child_id == child_id))}
     n, d = 0, datetime.now(timezone.utc).date()
     while d in days:
         n += 1

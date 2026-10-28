@@ -100,3 +100,26 @@ def test_turn_judges_activity_by_ref(client, parent_headers):
                     data={"meta": json.dumps({"index": 0, "attempt": 0, "activity_ref": tap_act["ref"],
                                               "tap": tap_act["target"], "offline": True})}).json()
     assert r["judged"] == "correct" and r["activity"]["ref"] == tap_act["ref"]
+
+
+def test_streak_counts_voice_session_days():
+    """The voice session is the only home practice now, so its days keep the streak going."""
+    from datetime import datetime, timedelta, timezone
+
+    from app.api.parent import _streak
+    from app.db import SessionLocal
+    from app.models.tables import VoiceSession
+
+    kid = 30  # class 1 child with no home sessions in the seed
+    now = datetime.now(timezone.utc).replace(tzinfo=None)
+    with SessionLocal() as db:
+        rows = [VoiceSession(school_id=1, child_id=kid, lang="hi", status="ended", stage="letter",
+                             started_at=now - timedelta(days=d), state={}) for d in (0, 1)]
+        db.add_all(rows)
+        db.commit()
+        try:
+            assert _streak(db, kid) == 2
+        finally:
+            for r in rows:
+                db.delete(r)
+            db.commit()

@@ -1,8 +1,8 @@
 # कक्षा साथी · Kaksha Saathi
 
 **A continuous learning-gap and intervention system for Indian primary classrooms.**
-Teacher app for diagnosis → grouping → intervention → reassessment. Parent app for structured
-voice practice at home. Both read and write **one child-level learning map**.
+Teacher app for diagnosis → grouping → intervention → reassessment. Parent app for a 30-minute AI
+voice learning session at home. Both read and write **one child-level learning map**.
 
 AI for Foundational Learning Hackathon · ShikshaNext × Anthropic · Build stage submission.
 
@@ -51,7 +51,7 @@ tap **साक्ष्य जोड़ें** → write a note like
 | `backend/` | FastAPI service: mastery engine, grouping, plan templates, AI orchestration, speech, API |
 | `content/` | Reviewed learning content: competency graph, activity library, practice items, probes |
 | `apps/teacher/` | Flutter app (Android + Web) — capture, board, plan, child profile |
-| `apps/parent/` | Flutter app (Web PWA + Android) — parent gate, session harness, history |
+| `apps/parent/` | Flutter app (Web PWA + Android) — parent gate, 30-minute voice learning session, reports |
 | `evals/` | Golden sets + runnable evaluation harness (extraction, planner, scorer) |
 | `deploy/web/` | Built web apps + landing page, served by the API at `/` |
 | `docs/` | Full design set: technical report, architecture, domain design, AI spec, eval plan, build plan, risks |
@@ -98,7 +98,8 @@ POST /v1/classes/{id}/captures/voice      target words + audio → per-item scor
 POST /v1/classes/{id}/captures/tap        zero-AI direct evidence
 POST /v1/captures/{id}/confirm            the teacher's confirmation commits evidence
 GET  /v1/children/{id}/profile?subject=   the learning map
-POST /v1/parent/login · /v1/parent/pack · /v1/parent/sessions/{id}/turn
+POST /v1/parent/login · /v1/parent/voice/sessions · /v1/parent/voice/sessions/{id}/turn
+GET  /v1/children/{id}/voice_sessions      voice-session reports for the teacher
 DELETE /v1/children/{id}/data · /v1/classes/{id}/data
 ```
 
@@ -112,12 +113,11 @@ Interactive reference: `/docs`. Health: `/healthz`, `/readyz`. Every response ca
 |---|---|---|
 | Teacher login (after first success) | ✅ | token cached |
 | Board, plan, profiles | ✅ | last successful copy, banner says so |
-| Tap checklist | ✅ (on reconnect) | the screen works; saving needs the network |
+| Tap checklist | ✅ | saved on the phone and sent on reconnect (offline outbox) |
 | Voice note | ⚠️ capture only | transcription needs the network; typed note works |
 | Work photo analysis | ❌ | needs Claude vision; fall back to tap |
 | Classroom voice judging | ❌ | needs ASR; fall back to tap |
-| Parent pack download | ✅ once | ~1–2 MB, cached in the browser/app |
-| Parent session | ✅ | same harness locally, canned lines, tap fallback |
+| Parent voice session | ❌ | needs the network for speech-to-text and Saathi's questions |
 | Plan generation | ✅ | template planner runs on the server; if offline, the last plan is shown |
 | Hindi read-aloud | ✅ Android (device TTS), ✅ web (browser SpeechSynthesis) | |
 

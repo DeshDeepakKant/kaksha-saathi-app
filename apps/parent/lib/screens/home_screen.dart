@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import '../api.dart';
 import '../theme.dart';
 import 'gate_screen.dart';
-import 'history_screen.dart';
-import 'session_screen.dart';
+import 'voice_history_screen.dart';
 import 'voice_session_screen.dart';
 import '../l10n.dart';
 
@@ -47,19 +46,6 @@ class _HomeScreenState extends State<HomeScreen> {
     } finally {
       if (mounted) setState(() => _loading = false);
     }
-    Api.i.fetchPack().catchError((_) {});
-    Api.i.flushPending().whenComplete(Api.i.fetchHistory);
-  }
-
-  Future<void> _start() async {
-    try {
-      await Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (_) => SessionScreen(offline: Api.i.offline),
-        ),
-      );
-    } catch (_) {}
-    _load();
   }
 
   @override
@@ -77,8 +63,9 @@ class _HomeScreenState extends State<HomeScreen> {
           IconButton(
             icon: const Icon(Icons.history_rounded),
             tooltip: tr('Past practice', 'पिछले अभ्यास'),
-            onPressed: () => Navigator.of(context)
-                .push(MaterialPageRoute(builder: (_) => const HistoryScreen())),
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => const VoiceHistoryScreen()),
+            ),
           ),
           IconButton(
             icon: const Icon(Icons.logout_rounded),
@@ -193,16 +180,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   const SizedBox(height: 18),
                   _voiceCard(),
-                  const SizedBox(height: 14),
-                  _startCard(),
-                  const SizedBox(height: 12),
-                  Text(
-                    tr(
-                      'About 25–30 minutes · keep the mic on · you can pause anytime',
-                      'लगभग 25–30 मिनट · माइक चालू रखें · बीच में रुक सकते हैं',
-                    ),
-                    style: TextStyle(color: Ks.muted, fontSize: 13),
-                  ),
                 ],
               ],
             ),
@@ -273,56 +250,4 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     ),
   );
-
-  Widget _startCard() {
-    final off = Api.i.offline;
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            Icon(Icons.record_voice_over_rounded, size: 54, color: Ks.accent),
-            const SizedBox(height: 8),
-            Text(
-              tr('Practise with Saathi', 'साथी के साथ अभ्यास'),
-              style: Theme.of(context).textTheme.titleMedium
-                  ?.copyWith(fontSize: 22),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              tr(
-                'Press the big mic button and answer by speaking.',
-                'बड़े माइक बटन को दबाएँ और बोलकर बताएँ।',
-              ),
-              textAlign: TextAlign.center,
-              style: TextStyle(color: Ks.muted),
-            ),
-            if (off)
-              Padding(
-                padding: EdgeInsets.only(top: 6),
-                child: Text(
-                  tr(
-                    'No internet — tap practice will run',
-                    'इंटरनेट नहीं — टैप अभ्यास चलेगा',
-                  ),
-                  style: TextStyle(color: Ks.amber, fontSize: 13),
-                ),
-              ),
-            const SizedBox(height: 14),
-            FilledButton.icon(
-              onPressed: _start,
-              style: FilledButton.styleFrom(
-                minimumSize: const Size.fromHeight(66),
-              ),
-              icon: const Icon(Icons.play_arrow_rounded, size: 28),
-              label: Text(
-                tr('Start practice', 'अभ्यास शुरू करें'),
-                style: TextStyle(fontSize: 20),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 }

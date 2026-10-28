@@ -13,33 +13,24 @@ class Api {
       : (kIsWeb ? Uri.base.origin : 'http://10.0.2.2:8000');
 
   String? _token;
-  Map<String, dynamic>? pack; // last downloaded pack → offline fallback
+
   /// Full home payload: {child, focus, streak}. `child` is the unwrapped identity map.
   Map<String, dynamic>? profile;
 
   Map<String, dynamic>? get child =>
       (profile?['child'] as Map?)?.cast<String, dynamic>();
-  List<dynamic> history = const [];
-
-  /// Offline sessions waiting to upload (see [flushPending]).
-  List<Map<String, dynamic>> pendingSessions = [];
-  bool offline = false;
 
   bool get signedIn => _token != null;
 
   Future<void> load() async {
     final p = await SharedPreferences.getInstance();
     _token = p.getString('token');
-    final pk = p.getString('pack');
-    if (pk != null) pack = jsonDecode(pk) as Map<String, dynamic>;
     final pr = p.getString('profile');
     if (pr != null) profile = jsonDecode(pr) as Map<String, dynamic>;
-    final pe = p.getString('pending');
-    if (pe != null) {
-      pendingSessions = (jsonDecode(pe) as List).cast<Map<String, dynamic>>();
+    // left over from the removed short practice (offline pack, upload queue, practice history)
+    for (final k in const ['pack', 'pending', 'history']) {
+      await p.remove(k);
     }
-    final h = p.getString('history');
-    if (h != null) history = jsonDecode(h) as List;
   }
 
   Future<void> save() async {
@@ -49,10 +40,7 @@ class Api {
     } else {
       await p.remove('token');
     }
-    if (pack != null) await p.setString('pack', jsonEncode(pack));
     if (profile != null) await p.setString('profile', jsonEncode(profile));
-    await p.setString('pending', jsonEncode(pendingSessions));
-    await p.setString('history', jsonEncode(history));
   }
 
   Map<String, String> get _h => {'Authorization': 'Bearer ${_token ?? ''}'};
@@ -126,68 +114,9 @@ class Api {
     profile = await get('/v1/parent/child') as Map<String, dynamic>;
   }
 
-  Future<void> fetchPack() async {
-    try {
-      pack = await get('/v1/parent/pack') as Map<String, dynamic>;
-      offline = false;
-      await save();
-    } catch (e) {
-      // An expired session is not "offline": let the caller send the parent back to the gate.
-      if (e is ApiError && e.status == 401) rethrow;
-      offline = pack != null;
-      if (pack == null) rethrow;
-    }
-  }
-
-  Future<void> fetchHistory() async {
-    try {
-      history = await get('/v1/parent/history') as List;
-      await save();
-    } catch (_) {}
-  }
-
-  Future<dynamic> startSession({required bool offlineMode}) async =>
-      post('/v1/parent/sessions', {'offline': offlineMode});
-
-  Future<void> endSession(int id, String? summary) async {
-    try {
-      await postMultipart('/v1/parent/sessions/$id/end', {
-        'summary': summary ?? '',
-      });
-    } catch (_) {}
-  }
-
-  void queueSession(Map<String, dynamic> session) {
-    pendingSessions.add(session);
-    save();
-  }
-
-  /// Upload offline sessions. Best-effort and safe to call repeatedly: the server skips a
-  /// session it already has, and anything that fails on the network stays queued.
-  Future<void> flushPending() async {
-    if (pendingSessions.isEmpty) return;
-    final left = <Map<String, dynamic>>[];
-    for (final s in List.of(pendingSessions)) {
-      try {
-        await post('/v1/parent/sessions/sync', s);
-      } on ApiError catch (e) {
-        // 404/422 will never succeed; keep auth and server errors for the next try.
-        if (e.status != 404 && e.status != 422) left.add(s);
-      } catch (_) {
-        left.add(s);
-      }
-    }
-    final sent = left.length < pendingSessions.length;
-    pendingSessions = left;
-    await save();
-    if (sent) await fetchHistory();
-  }
-
   Future<void> logout() async {
     _token = null;
-    pack = null;
     profile = null;
-    history = const [];
     final p = await SharedPreferences.getInstance();
     await p.clear();
   }
