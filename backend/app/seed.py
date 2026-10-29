@@ -16,12 +16,16 @@ from app.db import SessionLocal, init_db
 from app.models.tables import (
     AiCall, Attendance, CaptureSession, Child, Classroom, Evidence, HomeSession, InterventionLog, ParentAccount,
     Plan, Roadmap, RoadmapItem, School, Teacher, UsageCounter, utcnow, CustomCheckpoint, CustomSubject,
-    VoiceSession, VoiceTurn,
+    VoiceSession, VoiceTurn, AppMeta,
 )
 from app.services.content import get_content
 from app.services.ledger import school_today
 
 DEMO_CODE = "DEMO"
+# Bump when the demo story changes: the next start rebuilds the DEMO school once (other schools
+# are never touched). Needed because the live database is persistent (Neon), so restarts no longer
+# reseed it.
+SEED_VERSION = "2026-10-30"
 TEACHER_PIN = "1234"
 PARENT_PIN = "0000"
 PARENT_PHONE = "9876500000"
@@ -191,6 +195,7 @@ def seed() -> dict:
         db.add(Attendance(school_id=sch.id, class_id=cls2.id, child_id=kid,
                           day=school_today() - timedelta(days=1), present=False))
 
+        db.merge(AppMeta(key="demo_seed_version", value=SEED_VERSION))
         db.commit()
         return {"school_code": DEMO_CODE, "teacher_pin": TEACHER_PIN, "parent_pin": PARENT_PIN,
                 "parent_phone": PARENT_PHONE, "parent_child_roll": rahul.roll_no,
@@ -209,6 +214,21 @@ def seed_if_empty() -> None:
         db.close()
     if not has:
         seed()
+
+
+def reseed_demo_if_outdated() -> bool:
+    """Rebuild the DEMO school once when its seed is older than SEED_VERSION. Returns True if it did."""
+    init_db()
+    db = SessionLocal()
+    try:
+        row = db.get(AppMeta, "demo_seed_version")
+        current = row.value if row else None
+    finally:
+        db.close()
+    if current == SEED_VERSION:
+        return False
+    seed()
+    return True
 
 
 if __name__ == "__main__":

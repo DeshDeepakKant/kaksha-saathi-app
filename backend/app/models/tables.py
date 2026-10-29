@@ -276,3 +276,10 @@ class VoiceTurn(Base):
     client_turn_id: Mapped[str | None] = mapped_column(String(64))
     response: Mapped[dict | None] = mapped_column(JSON)
     at: Mapped[datetime] = mapped_column(DateTime, default=utcnow)
+
+
+class AppMeta(Base):
+    """Small key/value facts about the deployment itself (e.g. which demo seed version is loaded)."""
+    __tablename__ = "app_meta"
+    key: Mapped[str] = mapped_column(String(64), primary_key=True)
+    value: Mapped[str] = mapped_column(String(200))

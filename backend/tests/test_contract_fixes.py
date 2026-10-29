@@ -123,3 +123,14 @@ def test_streak_counts_voice_session_days():
             for r in rows:
                 db.delete(r)
             db.commit()
+
+
+def test_demo_reseed_runs_once_per_seed_version(monkeypatch):
+    """Persistent DB (Neon): the DEMO school is rebuilt only when SEED_VERSION changes."""
+    from app import seed as seed_mod
+
+    calls = []
+    monkeypatch.setattr(seed_mod, "seed", lambda: calls.append(1))
+    assert seed_mod.reseed_demo_if_outdated() is False and calls == []  # conftest's seed() stored the version
+    monkeypatch.setattr(seed_mod, "SEED_VERSION", "newer-demo-story")
+    assert seed_mod.reseed_demo_if_outdated() is True and calls == [1]

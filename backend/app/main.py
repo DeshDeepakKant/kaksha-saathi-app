@@ -1,6 +1,7 @@
 """Kaksha Saathi API. Run: uvicorn app.main:app  (from backend/)."""
 from __future__ import annotations
 
+import logging
 import time
 from contextlib import asynccontextmanager
 from pathlib import Path
@@ -21,8 +22,12 @@ async def lifespan(_: FastAPI):
     get_content()  # fail fast on bad content
     load_custom_checkpoints()  # teacher-made topics become real checkpoints (single-worker registry)
     if get_settings().seed_on_startup:
-        from app.seed import seed_if_empty
+        from app.seed import reseed_demo_if_outdated, seed_if_empty
         seed_if_empty()  # demo school on a fresh database only
+        try:  # the live DB is persistent: refresh the DEMO school once when its demo story changes
+            reseed_demo_if_outdated()
+        except Exception:  # never let a demo refresh stop the API from starting
+            logging.getLogger("kaksha").exception("demo re-seed failed; serving the existing data")
     yield
 
 
