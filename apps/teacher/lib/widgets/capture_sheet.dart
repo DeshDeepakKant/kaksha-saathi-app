@@ -534,7 +534,7 @@ class _TapPanelState extends State<_TapPanel> {
           ),
           const SizedBox(height: 14),
           FilledButton.icon(
-            onPressed: () => setState(() => _data = _load(refresh: true)),
+            onPressed: () => setState(() { _data = _load(refresh: true); }),
             icon: const Icon(Icons.refresh_rounded),
             label: Text(tr('Retry', 'दोबारा कोशिश करें')),
           ),

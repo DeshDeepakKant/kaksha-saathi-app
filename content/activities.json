@@ -248,7 +248,7 @@
     "L.G1.read_matra_words"
    ],
    "mode": "group",
-   "title_hi": "अक्षर जोड़कर शब्द पढ़ो · L.G1.read_matra_words",
+   "title_hi": "अक्षर जोड़कर शब्द पढ़ो",
    "materials_hi": "अक्षर कार्ड",
    "steps_hi": [
     "क + म + ल → कमल। धीरे-धीरे जोड़ें।",
@@ -297,7 +297,7 @@
     "N.G2.sub_2digit_no_borrow"
    ],
    "mode": "group",
-   "title_hi": "बड़ा ऊपर, छोटा नीचे · N.G2.sub_2digit_no_borrow",
+   "title_hi": "बड़ा ऊपर, छोटा नीचे",
    "materials_hi": "कोई नहीं",
    "steps_hi": [
     "62 − 45 लिखें। एक बच्चा 5 में से 2 करने की गलती करे।",
@@ -347,7 +347,7 @@
     "L.G3.fluency_60"
    ],
    "mode": "group",
-   "title_hi": "एक-एक पंक्ति पढ़ो · L.G2.fluency_45_60, L.G3.fluency_60",
+   "title_hi": "एक-एक पंक्ति पढ़ो",
    "materials_hi": "कोई नहीं",
    "steps_hi": [
     "बोर्ड पर 4 वाक्य लिखें।",
@@ -421,7 +421,7 @@
     "N.G3.read_write_to_9999"
    ],
    "mode": "group",
-   "title_hi": "संख्याओं को पढ़ो और लिखो · N.G2.place_value_999, N.G3.read_write_to_9999",
+   "title_hi": "संख्याओं को पढ़ो और लिखो",
    "materials_hi": "कोई नहीं",
    "steps_hi": [
     "बोर्ड पर 236, 305, 470 लिखें।",

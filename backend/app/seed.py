@@ -14,10 +14,11 @@ from sqlalchemy import delete, select
 from app.core.security import hash_phone, hash_pin
 from app.db import SessionLocal, init_db
 from app.models.tables import (
-    AiCall, Attendance, CaptureSession, Child, Classroom, Evidence, HomeSession, InterventionLog, ParentAccount,
-    Plan, Roadmap, RoadmapItem, School, Teacher, UsageCounter, utcnow, CustomCheckpoint, CustomSubject,
+    AiCall, Attendance, CaptureSession, Child, Classroom, Evidence, GroupSession, HomeSession, InterventionLog,
+    ParentAccount, Plan, Roadmap, RoadmapItem, School, Teacher, UsageCounter, utcnow, CustomCheckpoint, CustomSubject,
     VoiceSession, VoiceTurn,
 )
+from app.services import level_check
 from app.services.content import get_content
 from app.services.ledger import school_today
 
@@ -39,6 +40,37 @@ def _ev(db, sch, cls, child, cp, result, source, at, conf=0.9, misc=None):
                     source=source, confidence=conf, at=at, status="confirmed", misconception=misc))
 
 
+BORROW = "N.G2.sub_2digit_borrow"
+
+
+def _seed_group_sessions(db, sch: int, cls: Classroom, teacher: int, kids: list[Child], now: datetime) -> None:
+    """Three past borrowing lessons for 2A (follow-ups and "did it work?" on first boot).
+
+    Roll 3 sat through all three and is still behind (stuck); rolls 1-2 joined for the last two and
+    improved; roll 5 was absent on the second day and has not been re-checked since the third.
+    """
+    content = get_content()
+    cp = content.checkpoints[BORROW]
+    act = next(iter(content.activities_for({BORROW})), {}).get("id")
+    for days_ago, idxs in ((13, (2, 3)), (9, (0, 1, 2, 3, 4)), (3, (0, 1, 2, 4))):
+        done_at = now - timedelta(days=days_ago)
+        members = [{"id": kids[i].id, "first_name": kids[i].first_name} for i in idxs]
+        group = {"key": BORROW, "checkpoint_id": BORROW, "title_hi": cp.title_hi, "title_en": cp.title_en,
+                 "activity_id": act, "members": members, "nipun_ref": cp.nipun_ref or "", "time_min": 10}
+        plan = Plan(school_id=sch, class_id=cls.id, subject="numeracy", for_date=school_today(done_at),
+                    generated_by="fallback", created_at=done_at,
+                    payload={"groups": [group], "assess_first": None, "whole_class_note_hi": "",
+                             "today_observation_to_collect_hi": "", "generated_by": "fallback"})
+        db.add(plan)
+        db.flush()
+        db.add(InterventionLog(school_id=sch, plan_id=plan.id, group_key=BORROW, done_at=done_at))
+        db.add(GroupSession(school_id=sch, class_id=cls.id, plan_id=plan.id, subject="numeracy", group_key=BORROW,
+                            checkpoint_id=BORROW, activity_id=act, member_ids=[m["id"] for m in members],
+                            done_at=done_at, done_by=teacher))
+    db.add(Attendance(school_id=sch, class_id=cls.id, child_id=kids[4].id,
+                      day=school_today(now - timedelta(days=9)), present=False))
+
+
 def seed() -> dict:
     init_db()
     content = get_content()
@@ -53,6 +85,8 @@ def seed() -> dict:
                     select(CaptureSession.id).where(CaptureSession.school_id == old.id))))
             db.execute(delete(CaptureSession).where(CaptureSession.school_id == old.id))
             db.execute(delete(InterventionLog).where(InterventionLog.school_id == old.id))
+            db.execute(delete(GroupSession).where(GroupSession.school_id == old.id))
+            level_check.delete_for_school(db, old.id)
             db.execute(delete(AiCall).where(AiCall.school_id == old.id))
             db.execute(delete(UsageCounter).where(UsageCounter.school_id == old.id))
             if ids:
@@ -133,11 +167,15 @@ def seed() -> dict:
                 at = now - timedelta(days=d, hours=rng.randint(0, 5))
                 if d in (18, 13, 7, 3) and profile["borrow"] is not None:
                     _ev(db, sch.id, cls2.id, k.id, sub_borrow[0], profile["nocarry"], "teacher_tap", at, 1.0)
-                if d in (16, 11, 5, 1) and profile["borrow"] is not None:
+                if d in (16, 11, 5, 1) and profile["borrow"] is not None and not (d == 1 and idx == 4):
                     r = "incorrect" if profile["borrow"] == "incorrect" and d > 4 else (
                         "partial" if profile["borrow"] == "incorrect" else profile["borrow"])
+                    if d == 1 and idx in (0, 1):
+                        r = "correct"  # improved after the borrowing lessons (see _seed_group_sessions)
                     _ev(db, sch.id, cls2.id, k.id, sub_borrow[1], r, "photo_work" if d % 2 else "teacher_tap", at,
                         0.9, "smaller_minus_larger" if r == "incorrect" else None)
+                if d == 2 and idx in (0, 1):
+                    _ev(db, sch.id, cls2.id, k.id, sub_borrow[1], "correct", "teacher_tap", at, 1.0)
                 if d in (15, 9, 2) and profile["carry"] is not None:
                     _ev(db, sch.id, cls2.id, k.id, add_carry[1], profile["carry"], "photo_work", at, 0.85)
                 if d in (17, 8) and profile["pv"] is not None:
@@ -153,6 +191,7 @@ def seed() -> dict:
                         _ev(db, sch.id, cls2.id, k.id, cp, res, src, at, 0.8 if src == "class_voice" else 1.0,
                             "confuses_sa_sha" if cp == "L.G1.vyanjan" and res == "incorrect" else None)
             # one absent day (no evidence), as real life
+        _seed_group_sessions(db, sch.id, cls2, teacher.id, kids2, now)
         # marks: a couple of absent rows today for two children
         for k in kids2[:2]:
             db.add(Attendance(school_id=sch.id, class_id=cls2.id, child_id=k.id, day=school_today(), present=False))
@@ -176,6 +215,7 @@ def seed() -> dict:
                                ended_at=now - timedelta(days=d, hours=-1), evidence_count=7,
                                summary_hi="घर पर 7 गतिविधियाँ कीं।\nमात्रा वाले शब्दों पर अभ्यास चाहिए।"))
 
+        level_check.demo_seed(db, sch.id)
         db.commit()
         return {"school_code": DEMO_CODE, "teacher_pin": TEACHER_PIN, "parent_pin": PARENT_PIN,
                 "parent_phone": PARENT_PHONE, "parent_child_roll": rahul.roll_no,

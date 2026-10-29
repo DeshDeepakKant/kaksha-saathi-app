@@ -6,12 +6,15 @@ import '../api.dart';
 import '../theme.dart';
 import '../widgets/board_absent.dart';
 import '../widgets/board_chips.dart';
+import '../widgets/board_followups.dart';
 import '../widgets/board_moved_banner.dart';
 import '../widgets/capture_sheet.dart';
 import 'class_picker_screen.dart';
 import 'login_screen.dart';
 import 'group_plan_screen.dart';
+import 'level_check_screen.dart';
 import 'level_screen.dart';
+import 'outcomes_screen.dart';
 import 'settings_screen.dart';
 import 'syllabus_screen.dart';
 import '../l10n.dart';
@@ -52,6 +55,8 @@ class _BoardScreenState extends State<BoardScreen> {
   Timer? _wakeTimer;
   int _seq = 0; // only the newest load may touch state
   int _lastPending = 0;
+  int _loads =
+      0; // bumped on every board load so the follow-ups card refetches with it
 
   @override
   void initState() {
@@ -209,6 +214,7 @@ class _BoardScreenState extends State<BoardScreen> {
       setState(() {
         _board = b.cast<String, dynamic>();
         _offline = b['offline'] == true;
+        _loads++;
         _error = null;
         _loading = false;
       });
@@ -319,6 +325,32 @@ class _BoardScreenState extends State<BoardScreen> {
     if (mounted) _loadBoard(showSpinner: false, freshMoves: true);
   }
 
+  /// "Did it work?" for the selected subject; a re-check made from there changes the board.
+  Future<void> _openOutcomes() async {
+    final cls = _cls;
+    if (cls == null) return;
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) =>
+            OutcomesScreen(classId: cls['id'] as int, subject: _subject),
+      ),
+    );
+    if (mounted) _loadBoard(showSpinner: false);
+  }
+
+  /// First-week level check: places children with no evidence yet; the results land on the board.
+  Future<void> _openLevelCheck() async {
+    final cls = _cls;
+    if (cls == null) return;
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) =>
+            LevelCheckScreen(classId: cls['id'] as int, subject: _subject),
+      ),
+    );
+    if (mounted) _loadBoard(showSpinner: false);
+  }
+
   Future<void> _openSyllabus() async {
     final cls = _cls;
     if (cls == null) return;
@@ -412,6 +444,11 @@ class _BoardScreenState extends State<BoardScreen> {
         ),
         actions: [
           IconButton(
+            tooltip: tr('Did it work?', 'क्या असर हुआ?'),
+            icon: const Icon(Icons.insights_rounded),
+            onPressed: _cls == null ? null : _openOutcomes,
+          ),
+          IconButton(
             tooltip: tr('Syllabus', 'पाठ्यक्रम'),
             icon: const Icon(Icons.checklist_rounded),
             onPressed: _cls == null ? null : _openSyllabus,
@@ -465,6 +502,14 @@ class _BoardScreenState extends State<BoardScreen> {
                 count: absentIds.length,
                 names: absentNames,
                 onEdit: _editAbsent,
+              ),
+            if (loaded)
+              BoardFollowupsCard(
+                classId: _cls!['id'] as int,
+                subject: _subject,
+                reloadToken: _loads,
+                onOpenChild: _openChild,
+                onOpenOutcomes: _openOutcomes,
               ),
             ..._content(),
           ],
@@ -790,10 +835,21 @@ class _BoardScreenState extends State<BoardScreen> {
             ],
           ),
           const SizedBox(height: 10),
-          OutlinedButton.icon(
-            onPressed: () => _capture(kids: kids),
-            icon: const Icon(Icons.touch_app_rounded),
-            label: Text(tr('Check in 3 taps', 'तीन टैप में जाँचें')),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              OutlinedButton.icon(
+                onPressed: () => _capture(kids: kids),
+                icon: const Icon(Icons.touch_app_rounded),
+                label: Text(tr('Check in 3 taps', 'तीन टैप में जाँचें')),
+              ),
+              OutlinedButton.icon(
+                onPressed: _openLevelCheck,
+                icon: const Icon(Icons.stairs_rounded),
+                label: Text(tr('Level check', 'स्तर जाँच')),
+              ),
+            ],
           ),
         ],
       ),

@@ -400,8 +400,8 @@ def test_plan_group_done_is_idempotent(client, teacher_headers, zclass):
     cid = zclass["class_id"]
     plan = client.post(f"/v1/classes/{cid}/plans?subject=numeracy&force=true", headers=teacher_headers).json()
     url = f"/v1/plans/{plan['id']}/groups/{BORROW}/done"
-    assert client.post(url, headers=teacher_headers).json() == {"ok": True}
-    assert client.post(url, headers=teacher_headers).json() == {"ok": True}
+    first, again = client.post(url, headers=teacher_headers).json(), client.post(url, headers=teacher_headers).json()
+    assert first["ok"] is True and again == first  # replay returns the same session
     client.post(f"/v1/plans/{plan['id']}/groups/other_group/done", headers=teacher_headers)
     with SessionLocal() as db:
         rows = db.scalars(select(InterventionLog).where(InterventionLog.plan_id == plan["id"])).all()

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
+import '../api.dart';
 import '../api_admin.dart';
 import '../theme.dart';
 import '../l10n.dart';
+import 'level_check_screen.dart';
 
 /// Students of one class: roll number, first name and consent state; add one, paste many,
-/// record parent consent.
+/// record parent consent, edit / move / remove a student and restore a removed one.
 class RosterScreen extends StatefulWidget {
   const RosterScreen({
     super.key,
@@ -23,11 +25,14 @@ class _RosterScreenState extends State<RosterScreen> {
   final _search = TextEditingController();
   String _q = '';
   final _busy = <int>{};
+  // Removed (inactive) students; empty when there are none or the server is older.
+  List<Map<String, dynamic>> _inactive = const [];
 
   @override
   void initState() {
     super.initState();
     _future = AdminApi.roster(widget.classId);
+    _loadInactive();
   }
 
   @override
@@ -38,10 +43,178 @@ class _RosterScreenState extends State<RosterScreen> {
 
   Future<void> _reload() async {
     final f = AdminApi.roster(widget.classId);
-    setState(() => _future = f);
+    setState(() { _future = f; });
+    _loadInactive();
     try {
       await f;
     } catch (_) {}
+  }
+
+  /// Separate from the roster so an older server (404) or a failure never breaks the list.
+  Future<void> _loadInactive() async {
+    var list = <Map<String, dynamic>>[];
+    try {
+      final r = await Api.i.get(
+        '/v1/classes/${widget.classId}/children/inactive',
+      );
+      if (r is List) {
+        list = r
+            .whereType<Map>()
+            .map((m) => m.cast<String, dynamic>())
+            .toList();
+      }
+    } catch (_) {}
+    if (mounted) setState(() => _inactive = list);
+  }
+
+  void _toast(String text, {SnackBarAction? action}) {
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(content: Text(text), action: action));
+  }
+
+  Future<void> _levelCheck() async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) =>
+            LevelCheckScreen(classId: widget.classId, subject: 'numeracy'),
+      ),
+    );
+    if (mounted) _reload();
+  }
+
+  Future<void> _edit(Map<String, dynamic> c) async {
+    final name = '${c['first_name']}';
+    final r = await showModalBottomSheet<_EditResult>(
+      context: context,
+      isScrollControlled: true,
+      showDragHandle: true,
+      builder: (_) => _EditStudentSheet(
+        child: c,
+        classId: widget.classId,
+        className: widget.className,
+      ),
+    );
+    if (r == null || !mounted) return;
+    _reload();
+    if (r.removed) {
+      final id = (c['id'] as num).toInt();
+      _toast(
+        tr('Removed $name from the class', '$name को कक्षा से हटाया'),
+        action: SnackBarAction(
+          label: tr('Restore', 'वापस लाएँ'),
+          onPressed: () => _restore({...c, 'id': id}),
+        ),
+      );
+    } else if (r.movedTo != null) {
+      _toast(
+        tr(
+          'Moved ${r.name} to ${r.movedTo}',
+          '${r.name} को ${r.movedTo} में भेजा',
+        ),
+      );
+    } else {
+      _toast(tr('Saved', 'सहेज लिया'));
+    }
+  }
+
+  /// Brings a removed student back. A roll clash (409) asks for a new roll number once.
+  Future<void> _restore(Map<String, dynamic> c) async {
+    final id = (c['id'] as num).toInt();
+    final name = '${c['first_name']}';
+    if (_busy.contains(id)) return;
+    setState(() => _busy.add(id));
+    try {
+      final body = <String, dynamic>{'active': true};
+      while (true) {
+        try {
+          await Api.i.postJson('/v1/children/$id/edit', body);
+          break;
+        } on ApiError catch (e) {
+          if (e.status != 409 || !mounted) rethrow;
+          final roll = await _askRoll(
+            name,
+            (body['roll_no'] as int?) ?? (c['roll_no'] as num?)?.toInt(),
+          );
+          if (roll == null) return;
+          body['roll_no'] = roll;
+        }
+      }
+      if (!mounted) return;
+      _toast(tr('Restored $name', '$name वापस आ गया'));
+      _reload();
+    } catch (e) {
+      if (mounted) _toast(_errText(e));
+    } finally {
+      if (mounted) setState(() => _busy.remove(id));
+    }
+  }
+
+  Future<int?> _askRoll(String name, int? taken) async {
+    final list = await _future.catchError((_) => <Map<String, dynamic>>[]);
+    if (!mounted) return null;
+    final ctrl = TextEditingController(text: '${_nextRoll(list)}');
+    String? err;
+    final roll = await showDialog<int>(
+      context: context,
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, setSt) => AlertDialog(
+          title: Text(tr('Roll number taken', 'रोल नंबर पहले से है')),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                taken == null
+                    ? tr(
+                        'That roll number is now used by another student. Restore $name with a new roll number:',
+                        'वह रोल नंबर अब किसी और बच्चे का है। $name को नए रोल नंबर के साथ वापस लाएँ:',
+                      )
+                    : tr(
+                        'Roll $taken is now used by another student. Restore $name with a new roll number:',
+                        'रोल $taken अब किसी और बच्चे का है। $name को नए रोल नंबर के साथ वापस लाएँ:',
+                      ),
+              ),
+              const SizedBox(height: 12),
+              TextField(
+                controller: ctrl,
+                autofocus: true,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  labelText: tr('Roll number', 'रोल नंबर'),
+                  errorText: err,
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: Text(tr('Cancel', 'रद्द करें')),
+            ),
+            FilledButton(
+              style: FilledButton.styleFrom(minimumSize: const Size(0, 44)),
+              onPressed: () {
+                final n = int.tryParse(ctrl.text.trim());
+                if (n == null || n < 1) {
+                  setSt(
+                    () => err = tr(
+                      'Roll number must be a number',
+                      'रोल नंबर एक संख्या होनी चाहिए',
+                    ),
+                  );
+                  return;
+                }
+                Navigator.pop(ctx, n);
+              },
+              child: Text(tr('Restore', 'वापस लाएँ')),
+            ),
+          ],
+        ),
+      ),
+    );
+    ctrl.dispose();
+    return roll;
   }
 
   int _nextRoll(List<Map<String, dynamic>> list) {
@@ -130,6 +303,15 @@ class _RosterScreenState extends State<RosterScreen> {
         title: Text(
           tr('Students · ${widget.className}', 'बच्चे · ${widget.className}'),
         ),
+        actions: [
+          TextButton.icon(
+            style: TextButton.styleFrom(minimumSize: const Size(0, 48)),
+            onPressed: _levelCheck,
+            icon: const Icon(Icons.stairs_rounded),
+            label: Text(tr('Level check', 'स्तर जाँच')),
+          ),
+          const SizedBox(width: 4),
+        ],
       ),
       body: FutureBuilder<List<Map<String, dynamic>>>(
         future: _future,
@@ -203,6 +385,14 @@ class _RosterScreenState extends State<RosterScreen> {
                     ),
                     style: const TextStyle(color: Ks.muted, fontSize: 13),
                   ),
+                  const SizedBox(height: 4),
+                  Text(
+                    tr(
+                      'Tap a student to edit, move or remove.',
+                      'बदलने, दूसरी कक्षा में भेजने या हटाने के लिए बच्चे पर टैप करें।',
+                    ),
+                    style: const TextStyle(color: Ks.muted, fontSize: 13),
+                  ),
                   const SizedBox(height: 12),
                   if (showSearch) ...[
                     TextField(
@@ -242,6 +432,10 @@ class _RosterScreenState extends State<RosterScreen> {
                     const SizedBox(height: 8),
                   ],
                 ],
+                if (_inactive.isNotEmpty) ...[
+                  const SizedBox(height: 8),
+                  _removedCard(),
+                ],
               ],
             ),
           );
@@ -255,6 +449,8 @@ class _RosterScreenState extends State<RosterScreen> {
     final ok = c['consented'] == true;
     return Card(
       child: ListTile(
+        minVerticalPadding: 10,
+        onTap: () => _edit(c),
         leading: CircleAvatar(
           backgroundColor: Ks.accentSoft,
           foregroundColor: Ks.accent,
@@ -289,7 +485,7 @@ class _RosterScreenState extends State<RosterScreen> {
           ),
         ),
         trailing: ok
-            ? null
+            ? const Icon(Icons.edit_rounded, color: Ks.muted)
             : _busy.contains(id)
             ? const SizedBox(
                 width: 22,
@@ -303,6 +499,74 @@ class _RosterScreenState extends State<RosterScreen> {
       ),
     );
   }
+
+  /// "Removed students (N)", collapsed; each row can be restored.
+  Widget _removedCard() => Card(
+    clipBehavior: Clip.antiAlias,
+    child: ExpansionTile(
+      leading: const Icon(Icons.person_off_rounded, color: Ks.muted),
+      title: Text(
+        tr(
+          'Removed students (${_inactive.length})',
+          'हटाए गए बच्चे (${_inactive.length})',
+        ),
+        style: const TextStyle(fontWeight: FontWeight.w600),
+      ),
+      subtitle: Text(
+        tr('Their records are kept.', 'इनका रिकॉर्ड रखा हुआ है।'),
+        style: const TextStyle(color: Ks.muted, fontSize: 13),
+      ),
+      children: [
+        for (final c in _inactive) _removedRow(c),
+        const SizedBox(height: 6),
+      ],
+    ),
+  );
+
+  Widget _removedRow(Map<String, dynamic> c) {
+    final id = (c['id'] as num).toInt();
+    return ListTile(
+      leading: CircleAvatar(
+        backgroundColor: Ks.line,
+        foregroundColor: Ks.muted,
+        child: Text(
+          '${c['roll_no'] ?? ''}',
+          style: const TextStyle(fontWeight: FontWeight.w700),
+        ),
+      ),
+      title: Text('${c['first_name']}', style: const TextStyle(fontSize: 16)),
+      trailing: _busy.contains(id)
+          ? const SizedBox(
+              width: 22,
+              height: 22,
+              child: CircularProgressIndicator(strokeWidth: 2),
+            )
+          : OutlinedButton.icon(
+              style: OutlinedButton.styleFrom(minimumSize: const Size(0, 44)),
+              onPressed: () => _restore(c),
+              icon: const Icon(Icons.restore_rounded, size: 18),
+              label: Text(tr('Restore', 'वापस लाएँ')),
+            ),
+    );
+  }
+}
+
+/// Teacher-readable text for a failed manage call: the server's message, or a short
+/// "update the server" note when the route itself is missing (older backend).
+String _errText(Object e) {
+  if (e is! ApiError) {
+    return tr(
+      'Something went wrong, please try again',
+      'कुछ गड़बड़ हो गई, कृपया दोबारा कोशिश करें',
+    );
+  }
+  if (e.status == 404 && e.message == 'Not Found') {
+    return tr(
+      'This needs the latest server. Ask to update the server.',
+      'इसके लिए नया सर्वर चाहिए। सर्वर अपडेट करवाएँ।',
+    );
+  }
+  return e.toString();
 }
 
 class _ErrorView extends StatelessWidget {
@@ -648,6 +912,278 @@ class _PasteManySheetState extends State<_PasteManySheet> {
                 ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+/// What the edit sheet did, so the roster can say it in a SnackBar.
+class _EditResult {
+  const _EditResult({required this.name, this.movedTo, this.removed = false});
+  final String name;
+  final String? movedTo;
+  final bool removed;
+}
+
+/// Edit one student: first name, roll number, move to another class, or remove from the class.
+class _EditStudentSheet extends StatefulWidget {
+  const _EditStudentSheet({
+    required this.child,
+    required this.classId,
+    required this.className,
+  });
+  final Map<String, dynamic> child;
+  final int classId;
+  final String className;
+  @override
+  State<_EditStudentSheet> createState() => _EditStudentSheetState();
+}
+
+class _EditStudentSheetState extends State<_EditStudentSheet> {
+  late final _name = TextEditingController(
+    text: '${widget.child['first_name']}',
+  );
+  late final _roll = TextEditingController(text: '${widget.child['roll_no']}');
+  // The teacher's classes for "move"; empty (dropdown hidden) until loaded or on failure.
+  List<Map<String, dynamic>> _classes = const [];
+  late int _target = widget.classId;
+  bool _saving = false;
+  String? _err;
+
+  int get _id => (widget.child['id'] as num).toInt();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadClasses();
+  }
+
+  @override
+  void dispose() {
+    _name.dispose();
+    _roll.dispose();
+    super.dispose();
+  }
+
+  Future<void> _loadClasses() async {
+    try {
+      final r = await Api.i.classes();
+      final list = r is List
+          ? r.whereType<Map>().map((m) => m.cast<String, dynamic>()).toList()
+          : <Map<String, dynamic>>[];
+      // Only worth showing when there is somewhere to move to and this class is in the list.
+      if (mounted &&
+          list.length > 1 &&
+          list.any((c) => (c['id'] as num?)?.toInt() == widget.classId)) {
+        setState(() => _classes = list);
+      }
+    } catch (_) {}
+  }
+
+  String _classLabel(int id) {
+    for (final c in _classes) {
+      if ((c['id'] as num?)?.toInt() == id) return '${c['label']}';
+    }
+    return widget.className;
+  }
+
+  Future<void> _save() async {
+    final name = _name.text.trim();
+    final roll = int.tryParse(_roll.text.trim());
+    if (name.isEmpty) {
+      setState(
+        () => _err = tr(
+          'Type the child\'s first name',
+          'बच्चे का पहला नाम लिखें',
+        ),
+      );
+      return;
+    }
+    if (roll == null || roll < 1) {
+      setState(
+        () => _err = tr(
+          'Roll number must be a number',
+          'रोल नंबर एक संख्या होनी चाहिए',
+        ),
+      );
+      return;
+    }
+    final clipped = name.length > 60 ? name.substring(0, 60) : name;
+    // Send only what changed.
+    final body = <String, dynamic>{
+      if (clipped != '${widget.child['first_name']}') 'first_name': clipped,
+      if (roll != (widget.child['roll_no'] as num?)?.toInt()) 'roll_no': roll,
+      if (_target != widget.classId) 'class_id': _target,
+    };
+    if (body.isEmpty) {
+      Navigator.pop(context);
+      return;
+    }
+    setState(() {
+      _saving = true;
+      _err = null;
+    });
+    try {
+      await Api.i.postJson('/v1/children/$_id/edit', body);
+      if (!mounted) return;
+      Navigator.pop(
+        context,
+        _EditResult(
+          name: clipped,
+          movedTo: _target != widget.classId ? _classLabel(_target) : null,
+        ),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _saving = false;
+        _err = e is ApiError && e.status == 409
+            ? tr(
+                'Roll $roll is already used in ${_classLabel(_target)}. Pick another number.',
+                '${_classLabel(_target)} में रोल $roll पहले से है। दूसरा नंबर चुनें।',
+              )
+            : _errText(e);
+      });
+    }
+  }
+
+  Future<void> _remove() async {
+    final name = '${widget.child['first_name']}';
+    final yes = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(tr('Remove $name?', '$name को हटाएँ?')),
+        content: Text(
+          tr(
+            '$name leaves this class list. Their records are kept, and you can bring them back from "Removed students".',
+            '$name इस कक्षा की सूची से हट जाएगा। रिकॉर्ड रखा रहेगा, और "हटाए गए बच्चे" से वापस ला सकते हैं।',
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: Text(tr('Cancel', 'रद्द करें')),
+          ),
+          FilledButton(
+            style: FilledButton.styleFrom(
+              backgroundColor: Ks.rose,
+              minimumSize: const Size(0, 44),
+            ),
+            onPressed: () => Navigator.pop(ctx, true),
+            child: Text(tr('Remove', 'हटाएँ')),
+          ),
+        ],
+      ),
+    );
+    if (yes != true || !mounted) return;
+    setState(() {
+      _saving = true;
+      _err = null;
+    });
+    try {
+      await Api.i.postJson('/v1/children/$_id/edit', {'active': false});
+      if (mounted) {
+        Navigator.pop(context, _EditResult(name: name, removed: true));
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _saving = false;
+          _err = _errText(e);
+        });
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(
+        20,
+        0,
+        20,
+        20 + MediaQuery.of(context).viewInsets.bottom,
+      ),
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              tr('Edit student', 'बच्चे की जानकारी बदलें'),
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const SizedBox(height: 14),
+            TextField(
+              controller: _name,
+              enabled: !_saving,
+              textCapitalization: TextCapitalization.words,
+              decoration: InputDecoration(
+                labelText: tr('First name', 'पहला नाम'),
+              ),
+            ),
+            const SizedBox(height: 12),
+            TextField(
+              controller: _roll,
+              enabled: !_saving,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                labelText: tr('Roll number', 'रोल नंबर'),
+              ),
+            ),
+            if (_classes.isNotEmpty) ...[
+              const SizedBox(height: 12),
+              DropdownButtonFormField<int>(
+                initialValue: _target,
+                isExpanded: true,
+                decoration: InputDecoration(labelText: tr('Class', 'कक्षा')),
+                items: [
+                  for (final c in _classes)
+                    DropdownMenuItem(
+                      value: (c['id'] as num).toInt(),
+                      child: Text('${c['label']}'),
+                    ),
+                ],
+                onChanged: _saving
+                    ? null
+                    : (v) => setState(() => _target = v ?? widget.classId),
+              ),
+              if (_target != widget.classId)
+                Padding(
+                  padding: const EdgeInsets.only(top: 6),
+                  child: Text(
+                    tr(
+                      'The student and their records move to ${_classLabel(_target)}.',
+                      'बच्चा और उसका रिकॉर्ड ${_classLabel(_target)} में चला जाएगा।',
+                    ),
+                    style: const TextStyle(color: Ks.muted, fontSize: 13),
+                  ),
+                ),
+            ],
+            const SizedBox(height: 14),
+            if (_err != null)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: Text(_err!, style: const TextStyle(color: Ks.rose)),
+              ),
+            FilledButton(
+              onPressed: _saving ? null : _save,
+              child: Text(
+                _saving ? tr('Saving…', 'सहेज रहे हैं…') : tr('Save', 'सहेजें'),
+              ),
+            ),
+            const SizedBox(height: 10),
+            OutlinedButton.icon(
+              style: OutlinedButton.styleFrom(
+                foregroundColor: Ks.rose,
+                minimumSize: const Size(0, 48),
+              ),
+              onPressed: _saving ? null : _remove,
+              icon: const Icon(Icons.person_remove_rounded),
+              label: Text(tr('Remove from class', 'कक्षा से हटाएँ')),
+            ),
+          ],
         ),
       ),
     );

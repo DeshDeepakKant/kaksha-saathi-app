@@ -608,7 +608,7 @@ class _TranscriptLoaderState extends State<_TranscriptLoader> {
                 ),
               ),
               TextButton.icon(
-                onPressed: () => setState(() => _f = widget.load()),
+                onPressed: () => setState(() { _f = widget.load(); }),
                 icon: const Icon(Icons.refresh_rounded),
                 label: Text(tr('Try again', 'फिर से कोशिश करें')),
               ),

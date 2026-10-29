@@ -18,7 +18,7 @@ class _VoiceHistoryScreenState extends State<VoiceHistoryScreen> {
 
   Future<void> _refresh() async {
     final f = Api.i.voiceSessions();
-    setState(() => _f = f);
+    setState(() { _f = f; });
     try {
       await f;
     } catch (_) {}
