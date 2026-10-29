@@ -16,7 +16,7 @@ from app.db import SessionLocal, init_db
 from app.models.tables import (
     AiCall, Attendance, CaptureSession, Child, Classroom, Evidence, GroupSession, HomeSession,
     InterventionLog, ParentAccount, Plan, Roadmap, RoadmapItem, School, Teacher, UsageCounter, utcnow,
-    CustomCheckpoint, CustomSubject, VoiceSession, VoiceTurn, AppMeta, TextbookMap,
+    CustomCheckpoint, CustomSubject, VoiceSession, VoiceTurn, AppMeta, TextbookMap, UserPrefs,
 )
 from app.services import level_check, tips
 from app.services.content import get_content
@@ -255,6 +255,7 @@ def seed() -> dict:
                 select(Roadmap.id).where(Roadmap.school_id == old.id))))
             db.execute(delete(Roadmap).where(Roadmap.school_id == old.id))
             db.execute(delete(TextbookMap).where(TextbookMap.school_id == old.id))
+            db.execute(delete(UserPrefs).where(UserPrefs.school_id == old.id))  # per-user language/voice settings
             db.execute(delete(ParentAccount).where(ParentAccount.school_id == old.id))
             db.execute(delete(Child).where(Child.class_id.in_(select(Classroom.id).where(Classroom.school_id == old.id))))
             db.execute(delete(Classroom).where(Classroom.school_id == old.id))
