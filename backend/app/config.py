@@ -28,6 +28,9 @@ class Settings(BaseSettings):
     model_extract: str = "claude-haiku-4-5-20251001"
     model_plan: str = "claude-sonnet-5"
     model_tutor: str = "claude-sonnet-5"
+    model_book: str = "claude-sonnet-5"  # textbook/chapter mapping (vision + book knowledge)
+    book_web_search: bool = True  # let book mapping look the book up on the web (server-side search)
+    book_research_timeout_s: float = 45.0  # wall-clock cap on that lookup; mapping goes on without it
     anthropic_api_key: str = ""
 
     # --- speech

@@ -94,6 +94,9 @@ def _charge(session: Session, school_id: int, cost: float) -> None:
     if row is None:
         row = UsageCounter(school_id=school_id, day=day, cost_inr=0.0)
         session.add(row)
+        # Sessions don't autoflush: flush now so a second call in the same request finds this row
+        # instead of inserting a duplicate (school_id, day).
+        session.flush()
     row.cost_inr += cost
 
 
@@ -197,3 +200,87 @@ def simple_text(session: Session, *, feature: str, prompt_version: str, model: s
     if school_id is not None:
         _charge(session, school_id, cost)
     return text
+
+
+# INR per web search request (server-side tool; assumption: ~$10 per 1,000 searches)
+WEB_SEARCH_INR = 0.9
+WEB_SEARCH_TOOL = "web_search_20260209"
+MAX_CONTINUATIONS = 2
+
+
+def _search_outcome(blocks) -> tuple[int, int]:
+    """(successful, failed) web_search_tool_result blocks. A failure's content is an error object, not a list."""
+    ok = failed = 0
+    for b in blocks:
+        if getattr(b, "type", None) != "web_search_tool_result":
+            continue
+        if isinstance(getattr(b, "content", None), list):
+            ok += 1
+        else:
+            failed += 1
+    return ok, failed
+
+
+def web_research(session: Session, *, feature: str, prompt_version: str, model: str, system: str,
+                 user: str, max_uses: int = 3, max_tokens: int = 1500,
+                 school_id: int | None = None, time_budget_s: float | None = None) -> str:
+    """Short research notes from Claude's server-side web search. Raises LLMUnavailable on any failure.
+
+    Returns "" when no search succeeded (every result was an error object): notes must be web-backed or
+    nothing, so a caller never labels model memory as "web". `pause_turn` is resumed by re-sending the
+    conversation (no extra "continue" message), at most MAX_CONTINUATIONS times.
+    `time_budget_s` caps the whole lookup: each request gets only the time left, with no SDK retries,
+    so a slow search can't hold a teacher's request open for minutes.
+    """
+    if budget_remaining(session, school_id) <= 0:
+        raise LLMUnavailable("daily budget exhausted")
+    client = _client()
+    started = time.monotonic()
+    tools = [{"type": WEB_SEARCH_TOOL, "name": "web_search", "max_uses": max_uses}]
+    first = {"role": "user", "content": user}
+    assistant: list = []
+    in_tok = out_tok = searches = 0
+    error = None
+    deadline = started + time_budget_s if time_budget_s else None
+    try:
+        for _ in range(1 + MAX_CONTINUATIONS):
+            api = client
+            if deadline is not None:
+                left = deadline - time.monotonic()
+                if left < 5:
+                    break  # out of time: keep whatever the finished searches produced
+                api = client.with_options(timeout=left, max_retries=0)
+            messages = [first] + ([{"role": "assistant", "content": assistant}] if assistant else [])
+            resp = _create(api, model=model, max_tokens=max_tokens, system=system,
+                           messages=messages, tools=tools)
+            in_tok += resp.usage.input_tokens
+            out_tok += resp.usage.output_tokens
+            stu = getattr(resp.usage, "server_tool_use", None)
+            searches += int(getattr(stu, "web_search_requests", 0) or 0) if stu is not None else 0
+            assistant = assistant + list(resp.content)
+            if resp.stop_reason != "pause_turn":
+                break
+    except LLMUnavailable as e:
+        error = str(e)
+        raise
+    except Exception as e:  # unexpected SDK/response shape: the caller just gets no notes
+        error = f"{type(e).__name__}: {e}"
+        raise LLMUnavailable(error[:300]) from e
+    finally:
+        pin, pout = PRICING_INR[_model_tier(model)]
+        cost = in_tok / 1e6 * pin + out_tok / 1e6 * pout + searches * WEB_SEARCH_INR
+        ok, failed = _search_outcome(assistant)
+        status = "error" if error else ("ok" if ok else "no_results")
+        if not error and failed and not ok:
+            error = f"{failed} web search error(s)"
+        session.add(AiCall(school_id=school_id, feature=feature, model=model, prompt_version=prompt_version,
+                           input_tokens=in_tok, output_tokens=out_tok,
+                           latency_ms=int((time.monotonic() - started) * 1000), cost_inr=round(cost, 4),
+                           validation_status=status, error=error[:300] if error else None))
+        if school_id is not None and cost:
+            _charge(session, school_id, cost)
+    if not ok:
+        return ""
+    # citations split one answer into several text blocks, so join them back without separators
+    text = "".join(b.text for b in assistant if getattr(b, "type", None) == "text")
+    return text.strip()[:4000]

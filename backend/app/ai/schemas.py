@@ -60,6 +60,31 @@ ROADMAP_SCHEMA = {
     "required": ["chapters"],
 }
 
+BOOK_BASES = ("page", "book_knowledge", "web", "template")
+BOOK_MAX_CHAPTERS = 40
+BOOK_MAX_ITEMS = 80
+
+BOOK_MAP_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "book": {"type": "object", "properties": {
+            "title": {"type": "string"}, "grade": {"type": ["integer", "null"]},
+            "board": {"type": "string"}, "publisher": {"type": "string"},
+            "read_from_cover": {"type": "boolean"}}},
+        "chapters": {"type": "array", "items": {"type": "object", "properties": {
+            "title": {"type": "string"},
+            "inferred": {"type": "boolean"},
+            "basis": {"type": "string", "enum": list(BOOK_BASES)},
+            "topics": {"type": "array", "items": {"type": "object", "properties": {
+                "text": {"type": "string"}, "checkpoint_id": {"type": ["string", "null"]}},
+                "required": ["text"]}}},
+            "required": ["title", "inferred", "basis", "topics"]}},
+        "confidence": {"type": "number"},
+        "note": {"type": "string"},
+    },
+    "required": ["chapters", "confidence"],
+}
+
 VOICE_SCHEMA = {
     "type": "object",
     "properties": {
@@ -183,6 +208,62 @@ def validate_roadmap(data: dict) -> dict:
     if not chapters:
         raise ValueError("no chapters found")
     return {"chapters": chapters[:40], "confidence": max(0.0, min(1.0, float(data.get("confidence", 0.6))))}
+
+
+def _short(v, n: int) -> str:
+    return " ".join(str(v or "").split())[:n]
+
+
+def validate_book_map(data: dict, allowed_ids: set[str], *, web_ok: bool = False,
+                      require_chapters: bool = True) -> dict:
+    """Normalise a textbook mapping. Unknown checkpoint ids become None (the text is kept as a custom
+    topic); basis/inferred are made consistent; at most 40 chapters and 80 rows (a chapter without topics
+    counts as one row). `web_ok` is False when no research notes were used, so "web" can't be claimed."""
+    book = data.get("book") if isinstance(data.get("book"), dict) else {}
+    grade = book.get("grade")
+    try:
+        grade = int(grade) if grade not in (None, "") else None
+    except (TypeError, ValueError):
+        grade = None
+    out_book = {"title": _short(book.get("title"), 120), "grade": grade if grade and 1 <= grade <= 8 else None,
+                "board": _short(book.get("board"), 60), "publisher": _short(book.get("publisher"), 60),
+                "read_from_cover": bool(book.get("read_from_cover", False))}
+    chapters, rows = [], 0
+    for ch in data.get("chapters") or []:
+        if not isinstance(ch, dict) or len(chapters) >= BOOK_MAX_CHAPTERS or rows >= BOOK_MAX_ITEMS:
+            break
+        title = _short(ch.get("title"), 120)
+        if not title:
+            continue
+        basis = ch.get("basis") if ch.get("basis") in BOOK_BASES else None
+        if basis == "web" and not web_ok:
+            basis = "book_knowledge"
+        if basis is None:
+            basis = "book_knowledge" if ch.get("inferred") else "page"
+        topics = []
+        for t in ch.get("topics") or []:
+            if not isinstance(t, dict):
+                continue
+            cid = t.get("checkpoint_id")
+            cid = cid if isinstance(cid, str) and cid in allowed_ids else None
+            text = _short(t.get("text"), 120)
+            if not text and not cid:
+                continue
+            if rows + len(topics) + 1 > BOOK_MAX_ITEMS:
+                break
+            topics.append({"text": text, "checkpoint_id": cid})
+        # "inferred" means the topics were deduced, not printed: only page topics are not inferred
+        inferred = basis in ("book_knowledge", "web") and bool(topics)
+        chapters.append({"title": title, "inferred": inferred, "basis": basis, "topics": topics})
+        rows += max(1, len(topics))
+    if require_chapters and not chapters:
+        raise ValueError("no chapters found")
+    try:
+        conf = float(data.get("confidence", 0.6))
+    except (TypeError, ValueError):
+        conf = 0.6
+    return {"book": out_book, "chapters": chapters, "confidence": max(0.0, min(1.0, conf)),
+            "note": _short(data.get("note"), 300)}
 
 
 def validate_voice(data: dict, misconceptions: set[str]) -> dict:

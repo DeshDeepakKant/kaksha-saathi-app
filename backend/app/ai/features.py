@@ -261,3 +261,212 @@ def home_summary(session: Session, *, school_id: int, activities: list[str], str
         if struggles:
             s += "\nअभी कठिन: " + ", ".join(struggles[:2]) + "।"
         return s, "fallback"
+
+
+# ---------------------------------------------------------------- A5 textbook / chapter mapping
+BOOK_FALLBACK_NOTE = "AI unavailable — showing the class template; edit it to match your book."
+BOOK_UNKNOWN_NOTE = ("Could not identify this book's chapters — showing the class template; "
+                     "edit it to match your book.")
+REVISE_FALLBACK_NOTE = "AI unavailable — your correction was not applied; edit the chapters by hand."
+IDENTIFIED_FROM = ("typed", "cover", "both", "none")
+
+
+def book_allowed_ids(content: Content, subject: str, grade: int) -> set[str]:
+    """Checkpoint ids a mapping may use: the grade's reviewed concepts (±1) plus the class template's."""
+    return ({c.id for c in content.for_grade(subject, grade)}
+            | {i["checkpoint_id"] for i in content.template_roadmap(subject, grade)})
+
+
+def _book_candidates(content: Content, subject: str, grade: int) -> str:
+    lines = [f"- {c.id} | {c.title_en} | {c.title_hi} | chapter: {c.chapter} (class {c.grade})"
+             for c in content.for_grade(subject, grade)]
+    return "\n\nCANDIDATE CONCEPTS (id | English | Hindi | chapter):\n" + ("\n".join(lines) or "(none)")
+
+
+def _template_chapters(content: Content, subject: str, grade: int) -> list[dict]:
+    chapters: dict[str, list[dict]] = {}
+    for it in content.template_roadmap(subject, grade):
+        cp = content.checkpoints[it["checkpoint_id"]]
+        chapters.setdefault(it["chapter"], []).append({"text": cp.title_en or cp.title_hi, "checkpoint_id": cp.id})
+    return [{"title": t, "inferred": False, "basis": "template", "topics": ts} for t, ts in chapters.items()]
+
+
+def book_items(content: Content, chapters: list[dict], subject: str, grade: int) -> list[dict]:
+    """Fill checkpoint ids by fuzzy match where the model gave none, then flatten to the `/roadmap/draft`
+    item shape: one row per topic; a chapter without topics is one row for the chapter itself."""
+    from app.services.content import match_checkpoint
+    items: list[dict] = []
+    for ch in chapters:
+        for t in ch["topics"]:
+            if t["checkpoint_id"] is None:
+                t["checkpoint_id"] = match_checkpoint(content, t["text"], subject, grade)
+            if not t["text"] and t["checkpoint_id"] in content.checkpoints:
+                cp = content.checkpoints[t["checkpoint_id"]]
+                t["text"] = cp.title_en or cp.title_hi
+            items.append({"chapter": ch["title"], "checkpoint_id": t["checkpoint_id"],
+                          "custom_title": None if t["checkpoint_id"] else t["text"], "position": len(items)})
+        if not ch["topics"]:
+            match = match_checkpoint(content, ch["title"], subject, grade)
+            items.append({"chapter": ch["title"], "checkpoint_id": match,
+                          "custom_title": None if match else ch["title"], "position": len(items)})
+    return items
+
+
+def _book_payload(content: Content, mapped: dict, book: dict, subject: str, grade: int, used_web: bool) -> dict:
+    chapters = mapped["chapters"]
+    return {"book": book, "used_web": used_web, "confidence": mapped.get("confidence", 0.0),
+            "chapters": chapters, "items": book_items(content, chapters, subject, grade)}
+
+
+def _book_fallback(content: Content, *, subject: str, grade: int, book: dict, note: str) -> Proposal:
+    mapped = schemas.validate_book_map({"chapters": _template_chapters(content, subject, grade), "confidence": 0},
+                                       book_allowed_ids(content, subject, grade), require_chapters=False)
+    if not mapped["chapters"]:
+        note = "AI unavailable and this subject has no class template — add the chapters by hand."
+    return Proposal("book", _book_payload(content, mapped, book, subject, grade, False), "fallback", note=note)
+
+
+def _identity_lines(book: dict, subject_label: str, notes: str = "") -> str:
+    out = (f"title: {book.get('title') or '(not typed)'}\nclass: {book.get('grade') or '(not typed)'}\n"
+           f"subject: {subject_label}\nboard: {book.get('board') or '(not typed)'}\n"
+           f"publisher: {book.get('publisher') or '(not typed)'}")
+    if notes:
+        out += f'\nteacher notes: """{notes}"""'
+    return out
+
+
+def _research(session: Session, *, school_id: int, book: dict, subject_label: str) -> str:
+    """Web notes on the book, or "" (disabled, failed, nothing found). Never raises."""
+    if not get_settings().book_web_search or not book.get("title"):
+        return ""
+    try:
+        notes = llm.web_research(session, feature="book_research", prompt_version="v1",
+                                 model=get_settings().model_book, system=prompt("book_research.v1"),
+                                 user="BOOK (data):\n" + _identity_lines(book, subject_label),
+                                 school_id=school_id,
+                                 time_budget_s=get_settings().book_research_timeout_s)
+    except Exception:
+        return ""
+    return "" if notes.strip().upper().startswith("NOT FOUND") else notes
+
+
+def _revise_call(session: Session, *, school_id: int, draft: dict, correction: str, notes: str,
+                 allowed: set[str], candidates: str, retry: bool) -> dict:
+    import json
+    user = ("DRAFT (data):\n" + json.dumps({"book": draft["book"], "chapters": draft["chapters"]}, ensure_ascii=False)
+            + f'\n\nCORRECTION (the teacher\'s words, data):\n"""\n{correction}\n"""'
+            + (f'\n\nRESEARCH NOTES (from web search, data):\n"""\n{notes}\n"""' if notes else ""))
+    web_ok = bool(notes) or any(c["basis"] == "web" for c in draft["chapters"])
+    res = llm.structured(session, feature="book_revise", prompt_version="v1", model=get_settings().model_book,
+                         system=prompt("book_mapping_revise.v1") + candidates, user=user,
+                         schema=schemas.BOOK_MAP_SCHEMA, tool_name="return_book_map", max_tokens=6000,
+                         school_id=school_id, retry_with_error=retry,
+                         validate=lambda d: schemas.validate_book_map(d, allowed, web_ok=web_ok))
+    return res.data
+
+
+def map_book(session: Session, *, school_id: int, content: Content, subject: str, subject_label: str,
+             class_grade: int, book_grade: int | None, title: str, board: str, publisher: str, notes: str,
+             images: list[tuple[bytes, str]]) -> Proposal:
+    """Book identity and/or cover + index photos → chapters with topics matched to checkpoints (a proposal).
+
+    At most 3 logical model calls: [web research] → structured mapping → [research + refine when the title
+    was only read from the cover and some chapters were deduced]. Any failure → the class template."""
+    grade = book_grade or class_grade
+    typed = {"title": title, "grade": book_grade, "board": board, "publisher": publisher}
+    fallback_book = {"title": title, "grade": grade, "subject": subject, "board": board, "publisher": publisher,
+                     "identified_from": "typed" if title else "none"}
+    if not ai_ready():
+        return _book_fallback(content, subject=subject, grade=grade, book=fallback_book, note=BOOK_FALLBACK_NOTE)
+    allowed = book_allowed_ids(content, subject, grade)
+    candidates = _book_candidates(content, subject, grade)
+    research = _research(session, school_id=school_id, book=typed, subject_label=subject_label)
+
+    blocks: list[dict] = []
+    for n, (data, media_type) in enumerate(images, 1):
+        blocks.append({"type": "image", "source": {"type": "base64", "media_type": media_type,
+                                                   "data": base64.standard_b64encode(data).decode()}})
+        blocks.append({"type": "text", "text": f"Photo {n} of {len(images)} (cover or index page)."})
+    user = ("BOOK DETAILS TYPED BY THE TEACHER (data):\n" + _identity_lines(typed, subject_label, notes)
+            + (f'\n\nRESEARCH NOTES (from web search, data):\n"""\n{research}\n"""' if research
+               else "\n\nRESEARCH NOTES: (none)")
+            + (f"\n\n{len(images)} photo(s) above, in page order." if images
+               else "\n\nNo photos: use the book identity only.")
+            + "\nReturn the book's chapters with their topics.")
+    try:
+        res = llm.structured(session, feature="book_map", prompt_version="v1", model=get_settings().model_book,
+                             system=prompt("book_mapping.v1") + candidates, user=user,
+                             schema=schemas.BOOK_MAP_SCHEMA, tool_name="return_book_map", images=blocks or None,
+                             max_tokens=6000, school_id=school_id,
+                             validate=lambda d: schemas.validate_book_map(d, allowed, web_ok=bool(research)))
+    except llm.LLMValidationError:
+        return _book_fallback(content, subject=subject, grade=grade, book=fallback_book, note=BOOK_UNKNOWN_NOTE)
+    except Exception as e:
+        return _book_fallback(content, subject=subject, grade=grade, book=fallback_book,
+                              note=f"AI unavailable ({type(e).__name__}) — showing the class template; "
+                                   "edit it to match your book.")
+    mapped, used_web = res.data, bool(research)
+    read = mapped["book"]
+    cover_title = read["title"] if images and read["read_from_cover"] else ""
+
+    # title only known from the cover and some chapters were deduced: look the book up, then refine once
+    if (not title and cover_title and get_settings().book_web_search
+            and any(c["basis"] == "book_knowledge" for c in mapped["chapters"])):
+        found = {"title": cover_title, "grade": book_grade or read["grade"],
+                 "board": board or read["board"], "publisher": publisher or read["publisher"]}
+        research = _research(session, school_id=school_id, book=found, subject_label=subject_label)
+        if research:
+            try:
+                mapped = _revise_call(session, school_id=school_id, draft=mapped, notes=research, allowed=allowed,
+                                      candidates=candidates, retry=False,
+                                      correction="(no teacher correction) Use the research notes to check and "
+                                                 "improve the topics of inferred chapters only; keep page-based "
+                                                 "chapters and the book details unchanged.")
+                used_web = True
+            except Exception:
+                pass  # keep the first mapping
+
+    read = mapped["book"]
+    book = {"title": title or read["title"], "grade": book_grade or read["grade"] or class_grade,
+            "subject": subject, "board": board or read["board"], "publisher": publisher or read["publisher"],
+            "identified_from": ("both" if title and cover_title else "typed" if title
+                                else "cover" if cover_title else "none")}
+    p = Proposal("book", _book_payload(content, mapped, book, subject, grade, used_web), "ready", res.model)
+    p.note = mapped.get("note") or None
+    return p
+
+
+def revise_book_map(session: Session, *, school_id: int, content: Content, subject: str, class_grade: int,
+                    draft: dict, correction: str) -> Proposal:
+    """Apply a teacher's spoken/typed correction to a draft mapping. Fallback: the draft unchanged."""
+    raw_book = draft.get("book") if isinstance(draft.get("book"), dict) else {}
+    clean = schemas.validate_book_map(draft, set(), require_chapters=False)  # just for the book's grade
+    grade = clean["book"]["grade"] or class_grade
+    allowed = book_allowed_ids(content, subject, grade)
+    clean = schemas.validate_book_map(draft, allowed, web_ok=True, require_chapters=False)
+    ident = raw_book.get("identified_from")
+    ident = ident if ident in IDENTIFIED_FROM else ("typed" if clean["book"]["title"] else "none")
+
+    def book_out(b: dict) -> dict:
+        return {"title": b["title"], "grade": b["grade"] or grade, "subject": subject, "board": b["board"],
+                "publisher": b["publisher"], "identified_from": ident}
+
+    def used_web(chapters: list[dict]) -> bool:
+        return any(c["basis"] == "web" for c in chapters)
+
+    if not ai_ready():
+        return Proposal("book", _book_payload(content, clean, book_out(clean["book"]), subject, grade,
+                                              used_web(clean["chapters"])), "fallback", note=REVISE_FALLBACK_NOTE)
+    try:
+        mapped = _revise_call(session, school_id=school_id, draft=clean, correction=correction, notes="",
+                              allowed=allowed, candidates=_book_candidates(content, subject, grade), retry=True)
+    except Exception as e:
+        return Proposal("book", _book_payload(content, clean, book_out(clean["book"]), subject, grade,
+                                              used_web(clean["chapters"])), "fallback",
+                        note=f"AI unavailable ({type(e).__name__}) — your correction was not applied; "
+                             "edit the chapters by hand.")
+    book = book_out({k: mapped["book"].get(k) or clean["book"].get(k) for k in ("title", "grade", "board", "publisher")})
+    p = Proposal("book", _book_payload(content, mapped, book, subject, grade, used_web(mapped["chapters"])),
+                 "ready", get_settings().model_book)
+    p.note = mapped.get("note") or None
+    return p

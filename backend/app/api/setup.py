@@ -13,7 +13,7 @@ from sqlalchemy.orm import Session
 
 from app.api.deps import current_teacher, owned_class
 from app.db import get_db
-from app.models.tables import Classroom, Teacher
+from app.models.tables import Classroom, Teacher, TextbookMap
 from app.services import coverage
 from app.services.content import get_content
 from app.services.subjects import create_custom_subject, resolve_subject, subject_names
@@ -21,7 +21,8 @@ from app.services.subjects import create_custom_subject, resolve_subject, subjec
 router = APIRouter(prefix="/v1")
 
 MAX_ITEMS = 80
-SOURCES = ("template", "photo", "import")
+SOURCES = ("template", "photo", "import", "book")
+MAX_BOOK_CHAPTERS = 40
 
 
 def _class_out(c: Classroom, children: int = 0, consented: int = 0) -> dict:
@@ -82,7 +83,23 @@ def get_syllabus(class_id: int, subject: str, teacher: Teacher = Depends(current
                  db: Session = Depends(get_db)):
     subject = resolve_subject(db, teacher.school_id, subject)
     cls = owned_class(class_id, teacher, db)
-    return coverage.syllabus(db, cls, subject)
+    return _with_book(db, cls, subject, coverage.syllabus(db, cls, subject))
+
+
+def _book_out(row: TextbookMap | None) -> dict | None:
+    if row is None:
+        return None
+    return {"id": row.id, "title": row.title, "grade": row.grade, "board": row.board, "publisher": row.publisher,
+            "chapters": (row.mapping or {}).get("chapters", []),
+            "saved_at": row.created_at.isoformat() if row.created_at else None}
+
+
+def _with_book(db: Session, cls: Classroom, subject: str, out: dict) -> dict:
+    """The syllabus response plus the latest saved textbook mapping for this class + subject (or None)."""
+    row = db.scalar(select(TextbookMap).where(TextbookMap.class_id == cls.id, TextbookMap.subject == subject)
+                    .order_by(TextbookMap.created_at.desc(), TextbookMap.id.desc()).limit(1))
+    out["book"] = _book_out(row)
+    return out
 
 
 class SyllabusItemIn(BaseModel):
@@ -93,10 +110,32 @@ class SyllabusItemIn(BaseModel):
     position: int | None = None
 
 
+class BookTopicIn(BaseModel):
+    text: str = Field(default="", max_length=120)
+    checkpoint_id: str | None = Field(default=None, max_length=80)
+
+
+class BookChapterIn(BaseModel):
+    title: str = Field(min_length=1, max_length=120)
+    inferred: bool = False
+    basis: str = Field(default="page", max_length=20)
+    topics: list[BookTopicIn] = Field(default_factory=list, max_length=MAX_ITEMS)
+
+
+class BookIn(BaseModel):
+    """The reviewed textbook mapping (same shape as the /books/map draft); stored as a record of the book."""
+    title: str = Field(default="", max_length=120)
+    grade: int | None = Field(default=None, ge=1, le=8)
+    board: str = Field(default="", max_length=60)
+    publisher: str = Field(default="", max_length=60)
+    chapters: list[BookChapterIn] = Field(default_factory=list, max_length=MAX_BOOK_CHAPTERS)
+
+
 class SyllabusIn(BaseModel):
     subject: str
     source: str = "import"
     items: list[SyllabusItemIn] = Field(max_length=MAX_ITEMS)
+    book: BookIn | None = None
 
 
 def _clean(text: str | None) -> str:
@@ -116,6 +155,7 @@ def save_syllabus(class_id: int, body: SyllabusIn, teacher: Teacher = Depends(cu
     # keep the sender's order: by position when given, otherwise as listed
     ordered = sorted(enumerate(body.items), key=lambda p: (p[1].position if p[1].position is not None else p[0], p[0]))
     rows, created, seen = [], [], set()
+    made: dict[tuple[str, str], str] = {}  # (chapter, custom title) -> new checkpoint id, for the book record
     for _, it in ordered:
         cid = _clean(it.checkpoint_id)
         chapter = _clean(it.chapter)
@@ -137,12 +177,37 @@ def save_syllabus(class_id: int, body: SyllabusIn, teacher: Teacher = Depends(cu
             row = coverage.new_custom_checkpoint(db, cls, teacher, subject, chapter or coverage.DEFAULT_CHAPTER,
                                                  title, _clean(it.custom_title_hi) or title)
             created.append(row)
+            made.setdefault((chapter or coverage.DEFAULT_CHAPTER, title), row.id)
             rows.append({"chapter": chapter or coverage.DEFAULT_CHAPTER, "checkpoint_id": row.id,
                          "custom_title": None})
     coverage.write_version(db, cls, teacher, subject, body.source, rows)
     for row in created:
         coverage.register(row)
-    return coverage.syllabus(db, cls, subject)
+    if body.book is not None:
+        _save_book(db, cls, teacher, subject, body.book, made)
+    return _with_book(db, cls, subject, coverage.syllabus(db, cls, subject))
+
+
+def _save_book(db: Session, cls: Classroom, teacher: Teacher, subject: str, book: BookIn,
+               made: dict[tuple[str, str], str]) -> None:
+    chapters = []
+    for ch in book.chapters:
+        title = _clean(ch.title)
+        if not title:
+            continue
+        topics = []
+        for t in ch.topics:
+            text, cid = _clean(t.text), _clean(t.checkpoint_id) or None
+            # a custom topic just saved on the syllabus: point the book record at its new checkpoint
+            cid = cid or made.get((title, text))
+            if text or cid:
+                topics.append({"text": text, "checkpoint_id": cid})
+        chapters.append({"title": title, "inferred": ch.inferred, "basis": _clean(ch.basis) or "page",
+                         "topics": topics})
+    db.add(TextbookMap(school_id=cls.school_id, class_id=cls.id, subject=subject, title=_clean(book.title),
+                       grade=book.grade, board=_clean(book.board), publisher=_clean(book.publisher),
+                       mapping={"chapters": chapters}, created_by=teacher.id))
+    db.flush()
 
 
 class TopicIn(BaseModel):
@@ -186,4 +251,4 @@ def remove_topic(class_id: int, checkpoint_id: str, subject: str, teacher: Teach
         raise HTTPException(404, "topic not on this syllabus")
     # the topic's checkpoint and any evidence stay; only this class's syllabus stops listing it
     coverage.write_version(db, cls, teacher, subject, prev.source if prev else "template", kept)
-    return coverage.syllabus(db, cls, subject)
+    return _with_book(db, cls, subject, coverage.syllabus(db, cls, subject))

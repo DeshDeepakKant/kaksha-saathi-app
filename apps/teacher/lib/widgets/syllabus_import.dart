@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
@@ -5,14 +6,16 @@ import 'package:image_picker/image_picker.dart';
 
 import '../api.dart';
 import '../l10n.dart';
+import '../record_audio.dart';
 import '../theme.dart';
 import 'syllabus_widgets.dart';
 
-/// Import the syllabus from a photo of the book's index page, or from typed lines.
+/// Import the syllabus from the textbook (cover + index page photos and/or the book's name), or
+/// from typed lines.
 ///
 /// The AI only proposes: the draft is shown as an editable list (rename, drop, unlink from a
-/// matched lesson) and nothing is saved until the teacher presses Confirm. Pops `true` once the
-/// syllabus was saved.
+/// matched lesson), can be corrected by voice or a typed sentence, and nothing is saved until the
+/// teacher presses Confirm. Pops `true` once the syllabus was saved.
 class SylImportScreen extends StatefulWidget {
   const SylImportScreen({
     super.key,
@@ -20,9 +23,13 @@ class SylImportScreen extends StatefulWidget {
     required this.subject,
     required this.existingChapters,
     required this.confirmed,
+    this.grade,
   });
   final int classId;
   final String subject;
+
+  /// The class's grade, used as the book's class by default; looked up from `/v1/classes` if null.
+  final int? grade;
 
   /// The chapters (from `GET .../syllabus`) currently on the screen.
   final List<Map<String, dynamic>> existingChapters;
@@ -49,7 +56,15 @@ class _Chap {
   _Chap(String name) : name = TextEditingController(text: name);
   final TextEditingController name;
   final List<_Row> rows = [];
+
+  /// From the book flow: true when the topics were not read off a photographed page, and where
+  /// they came from instead (`page` / `book_knowledge` / `web` / `template`).
+  bool inferred = false;
+  String basis = 'page';
 }
+
+/// At most this many photos (cover + index pages) go to the book reader.
+const _maxPhotos = 6;
 
 final _devanagari = RegExp(r'[ऀ-ॿ]');
 
@@ -57,10 +72,19 @@ class _SylImportScreenState extends State<SylImportScreen> {
   _Stage _stage = _Stage.pick;
   String? _error;
   int _errorStatus = 0;
-  Uint8List? _bytes;
-  String _filename = 'index.jpg';
+  final List<(Uint8List, String)> _photos = []; // (bytes, filename)
+  final _bookCtl = TextEditingController();
+  final _otherBoardCtl = TextEditingController();
+  int? _grade;
+  String? _board; // NCERT / SCERT / other; none = let the reader identify it
+  Map<String, dynamic>? _book; // what the reader identified
   String _source = 'photo';
   String? _note;
+  final Recorder _rec = Recorder();
+  bool _recording = false;
+  bool _revising = false;
+  String? _heard; // what the last correction was understood as
+  final _fixCtl = TextEditingController();
   final List<_Chap> _chaps = [];
   final _typeCtl = TextEditingController();
   Map<String, String> _titles = {};
@@ -73,9 +97,39 @@ class _SylImportScreenState extends State<SylImportScreen> {
     (n, c) => n + sylMaps(c['topics']).length,
   );
 
+  /// Editing is locked while saving or while a correction is being applied.
+  bool get _busy => _saving || _revising;
+
+  bool get _canMap => _photos.isNotEmpty || _bookCtl.text.trim().isNotEmpty;
+
+  @override
+  void initState() {
+    super.initState();
+    _grade = widget.grade;
+    if (_grade == null) _loadGrade();
+  }
+
+  Future<void> _loadGrade() async {
+    try {
+      for (final c in sylMaps(await Api.i.classes())) {
+        final g = sylInt(c['grade']);
+        if (sylInt(c['id']) == widget.classId && g >= 1 && g <= 8) {
+          if (mounted && _grade == null) setState(() => _grade = g);
+          return;
+        }
+      }
+    } catch (_) {
+      // The teacher picks the class.
+    }
+  }
+
   @override
   void dispose() {
     _typeCtl.dispose();
+    _bookCtl.dispose();
+    _otherBoardCtl.dispose();
+    _fixCtl.dispose();
+    _rec.dispose();
     for (final c in _chaps) {
       c.name.dispose();
       for (final r in c.rows) {
@@ -88,19 +142,36 @@ class _SylImportScreenState extends State<SylImportScreen> {
   void _toast(String s) =>
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(s)));
 
-  // ---- step 1: photo -> draft
-  Future<void> _pickPhoto(ImageSource src) async {
+  // ---- step 1: book (photos and/or name) -> draft
+  Future<void> _addPhotos(ImageSource src) async {
+    final room = _maxPhotos - _photos.length;
+    if (room <= 0) return;
     try {
-      final file = await ImagePicker().pickImage(
-        source: src,
-        maxWidth: 1800,
-        imageQuality: 85,
-      );
-      if (file == null) return;
-      final bytes = await file.readAsBytes();
-      _bytes = bytes;
-      _filename = file.name.isEmpty ? 'index.jpg' : file.name;
-      await _upload();
+      final picker = ImagePicker();
+      final files = src == ImageSource.gallery && room > 1
+          ? await picker.pickMultiImage(
+              maxWidth: 1800,
+              imageQuality: 85,
+              limit: room,
+            )
+          : [
+              ?await picker.pickImage(
+                source: src,
+                maxWidth: 1800,
+                imageQuality: 85,
+              ),
+            ];
+      final added = <(Uint8List, String)>[];
+      for (final f in files.take(room)) {
+        added.add((
+          await f.readAsBytes(),
+          f.name.isEmpty
+              ? 'page${_photos.length + added.length + 1}.jpg'
+              : f.name,
+        ));
+      }
+      if (!mounted || added.isEmpty) return;
+      setState(() => _photos.addAll(added));
     } catch (_) {
       if (!mounted) return;
       _toast(
@@ -112,28 +183,90 @@ class _SylImportScreenState extends State<SylImportScreen> {
     }
   }
 
-  Future<void> _upload() async {
-    final bytes = _bytes;
-    if (bytes == null) return;
+  /// "NCERT" / "SCERT" / "Other" and, for Other, what the teacher typed as the publisher.
+  (String, String) _boardChoice() => switch (_board) {
+    'NCERT' => ('NCERT', 'NCERT'),
+    'SCERT' => ('SCERT', ''),
+    'other' => ('Other', _otherBoardCtl.text.trim()),
+    _ => ('', ''),
+  };
+
+  /// The book as the teacher described it, filled in with what the reader identified.
+  Map<String, dynamic> _bookJson() {
+    final got = _book ?? const <String, dynamic>{};
+    final (board, publisher) = _boardChoice();
+    String or(String mine, Object? theirs) =>
+        mine.isNotEmpty ? mine : (theirs ?? '').toString().trim();
+    return {
+      'title': or(_bookCtl.text.trim(), got['title']),
+      'grade': _grade ?? (got['grade'] is int ? got['grade'] : null),
+      'board': or(board, got['board']),
+      'publisher': or(publisher, got['publisher']),
+    };
+  }
+
+  /// The current (edited) review state in the book contract's chapter shape.
+  List<Map<String, dynamic>> _chaptersJson() => [
+    for (final c in _chaps)
+      {
+        'title': c.name.text.trim(),
+        'inferred': c.inferred,
+        'basis': c.basis,
+        'topics': [
+          for (final r in c.rows)
+            if (r.matched || r.ctl.text.trim().isNotEmpty)
+              {
+                'text': r.matched ? (r.matchTitle ?? '') : r.ctl.text.trim(),
+                'checkpoint_id': r.checkpointId,
+              },
+        ],
+      },
+  ];
+
+  Future<void> _mapBook() async {
+    if (!_canMap) return;
+    FocusScope.of(context).unfocus();
     setState(() {
       _stage = _Stage.uploading;
       _error = null;
     });
+    final (board, publisher) = _boardChoice();
+    final title = _bookCtl.text.trim();
     try {
-      final r = await Api.i.postMultipart(
-        '/v1/classes/${widget.classId}/roadmap/draft',
-        fields: {'subject': widget.subject},
-        file: bytes,
-        filename: _filename,
-      );
-      final m = (r as Map).cast<String, dynamic>();
+      var fromBook = true;
+      Map<String, dynamic> m;
+      try {
+        final r = await Api.i.postMultipartFiles(
+          '/v1/classes/${widget.classId}/books/map',
+          fields: {
+            'subject': widget.subject,
+            if (title.isNotEmpty) 'book_title': title,
+            if (board.isNotEmpty) 'board': board,
+            if (publisher.isNotEmpty) 'publisher': publisher,
+            if (_grade != null) 'book_grade': '$_grade',
+          },
+          files: [for (final (bytes, name) in _photos) ('images', bytes, name)],
+        );
+        m = (r as Map).cast<String, dynamic>();
+      } on ApiError catch (e) {
+        // A server without the book reader: read the last photo as a single index page.
+        if ((e.status != 404 && e.status != 405) || _photos.isEmpty) rethrow;
+        final (bytes, name) = _photos.last;
+        final r = await Api.i.postMultipartFiles(
+          '/v1/classes/${widget.classId}/roadmap/draft',
+          fields: {'subject': widget.subject},
+          files: [('image', bytes, name)],
+        );
+        m = (r as Map).cast<String, dynamic>();
+        fromBook = false;
+      }
       final items = sylMaps(m['items']);
       if (items.isEmpty) {
         _fail(
           (m['note'] as String?) ??
               tr(
-                'The index could not be read from this photo.',
-                'इस फ़ोटो से अनुक्रम नहीं पढ़ा जा सका।',
+                'The chapters could not be read from these photos.',
+                'इन फ़ोटो से अध्याय नहीं पढ़े जा सके।',
               ),
           422,
         );
@@ -142,9 +275,14 @@ class _SylImportScreenState extends State<SylImportScreen> {
       await _loadTitles(items);
       if (!mounted) return;
       _fillFromDraft(items);
+      _applyChapterMeta(sylMaps(m['chapters']));
       setState(() {
-        _source = 'photo';
+        _source = fromBook ? 'book' : 'photo';
+        _book = m['book'] is Map
+            ? (m['book'] as Map).cast<String, dynamic>()
+            : null;
         _note = m['status'] == 'ready' ? null : m['note'] as String?;
+        _heard = null;
         _saveError = null;
         _stage = _Stage.review;
       });
@@ -161,6 +299,107 @@ class _SylImportScreenState extends State<SylImportScreen> {
     }
   }
 
+  /// Marks chapters whose topics were inferred (matched to the response's chapters by title).
+  void _applyChapterMeta(List<Map<String, dynamic>> chapters) {
+    final byTitle = {
+      for (final c in chapters) (c['title'] ?? '').toString().trim(): c,
+    };
+    for (final chap in _chaps) {
+      final c = byTitle[chap.name.text.trim()];
+      chap.inferred = c?['inferred'] == true;
+      chap.basis = (c?['basis'] ?? 'page').toString();
+    }
+  }
+
+  // ---- step 1b: correct the draft by voice or a typed sentence
+  Future<void> _toggleRecord() async {
+    if (!_recording) {
+      final ok = await _rec.start();
+      if (!mounted) return;
+      if (!ok) {
+        _toast(
+          tr(
+            'Mic not available — type the correction instead.',
+            'माइक उपलब्ध नहीं — सुधार लिखकर बताएँ।',
+          ),
+        );
+        return;
+      }
+      setState(() => _recording = true);
+    } else {
+      final bytes = await _rec.stop();
+      if (!mounted) return;
+      setState(() => _recording = false);
+      if (bytes == null || bytes.isEmpty) {
+        _toast(tr('Recording was empty', 'रिकॉर्डिंग खाली रही'));
+        return;
+      }
+      await _revise(audio: bytes);
+    }
+  }
+
+  /// Sends the CURRENT edited list plus the correction; the reply replaces the list. On any
+  /// failure the list stays exactly as it was.
+  Future<void> _revise({Uint8List? audio}) async {
+    final typed = _fixCtl.text.trim();
+    if (audio == null && typed.isEmpty) return;
+    FocusScope.of(context).unfocus();
+    setState(() => _revising = true);
+    try {
+      final r = await Api.i.postMultipartFiles(
+        '/v1/classes/${widget.classId}/books/map/revise',
+        fields: {
+          'subject': widget.subject,
+          'draft': jsonEncode({
+            'book': {...?_book, ..._bookJson()},
+            'chapters': _chaptersJson(),
+          }),
+          if (audio == null) 'transcript': typed,
+        },
+        files: [if (audio != null) ('audio', audio, 'correction.wav')],
+      );
+      final m = (r as Map).cast<String, dynamic>();
+      final heard = (m['heard'] ?? '').toString().trim();
+      final items = sylMaps(m['items']);
+      if (items.isEmpty) {
+        if (!mounted) return;
+        setState(() => _heard = heard.isEmpty ? null : heard);
+        _toast(
+          (m['note'] as String?) ??
+              tr(
+                'Could not apply that correction. Your list is unchanged.',
+                'यह सुधार लागू नहीं हो सका। आपकी सूची जैसी थी वैसी है।',
+              ),
+        );
+        return;
+      }
+      await _loadTitles(items);
+      if (!mounted) return;
+      setState(() {
+        _fillFromDraft(items, disposeLater: true);
+        _applyChapterMeta(sylMaps(m['chapters']));
+        if (m['book'] is Map) {
+          _book = (m['book'] as Map).cast<String, dynamic>();
+        }
+        _note = m['status'] == 'ready' ? null : m['note'] as String?;
+        _heard = heard.isNotEmpty ? heard : (audio == null ? typed : null);
+        _fixCtl.clear();
+        _saveError = null;
+      });
+    } on ApiError catch (e) {
+      _toast(e.message);
+    } catch (_) {
+      _toast(
+        tr(
+          'Could not apply that correction. Your list is unchanged.',
+          'यह सुधार लागू नहीं हो सका। आपकी सूची जैसी थी वैसी है।',
+        ),
+      );
+    } finally {
+      if (mounted) setState(() => _revising = false);
+    }
+  }
+
   void _fail(String msg, int status) {
     if (!mounted) return;
     setState(() {
@@ -172,7 +411,9 @@ class _SylImportScreenState extends State<SylImportScreen> {
 
   /// Titles of the lessons the draft matched, so a matched row can show what it matched.
   Future<void> _loadTitles(List<Map<String, dynamic>> items) async {
-    if (!items.any((i) => i['checkpoint_id'] != null)) return;
+    if (_titles.isNotEmpty || !items.any((i) => i['checkpoint_id'] != null)) {
+      return;
+    }
     try {
       final r = await Api.i.get(
         '/v1/content/checkpoints?subject=${Uri.encodeQueryComponent(widget.subject)}',
@@ -185,8 +426,11 @@ class _SylImportScreenState extends State<SylImportScreen> {
 
   /// Turns the flat draft items into chapters. The backend emits a heading item per chapter
   /// (custom title == chapter name, no lesson); it is dropped when the chapter has other rows.
-  void _fillFromDraft(List<Map<String, dynamic>> items) {
-    _resetChapters();
+  void _fillFromDraft(
+    List<Map<String, dynamic>> items, {
+    bool disposeLater = false,
+  }) {
+    _resetChapters(disposeLater: disposeLater);
     final groups = <String, List<Map<String, dynamic>>>{};
     for (final it in items) {
       final ch = (it['chapter'] ?? '').toString().trim();
@@ -220,14 +464,25 @@ class _SylImportScreenState extends State<SylImportScreen> {
     });
   }
 
-  void _resetChapters() {
-    for (final c in _chaps) {
-      c.name.dispose();
-      for (final r in c.rows) {
-        r.ctl.dispose();
+  /// With [disposeLater] the old controllers are disposed after the next frame, because the
+  /// review list on screen still holds them until it rebuilds.
+  void _resetChapters({bool disposeLater = false}) {
+    final old = List.of(_chaps);
+    _chaps.clear();
+    void dispose() {
+      for (final c in old) {
+        c.name.dispose();
+        for (final r in c.rows) {
+          r.ctl.dispose();
+        }
       }
     }
-    _chaps.clear();
+
+    if (disposeLater) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => dispose());
+    } else {
+      dispose();
+    }
   }
 
   // ---- fallback: typed topics
@@ -339,6 +594,8 @@ class _SylImportScreenState extends State<SylImportScreen> {
         'subject': widget.subject,
         'source': _source,
         'items': items,
+        if (_source == 'book')
+          'book': {..._bookJson(), 'chapters': _chaptersJson()},
       });
       if (mounted) Navigator.pop(context, true);
     } on ApiError catch (e) {
@@ -398,7 +655,10 @@ class _SylImportScreenState extends State<SylImportScreen> {
         body: switch (_stage) {
           _Stage.pick => _pickView(),
           _Stage.uploading => Loading(
-            label: tr('Reading the index page…', 'अनुक्रम पृष्ठ पढ़ रहे हैं…'),
+            label: tr(
+              'Reading the book… this can take a minute.',
+              'किताब पढ़ रहे हैं… इसमें एक मिनट लग सकता है।',
+            ),
           ),
           _Stage.error => _errorView(),
           _Stage.typing => _typingView(),
@@ -432,46 +692,230 @@ class _SylImportScreenState extends State<SylImportScreen> {
     ),
   );
 
-  Widget _pickView() => ListView(
-    padding: const EdgeInsets.all(20),
-    children: [
-      Text(
-        tr(
-          'Take a photo of the contents page of the book.',
-          'किताब के विषय-सूची वाले पन्ने की फ़ोटो लें।',
-        ),
-        style: Theme.of(context).textTheme.titleMedium,
-      ),
-      const SizedBox(height: 6),
-      Text(
-        tr(
-          'Keep the whole page in the frame, in good light.',
-          'पूरा पन्ना फ़्रेम में रखें, अच्छी रोशनी में।',
-        ),
-        style: const TextStyle(color: Ks.muted),
-      ),
-      const SizedBox(height: 14),
-      _proposeNote(),
-      const SizedBox(height: 20),
-      FilledButton.icon(
-        onPressed: () => _pickPhoto(ImageSource.camera),
-        icon: const Icon(Icons.photo_camera_rounded),
-        label: Text(tr('Take a photo', 'फ़ोटो लें')),
-      ),
-      const SizedBox(height: 10),
-      OutlinedButton.icon(
-        onPressed: () => _pickPhoto(ImageSource.gallery),
-        icon: const Icon(Icons.photo_library_rounded),
-        label: Text(tr('Choose from gallery', 'गैलरी से चुनें')),
-      ),
-      const SizedBox(height: 10),
-      TextButton.icon(
-        onPressed: () => setState(() => _stage = _Stage.typing),
-        icon: const Icon(Icons.keyboard_rounded),
-        label: Text(tr('Type the topics instead', 'इसके बजाय विषय टाइप करें')),
-      ),
-    ],
+  Widget _label(String text) => Padding(
+    padding: const EdgeInsets.only(bottom: 6),
+    child: Text(
+      text,
+      style: const TextStyle(fontWeight: FontWeight.w700, color: Ks.ink),
+    ),
   );
+
+  Widget _pickView() {
+    final full = _photos.length >= _maxPhotos;
+    return ListView(
+      padding: const EdgeInsets.all(20),
+      children: [
+        Text(
+          tr('Take photos of your textbook.', 'अपनी किताब की फ़ोटो लें।'),
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
+        const SizedBox(height: 6),
+        Text(
+          tr(
+            'Add the cover and every index page. Keep each page in the frame, in good light.',
+            'कवर और विषय-सूची के सभी पन्ने जोड़ें। हर पन्ना फ़्रेम में रखें, अच्छी रोशनी में।',
+          ),
+          style: const TextStyle(color: Ks.muted),
+        ),
+        const SizedBox(height: 14),
+        _photoStrip(),
+        const SizedBox(height: 10),
+        Row(
+          children: [
+            Expanded(
+              child: OutlinedButton.icon(
+                onPressed: full ? null : () => _addPhotos(ImageSource.camera),
+                icon: const Icon(Icons.photo_camera_rounded),
+                label: Text(tr('Camera', 'कैमरा')),
+              ),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: OutlinedButton.icon(
+                onPressed: full ? null : () => _addPhotos(ImageSource.gallery),
+                icon: const Icon(Icons.photo_library_rounded),
+                label: Text(tr('Gallery', 'गैलरी')),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 6),
+        Text(
+          tr(
+            '${_photos.length} of $_maxPhotos photos',
+            '$_maxPhotos में से ${_photos.length} फ़ोटो',
+          ),
+          style: const TextStyle(color: Ks.muted, fontSize: 13.5),
+        ),
+        const SizedBox(height: 18),
+        _label(tr('Book name', 'किताब का नाम')),
+        TextField(
+          controller: _bookCtl,
+          onChanged: (_) => setState(() {}),
+          textCapitalization: TextCapitalization.words,
+          decoration: InputDecoration(
+            hintText: tr('e.g. Math-Magic', 'जैसे: गणित का जादू'),
+          ),
+        ),
+        const SizedBox(height: 16),
+        _label(tr('Class', 'कक्षा')),
+        Wrap(
+          spacing: 8,
+          runSpacing: 6,
+          children: [
+            for (var g = 1; g <= 8; g++)
+              ChoiceChip(
+                label: Text('$g', style: const TextStyle(fontSize: 16)),
+                selected: _grade == g,
+                onSelected: (_) => setState(() => _grade = g),
+              ),
+          ],
+        ),
+        const SizedBox(height: 16),
+        _label(tr('Board or publisher', 'बोर्ड या प्रकाशक')),
+        Wrap(
+          spacing: 8,
+          runSpacing: 6,
+          children: [
+            for (final (key, label) in [
+              ('NCERT', 'NCERT'),
+              ('SCERT', tr('State board (SCERT)', 'राज्य बोर्ड (SCERT)')),
+              ('other', tr('Other', 'अन्य')),
+            ])
+              ChoiceChip(
+                label: Text(label, style: const TextStyle(fontSize: 15)),
+                selected: _board == key,
+                onSelected: (on) => setState(() => _board = on ? key : null),
+              ),
+          ],
+        ),
+        if (_board == 'other') ...[
+          const SizedBox(height: 10),
+          TextField(
+            controller: _otherBoardCtl,
+            textCapitalization: TextCapitalization.words,
+            decoration: InputDecoration(
+              hintText: tr(
+                'Board or publisher name',
+                'बोर्ड या प्रकाशक का नाम',
+              ),
+            ),
+          ),
+        ],
+        const SizedBox(height: 20),
+        FilledButton.icon(
+          onPressed: _canMap ? _mapBook : null,
+          icon: const Icon(Icons.auto_awesome_rounded),
+          label: Text(tr('Map chapters', 'अध्याय बनाएँ')),
+        ),
+        if (!_canMap)
+          Padding(
+            padding: const EdgeInsets.only(top: 6),
+            child: Text(
+              tr(
+                'Add a photo or the book name first.',
+                'पहले एक फ़ोटो या किताब का नाम जोड़ें।',
+              ),
+              textAlign: TextAlign.center,
+              style: const TextStyle(color: Ks.muted, fontSize: 13.5),
+            ),
+          ),
+        const SizedBox(height: 14),
+        _proposeNote(),
+        const SizedBox(height: 10),
+        TextButton.icon(
+          onPressed: () => setState(() => _stage = _Stage.typing),
+          icon: const Icon(Icons.keyboard_rounded),
+          label: Text(
+            tr('Type the topics instead', 'इसके बजाय विषय टाइप करें'),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _photoStrip() {
+    if (_photos.isEmpty) {
+      return Container(
+        height: 112,
+        decoration: BoxDecoration(
+          color: Ks.card,
+          border: Border.all(color: Ks.line),
+          borderRadius: BorderRadius.circular(14),
+        ),
+        alignment: Alignment.center,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.menu_book_rounded, color: Ks.muted, size: 32),
+            const SizedBox(height: 6),
+            Text(
+              tr('No photos yet', 'अभी कोई फ़ोटो नहीं'),
+              style: const TextStyle(color: Ks.muted),
+            ),
+          ],
+        ),
+      );
+    }
+    return SizedBox(
+      height: 112,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        itemCount: _photos.length,
+        separatorBuilder: (_, _) => const SizedBox(width: 8),
+        itemBuilder: (_, i) => Stack(
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Image.memory(
+                _photos[i].$1,
+                width: 84,
+                height: 112,
+                fit: BoxFit.cover,
+                cacheWidth: 252,
+              ),
+            ),
+            Positioned(
+              left: 4,
+              bottom: 4,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+                decoration: BoxDecoration(
+                  color: Colors.black54,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  '${i + 1}',
+                  style: const TextStyle(color: Colors.white, fontSize: 12.5),
+                ),
+              ),
+            ),
+            Positioned(
+              top: 2,
+              right: 2,
+              child: Material(
+                color: Colors.black54,
+                shape: const CircleBorder(),
+                child: InkWell(
+                  customBorder: const CircleBorder(),
+                  onTap: () => setState(() => _photos.removeAt(i)),
+                  child: Padding(
+                    padding: const EdgeInsets.all(7),
+                    child: Icon(
+                      Icons.close_rounded,
+                      size: 20,
+                      color: Colors.white,
+                      semanticLabel: tr('Remove photo', 'फ़ोटो हटाएँ'),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
   Widget _errorView() {
     // 503 / 422: the reader (AI) is unavailable or could not read the page, so typing is the way on.
@@ -498,7 +942,7 @@ class _SylImportScreenState extends State<SylImportScreen> {
         const Icon(Icons.error_outline_rounded, size: 48, color: Ks.rose),
         const SizedBox(height: 12),
         Text(
-          tr('Could not read the photo', 'फ़ोटो पढ़ी नहीं जा सकी'),
+          tr('Could not map the chapters', 'अध्याय नहीं बन सके'),
           textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.titleMedium,
         ),
@@ -509,16 +953,16 @@ class _SylImportScreenState extends State<SylImportScreen> {
           style: const TextStyle(color: Ks.muted),
         ),
         const SizedBox(height: 20),
-        if (_bytes != null) ...[
+        if (_canMap) ...[
           if (!typeFirst)
             FilledButton.icon(
-              onPressed: _upload,
+              onPressed: _mapBook,
               icon: const Icon(Icons.refresh_rounded),
               label: Text(tr('Retry', 'दोबारा कोशिश करें')),
             )
           else
             OutlinedButton.icon(
-              onPressed: _upload,
+              onPressed: _mapBook,
               icon: const Icon(Icons.refresh_rounded),
               label: Text(tr('Retry', 'दोबारा कोशिश करें')),
             ),
@@ -528,7 +972,12 @@ class _SylImportScreenState extends State<SylImportScreen> {
         const SizedBox(height: 10),
         TextButton(
           onPressed: () => setState(() => _stage = _Stage.pick),
-          child: Text(tr('Choose another photo', 'दूसरी फ़ोटो चुनें')),
+          child: Text(
+            tr(
+              'Change the photos or book details',
+              'फ़ोटो या किताब की जानकारी बदलें',
+            ),
+          ),
         ),
       ],
     );
@@ -588,6 +1037,10 @@ class _SylImportScreenState extends State<SylImportScreen> {
           child: ListView(
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
             children: [
+              if (_source == 'book') ...[
+                _bookHeader(),
+                const SizedBox(height: 10),
+              ],
               _proposeNote(),
               if (_note != null && _note!.isNotEmpty) ...[
                 const SizedBox(height: 8),
@@ -608,7 +1061,7 @@ class _SylImportScreenState extends State<SylImportScreen> {
                 SwitchListTile(
                   contentPadding: EdgeInsets.zero,
                   value: _keep,
-                  onChanged: _saving ? null : (v) => setState(() => _keep = v),
+                  onChanged: _busy ? null : (v) => setState(() => _keep = v),
                   title: Text(
                     tr(
                       'Keep my current $_existingCount topics',
@@ -628,10 +1081,14 @@ class _SylImportScreenState extends State<SylImportScreen> {
                   ),
                 ),
               const SizedBox(height: 8),
+              if (_source == 'book') ...[
+                _correctionCard(),
+                const SizedBox(height: 12),
+              ],
               for (final c in _chaps) _chapterCard(c),
               const SizedBox(height: 4),
               TextButton.icon(
-                onPressed: _saving
+                onPressed: _busy
                     ? null
                     : () => setState(
                         () => _chaps.add(_Chap('')..rows.add(_Row(text: ''))),
@@ -662,7 +1119,9 @@ class _SylImportScreenState extends State<SylImportScreen> {
                       ),
                     ),
                   FilledButton.icon(
-                    onPressed: (_saving || n == 0) ? null : _confirm,
+                    onPressed: (_busy || _recording || n == 0)
+                        ? null
+                        : _confirm,
                     icon: _saving
                         ? const SizedBox(
                             height: 20,
@@ -695,6 +1154,185 @@ class _SylImportScreenState extends State<SylImportScreen> {
     );
   }
 
+  /// Badge for a chapter whose topics were not read off a photographed page.
+  String? _inferredText(_Chap chap) {
+    if (!chap.inferred && chap.basis != 'template') return null;
+    return switch (chap.basis) {
+      'book_knowledge' => tr(
+        'Topics guessed from the book — please check',
+        'विषय किताब के अनुमान से — कृपया जाँचें',
+      ),
+      'web' => tr(
+        'Topics found online — please check',
+        'विषय इंटरनेट से मिले — कृपया जाँचें',
+      ),
+      'template' => tr(
+        'Not read from the book: the usual class syllabus — please check',
+        'किताब से नहीं पढ़ा: कक्षा का सामान्य पाठ्यक्रम — कृपया जाँचें',
+      ),
+      _ => tr('Please check these topics', 'कृपया ये विषय जाँचें'),
+    };
+  }
+
+  /// Title · class · board of the book the draft came from.
+  Widget _bookHeader() {
+    final b = _bookJson();
+    final title = (b['title'] as String).isEmpty
+        ? tr('Your textbook', 'आपकी किताब')
+        : b['title'] as String;
+    final board = b['board'] == 'Other' && (b['publisher'] as String).isNotEmpty
+        ? b['publisher'] as String
+        : b['board'] as String;
+    final parts = [
+      if (b['grade'] != null) tr('Class ${b['grade']}', 'कक्षा ${b['grade']}'),
+      if (board.isNotEmpty) board,
+    ];
+    return Row(
+      children: [
+        const Icon(Icons.menu_book_rounded, color: Ks.accent, size: 28),
+        const SizedBox(width: 10),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.w700,
+                  color: Ks.ink,
+                ),
+              ),
+              if (parts.isNotEmpty)
+                Text(
+                  parts.join(' · '),
+                  style: const TextStyle(fontSize: 14, color: Ks.muted),
+                ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// Fix the draft by speaking (or typing) a correction; hand edits below still work after it.
+  Widget _correctionCard() {
+    final canSend = !_busy && !_recording && _fixCtl.text.trim().isNotEmpty;
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Ks.card,
+        border: Border.all(color: Ks.line),
+        borderRadius: BorderRadius.circular(14),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              InkWell(
+                onTap: _busy ? null : _toggleRecord,
+                customBorder: const CircleBorder(),
+                child: Container(
+                  width: 60,
+                  height: 60,
+                  decoration: BoxDecoration(
+                    color: _busy ? Ks.line : (_recording ? Ks.rose : Ks.accent),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    _recording ? Icons.stop_rounded : Icons.mic_rounded,
+                    color: Colors.white,
+                    size: 32,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      tr('Explain a correction', 'सुधार बोलकर बताएँ'),
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                        color: Ks.ink,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      _recording
+                          ? tr(
+                              'Listening… tap again to stop.',
+                              'सुन रहे हैं… रोकने के लिए फिर दबाएँ।',
+                            )
+                          : tr(
+                              'e.g. "Chapter 3 also has subtraction with borrowing"',
+                              'जैसे: "अध्याय 3 में उधार वाला घटाव भी है"',
+                            ),
+                      style: TextStyle(
+                        fontSize: 13.5,
+                        color: _recording ? Ks.rose : Ks.muted,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          if (_revising) ...[
+            const SizedBox(height: 10),
+            const LinearProgressIndicator(minHeight: 3, color: Ks.accent),
+            const SizedBox(height: 4),
+            Text(
+              tr('Updating the list…', 'सूची बदल रहे हैं…'),
+              style: const TextStyle(color: Ks.muted, fontSize: 13.5),
+            ),
+          ],
+          const SizedBox(height: 10),
+          Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: _fixCtl,
+                  enabled: !_busy && !_recording,
+                  onChanged: (_) => setState(() {}),
+                  minLines: 1,
+                  maxLines: 3,
+                  textCapitalization: TextCapitalization.sentences,
+                  decoration: InputDecoration(
+                    isDense: true,
+                    hintText: tr('Type a correction', 'सुधार लिखें'),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              IconButton.filled(
+                tooltip: tr('Send correction', 'सुधार भेजें'),
+                onPressed: canSend ? () => _revise() : null,
+                iconSize: 24,
+                style: IconButton.styleFrom(minimumSize: const Size(52, 52)),
+                icon: const Icon(Icons.send_rounded),
+              ),
+            ],
+          ),
+          if (_heard != null && _heard!.isNotEmpty) ...[
+            const SizedBox(height: 8),
+            Text(
+              tr('Heard: "$_heard"', 'सुना: "$_heard"'),
+              style: const TextStyle(
+                color: Ks.muted,
+                fontSize: 13.5,
+                fontStyle: FontStyle.italic,
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
   Widget _chapterCard(_Chap chap) {
     return Padding(
       key: ObjectKey(chap),
@@ -710,7 +1348,7 @@ class _SylImportScreenState extends State<SylImportScreen> {
                   Expanded(
                     child: TextField(
                       controller: chap.name,
-                      enabled: !_saving,
+                      enabled: !_busy,
                       onChanged: (_) => setState(() {}),
                       style: const TextStyle(
                         fontWeight: FontWeight.w700,
@@ -724,7 +1362,7 @@ class _SylImportScreenState extends State<SylImportScreen> {
                   ),
                   IconButton(
                     tooltip: tr('Remove chapter', 'अध्याय हटाएँ'),
-                    onPressed: _saving
+                    onPressed: _busy
                         ? null
                         : () => setState(() => _chaps.remove(chap)),
                     icon: const Icon(Icons.delete_outline_rounded),
@@ -732,10 +1370,22 @@ class _SylImportScreenState extends State<SylImportScreen> {
                   ),
                 ],
               ),
+              if (_inferredText(chap) case final t?)
+                Padding(
+                  padding: const EdgeInsets.only(top: 8, right: 8),
+                  child: SylTag(
+                    t,
+                    icon: chap.basis == 'web'
+                        ? Icons.travel_explore_rounded
+                        : Icons.help_outline_rounded,
+                    bg: Ks.amberSoft,
+                    fg: SylColors.amberText,
+                  ),
+                ),
               const SizedBox(height: 8),
               for (final r in List.of(chap.rows)) _rowTile(chap, r),
               TextButton.icon(
-                onPressed: _saving
+                onPressed: _busy
                     ? null
                     : () => setState(() => chap.rows.add(_Row(text: ''))),
                 icon: const Icon(Icons.add_rounded, size: 20),
@@ -774,7 +1424,7 @@ class _SylImportScreenState extends State<SylImportScreen> {
                 else
                   TextField(
                     controller: r.ctl,
-                    enabled: !_saving,
+                    enabled: !_busy,
                     onChanged: (_) => setState(() {}),
                     minLines: 1,
                     maxLines: 3,
@@ -808,7 +1458,7 @@ class _SylImportScreenState extends State<SylImportScreen> {
                       ),
                     if (r.matched)
                       InkWell(
-                        onTap: _saving
+                        onTap: _busy
                             ? null
                             : () => setState(() {
                                 r.ctl.text = r.matchTitle ?? '';
@@ -834,9 +1484,7 @@ class _SylImportScreenState extends State<SylImportScreen> {
           ),
           IconButton(
             tooltip: tr('Remove this line', 'यह पंक्ति हटाएँ'),
-            onPressed: _saving
-                ? null
-                : () => setState(() => chap.rows.remove(r)),
+            onPressed: _busy ? null : () => setState(() => chap.rows.remove(r)),
             icon: const Icon(Icons.close_rounded),
             color: Ks.muted,
           ),

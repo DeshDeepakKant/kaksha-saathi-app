@@ -14,9 +14,9 @@ from sqlalchemy import delete, select
 from app.core.security import hash_phone, hash_pin
 from app.db import SessionLocal, init_db
 from app.models.tables import (
-    AiCall, Attendance, CaptureSession, Child, Classroom, Evidence, GroupSession, HomeSession, InterventionLog,
-    ParentAccount, Plan, Roadmap, RoadmapItem, School, Teacher, UsageCounter, utcnow, CustomCheckpoint, CustomSubject,
-    VoiceSession, VoiceTurn, AppMeta,
+    AiCall, Attendance, CaptureSession, Child, Classroom, Evidence, GroupSession, HomeSession,
+    InterventionLog, ParentAccount, Plan, Roadmap, RoadmapItem, School, Teacher, UsageCounter, utcnow,
+    CustomCheckpoint, CustomSubject, VoiceSession, VoiceTurn, AppMeta, TextbookMap,
 )
 from app.services import level_check
 from app.services.content import get_content
@@ -106,6 +106,7 @@ def seed() -> dict:
             db.execute(delete(RoadmapItem).where(RoadmapItem.roadmap_id.in_(
                 select(Roadmap.id).where(Roadmap.school_id == old.id))))
             db.execute(delete(Roadmap).where(Roadmap.school_id == old.id))
+            db.execute(delete(TextbookMap).where(TextbookMap.school_id == old.id))
             db.execute(delete(ParentAccount).where(ParentAccount.school_id == old.id))
             db.execute(delete(Child).where(Child.class_id.in_(select(Classroom.id).where(Classroom.school_id == old.id))))
             db.execute(delete(Classroom).where(Classroom.school_id == old.id))

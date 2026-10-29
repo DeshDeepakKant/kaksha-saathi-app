@@ -40,3 +40,22 @@ items), so tap marking, board, profile and plans work on them.
   `ValueNotifier<int>`; `Api.i.flushOutbox()`; `Api.i.plan(classId, subject, {force, forDate})`.
 - Put new API wrappers inline (`Api.i.get/postJson`) or in your own `lib/api_<area>.dart` extension; never edit
   another agent's file.
+
+## Textbook mapping (backend/app/api/books.py, ai/features.py, models `textbook_maps`)
+Cover + index photos and/or the typed book identity become a draft Chapter → Topics map. The teacher
+edits it (by hand, voice or typed correction) and saves it through the existing syllabus route.
+- `POST /classes/{id}/books/map` multipart: `subject` (required), `book_title`, `board`, `publisher`,
+  `book_grade`, `notes`; files `images` repeated 0..6 (cover + index pages). 422 without an image or a title.
+  -> `{status:"ready|fallback", note, confidence, used_web,
+  book:{title,grade,subject,board,publisher,identified_from:"typed|cover|both|none"},
+  chapters:[{title, inferred, basis:"page|book_knowledge|web|template", topics:[{text, checkpoint_id|null}]}],
+  items:[{chapter, checkpoint_id|null, custom_title|null, position}]}` (`items` = same shape as `/roadmap/draft`).
+- `POST /classes/{id}/books/map/revise` multipart: `subject`, `draft` (JSON `{book, chapters}`), `transcript`
+  and/or `audio` (transcribed by the ASR provider). -> same shape plus `heard`. Without AI it returns the
+  draft unchanged with a note.
+- `POST /classes/{id}/syllabus`: `source` may be `"book"`; optional `book:{title,grade,board,publisher,chapters}`
+  is stored in `textbook_maps`. `GET /classes/{id}/syllabus` gains `book` (latest map for the class and subject, or `null`).
+- Story-like chapter titles (e.g. NCERT Class 1–3 Maths) get their concepts from the book identity, the model's
+  knowledge and, when `BOOK_WEB_SEARCH` is on and a title is known, Claude web search notes; those chapters are
+  marked `inferred: true` so the teacher checks them. Checkpoint ids are validated by code; anything else stays a
+  custom topic. Fallback without a key: the grade template, `basis:"template"`.

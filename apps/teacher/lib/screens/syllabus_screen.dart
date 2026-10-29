@@ -9,7 +9,7 @@ import '../widgets/syllabus_import.dart';
 import '../widgets/syllabus_widgets.dart';
 
 /// Syllabus & progress: every lesson (checkpoint) of a subject with how many children are
-/// done / in progress / not started, plus add-topic and index-photo import.
+/// done / in progress / not started, plus add-topic and textbook (cover + index photos) import.
 /// "Done / in progress / not started" is defined once in `syllabus_widgets.dart` (`sylTopicState`).
 class SyllabusScreen extends StatefulWidget {
   const SyllabusScreen({
@@ -596,6 +596,8 @@ class _SyllabusScreenState extends State<SyllabusScreen> {
     }
     final offline = data['offline'] == true;
     final children = sylInt(data['children']);
+    final book = data['book'] is Map ? data['book'] as Map : null;
+    final bookTitle = (book?['title'] ?? '').toString().trim();
 
     return RefreshIndicator(
       color: Ks.accent,
@@ -617,6 +619,19 @@ class _SyllabusScreenState extends State<SyllabusScreen> {
                   icon: Icons.cloud_off_rounded,
                   bg: Ks.amberSoft,
                   fg: SylColors.amberText,
+                ),
+              ),
+            ),
+          if (bookTitle.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: SylTag(
+                  tr('Mapped from: $bookTitle', 'किताब से: $bookTitle'),
+                  icon: Icons.menu_book_rounded,
+                  bg: Ks.accentSoft,
+                  fg: Ks.accent,
                 ),
               ),
             ),
@@ -658,12 +673,9 @@ class _SyllabusScreenState extends State<SyllabusScreen> {
 
   Widget _importButton() => OutlinedButton.icon(
     onPressed: _import,
-    icon: const Icon(Icons.photo_camera_rounded),
+    icon: const Icon(Icons.menu_book_rounded),
     label: Text(
-      tr(
-        'Import syllabus from a book index photo',
-        'किताब की विषय-सूची की फ़ोटो से पाठ्यक्रम जोड़ें',
-      ),
+      tr('Map chapters from your textbook', 'अपनी किताब से अध्याय जोड़ें'),
       textAlign: TextAlign.center,
     ),
   );

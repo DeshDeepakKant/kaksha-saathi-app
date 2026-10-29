@@ -283,6 +283,37 @@ class Api {
     return jsonDecode(utf8.decode(r.bodyBytes));
   }
 
+  /// Multipart POST with several files, each `(field, bytes, filename)`; a field name may repeat
+  /// (a book's cover and index pages all go as `images`). Reading a book with AI can take a
+  /// couple of minutes, hence the long timeout. A request that never reached the server
+  /// throws [ApiError.network].
+  Future<dynamic> postMultipartFiles(
+    String path, {
+    Map<String, String> fields = const {},
+    List<(String, Uint8List, String)> files = const [],
+    Duration timeout = const Duration(seconds: 240),
+  }) async {
+    try {
+      final req = http.MultipartRequest('POST', Uri.parse('$base$path'));
+      req.headers.addAll(_headers);
+      req.fields.addAll(fields);
+      for (final (field, bytes, filename) in files) {
+        req.files.add(
+          http.MultipartFile.fromBytes(field, bytes, filename: filename),
+        );
+      }
+      final streamed = await _client.send(req).timeout(timeout);
+      final r = await http.Response.fromStream(streamed).timeout(timeout);
+      if (r.statusCode >= 400) throw _fail(r);
+      _kickOutbox();
+      return jsonDecode(utf8.decode(r.bodyBytes));
+    } on ApiError {
+      rethrow;
+    } catch (_) {
+      throw ApiError.network();
+    }
+  }
+
   /// Called once when the server rejects the session (401); main.dart opens the login screen.
   VoidCallback? onSessionExpired;
 

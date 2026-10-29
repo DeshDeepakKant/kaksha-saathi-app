@@ -321,3 +321,24 @@ class AppMeta(Base):
     __tablename__ = "app_meta"
     key: Mapped[str] = mapped_column(String(64), primary_key=True)
     value: Mapped[str] = mapped_column(String(200))
+
+
+class TextbookMap(Base):
+    """A teacher-approved textbook → chapters → topics mapping, saved with a syllabus (source "book").
+
+    Append-only: the latest row for a class + subject is the current book. `mapping` holds the chapters
+    as reviewed ({"chapters": [{title, inferred, basis, topics: [{text, checkpoint_id}]}]}).
+    """
+    __tablename__ = "textbook_maps"
+    __table_args__ = (Index("ix_textbook_maps_class_subject", "class_id", "subject"),)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    school_id: Mapped[int] = mapped_column(ForeignKey("schools.id"), index=True)
+    class_id: Mapped[int] = mapped_column(ForeignKey("classes.id"))
+    subject: Mapped[str] = mapped_column(String(16))
+    title: Mapped[str] = mapped_column(String(120))
+    grade: Mapped[int | None] = mapped_column(Integer)
+    board: Mapped[str] = mapped_column(String(60), default="")
+    publisher: Mapped[str] = mapped_column(String(60), default="")
+    mapping: Mapped[dict] = mapped_column(JSON, default=dict)
+    created_by: Mapped[int | None] = mapped_column(ForeignKey("teachers.id"))
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow)

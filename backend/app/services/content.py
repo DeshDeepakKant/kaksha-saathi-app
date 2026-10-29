@@ -108,6 +108,17 @@ class Content:
         return [i for i in self.practice_items if i["checkpoint_id"] == checkpoint_id][:limit]
 
 
+def match_checkpoint(content: Content, text: str, subject: str, grade: int, threshold: int = 70) -> str | None:
+    """Best fuzzy match of free text (a printed topic or chapter title) to a reviewed checkpoint, or None."""
+    from rapidfuzz import fuzz
+    best, best_score = None, 0
+    for c in content.for_grade(subject, grade):
+        s = max(fuzz.partial_ratio(text, c.title_hi), fuzz.partial_ratio(text, c.title_en))
+        if s > best_score:
+            best, best_score = c.id, s
+    return best if best_score >= threshold else None
+
+
 def _load_json(path: Path) -> dict:
     with path.open(encoding="utf-8") as f:
         return json.load(f)

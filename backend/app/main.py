@@ -10,7 +10,7 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
-from app.api import insights, level_check, manage, parent, parent_insights, setup, teacher, voice
+from app.api import books, insights, level_check, manage, parent, parent_insights, setup, teacher, voice
 from app.config import get_settings
 from app.db import init_db
 from app.services.content import get_content, load_custom_checkpoints
@@ -73,6 +73,7 @@ def readyz():
 
 app.include_router(teacher.router)
 app.include_router(setup.router)
+app.include_router(books.router)
 app.include_router(parent.router)
 app.include_router(parent_insights.router)
 app.include_router(voice.router)

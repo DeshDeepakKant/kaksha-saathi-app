@@ -30,7 +30,7 @@ from app.models.tables import (
 )
 from app.services import followups, ledger
 from app.services.subjects import resolve_subject
-from app.services.content import get_content
+from app.services.content import get_content, match_checkpoint
 from app.services.mastery import RESULT_VALUES
 from app.services.resolver import resolve_names
 from app.speech import get_asr, has_asr
@@ -261,14 +261,7 @@ async def draft_roadmap(class_id: int, subject: str = Form(...), image: UploadFi
     return {"status": p.ai_status, "note": p.note, "confidence": p.payload.get("confidence", 0), "items": items}
 
 
-def _match_checkpoint(content, text: str, subject: str, grade: int) -> str | None:
-    from rapidfuzz import fuzz
-    best, best_score = None, 0
-    for c in content.for_grade(subject, grade):
-        s = max(fuzz.partial_ratio(text, c.title_hi), fuzz.partial_ratio(text, c.title_en))
-        if s > best_score:
-            best, best_score = c.id, s
-    return best if best_score >= 70 else None
+_match_checkpoint = match_checkpoint  # shared with the textbook mapper (services/content.py)
 
 
 # ------------------------------------------------------------------ captures
