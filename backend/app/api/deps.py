@@ -37,7 +37,11 @@ def current_parent(authorization: str | None = Header(default=None),
         raise HTTPException(401, "invalid token")
     if payload.get("kind") != "parent":
         raise HTTPException(403, "parent token required")
-    p = db.get(ParentAccount, int(payload["sub"]))
+    try:
+        pid = int(payload["sub"])
+    except (KeyError, TypeError, ValueError):
+        raise HTTPException(401, "invalid token")
+    p = db.get(ParentAccount, pid)
     if not p:
         raise HTTPException(401, "parent not found")
     return p

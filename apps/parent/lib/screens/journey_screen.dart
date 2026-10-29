@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../api.dart';
+import '../session_guard.dart';
 import '../l10n.dart';
 import '../theme.dart';
 import '../tts.dart';
@@ -53,9 +54,11 @@ class _JourneyScreenState extends State<JourneyScreen> {
         _data[subject] = (r as Map).cast<String, dynamic>();
         _loading = false;
       });
-      _scrollToCurrent();
+      // Opens at the top (name, celebrations, growth). "Go to current step" jumps to the trail.
     } catch (e) {
       if (!mounted || req != _request) return;
+      if (await handleExpiredSession(context, e)) return;
+      if (!mounted) return;
       final msg = _errorText(e);
       if (refresh && _data.containsKey(subject)) {
         setState(() => _loading = false);
@@ -77,11 +80,7 @@ class _JourneyScreenState extends State<JourneyScreen> {
       _subject = subject;
       _error = null;
     });
-    if (_data.containsKey(subject)) {
-      _scrollToCurrent();
-    } else {
-      _load();
-    }
+    if (!_data.containsKey(subject)) _load();
   }
 
   void _scrollToCurrent() {
@@ -153,6 +152,14 @@ class _JourneyScreenState extends State<JourneyScreen> {
           ),
         ],
       ),
+      floatingActionButton:
+          (_loading || _error != null || !_data.containsKey(_subject))
+          ? null
+          : FloatingActionButton.extended(
+              onPressed: _scrollToCurrent,
+              icon: const Icon(Icons.flag_rounded),
+              label: Text(tr('Go to current step', 'अभी के कदम पर जाएँ')),
+            ),
       body: SafeArea(
         child: Column(
           children: [

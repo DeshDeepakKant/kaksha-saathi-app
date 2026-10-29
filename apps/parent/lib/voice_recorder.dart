@@ -32,11 +32,17 @@ class MicError implements Exception {
 /// below the threshold for [silence]; or [maxRecordS] after speech began; or when the child
 /// never starts, [maxRecordS] + [waitForSpeech] after the mic opened; or on [finish].
 class VoiceRecorder {
-  final _rec = AudioRecorder();
+  /// Replaced in tests, which cannot use the platform plugin.
+  @visibleForTesting
+  static AudioRecorder Function() recorderFactory = AudioRecorder.new;
+
+  final _rec = recorderFactory();
   StreamSubscription<Uint8List>? _sub;
   Completer<bool>? _end; // true = keep the take, false = discard
   Timer? _cap;
   bool _disposed = false;
+  // Bumped by cancel(): a listen() still waiting for the permission dialog gives up quietly.
+  int _epoch = 0;
 
   /// 0..1 input level for a meter.
   final level = ValueNotifier<double>(0);
@@ -46,6 +52,21 @@ class VoiceRecorder {
 
   static const _rate = 16000;
   static const _bytesPerMs = _rate * 2 / 1000; // PCM16 mono
+
+  /// Safety net for a permission request that never returns.
+  static const permissionTimeout = Duration(seconds: 60);
+
+  /// Whether the permission is granted now, without showing the dialog (used when the app
+  /// comes back from Settings). Never throws.
+  Future<bool> permissionGranted() async {
+    try {
+      return await _rec
+          .hasPermission(request: false)
+          .timeout(const Duration(seconds: 5), onTimeout: () => false);
+    } catch (_) {
+      return false;
+    }
+  }
 
   bool get active => _end != null && !_end!.isCompleted;
 
@@ -57,15 +78,23 @@ class VoiceRecorder {
     Duration waitForSpeech = const Duration(seconds: 6),
   }) async {
     await cancel();
+    final epoch = _epoch;
     bool ok;
     try {
+      // The first call shows the system permission dialog and resolves only when the parent
+      // answers, however long that takes, so a slow dialog is never mistaken for a refusal.
+      // The long timeout is only a safety net for a call that never returns (not a denial).
       ok = await _rec.hasPermission().timeout(
-        const Duration(seconds: 20), // the system dialog may be on screen
-        onTimeout: () => false,
+        permissionTimeout,
+        onTimeout: () => throw const MicError(),
       );
+    } on MicError {
+      rethrow;
     } catch (_) {
       throw const MicError();
     }
+    // Cancelled (pause, skip, leave) while the dialog was up.
+    if (_disposed || epoch != _epoch) return null;
     if (!ok) throw const MicError(denied: true);
 
     final end = Completer<bool>();
@@ -181,6 +210,7 @@ class VoiceRecorder {
 
   /// Stops and discards the current take (pause, skip, leaving the screen).
   Future<void> cancel() async {
+    _epoch++;
     final e = _end;
     if (e != null && !e.isCompleted) e.complete(false);
     _cap?.cancel();

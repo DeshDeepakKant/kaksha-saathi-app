@@ -32,3 +32,12 @@ def parent_headers(client):
                                               "parent_phone": "9876500000", "pin": "0000"})
     assert r.status_code == 200, r.text
     return {"Authorization": f"Bearer {r.json()['token']}"}
+
+
+@pytest.fixture(autouse=True)
+def _reset_login_lockout():
+    """Wrong-PIN counting is per process; tests that guess wrong on purpose must not lock out later ones."""
+    from app.api import parent
+    parent._FAILED_LOGINS.clear()
+    yield
+    parent._FAILED_LOGINS.clear()

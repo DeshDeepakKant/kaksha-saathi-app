@@ -275,11 +275,20 @@ def tutor_line(session: Session, *, school_id: int, situation: str, activity_tit
         return FALLBACK_LINES[situation].format(prompt=prompt_text), "fallback"
 
 
-_DISTRESS_PHRASES = (" मुझे डर लग", " डर लगता", " डर लग रहा", " मुझे मारते", " मुझे मारा", " मारते हैं",
-                     " पीटते", " मुझे पीटा", " रोना आ", " मैं रो रह", " बहुत दुख", " दुखी हूँ", " दुखी हूं",
-                     " चोट लगी", " मुझे बचाओ", " hit me ", " beat me ", " scared ", " i am sad ")
+_DISTRESS_PHRASES = (" मुझे डर लग", " डर लगता", " डर लग रहा", " मुझे मारते", " मुझे मारा", " मुझे पीटते",
+                     " मुझे पीटा", " मुझे पीट", " रोना आ", " मैं रो रह", " बहुत दुख", " दुखी हूँ", " दुखी हूं",
+                     " चोट लगी", " मुझे बचाओ", " hit me ", " beat me ", " i am scared ", " i'm scared ",
+                     " i am afraid ", " i am sad ", " help me ")
 _PERSONAL_PHRASES = (" फोन नंबर", " फ़ोन नंबर", " मोबाइल नंबर", " मेरा नंबर", " घर का पता", " मेरा पता",
                      " phone number ", " my address ")
+
+
+def local_safety_category(text: str) -> str | None:
+    """Free, instant whole-phrase check ("personal" / "distress" / None); no model call."""
+    t = " " + " ".join(text.lower().replace("।", " ").replace(",", " ").replace(".", " ").split()) + " "
+    if any(p in t for p in _PERSONAL_PHRASES):
+        return "personal"
+    return "distress" if any(p in t for p in _DISTRESS_PHRASES) else None
 
 
 def classify_child_input(session: Session, *, school_id: int, text: str) -> str:
@@ -294,10 +303,7 @@ def classify_child_input(session: Session, *, school_id: int, text: str) -> str:
     except Exception:
         # offline / no key: a conservative check on whole phrases, never word fragments
         # ("पता नहीं", "हमारा", "बिल्ली डर गई" are ordinary speech, not distress)
-        t = " " + " ".join(text.replace("।", " ").replace(",", " ").split()) + " "
-        if any(p in t for p in _PERSONAL_PHRASES):
-            return "personal"
-        return "distress" if any(p in t for p in _DISTRESS_PHRASES) else "learning"
+        return local_safety_category(text) or "learning"
 
 
 def home_summary(session: Session, *, school_id: int, activities: list[str], struggles: list[str],

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../api.dart';
+import '../friendly.dart';
 import '../api_insights.dart';
 import '../theme.dart';
 import '../tts.dart';
@@ -65,9 +66,9 @@ class _HomeScreenState extends State<HomeScreen> {
         }
         return;
       }
-      _failed(e.toString());
+      _failed(friendlyError(e));
     } catch (e) {
-      _failed(e.toString());
+      _failed(friendlyError(e));
     } finally {
       if (mounted) setState(() => _loading = false);
     }
@@ -168,6 +169,16 @@ class _HomeScreenState extends State<HomeScreen> {
                       physics: const AlwaysScrollableScrollPhysics(),
                       children: [
                         EmptyState(icon: Icons.wifi_off_rounded, text: _error!),
+                        Center(
+                          child: FilledButton.icon(
+                            onPressed: _load,
+                            style: FilledButton.styleFrom(
+                              minimumSize: const Size(200, 56),
+                            ),
+                            icon: const Icon(Icons.refresh_rounded),
+                            label: Text(tr('Try again', 'फिर कोशिश करें')),
+                          ),
+                        ),
                       ],
                     )
                   : ListView(
@@ -194,11 +205,73 @@ class _HomeScreenState extends State<HomeScreen> {
                             onTap: () => _open(const WeeklyScreen()),
                           ),
                           ..._focusList(profile),
+                          const SizedBox(height: 12),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: TextButton.icon(
+                              onPressed: _confirmDelete,
+                              style: TextButton.styleFrom(
+                                foregroundColor: Ks.muted,
+                                minimumSize: const Size(48, 48),
+                              ),
+                              icon: const Icon(Icons.delete_outline_rounded),
+                              label: Text(
+                                tr(
+                                  "Delete my child's practice data",
+                                  'मेरे बच्चे के अभ्यास का डेटा हटाएँ',
+                                ),
+                              ),
+                            ),
+                          ),
                         ],
                       ],
                     ),
             ),
     );
+  }
+
+  Future<void> _confirmDelete() async {
+    final yes = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(tr('Delete practice data?', 'अभ्यास का डेटा हटाएँ?')),
+        content: Text(
+          tr(
+            'This removes every practice session and what was said in it, for this child. '
+                'The school\'s own learning records stay. This cannot be undone.',
+            'इससे इस बच्चे के सभी अभ्यास सत्र और उनमें कही बातें हट जाएँगी। '
+                'स्कूल के सीखने के अपने रिकॉर्ड बने रहेंगे। यह वापस नहीं हो सकता।',
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: Text(tr('Keep', 'रहने दें')),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: Text(tr('Delete', 'हटाएँ')),
+          ),
+        ],
+      ),
+    );
+    if (yes != true || !mounted) return;
+    try {
+      await Api.i.deleteMyData();
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            tr('Practice data deleted.', 'अभ्यास का डेटा हटा दिया गया।'),
+          ),
+        ),
+      );
+      _load();
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(friendlyError(e))));
+    }
   }
 
   List<Widget> _greeting(

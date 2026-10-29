@@ -5,7 +5,7 @@ Contract: docs/parent_insights_contract.md. All texts are deterministic template
 """
 from __future__ import annotations
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 
 from app.api.deps import current_parent

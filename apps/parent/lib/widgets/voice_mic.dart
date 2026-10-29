@@ -14,10 +14,14 @@ class VoiceMicIndicator extends StatefulWidget {
     required this.state,
     required this.level,
     required this.speaking,
+    this.compact = false,
   });
   final VoiceMicState state;
   final ValueNotifier<double> level;
   final ValueNotifier<bool> speaking;
+
+  /// Smaller mic and no hint line, for short screens where the item needs the room.
+  final bool compact;
 
   @override
   State<VoiceMicIndicator> createState() => _VoiceMicIndicatorState();
@@ -93,8 +97,8 @@ class _VoiceMicIndicatorState extends State<VoiceMicIndicator>
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SizedBox(
-            width: 84,
-            height: 84,
+            width: widget.compact ? 72 : 84,
+            height: widget.compact ? 72 : 84,
             child: AnimatedBuilder(
               animation: Listenable.merge([_pulse, widget.level]),
               builder: (_, _) {
@@ -151,24 +155,29 @@ class _VoiceMicIndicatorState extends State<VoiceMicIndicator>
                 Text(
                   label,
                   style: TextStyle(
-                    fontSize: 19,
+                    fontSize: widget.compact ? 17 : 19,
                     fontWeight: FontWeight.w700,
                     color: color,
                   ),
                 ),
                 if (s == VoiceMicState.listening) ...[
                   const SizedBox(height: 8),
-                  SizedBox(width: 150, child: _LevelMeter(widget.level)),
-                  const SizedBox(height: 4),
-                  ValueListenableBuilder<bool>(
-                    valueListenable: widget.speaking,
-                    builder: (_, on, _) => Text(
-                      on
-                          ? tr('I can hear you 👂', 'सुनाई दे रहा है 👂')
-                          : tr('Waiting for your voice', 'आवाज़ का इंतज़ार'),
-                      style: const TextStyle(fontSize: 14, color: Ks.muted),
-                    ),
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 150),
+                    child: _LevelMeter(widget.level),
                   ),
+                  if (!widget.compact) ...[
+                    const SizedBox(height: 4),
+                    ValueListenableBuilder<bool>(
+                      valueListenable: widget.speaking,
+                      builder: (_, on, _) => Text(
+                        on
+                            ? tr('I can hear you 👂', 'सुनाई दे रहा है 👂')
+                            : tr('Waiting for your voice', 'आवाज़ का इंतज़ार'),
+                        style: const TextStyle(fontSize: 14, color: Ks.muted),
+                      ),
+                    ),
+                  ],
                 ],
               ],
             ),

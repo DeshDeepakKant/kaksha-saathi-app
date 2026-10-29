@@ -18,15 +18,19 @@ class _VoiceHistoryScreenState extends State<VoiceHistoryScreen> {
 
   Future<void> _refresh() async {
     final f = Api.i.voiceSessions();
-    setState(() { _f = f; });
+    setState(() {
+      _f = f;
+    });
     try {
       await f;
     } catch (_) {}
   }
 
-  static int _pct(Object? v) {
-    final a = (v as num?)?.toDouble() ?? 0;
-    return (a <= 1 ? a * 100 : a).round().clamp(0, 100);
+  /// Questions answered right: the list gives accuracy (0..1, or a percent) and the question count.
+  static int _right(Map<String, dynamic> s) {
+    final items = (s['items'] as num?)?.toInt() ?? 0;
+    final a = (s['accuracy'] as num?)?.toDouble() ?? 0;
+    return (((a > 1 ? a / 100 : a) * items)).round().clamp(0, items);
   }
 
   @override
@@ -149,12 +153,7 @@ class _VoiceHistoryScreenState extends State<VoiceHistoryScreen> {
                 children: [
                   Text(trf('{minutes} min', '{minutes} मिनट', {'minutes': minutes})),
                   Text(trf('{items} questions', '{items} सवाल', {'items': items})),
-                  Text(
-                    trf(
-                      '{accuracy}% right',
-                      '{accuracy}% सही', {'accuracy': _pct(s['accuracy'])},
-                    ),
-                  ),
+                  Text(trf('{right} right', '{right} सही', {'right': _right(s)})),
                   if ((s['highest_stage'] as String?)?.isNotEmpty == true)
                     Text(
                       voiceStageLabel(s['highest_stage'] as String?),

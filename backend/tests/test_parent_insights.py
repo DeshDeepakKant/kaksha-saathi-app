@@ -212,7 +212,7 @@ def test_brand_new_child_gets_empty_values(client, sb):
     assert j["counts"]["learned"] == 0 and j["counts"]["working"] == 0 and j["counts"]["total"] > 0
     assert [m["state"] for m in j["milestones"][:3]] == ["next", "next", "later"]  # template roadmap
     assert j["celebrations"] == [] and all(g["learned"] == 0 for g in j["growth"])
-    assert client.get("/v1/parent/journey?subject=nosuch", headers=h).json()["milestones"] == []
+    assert client.get("/v1/parent/journey?subject=nosuch", headers=h).status_code == 422  # not a real subject
     assert client.get("/v1/parent/tips", headers=h).json() == {"tips": []}
     assert client.get("/v1/parent/moments", headers=h).json() == {"moments": []}
     w = client.get("/v1/parent/weekly", headers=h).json()

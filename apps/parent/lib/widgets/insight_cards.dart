@@ -8,10 +8,15 @@ import '../tts.dart';
 /// teacher-noticed moments, mistake tips and the links to Journey / Weekly. Each card takes the
 /// server map as given and reads its text aloud; none of them shows scores or group labels.
 
-/// Voice for [text]: Devanagari is always read in Hindi (a missing English field falls back to
-/// Hindi), anything else follows the app language.
-String speechLang(String text) =>
-    RegExp(r'[ऀ-ॿ]').hasMatch(text) ? 'hi' : (Lang.isHi ? 'hi' : 'en');
+/// Voice for [text]: whichever script has more letters wins, so an English sentence that carries
+/// the child's Hindi name is read in English and a Hindi line with a Latin word in Hindi. A line
+/// with no letters follows the app language.
+String speechLang(String text) {
+  final deva = RegExp(r'[ऀ-ॿ]').allMatches(text).length;
+  final latin = RegExp(r'[A-Za-z]').allMatches(text).length;
+  if (deva == 0 && latin == 0) return Lang.isHi ? 'hi' : 'en';
+  return deva >= latin ? 'hi' : 'en';
+}
 
 /// [text] without a leading emoji (server lines start with ⭐ / 🌱; the card already shows one,
 /// and some voices read the emoji name aloud).

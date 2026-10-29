@@ -12,11 +12,12 @@ from __future__ import annotations
 
 import copy
 from datetime import datetime, timedelta, timezone
-from typing import Literal
+from typing import Annotated, Literal
 
-from fastapi import APIRouter, Depends, File, Form, HTTPException, Query, UploadFile
+from fastapi import APIRouter, Depends, File, Form, HTTPException, Path, Query, UploadFile
 from pydantic import BaseModel, Field, ValidationError
 from sqlalchemy import update
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.api.deps import current_parent, current_teacher, owned_child, validate_media
@@ -26,6 +27,8 @@ from app.services import ledger, prefs, voice_plan, voice_session as engine
 from app.services.content import get_content
 from app.services.voice_types import STAGES, VOICE_LANGS
 from app.speech import capabilities
+
+SessionId = Annotated[int, Path(ge=-2_147_483_648, le=2_147_483_647)]  # ids beyond the DB range are a 422, not a 500
 
 router = APIRouter(prefix="/v1")
 
@@ -116,7 +119,7 @@ class EndIn(BaseModel):
     reason: Literal["time_up", "parent_stop"] = "parent_stop"
 
 
-def _own(db: Session, parent: ParentAccount, session_id: int) -> VoiceSession:
+def _own(db: Session, parent: ParentAccount, session_id: SessionId) -> VoiceSession:
     vs = db.get(VoiceSession, session_id)
     if not vs or vs.child_id != parent.child_id:
         raise HTTPException(404, "session not found")
@@ -137,7 +140,7 @@ def start_voice_session(body: StartIn | None = None, parent: ParentAccount = Dep
 
 
 @router.post("/parent/voice/sessions/{session_id}/turn")
-async def voice_turn(session_id: int, meta: str = Form(...), audio: UploadFile | None = File(None),
+async def voice_turn(session_id: SessionId, meta: str = Form(...), audio: UploadFile | None = File(None),
                      parent: ParentAccount = Depends(current_parent), db: Session = Depends(get_db)):
     vs = _own(db, parent, session_id)
     try:
@@ -152,11 +155,18 @@ async def voice_turn(session_id: int, meta: str = Form(...), audio: UploadFile |
                         filename=(audio.filename if audio else None) or "turn.wav")
     except engine.StaleItem as e:
         raise HTTPException(409, f"item {m.item_id} is not the current item ({e.args[0]})")
+    except IntegrityError:
+        # the same client_turn_id arrived twice at once: the other request won, so hand back its answer
+        db.rollback()
+        vs = _own(db, parent, session_id)
+        t = engine._replay(db, vs, m.client_turn_id)
+        if t is None:
+            raise HTTPException(409, "turn already being processed")
     return _public(t, _name(db, vs.child_id), "next_item")
 
 
 @router.post("/parent/voice/sessions/{session_id}/skip")
-def voice_skip(session_id: int, body: SkipIn, parent: ParentAccount = Depends(current_parent),
+def voice_skip(session_id: SessionId, body: SkipIn, parent: ParentAccount = Depends(current_parent),
                db: Session = Depends(get_db)):
     vs = _own(db, parent, session_id)
     t = engine.skip(db, vs, item_id=body.item_id, client_turn_id=body.client_turn_id)
@@ -164,7 +174,7 @@ def voice_skip(session_id: int, body: SkipIn, parent: ParentAccount = Depends(cu
 
 
 @router.post("/parent/voice/sessions/{session_id}/end")
-def voice_end(session_id: int, body: EndIn | None = None, parent: ParentAccount = Depends(current_parent),
+def voice_end(session_id: SessionId, body: EndIn | None = None, parent: ParentAccount = Depends(current_parent),
               db: Session = Depends(get_db)):
     vs = _own(db, parent, session_id)
     report = engine.end(db, vs, reason=(body or EndIn()).reason)
@@ -185,7 +195,7 @@ def voice_sessions(parent: ParentAccount = Depends(current_parent), db: Session 
 
 
 @router.get("/parent/voice/sessions/{session_id}")
-def voice_session_detail(session_id: int, parent: ParentAccount = Depends(current_parent),
+def voice_session_detail(session_id: SessionId, parent: ParentAccount = Depends(current_parent),
                          db: Session = Depends(get_db)):
     vs = _own(db, parent, session_id)
     return _detail(db, vs, _name(db, vs.child_id))
@@ -199,7 +209,7 @@ def child_voice_sessions(child_id: int, teacher: Teacher = Depends(current_teach
 
 
 @router.get("/voice_sessions/{session_id}")
-def teacher_voice_session(session_id: int, teacher: Teacher = Depends(current_teacher),
+def teacher_voice_session(session_id: SessionId, teacher: Teacher = Depends(current_teacher),
                           db: Session = Depends(get_db)):
     vs = db.get(VoiceSession, session_id)
     if not vs:

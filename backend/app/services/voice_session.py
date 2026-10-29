@@ -576,6 +576,21 @@ def _needs_safety(item: dict, heard: str) -> bool:
     return len(heard) > 2 * len(target) + 20
 
 
+HIDE_ANSWER_KINDS = ("build_word", "say_sound", "answer_question")  # the child must not be shown the answer
+REVEAL_AT_TRY = 4  # the tutor line may model the answer from the 4th try (see voice_tutor hints)
+
+
+def _masked(a: dict, item: dict, tried: int) -> tuple[list, list]:
+    """Words/errors for the app and the transcript: the target is left out for items whose answer is
+    the point, until the tutor itself starts modelling it."""
+    words, errors = list(a.get("words") or []), list(a.get("errors") or [])
+    if item["kind"] not in HIDE_ANSWER_KINDS or tried >= REVEAL_AT_TRY:
+        return words, errors
+    words = [{**w, "target": ""} if "target" in w else w for w in words]
+    errors = [{k: ("" if k in ("target", "word") else v) for k, v in e.items()} for e in errors]
+    return words, errors
+
+
 def _fallback_assess(item: dict, heard: str) -> dict:
     """Used only if the assessment module fails: plain normalised match."""
     h = _norm(heard)
@@ -1011,8 +1026,10 @@ def turn(db: Session, vs: VoiceSession, *, item_id: str, client_turn_id: str, tr
         breather = _line(db, st, "break")
 
     # -- child-safety check on open answers and runaway transcripts: redirect, don't advance
-    if heard and _needs_safety(item, heard):
+    category = features.local_safety_category(heard) if heard else None  # free, on every utterance
+    if heard and category is None and _needs_safety(item, heard):
         category = features.classify_child_input(db, school_id=vs.school_id, text=heard)
+    if heard:
         if category in ("distress", "personal"):
             st["silent_streak"] = 0
             st["safety_flags"].append({"category": category, "item_id": item["id"], "at": _now().isoformat()})
@@ -1085,10 +1102,11 @@ def turn(db: Session, vs: VoiceSession, *, item_id: str, client_turn_id: str, tr
     else:
         parts.append(breather)
 
+    words, errors = _masked(a, item, tried)
     return _finish_turn(db, vs, st, client_turn_id=client_turn_id, child_text=heard, child_verdict=a["verdict"],
-                        child_item=item["id"], words=a["words"], tutor_text=_join(*parts),
+                        child_item=item["id"], words=words, tutor_text=_join(*parts),
                         base={"verdict": a["verdict"], "score": a["score"], "heard": a["heard"] or heard,
-                              "words": a["words"], "errors": a["errors"], "stage_changed": stage_changed,
+                              "words": words, "errors": errors, "stage_changed": stage_changed,
                               "asr": asr, "item_result": finished})
 
 

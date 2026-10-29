@@ -55,11 +55,29 @@ class Api {
     if (r.statusCode >= 400) {
       String d = 'HTTP ${r.statusCode}';
       try {
-        d = (jsonDecode(utf8.decode(r.bodyBytes)) as Map)['detail'].toString();
+        final detail = (jsonDecode(utf8.decode(r.bodyBytes)) as Map)['detail'];
+        if (detail is String && detail.isNotEmpty) {
+          d = detail;
+        } else if (detail is List && detail.isNotEmpty) {
+          // FastAPI validation errors: [{loc: [...], msg: "..."}]
+          final first = detail.first;
+          d = first is Map && first['msg'] != null
+              ? first['msg'].toString()
+              : 'HTTP ${r.statusCode}';
+        }
       } catch (_) {}
       throw ApiError(d, r.statusCode);
     }
     return jsonDecode(utf8.decode(r.bodyBytes));
+  }
+
+  /// Deletes this child's practice data (home sessions, voice sessions and their transcripts).
+  /// The school's own records are not touched.
+  Future<void> deleteMyData() async {
+    final r = await http
+        .delete(Uri.parse('$base/v1/parent/child/data'), headers: _h)
+        .timeout(const Duration(seconds: 30));
+    _read(r);
   }
 
   Future<dynamic> get(String path) async {

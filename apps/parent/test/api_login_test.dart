@@ -18,7 +18,12 @@ void main() {
       return http.Response(
         jsonEncode({
           'token': 't0k',
-          'child': {'id': 12, 'first_name': 'कविता', 'roll_no': 12, 'class': null},
+          'child': {
+            'id': 12,
+            'first_name': 'कविता',
+            'roll_no': 12,
+            'class': null,
+          },
         }),
         200,
         headers: {'content-type': 'application/json; charset=utf-8'},
@@ -38,12 +43,24 @@ void main() {
 
   test('wrong PIN is an ApiError with the server detail', () async {
     final client = MockClient(
-      (_) async => http.Response(jsonEncode({'detail': 'invalid credentials'}), 401),
+      (_) async =>
+          http.Response(jsonEncode({'detail': 'invalid credentials'}), 401),
     );
     await http.runWithClient(() async {
       await expectLater(
-        Api.i.login({'school_code': 'DEMO', 'child_roll': 12, 'parent_phone': '1', 'pin': '1'}),
-        throwsA(isA<ApiError>().having((e) => e.message, 'message', 'invalid credentials')),
+        Api.i.login({
+          'school_code': 'DEMO',
+          'child_roll': 12,
+          'parent_phone': '1',
+          'pin': '1',
+        }),
+        throwsA(
+          isA<ApiError>().having(
+            (e) => e.message,
+            'message',
+            'invalid credentials',
+          ),
+        ),
       );
     }, () => client);
   });

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../api.dart';
+import '../session_guard.dart';
 import '../api_voice.dart';
 import '../l10n.dart';
 import '../theme.dart';
@@ -62,7 +63,9 @@ class _VoiceReportScreenState extends State<VoiceReportScreen> {
         _notReady = r == null;
       });
     } catch (e) {
-      if (mounted) setState(() => _error = voiceErrorText(e));
+      if (!mounted) return;
+      if (await handleExpiredSession(context, e)) return;
+      setState(() => _error = voiceErrorText(e));
     } finally {
       if (mounted) setState(() => _loading = false);
     }
@@ -92,26 +95,19 @@ class _VoiceReportScreenState extends State<VoiceReportScreen> {
     return e.isNotEmpty ? e : h;
   }
 
-  /// Accuracy may arrive as 0..1 or 0..100.
-  static int _pct(Object? v) {
-    final a = (v as num?)?.toDouble() ?? 0;
-    return (a <= 1 ? a * 100 : a).round().clamp(0, 100);
-  }
-
   String _narrative(Map<String, dynamic> r) {
     final n = (r['narrative'] as Map?) ?? const {};
     final text = _bi(n, 'parent_en', 'parent_hi');
     if (text.trim().isNotEmpty) return text;
     final mins = _int(r['minutes']);
     final items = _int(r['items_attempted']);
-    final acc = _pct(r['accuracy']);
+    final right = _int(r['first_try']) + _int(r['after_retry']);
     final stage = voiceStageLabel(r['highest_stage'] as String?);
     return trf(
-      'Your child practised for {mins} minutes and tried {items} questions, getting {acc}% right. '
+      'Your child practised for {mins} minutes and tried {items} questions and got {right} right. '
           'The highest level reached was "{stage}".',
-      'आपके बच्चे ने {mins} मिनट अभ्यास किया और {items} सवाल किए, जिनमें {acc}% सही रहे। '
-          'सबसे ऊँचा स्तर "{stage}" रहा।',
-      {'mins': mins, 'items': items, 'acc': acc, 'stage': stage},
+      'आपके बच्चे ने {mins} मिनट अभ्यास किया और {items} सवाल किए, जिनमें {right} सही रहे। '
+          'सबसे ऊँचा स्तर "{stage}" रहा।', {'mins': mins, 'items': items, 'right': right, 'stage': stage},
     );
   }
 
@@ -398,8 +394,8 @@ class _VoiceReportScreenState extends State<VoiceReportScreen> {
         Row(
           children: [
             tile(
-              '${_pct(r['accuracy'])}%',
-              tr('correct', 'सही'),
+              '${_int(r['first_try']) + _int(r['after_retry'])}',
+              tr('right answers', 'सही जवाब'),
               Icons.check_circle_rounded,
             ),
             const SizedBox(width: 8),
@@ -478,11 +474,14 @@ class _VoiceReportScreenState extends State<VoiceReportScreen> {
                   Text(
                     items > 0
                         ? trf(
-                            'Focus: {stage} · {acc}% right',
-                            'मुख्य अभ्यास: {stage} · {acc}% सही',
+                            'Focus: {stage} · {right} of {items} right',
+                            'मुख्य अभ्यास: {stage} · {items} में से {right} सही',
                             {
                               'stage': voiceStageLabel(stage),
-                              'acc': _pct(o['focus_accuracy']),
+                              'right':
+                                  (((o['focus_accuracy'] as num?) ?? 0) * items)
+                                      .round(),
+                              'items': items,
                             },
                           )
                         : trf('Focus: {stage}', 'मुख्य अभ्यास: {stage}', {

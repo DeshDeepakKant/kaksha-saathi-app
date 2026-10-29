@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 import '../l10n.dart';
 import '../theme.dart';
@@ -248,4 +249,136 @@ class _Tile extends StatelessWidget {
       ),
     ),
   );
+}
+
+/// Shrinks [child] (laid out at the full width) so it is at most [maxHeight] tall, but never
+/// below [minScale]; below that it keeps [minScale] and is taller than [maxHeight], so wrap it
+/// in a scroll view. The child is laid out at width / scale, so it uses the whole row after
+/// shrinking and long paragraphs shrink less than a plain FittedBox would.
+class VoiceFit extends SingleChildRenderObjectWidget {
+  const VoiceFit({
+    super.key,
+    required this.maxHeight,
+    this.minScale = 0.6,
+    super.child,
+  });
+  final double maxHeight;
+  final double minScale;
+
+  @override
+  RenderObject createRenderObject(BuildContext context) =>
+      _RenderVoiceFit(maxHeight, minScale);
+
+  @override
+  void updateRenderObject(BuildContext context, RenderObject renderObject) {
+    (renderObject as _RenderVoiceFit)
+      ..maxHeight = maxHeight
+      ..minScale = minScale;
+  }
+}
+
+class _RenderVoiceFit extends RenderBox
+    with RenderObjectWithChildMixin<RenderBox> {
+  _RenderVoiceFit(this._maxHeight, this._minScale);
+
+  double _maxHeight;
+  double _minScale;
+  double _scale = 1;
+
+  set maxHeight(double v) {
+    if (v == _maxHeight) return;
+    _maxHeight = v;
+    markNeedsLayout();
+  }
+
+  set minScale(double v) {
+    if (v == _minScale) return;
+    _minScale = v;
+    markNeedsLayout();
+  }
+
+  /// The scale and the child's size (at width / scale) for width [w].
+  (double, Size) _fit(double w, Size Function(double) at) {
+    var cs = at(w);
+    var scale = 1.0;
+    if (cs.height > _maxHeight && _maxHeight > 0) {
+      scale = (_maxHeight / cs.height).clamp(_minScale, 1.0);
+      // More room per line once shrunk: lay out at width / scale, then fit the new height.
+      cs = at(w / scale);
+      if (cs.height * scale > _maxHeight) {
+        scale = (_maxHeight / cs.height).clamp(_minScale, scale);
+        cs = at(w / scale);
+      }
+    }
+    return (scale, cs);
+  }
+
+  static BoxConstraints _tight(double w) =>
+      BoxConstraints(minWidth: w, maxWidth: w);
+
+  double _width(BoxConstraints c) => c.hasBoundedWidth ? c.maxWidth : 0.0;
+
+  @override
+  void performLayout() {
+    final c = child;
+    if (c == null) {
+      size = constraints.smallest;
+      return;
+    }
+    final w = _width(constraints);
+    final (scale, cs) = _fit(w, (cw) {
+      c.layout(_tight(cw), parentUsesSize: true);
+      return c.size;
+    });
+    _scale = scale;
+    size = constraints.constrain(Size(w, cs.height * scale));
+  }
+
+  @override
+  Size computeDryLayout(BoxConstraints constraints) {
+    final c = child;
+    if (c == null) return constraints.smallest;
+    final w = _width(constraints);
+    final (scale, cs) = _fit(w, (cw) => c.getDryLayout(_tight(cw)));
+    return constraints.constrain(Size(w, cs.height * scale));
+  }
+
+  @override
+  void paint(PaintingContext context, Offset offset) {
+    final c = child;
+    if (c == null) return;
+    context.pushTransform(
+      needsCompositing,
+      offset,
+      Matrix4.diagonal3Values(_scale, _scale, 1),
+      c.paint,
+    );
+  }
+
+  @override
+  void applyPaintTransform(RenderBox c, Matrix4 transform) {
+    transform.multiply(Matrix4.diagonal3Values(_scale, _scale, 1));
+  }
+
+  @override
+  bool hitTestChildren(BoxHitTestResult result, {required Offset position}) =>
+      child != null &&
+      result.addWithPaintTransform(
+        transform: Matrix4.diagonal3Values(_scale, _scale, 1),
+        position: position,
+        hitTest: (r, p) => child!.hitTest(r, position: p),
+      );
+
+  @override
+  double computeMinIntrinsicHeight(double width) =>
+      child?.getMinIntrinsicHeight(width) ?? 0;
+  @override
+  double computeMaxIntrinsicHeight(double width) =>
+      child?.getMaxIntrinsicHeight(width) ?? 0;
+  @override
+  double computeMinIntrinsicWidth(double height) =>
+      child?.getMinIntrinsicWidth(height) ?? 0;
+  @override
+  double computeMaxIntrinsicWidth(double height) =>
+      child?.getMaxIntrinsicWidth(height) ?? 0;
 }

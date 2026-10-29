@@ -1,9 +1,8 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:flutter/services.dart';
 
 import '../api.dart';
+import '../friendly.dart';
 import '../theme.dart';
 import 'home_screen.dart';
 import '../l10n.dart';
@@ -26,7 +25,39 @@ class _GateScreenState extends State<GateScreen> {
   bool _busy = false;
   String? _error;
 
+  /// Checks the form on the phone so a half-filled form never becomes a request (and a server
+  /// error). Returns the message to show, or null when it is fine.
+  String? _problem() {
+    if (_school.text.trim().isEmpty) {
+      return tr('Please type the school code.', 'कृपया स्कूल कोड लिखें।');
+    }
+    if ((int.tryParse(_roll.text.trim()) ?? 0) < 1) {
+      return tr(
+        'Please type the child\'s roll number.',
+        'कृपया बच्चे का रोल नंबर लिखें।',
+      );
+    }
+    if (_phone.text.replaceAll(RegExp(r'\D'), '').length < 10) {
+      return tr(
+        'Please type the 10-digit mobile number.',
+        'कृपया 10 अंकों का मोबाइल नंबर लिखें।',
+      );
+    }
+    if (_pin.text.trim().length < 4) {
+      return tr('The PIN has 4 digits.', 'पिन में 4 अंक होते हैं।');
+    }
+    if (_mode == 1 && !_consent) {
+      return tr('Please tick the consent box.', 'कृपया सहमति का बॉक्स चुनें।');
+    }
+    return null;
+  }
+
   Future<void> _submit() async {
+    final problem = _problem();
+    if (problem != null) {
+      setState(() => _error = problem);
+      return;
+    }
     setState(() {
       _busy = true;
       _error = null;
@@ -53,28 +84,9 @@ class _GateScreenState extends State<GateScreen> {
         context,
       ).pushReplacement(MaterialPageRoute(builder: (_) => const HomeScreen()));
     } on ApiError catch (e) {
-      setState(
-        () => _error = e.status == 403
-            ? tr(
-                'The school has not recorded this child\'s parent consent. Please meet the teacher.',
-                'स्कूल ने इस बच्चे के अभिभावक की सहमति दर्ज नहीं की। अध्यापिका से मिलें।',
-              )
-            : e.message,
-      );
+      setState(() => _error = friendlyGateError(e));
     } catch (e) {
-      // Only a real network failure is "could not connect"; anything else is a bug, not the parent's wifi.
-      final network = e is TimeoutException || e is http.ClientException;
-      setState(
-        () => _error = network
-            ? tr(
-                'Could not connect to the server. Check your internet.',
-                'सर्वर से नहीं जुड़ सके। इंटरनेट जाँचें।',
-              )
-            : tr(
-                'Something went wrong. Please try again.',
-                'कुछ गड़बड़ हुई। फिर से कोशिश करें।',
-              ),
-      );
+      setState(() => _error = friendlyError(e));
     } finally {
       if (mounted) setState(() => _busy = false);
     }
@@ -144,6 +156,10 @@ class _GateScreenState extends State<GateScreen> {
                   TextField(
                     controller: _roll,
                     keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      LengthLimitingTextInputFormatter(3),
+                    ],
                     decoration: InputDecoration(
                       labelText: tr(
                         'Child\'s roll number',
@@ -155,6 +171,10 @@ class _GateScreenState extends State<GateScreen> {
                   TextField(
                     controller: _phone,
                     keyboardType: TextInputType.phone,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      LengthLimitingTextInputFormatter(12),
+                    ],
                     decoration: InputDecoration(
                       labelText: tr(
                         'Parent\'s mobile number',
@@ -166,6 +186,14 @@ class _GateScreenState extends State<GateScreen> {
                   TextField(
                     controller: _pin,
                     keyboardType: TextInputType.number,
+                    textInputAction: TextInputAction.done,
+                    onSubmitted: (_) {
+                      if (!_busy) _submit();
+                    },
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      LengthLimitingTextInputFormatter(4),
+                    ],
                     obscureText: true,
                     decoration: InputDecoration(
                       labelText: _mode == 1
@@ -191,8 +219,8 @@ class _GateScreenState extends State<GateScreen> {
                             const SizedBox(height: 6),
                             Text(
                               tr(
-                                'We keep only the child\'s first name, roll number and learning evidence. Photos are deleted after 7 days and voice is not saved. Practice is for learning only, if the child talks about something else, Saathi brings them back to the lesson. You can have the data deleted at any time.',
-                                'हम बच्चे का पहला नाम, रोल नंबर और सीखने के सबूत ही रखते हैं। फ़ोटो 7 दिन में हट जाती हैं और आवाज़ सहेजी नहीं जाती। '
+                                'We keep only the child\'s first name, roll number and learning evidence, plus what the child said in practice sessions as text (the voice itself is never saved). Photos are deleted after 7 days. Practice is for learning only, if the child talks about something else, Saathi brings them back to the lesson. You can have the data deleted at any time.',
+                                'हम बच्चे का पहला नाम, रोल नंबर और सीखने के सबूत रखते हैं, और अभ्यास में बच्चे ने जो कहा वह सिर्फ़ लिखित रूप में (आवाज़ कभी सहेजी नहीं जाती)। फ़ोटो 7 दिन में हट जाती हैं। '
                                     'अभ्यास केवल पढ़ाई का है, बच्चा किसी और विषय की बात करे तो साथी पढ़ाई पर लौटाता है। आप कभी भी डेटा हटवा सकते हैं।',
                               ),
                               style: TextStyle(fontSize: 15),

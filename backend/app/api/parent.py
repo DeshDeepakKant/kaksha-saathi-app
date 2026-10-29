@@ -11,10 +11,11 @@ judged against Hindi targets, so their speech-to-text stays Hindi (with the pare
 from __future__ import annotations
 
 import json
+import time
 from datetime import datetime, timedelta, timezone
 
-from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
-from pydantic import BaseModel, Field, ValidationError
+from fastapi import APIRouter, Depends, File, Form, HTTPException, Request, UploadFile
+from pydantic import BaseModel, Field, field_validator, ValidationError
 from sqlalchemy import delete, select
 from sqlalchemy.orm import Session
 
@@ -33,10 +34,22 @@ from app.speech.scorer import score_read
 router = APIRouter(prefix="/v1")
 
 
+def _digits_ok(v: str) -> str:
+    if not 10 <= len("".join(ch for ch in v if ch.isdigit())) <= 15:
+        raise ValueError("phone number needs 10 to 15 digits")
+    return v
+
+
 class ConsentIn(BaseModel):
     school_code: str
-    child_roll: int
-    parent_phone: str = Field(min_length=8, max_length=15)
+    child_roll: int = Field(ge=1, le=9999)
+    parent_phone: str = Field(min_length=8, max_length=20)
+
+    @field_validator("parent_phone")
+    @classmethod
+    def _phone(cls, v: str) -> str:
+        return _digits_ok(v)
+
     consents: bool
     pin: str = Field(min_length=4, max_length=6)
     language: str = "hi"
@@ -66,24 +79,63 @@ def parent_consent(body: ConsentIn, db: Session = Depends(get_db)):
 
 class ParentLoginIn(BaseModel):
     school_code: str
-    child_roll: int
-    parent_phone: str
-    pin: str
+    child_roll: int = Field(ge=1, le=9999)
+    parent_phone: str = Field(max_length=20)
+    pin: str = Field(max_length=12)
+
+
+# A 4-digit PIN has only 10,000 possibilities, so guessing is slowed down. Wrong tries are counted per
+# child AND per device address: 5 from one address lock that address out for this child for 15 minutes,
+# and 30 from anywhere lock the child's sign-in for an hour. A stranger guessing from elsewhere therefore
+# cannot easily lock the real parent out. In memory (one worker); a restart clears it.
+_FAILED_LOGINS: dict[tuple, list[float]] = {}
+PER_ADDR_TRIES, PER_ADDR_WINDOW_S = 5, 15 * 60
+PER_CHILD_TRIES, PER_CHILD_WINDOW_S = 30, 60 * 60
+
+
+def _client_addr(request: Request) -> str:
+    fwd = request.headers.get("x-forwarded-for", "")
+    return (fwd.split(",")[0].strip() or (request.client.host if request.client else "?"))
+
+
+def _recent(key: tuple, window: float) -> list[float]:
+    now = time.monotonic()
+    recent = [t for t in _FAILED_LOGINS.get(key, []) if now - t < window]
+    if recent:
+        _FAILED_LOGINS[key] = recent
+    else:
+        _FAILED_LOGINS.pop(key, None)
+    return recent
+
+
+def _check_lockout(child: tuple, addr: str) -> None:
+    if (len(_recent((*child, addr), PER_ADDR_WINDOW_S)) >= PER_ADDR_TRIES
+            or len(_recent(child, PER_CHILD_WINDOW_S)) >= PER_CHILD_TRIES):
+        raise HTTPException(429, "too many wrong tries; please wait a while and try again")
+
+
+def _note_failed_login(child: tuple, addr: str) -> None:
+    _FAILED_LOGINS.setdefault((*child, addr), []).append(time.monotonic())
+    _FAILED_LOGINS.setdefault(child, []).append(time.monotonic())
 
 
 @router.post("/parent/login")
-def parent_login(body: ParentLoginIn, db: Session = Depends(get_db)):
+def parent_login(body: ParentLoginIn, request: Request, db: Session = Depends(get_db)):
     school = db.scalar(select(School).where(School.code == body.school_code.upper().strip()))
     if not school:
         raise HTTPException(401, "school not found")
     kids = _children_by_roll(db, school.id, body.child_roll)
     if not kids:
         raise HTTPException(401, "child not found")
+    key, addr = (school.id, body.child_roll), _client_addr(request)
+    _check_lockout(key, addr)
     phone = hash_phone(body.parent_phone)
     for child in kids:
         p = db.scalar(select(ParentAccount).where(ParentAccount.child_id == child.id))
         if p and p.phone_hash == phone and verify_pin(body.pin, p.pin_hash):
+            _FAILED_LOGINS.pop((*key, addr), None)
             return {"token": make_token(str(p.id), "parent"), "child": _pub(child)}
+    _note_failed_login(key, addr)
     raise HTTPException(401, "invalid credentials")
 
 
@@ -160,9 +212,13 @@ def _transcribe(db: Session, parent: ParentAccount, audio: bytes, filename: str,
 
 
 def _streak(db: Session, child_id: int) -> int:
-    days = {s.started_at.date() for s in db.scalars(select(HomeSession).where(HomeSession.child_id == child_id))}
-    days |= {v.started_at.date() for v in db.scalars(select(VoiceSession).where(VoiceSession.child_id == child_id))}
-    n, d = 0, datetime.now(timezone.utc).date()
+    ist = lambda dt: ledger.school_today(dt if dt.tzinfo else dt.replace(tzinfo=timezone.utc))  # noqa: E731
+    days = {ist(s.started_at) for s in db.scalars(select(HomeSession).where(HomeSession.child_id == child_id))}
+    days |= {ist(v.started_at) for v in db.scalars(select(VoiceSession).where(VoiceSession.child_id == child_id))}
+    d = ledger.school_today()
+    if d not in days:
+        d -= timedelta(days=1)  # not practised yet today: the streak is still alive until a day is missed
+    n = 0
     while d in days:
         n += 1
         d -= timedelta(days=1)

@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../api.dart';
+import '../session_guard.dart';
 import '../l10n.dart';
 import '../theme.dart';
 import '../tts.dart';
@@ -58,6 +59,7 @@ class _WeeklyScreenState extends State<WeeklyScreen> {
       });
     } catch (e) {
       if (!mounted) return;
+      if (await handleExpiredSession(context, e)) return;
       if (quiet && _data != null) {
         _snack(_errorText(e));
       } else {

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
@@ -47,7 +48,8 @@ class _Pending {
 
 typedef _Cheer = ({String emoji, String text, Color fg, Color bg});
 
-class _VoiceSessionScreenState extends State<VoiceSessionScreen> {
+class _VoiceSessionScreenState extends State<VoiceSessionScreen>
+    with WidgetsBindingObserver {
   final _rec = VoiceRecorder();
 
   _Phase _phase = _Phase.choose;
@@ -96,6 +98,7 @@ class _VoiceSessionScreenState extends State<VoiceSessionScreen> {
     // Refresh the content-language list (the last copy shows at once).
     Api.i.languages().then((_) => _set(_loadPlans)).catchError((_) {});
     _loadPlans();
+    WidgetsBinding.instance.addObserver(this);
   }
 
   /// Fetches the plan for each session language not asked yet. A failed call hides the card.
@@ -145,8 +148,23 @@ class _VoiceSessionScreenState extends State<VoiceSessionScreen> {
     return null;
   }
 
+  /// Back from the permission dialog or the Settings screen with the mic panel still up:
+  /// if the permission is granted now, carry on listening without the retry tap.
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed && _phase == _Phase.micBlocked) {
+      _recheckMic();
+    }
+  }
+
+  Future<void> _recheckMic() async {
+    final ok = await _rec.permissionGranted();
+    if (ok && mounted && _phase == _Phase.micBlocked) _retryMic();
+  }
+
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _gen++;
     _cheerTimer?.cancel();
     Speak.stop();
@@ -988,22 +1006,71 @@ class _VoiceSessionScreenState extends State<VoiceSessionScreen> {
     final wide = size.width >= 760;
     // A help panel (network, mic, safety) needs the room more than the transcript does.
     final panel = _phase != _Phase.running;
-    final showTranscript = !panel && (_showTranscript ?? size.height >= 760);
-    final main = Column(
-      children: [
-        _tutorCard(),
-        Expanded(child: _itemArea()),
-        ConstrainedBox(
-          constraints: BoxConstraints(maxHeight: size.height * 0.4),
-          child: SingleChildScrollView(child: _statusArea()),
-        ),
-        if (!wide && !panel) _transcriptToggle(showTranscript),
-        if (!wide && showTranscript)
-          SizedBox(
-            height: (size.height * 0.26).clamp(140.0, 260.0),
-            child: _transcriptBox(),
-          ),
-      ],
+    // Collapsed unless the parent opens it, so it never squeezes the item the child reads.
+    final showTranscript = !panel && (_showTranscript ?? false);
+    // Short screens: the "Conversation" toggle moves into the Saathi card, the mic is smaller,
+    // and help panels hide the Saathi card, so the item keeps its room.
+    final compact = size.height < 700;
+    final main = LayoutBuilder(
+      builder: (context, c) {
+        // Space budget: the item gets whatever the other parts do not need, and never less
+        // than itemMin; the mic/status area and the transcript scroll inside their caps.
+        final h = c.maxHeight;
+        final scale = MediaQuery.textScalerOf(context).scale(1);
+        final showTutor = !(compact && panel);
+        // On short screens the open transcript takes the Saathi card's place (its last line
+        // is what Saathi just said), so the item still gets room.
+        final transInHead = compact && showTranscript;
+        final tutorCap = compact
+            ? (h * 0.13).clamp(48.0, 80.0)
+            : (h * (panel ? 0.12 : 0.17)).clamp(56.0, 110.0);
+        final tutorH = showTutor && !transInHead ? tutorCap + 28 : 0.0;
+        final toggleH = !wide && !panel && !compact
+            ? 48.0 * math.max(1, scale * 0.9)
+            : 0.0;
+        final transH = !wide && showTranscript
+            ? (compact
+                  ? (h * 0.26).clamp(96.0, 130.0)
+                  : (h * 0.22).clamp(96.0, 200.0))
+            : 0.0;
+        // Help panels scroll inside their cap; the mic/Done row always shows in full (the
+        // item shrinks for it).
+        final statusCap = panel
+            ? (h - tutorH - toggleH - transH - h * 0.40).clamp(200.0, h * 0.6)
+            : h * 0.6;
+        return Column(
+          children: [
+            if (transInHead)
+              SizedBox(
+                height: transH,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(child: _transcriptBox()),
+                    _transcriptIcon(true),
+                  ],
+                ),
+              )
+            else if (showTutor)
+              _tutorCard(
+                tutorCap,
+                toggle: compact && !wide && !panel
+                    ? _transcriptIcon(false)
+                    : null,
+              ),
+            Expanded(child: _itemArea()),
+            ConstrainedBox(
+              constraints: BoxConstraints(maxHeight: statusCap),
+              child: SingleChildScrollView(
+                child: _statusArea(compact: compact),
+              ),
+            ),
+            if (!wide && !panel && !compact) _transcriptToggle(showTranscript),
+            if (!wide && showTranscript && !transInHead)
+              SizedBox(height: transH, child: _transcriptBox()),
+          ],
+        );
+      },
     );
     return Column(
       children: [
@@ -1052,7 +1119,7 @@ class _VoiceSessionScreenState extends State<VoiceSessionScreen> {
     );
   }
 
-  Widget _tutorCard() => Card(
+  Widget _tutorCard(double maxContentHeight, {Widget? toggle}) => Card(
     child: Padding(
       padding: const EdgeInsetsDirectional.fromSTEB(14, 10, 6, 10),
       child: Row(
@@ -1062,7 +1129,7 @@ class _VoiceSessionScreenState extends State<VoiceSessionScreen> {
           const SizedBox(width: 10),
           Expanded(
             child: ConstrainedBox(
-              constraints: const BoxConstraints(maxHeight: 110),
+              constraints: BoxConstraints(maxHeight: maxContentHeight),
               child: SingleChildScrollView(
                 child: Text(
                   _tutorText,
@@ -1075,84 +1142,65 @@ class _VoiceSessionScreenState extends State<VoiceSessionScreen> {
               ),
             ),
           ),
+          ?toggle,
         ],
       ),
     ),
   );
 
+  /// The item the child reads, with the try/cheer badges in a row of their own above it (never
+  /// drawn over it). The item shrinks to fit, scrolls only when it cannot be shrunk enough.
   Widget _itemArea() {
     final item = _shown;
-    return Stack(
+    final retry = _try > 1 && _item != null && _shown?['id'] == _item?['id'];
+    final compact = MediaQuery.sizeOf(context).height < 700;
+    return Column(
       children: [
-        Positioned.fill(
-          child: Center(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 6),
-              child: item == null
-                  ? const Text('🦉', style: TextStyle(fontSize: 96))
-                  : VoiceItemView(item: item, words: _shownWords),
+        if (_cheer != null || retry || voicePhaseLabel(_step).isNotEmpty)
+          Padding(
+            padding: EdgeInsets.only(top: compact ? 2 : 6),
+            child: Wrap(
+              alignment: WrapAlignment.center,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              spacing: 10,
+              runSpacing: 6,
+              children: [
+                if (voicePhaseLabel(_step).isNotEmpty) _stepChip(_step!),
+                if (_cheer != null) _cheerBadge(_cheer!, compact),
+                // Short screens show one badge at a time (the cheer fades after a moment).
+                if (retry && !(compact && _cheer != null)) _tryBadge(),
+              ],
+            ),
+          ),
+        Expanded(
+          child: LayoutBuilder(
+            builder: (context, c) => SingleChildScrollView(
+              padding: EdgeInsets.symmetric(
+                vertical: compact ? 2 : 8,
+                horizontal: 6,
+              ),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  minHeight: math.max(0, c.maxHeight - (compact ? 4 : 16)),
+                ),
+                child: Center(
+                  child: item == null
+                      ? const Text('🦉', style: TextStyle(fontSize: 96))
+                      : VoiceFit(
+                          maxHeight: math.max(
+                            0,
+                            c.maxHeight - (compact ? 4 : 16),
+                          ),
+                          // Big single items can shrink a lot and stay readable; running text
+                          // shrinks less and scrolls instead.
+                          minScale: _bigItem(item['kind']) ? 0.3 : 0.6,
+                          child: VoiceItemView(item: item, words: _shownWords),
+                        ),
+                ),
+              ),
             ),
           ),
         ),
-        if (voicePhaseLabel(_step).isNotEmpty)
-          Positioned(top: 8, left: 4, child: _stepChip(_step!)),
-        if (_try > 1 && _item != null && _shown?['id'] == _item?['id'])
-          Positioned(
-            top: 8,
-            right: 4,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              decoration: BoxDecoration(
-                color: Ks.amberSoft,
-                borderRadius: BorderRadius.circular(99),
-              ),
-              child: Text(
-                trf('Try {try} of {maxTries}', 'कोशिश {try} / {maxTries}', {
-                  'try': _try,
-                  'maxTries': _maxTries,
-                }),
-                style: const TextStyle(
-                  color: Ks.amber,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ),
-          ),
-        if (_cheer != null)
-          Positioned(
-            top: 8,
-            left: 0,
-            right: 0,
-            child: Center(
-              child: TweenAnimationBuilder<double>(
-                key: ValueKey(_cheerKey),
-                tween: Tween(begin: 0.3, end: 1),
-                duration: const Duration(milliseconds: 600),
-                curve: Curves.elasticOut,
-                builder: (_, v, child) =>
-                    Transform.scale(scale: v, child: child),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 18,
-                    vertical: 10,
-                  ),
-                  decoration: BoxDecoration(
-                    color: _cheer!.bg,
-                    borderRadius: BorderRadius.circular(99),
-                    border: Border.all(color: _cheer!.fg.withValues(alpha: .4)),
-                  ),
-                  child: Text(
-                    '${_cheer!.emoji}  ${_cheer!.text}',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w800,
-                      color: _cheer!.fg,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
       ],
     );
   }
@@ -1189,7 +1237,55 @@ class _VoiceSessionScreenState extends State<VoiceSessionScreen> {
     );
   }
 
-  Widget _statusArea() {
+  static bool _bigItem(Object? kind) => const {
+    'read_letter',
+    'say_sound',
+    'read_word',
+    'build_word',
+    'make_sentence',
+  }.contains(kind);
+
+  Widget _tryBadge() => Container(
+    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+    decoration: BoxDecoration(
+      color: Ks.amberSoft,
+      borderRadius: BorderRadius.circular(99),
+    ),
+    child: Text(
+      trf('Try {try} of {maxTries}', 'कोशिश {try} / {maxTries}', {'try': _try, 'maxTries': _maxTries}),
+      style: const TextStyle(color: Ks.amber, fontWeight: FontWeight.w700),
+    ),
+  );
+
+  Widget _cheerBadge(_Cheer cheer, bool compact) =>
+      TweenAnimationBuilder<double>(
+        key: ValueKey(_cheerKey),
+        tween: Tween(begin: 0.3, end: 1),
+        duration: const Duration(milliseconds: 600),
+        curve: Curves.elasticOut,
+        builder: (_, v, child) => Transform.scale(scale: v, child: child),
+        child: Container(
+          padding: EdgeInsets.symmetric(
+            horizontal: compact ? 12 : 18,
+            vertical: compact ? 4 : 8,
+          ),
+          decoration: BoxDecoration(
+            color: cheer.bg,
+            borderRadius: BorderRadius.circular(99),
+            border: Border.all(color: cheer.fg.withValues(alpha: .4)),
+          ),
+          child: Text(
+            '${cheer.emoji}  ${cheer.text}',
+            style: TextStyle(
+              fontSize: compact ? 19 : 24,
+              fontWeight: FontWeight.w800,
+              color: cheer.fg,
+            ),
+          ),
+        ),
+      );
+
+  Widget _statusArea({bool compact = false}) {
     switch (_phase) {
       case _Phase.netError:
         return _panel(
@@ -1250,32 +1346,36 @@ class _VoiceSessionScreenState extends State<VoiceSessionScreen> {
         );
       default:
         final state = _paused && !_busy ? VoiceMicState.paused : _mic;
+        final indicator = VoiceMicIndicator(
+          state: state,
+          level: _rec.level,
+          speaking: _rec.speaking,
+          compact: compact,
+        );
+        final Widget? action = switch (state) {
+          VoiceMicState.listening => FilledButton.icon(
+            style: FilledButton.styleFrom(minimumSize: const Size(0, 56)),
+            onPressed: _rec.finish,
+            icon: const Icon(Icons.check_rounded, size: 26),
+            label: Text(tr('Done speaking', 'बोल लिया')),
+          ),
+          VoiceMicState.paused => FilledButton.icon(
+            style: FilledButton.styleFrom(minimumSize: const Size(0, 56)),
+            onPressed: _togglePause,
+            icon: const Icon(Icons.play_arrow_rounded, size: 28),
+            label: Text(tr('Resume', 'फिर शुरू करें')),
+          ),
+          _ => null,
+        };
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 6),
           child: Column(
             children: [
-              VoiceMicIndicator(
-                state: state,
-                level: _rec.level,
-                speaking: _rec.speaking,
-              ),
-              if (state == VoiceMicState.listening)
+              indicator,
+              if (action != null)
                 Padding(
                   padding: const EdgeInsets.only(top: 8),
-                  child: FilledButton.icon(
-                    onPressed: _rec.finish,
-                    icon: const Icon(Icons.check_rounded, size: 26),
-                    label: Text(tr('Done speaking', 'बोल लिया')),
-                  ),
-                ),
-              if (state == VoiceMicState.paused)
-                Padding(
-                  padding: const EdgeInsets.only(top: 8),
-                  child: FilledButton.icon(
-                    onPressed: _togglePause,
-                    icon: const Icon(Icons.play_arrow_rounded, size: 28),
-                    label: Text(tr('Resume', 'फिर शुरू करें')),
-                  ),
+                  child: SizedBox(width: double.infinity, child: action),
                 ),
             ],
           ),
@@ -1341,6 +1441,15 @@ class _VoiceSessionScreenState extends State<VoiceSessionScreen> {
           ),
         ],
       ),
+    ),
+  );
+
+  Widget _transcriptIcon(bool open) => IconButton(
+    tooltip: tr('Conversation (${_lines.length})', 'बातचीत (${_lines.length})'),
+    onPressed: () => _set(() => _showTranscript = !open),
+    icon: Icon(
+      open ? Icons.forum_rounded : Icons.forum_outlined,
+      color: Ks.accent,
     ),
   );
 
