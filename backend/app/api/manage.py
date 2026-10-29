@@ -12,6 +12,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.api.deps import current_teacher, owned_child, owned_class
+from app.api.setup import _with_book
 from app.api.teacher import _subject
 from app.db import get_db
 from app.models.tables import Child, CustomCheckpoint, Evidence, Teacher
@@ -128,7 +129,7 @@ def rename_topic(class_id: int, checkpoint_id: str, body: TopicRenameIn,
         row.title_hi = hi
     db.flush()
     coverage.register(row)
-    return coverage.syllabus(db, cls, subject)
+    return _with_book(db, cls, subject, coverage.syllabus(db, cls, subject))  # same body as GET /syllabus
 
 
 class ReorderIn(BaseModel):
@@ -153,4 +154,4 @@ def reorder_syllabus(class_id: int, body: ReorderIn, teacher: Teacher = Depends(
         # each topic keeps its own chapter; only the positions change
         coverage.write_version(db, cls, teacher, subject, prev.source if prev else "template",
                                [by_id[cid].pop(0) for cid in body.order])
-    return coverage.syllabus(db, cls, subject)
+    return _with_book(db, cls, subject, coverage.syllabus(db, cls, subject))  # same body as GET /syllabus
