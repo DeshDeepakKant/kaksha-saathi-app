@@ -274,23 +274,24 @@ class _LevelScreenState extends State<LevelScreen> {
                     ),
                   ),
                 const SizedBox(height: 6),
-                Row(
-                  children: [
-                    Expanded(
-                      child: OutlinedButton(
-                        onPressed: () => setSt(() => passed = 0),
-                        child: Text(tr('Not correct', 'सही नहीं')),
+                if (items.isNotEmpty)
+                  Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton(
+                          onPressed: () => setSt(() => passed = 0),
+                          child: Text(tr('Not correct', 'सही नहीं')),
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: FilledButton(
-                        onPressed: () => setSt(() => passed = items.length),
-                        child: Text(tr('All correct', 'सब सही')),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: FilledButton(
+                          onPressed: () => setSt(() => passed = items.length),
+                          child: Text(tr('All correct', 'सब सही')),
+                        ),
                       ),
-                    ),
-                  ],
-                ),
+                    ],
+                  ),
                 if (saveError != null)
                   Padding(
                     padding: const EdgeInsets.only(top: 10),
@@ -300,55 +301,59 @@ class _LevelScreenState extends State<LevelScreen> {
                     ),
                   ),
                 const SizedBox(height: 10),
-                FilledButton.icon(
-                  onPressed: items.isEmpty || saving
-                      ? null
-                      : () async {
-                          setSt(() {
-                            saving = true;
-                            saveError = null;
-                          });
-                          try {
-                            final r = await Api.i.postQueued(
-                              '/v1/classes/${widget.classId}/captures/probe?child_id=${widget.childId}&checkpoint_id=$cp&passed=$passed&total=${items.length}',
-                              {},
-                            );
-                            if (ctx.mounted) Navigator.of(ctx).pop();
-                            if (!mounted) return;
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  r is Map && r['queued'] == true
-                                      ? tr(
-                                          'No internet. Saved on this phone and will send later.',
-                                          'इंटरनेट नहीं है। फ़ोन में रखा है, बाद में भेजा जाएगा।',
-                                        )
-                                      : tr('Check saved.', 'जाँच दर्ज हो गई।'),
-                                ),
-                              ),
-                            );
-                            _load(silent: true);
-                          } catch (e) {
-                            if (!ctx.mounted) return;
+                if (items.isNotEmpty)
+                  FilledButton.icon(
+                    onPressed: saving
+                        ? null
+                        : () async {
                             setSt(() {
-                              saving = false;
-                              saveError = tr(
-                                'Could not save the check. Try again. ($e)',
-                                'जाँच दर्ज नहीं हो पाई। दोबारा कोशिश करें। ($e)',
-                              );
+                              saving = true;
+                              saveError = null;
                             });
-                          }
-                        },
-                  icon: const Icon(Icons.save_rounded),
-                  label: Text(
-                    saving
-                        ? tr('Saving…', 'दर्ज हो रहा है…')
-                        : tr(
-                            'Save check ($passed/${items.length})',
-                            'जाँच दर्ज करें ($passed/${items.length})',
-                          ),
+                            try {
+                              final r = await Api.i.postQueued(
+                                '/v1/classes/${widget.classId}/captures/probe?child_id=${widget.childId}&checkpoint_id=$cp&passed=$passed&total=${items.length}',
+                                {},
+                              );
+                              if (ctx.mounted) Navigator.of(ctx).pop();
+                              if (!mounted) return;
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    r is Map && r['queued'] == true
+                                        ? tr(
+                                            'No internet. Saved on this phone and will send later.',
+                                            'इंटरनेट नहीं है। फ़ोन में रखा है, बाद में भेजा जाएगा।',
+                                          )
+                                        : tr(
+                                            'Check saved.',
+                                            'जाँच दर्ज हो गई।',
+                                          ),
+                                  ),
+                                ),
+                              );
+                              _load(silent: true);
+                            } catch (e) {
+                              if (!ctx.mounted) return;
+                              setSt(() {
+                                saving = false;
+                                saveError = tr(
+                                  'Could not save the check. Try again. ($e)',
+                                  'जाँच दर्ज नहीं हो पाई। दोबारा कोशिश करें। ($e)',
+                                );
+                              });
+                            }
+                          },
+                    icon: const Icon(Icons.save_rounded),
+                    label: Text(
+                      saving
+                          ? tr('Saving…', 'दर्ज हो रहा है…')
+                          : tr(
+                              'Save check ($passed/${items.length})',
+                              'जाँच दर्ज करें ($passed/${items.length})',
+                            ),
+                    ),
                   ),
-                ),
               ],
             ),
           );
@@ -688,9 +693,101 @@ class _LevelScreenState extends State<LevelScreen> {
             '${_srcHi(h['source'] as String? ?? '')} · $when',
             style: const TextStyle(color: Ks.muted, fontSize: 12),
           ),
+          // Older servers send history rows without an id: nothing to undo then.
+          if (h['id'] is num)
+            IconButton(
+              tooltip: tr('Undo this entry', 'यह एंट्री वापस लें'),
+              icon: const Icon(Icons.undo_rounded, size: 20, color: Ks.muted),
+              onPressed: () => _undo(
+                (h['id'] as num).toInt(),
+                lesson != null ? cpTitle(lesson) : _shortCp(id),
+                when,
+              ),
+            ),
         ],
       ),
     );
+  }
+
+  /// Old server: a new route answers FastAPI's bare 404.
+  String _errText(Object e) {
+    if (e is ApiError && e.status == 404 && e.message == 'Not Found') {
+      return tr(
+        'This needs the latest server. Ask to update the server.',
+        'इसके लिए नया सर्वर चाहिए। सर्वर अपडेट करवाएँ।',
+      );
+    }
+    return e is ApiError
+        ? e.message
+        : tr(
+            'Something went wrong, please try again',
+            'कुछ गड़बड़ हो गई, कृपया दोबारा कोशिश करें',
+          );
+  }
+
+  void _snack(String text, {SnackBarAction? action}) {
+    final m = ScaffoldMessenger.of(context);
+    m.hideCurrentSnackBar();
+    m.showSnackBar(SnackBar(content: Text(text), action: action));
+  }
+
+  /// Marks a wrong entry as rejected (mastery ignores it), with a Restore right after.
+  Future<void> _undo(int evidenceId, String lesson, String when) async {
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(tr('Undo this entry?', 'यह एंट्री वापस लें?')),
+        content: Text(
+          tr(
+            '"$lesson" ($when) will stop counting for ${widget.childName}. Use this for an entry saved by mistake.',
+            '"$lesson" ($when) अब ${widget.childName} के लिए नहीं गिना जाएगा। गलती से दर्ज एंट्री के लिए इसका इस्तेमाल करें।',
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: Text(tr('Cancel', 'रद्द करें')),
+          ),
+          FilledButton(
+            style: FilledButton.styleFrom(
+              backgroundColor: Ks.rose,
+              minimumSize: const Size(0, 44),
+            ),
+            onPressed: () => Navigator.pop(ctx, true),
+            child: Text(tr('Undo', 'वापस लें')),
+          ),
+        ],
+      ),
+    );
+    if (ok != true || !mounted) return;
+    try {
+      await Api.i.postJson('/v1/evidence/$evidenceId/undo', {});
+    } catch (e) {
+      if (mounted) _snack(_errText(e));
+      return;
+    }
+    if (!mounted) return;
+    await _load(silent: true);
+    if (!mounted) return;
+    _snack(
+      tr('Entry undone.', 'एंट्री वापस ली गई।'),
+      action: SnackBarAction(
+        label: tr('Restore', 'वापस लाएँ'),
+        onPressed: () => _restore(evidenceId),
+      ),
+    );
+  }
+
+  Future<void> _restore(int evidenceId) async {
+    try {
+      await Api.i.postJson('/v1/evidence/$evidenceId/restore', {});
+    } catch (e) {
+      if (mounted) _snack(_errText(e));
+      return;
+    }
+    if (!mounted) return;
+    await _load(silent: true);
+    if (mounted) _snack(tr('Entry restored.', 'एंट्री वापस आ गई।'));
   }
 
   String _shortCp(String id) => id.split('.').last.replaceAll('_', ' ');

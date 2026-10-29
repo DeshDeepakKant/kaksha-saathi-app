@@ -10,6 +10,7 @@ import '../api.dart';
 import '../theme.dart';
 import '../l10n.dart';
 import '../widgets/capture_sheet.dart';
+import 'outcomes_screen.dart';
 
 /// Today's intervention plan: one card per group, blackboard version, reassessment, TTS.
 class GroupPlanScreen extends StatefulWidget {
@@ -209,6 +210,11 @@ class _GroupPlanScreenState extends State<GroupPlanScreen> {
         ),
         actions: [
           IconButton(
+            tooltip: tr('Did it work?', 'क्या असर हुआ?'),
+            icon: const Icon(Icons.insights_rounded),
+            onPressed: _openOutcomes,
+          ),
+          IconButton(
             tooltip: tr('Regenerate', 'फिर से बनाएँ'),
             icon: const Icon(Icons.refresh_rounded),
             onPressed: _loading ? null : _confirmRegenerate,
@@ -361,6 +367,17 @@ class _GroupPlanScreenState extends State<GroupPlanScreen> {
             style: const TextStyle(color: Ks.muted),
           ),
         ],
+        const SizedBox(height: 16),
+        OutlinedButton.icon(
+          onPressed: _openOutcomes,
+          icon: const Icon(Icons.insights_rounded),
+          label: Text(
+            tr(
+              'Did it work? See earlier groups',
+              'क्या असर हुआ? पिछले समूह देखें',
+            ),
+          ),
+        ),
         const SizedBox(height: 90),
       ],
     );
@@ -743,10 +760,25 @@ class _GroupPlanScreenState extends State<GroupPlanScreen> {
     }
   }
 
+  /// "Did it work?": past groups of this class and subject, before → after per child.
+  void _openOutcomes() => Navigator.of(context).push(
+    MaterialPageRoute(
+      builder: (_) =>
+          OutcomesScreen(classId: widget.classId, subject: widget.subject),
+    ),
+  );
+
+  /// Ticks the group at once (saved on the phone), then tells the server, which records the group
+  /// session behind "Did it work?" and the re-check list. The call is idempotent and goes through
+  /// the outbox, so no network just parks it. Only a refusal (a 4xx) takes the tick back.
   Future<void> _markDone(int planId, String key) async {
     final id = '$planId:$key';
     if (_done.contains(id) || _doing.contains(id)) return;
-    setState(() => _doing.add(id));
+    setState(() {
+      _done.add(id);
+      _doing.add(id);
+    });
+    _persistDone();
     try {
       final r = await Api.i.postQueued(
         '/v1/plans/$planId/groups/${Uri.encodeComponent(key)}/done',
@@ -754,11 +786,7 @@ class _GroupPlanScreenState extends State<GroupPlanScreen> {
       );
       final queued = r is Map && r['queued'] == true;
       if (!mounted) return;
-      setState(() {
-        _done.add(id);
-        if (queued) _queued.add(id);
-      });
-      _persistDone();
+      if (queued) setState(() => _queued.add(id));
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
@@ -775,7 +803,10 @@ class _GroupPlanScreenState extends State<GroupPlanScreen> {
         ),
       );
     } catch (e) {
+      _done.remove(id);
+      _persistDone();
       if (!mounted) return;
+      setState(() {});
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(

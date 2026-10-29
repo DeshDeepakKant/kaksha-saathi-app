@@ -121,7 +121,7 @@ class _VoiceReportScreenState extends State<VoiceReportScreen> {
   Future<dynamic> _fetch() =>
       Api.i.get('/v1/voice_sessions/${widget.sessionId}');
 
-  void _reload() => setState(() => _future = _fetch());
+  void _reload() => setState(() { _future = _fetch(); });
 
   Future<void> _checkInClass(String checkpointId) async {
     final changed = await showModalBottomSheet<bool>(

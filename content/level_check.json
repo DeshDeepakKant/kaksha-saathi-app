@@ -1,0 +1,273 @@
+{
+  "note": "First-week / end-of-term level check, ASER/TaRL style. The teacher sits with one child, starts at level 1 and moves up; the check stops at the first level the child does not pass. Each level maps to one checkpoint and records one guided_probe evidence row. Literacy items are copied from reviewed voice_bank.json items (ids in `from`); numeracy items come from practice_items.json where they exist, plus plain numerals for the number-recognition levels.",
+  "subjects": {
+    "literacy": {
+      "title_en": "Hindi reading level",
+      "title_hi": "हिन्दी पढ़ने का स्तर",
+      "beginner": {
+        "key": "beginner",
+        "title_en": "Beginner (not yet letters)",
+        "title_hi": "शुरुआत (अक्षर अभी नहीं)"
+      },
+      "levels": [
+        {
+          "key": "letter",
+          "title_en": "Letters",
+          "title_hi": "अक्षर",
+          "checkpoint_id": "L.G1.vyanjan",
+          "ask_en": "Point to each letter. Ask the child to say it.",
+          "ask_hi": "हर अक्षर पर उँगली रखें। बच्चे से बोलने को कहें।",
+          "items": [
+            {
+              "show": "क",
+              "from": "vb-hi-let-009"
+            },
+            {
+              "show": "म",
+              "from": "vb-hi-let-011"
+            },
+            {
+              "show": "ल",
+              "from": "vb-hi-let-012"
+            },
+            {
+              "show": "र",
+              "from": "vb-hi-let-013"
+            },
+            {
+              "show": "स",
+              "from": "vb-hi-let-014"
+            }
+          ],
+          "pass_min": 4,
+          "of": 5
+        },
+        {
+          "key": "word",
+          "title_en": "Words",
+          "title_hi": "शब्द",
+          "checkpoint_id": "L.G1.read_matra_words",
+          "ask_en": "Ask the child to read each word.",
+          "ask_hi": "बच्चे से हर शब्द पढ़ने को कहें।",
+          "items": [
+            {
+              "show": "माला",
+              "from": "vb-hi-wr-001"
+            },
+            {
+              "show": "दाल",
+              "from": "vb-hi-wr-002"
+            },
+            {
+              "show": "नाक",
+              "from": "vb-hi-wr-003"
+            },
+            {
+              "show": "बादल",
+              "from": "vb-hi-wr-004"
+            },
+            {
+              "show": "गाजर",
+              "from": "vb-hi-wr-005"
+            }
+          ],
+          "pass_min": 4,
+          "of": 5
+        },
+        {
+          "key": "sentence",
+          "title_en": "Sentences",
+          "title_hi": "वाक्य",
+          "checkpoint_id": "L.G1.read_short_sentences",
+          "ask_en": "Ask the child to read each sentence aloud.",
+          "ask_hi": "बच्चे से हर वाक्य ज़ोर से पढ़ने को कहें।",
+          "items": [
+            {
+              "show": "गाय घास खाती है।",
+              "from": "vb-hi-rd-002"
+            },
+            {
+              "show": "माँ रोटी बना रही है।",
+              "from": "vb-hi-rd-007"
+            },
+            {
+              "show": "चिड़िया उड़ रही है।",
+              "from": "vb-hi-rd-006"
+            }
+          ],
+          "pass_min": 2,
+          "of": 3
+        },
+        {
+          "key": "story",
+          "title_en": "Short passage",
+          "title_hi": "छोटा अनुच्छेद",
+          "checkpoint_id": "L.G2.fluency_45_60",
+          "ask_en": "Ask the child to read each line like a story. A line passes if it is smooth, with at most 1 mistake.",
+          "ask_hi": "बच्चे से हर पंक्ति कहानी की तरह पढ़ने को कहें। बिना रुके और 1 से ज़्यादा गलती न हो तो वह पंक्ति सही।",
+          "items": [
+            {
+              "show": "गर्मी की छुट्टियों में हम नानी के गाँव जाते हैं।",
+              "from": "vb-hi-rd-016"
+            },
+            {
+              "show": "नदी के किनारे बच्चे मिट्टी के घर बना रहे हैं।",
+              "from": "vb-hi-rd-018"
+            },
+            {
+              "show": "गीता ने अपने छोटे भाई को पढ़ना सिखाया।",
+              "from": "vb-hi-rd-020"
+            }
+          ],
+          "pass_min": 2,
+          "of": 3
+        }
+      ]
+    },
+    "numeracy": {
+      "title_en": "Maths level",
+      "title_hi": "गणित का स्तर",
+      "beginner": {
+        "key": "beginner",
+        "title_en": "Beginner (not yet 1–9)",
+        "title_hi": "शुरुआत (1–9 अभी नहीं)"
+      },
+      "levels": [
+        {
+          "key": "num_1_9",
+          "title_en": "Numbers 1–9",
+          "title_hi": "संख्या 1–9",
+          "checkpoint_id": "N.G1.numerals_to_9",
+          "ask_en": "Point to each number. Ask the child to say it.",
+          "ask_hi": "हर संख्या पर उँगली रखें। बच्चे से बोलने को कहें।",
+          "items": [
+            {
+              "show": "3"
+            },
+            {
+              "show": "7"
+            },
+            {
+              "show": "1"
+            },
+            {
+              "show": "9"
+            },
+            {
+              "show": "5"
+            }
+          ],
+          "pass_min": 4,
+          "of": 5
+        },
+        {
+          "key": "num_10_99",
+          "title_en": "Numbers 10–99",
+          "title_hi": "संख्या 10–99",
+          "checkpoint_id": "N.G1.read_write_to_99",
+          "ask_en": "Point to each number. Ask the child to say it.",
+          "ask_hi": "हर संख्या पर उँगली रखें। बच्चे से बोलने को कहें।",
+          "items": [
+            {
+              "show": "23"
+            },
+            {
+              "show": "47"
+            },
+            {
+              "show": "81"
+            },
+            {
+              "show": "56"
+            },
+            {
+              "show": "90"
+            }
+          ],
+          "pass_min": 4,
+          "of": 5
+        },
+        {
+          "key": "add_single",
+          "title_en": "Single-digit sums",
+          "title_hi": "एक अंक का जोड़",
+          "checkpoint_id": "N.G1.add_single",
+          "ask_en": "Read each sum aloud. The child answers (fingers or objects are fine).",
+          "ask_hi": "हर सवाल पढ़कर सुनाएँ। बच्चा जवाब दे (उँगलियाँ या चीज़ें गिनना ठीक है)।",
+          "items": [
+            {
+              "show": "3 + 4",
+              "expect": "7",
+              "from": "pi_n1_add1"
+            },
+            {
+              "show": "6 + 3",
+              "expect": "9",
+              "from": "pi_n1_add2"
+            },
+            {
+              "show": "5 + 2",
+              "expect": "7"
+            }
+          ],
+          "pass_min": 2,
+          "of": 3
+        },
+        {
+          "key": "sub_borrow",
+          "title_en": "2-digit subtraction (borrowing)",
+          "title_hi": "दो अंक का घटाव (उधार)",
+          "checkpoint_id": "N.G2.sub_2digit_borrow",
+          "ask_en": "Write each sum on the slate. The child solves it.",
+          "ask_hi": "हर सवाल स्लेट पर लिखें। बच्चा हल करे।",
+          "items": [
+            {
+              "show": "52 − 28",
+              "expect": "24",
+              "from": "pi_sub1"
+            },
+            {
+              "show": "45 − 18",
+              "expect": "27",
+              "from": "pi_sub2"
+            },
+            {
+              "show": "63 − 27",
+              "expect": "36",
+              "from": "pi_sub3"
+            }
+          ],
+          "pass_min": 2,
+          "of": 3
+        },
+        {
+          "key": "mult",
+          "title_en": "Multiplication",
+          "title_hi": "गुणा",
+          "checkpoint_id": "N.G3.mult_concept",
+          "ask_en": "Read each question aloud. The child answers.",
+          "ask_hi": "हर सवाल पढ़कर सुनाएँ। बच्चा जवाब दे।",
+          "items": [
+            {
+              "show": "3 × 5",
+              "expect": "15",
+              "from": "pi_mult2"
+            },
+            {
+              "show": "4 × 3",
+              "expect": "12",
+              "from": "pi_tab1"
+            },
+            {
+              "show": "2 × 7",
+              "expect": "14",
+              "from": "pi_tab2"
+            }
+          ],
+          "pass_min": 2,
+          "of": 3
+        }
+      ]
+    }
+  }
+}

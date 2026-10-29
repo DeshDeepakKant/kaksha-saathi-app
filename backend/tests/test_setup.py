@@ -443,3 +443,13 @@ def test_custom_topic_is_private_to_its_school(client, teacher_headers):
     finally:
         get_content().checkpoints.pop(cid, None)
         get_content().custom_ids.discard(cid)
+
+
+def test_hosted_postgres_url_uses_psycopg3():
+    """Neon/Render give postgresql:// URLs; the engine must use the psycopg 3 driver we ship."""
+    from app.config import Settings
+
+    for raw in ("postgresql://u:p@h/db?sslmode=require", "postgres://u:p@h/db"):
+        assert Settings(database_url=raw).database_url.startswith("postgresql+psycopg://")
+    assert Settings(database_url="sqlite:///x.db").database_url == "sqlite:///x.db"
+    assert Settings(database_url="postgresql+psycopg://u:p@h/db").database_url == "postgresql+psycopg://u:p@h/db"

@@ -532,11 +532,20 @@ class SylChapterCard extends StatelessWidget {
   }
 }
 
-/// Bottom sheet for one topic. Pops with `'check'` or `'remove'`.
+/// Bottom sheet for one topic. Pops with `'check'`, `'up'`, `'down'`, or (custom topics only)
+/// `'rename'` / `'remove'`. [canMoveUp] / [canMoveDown] are false at the ends of the chapter.
 class SylTopicSheet extends StatelessWidget {
-  const SylTopicSheet({super.key, required this.topic, required this.chapter});
+  const SylTopicSheet({
+    super.key,
+    required this.topic,
+    required this.chapter,
+    this.canMoveUp = false,
+    this.canMoveDown = false,
+  });
   final Map<String, dynamic> topic;
   final String chapter;
+  final bool canMoveUp;
+  final bool canMoveDown;
 
   @override
   Widget build(BuildContext context) {
@@ -636,13 +645,64 @@ class SylTopicSheet extends StatelessWidget {
               icon: const Icon(Icons.fact_check_rounded),
               label: Text(tr('Check now', 'अभी जाँचें')),
             ),
+            const SizedBox(height: 10),
+            // Order within the chapter (the order the topics are taught in).
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: canMoveUp
+                        ? () => Navigator.pop(context, 'up')
+                        : null,
+                    style: OutlinedButton.styleFrom(
+                      minimumSize: const Size(0, 52),
+                    ),
+                    icon: const Icon(Icons.arrow_upward_rounded),
+                    label: Text(tr('Move up', 'ऊपर करें')),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: canMoveDown
+                        ? () => Navigator.pop(context, 'down')
+                        : null,
+                    style: OutlinedButton.styleFrom(
+                      minimumSize: const Size(0, 52),
+                    ),
+                    icon: const Icon(Icons.arrow_downward_rounded),
+                    label: Text(tr('Move down', 'नीचे करें')),
+                  ),
+                ),
+              ],
+            ),
             if (custom) ...[
               const SizedBox(height: 10),
-              OutlinedButton.icon(
-                onPressed: () => Navigator.pop(context, 'remove'),
-                style: OutlinedButton.styleFrom(foregroundColor: Ks.rose),
-                icon: const Icon(Icons.delete_outline_rounded),
-                label: Text(tr('Remove from syllabus', 'पाठ्यक्रम से हटाएँ')),
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      onPressed: () => Navigator.pop(context, 'rename'),
+                      style: OutlinedButton.styleFrom(
+                        minimumSize: const Size(0, 52),
+                      ),
+                      icon: const Icon(Icons.edit_rounded),
+                      label: Text(tr('Rename', 'नाम बदलें')),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      onPressed: () => Navigator.pop(context, 'remove'),
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: Ks.rose,
+                        minimumSize: const Size(0, 52),
+                      ),
+                      icon: const Icon(Icons.delete_outline_rounded),
+                      label: Text(tr('Remove', 'हटाएँ')),
+                    ),
+                  ),
+                ],
               ),
             ],
           ],

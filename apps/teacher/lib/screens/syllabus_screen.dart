@@ -92,11 +92,11 @@ class _SyllabusScreenState extends State<SyllabusScreen> {
     }
   }
 
-  void _reload() => setState(() => _future = _fetch());
+  void _reload() => setState(() { _future = _fetch(); });
 
   Future<void> _refresh() async {
     final f = _fetch();
-    setState(() => _future = f);
+    setState(() { _future = f; });
     try {
       await f;
     } catch (_) {
@@ -122,8 +122,50 @@ class _SyllabusScreenState extends State<SyllabusScreen> {
     return name.isEmpty ? s['key'].toString() : name;
   }
 
+  /// Server text for a failed write; a 404 "Not Found" means the route is missing (old server).
+  String _errText(Object e) {
+    if (e is ApiError) {
+      if (e.status == 404 && e.message == 'Not Found') {
+        return tr(
+          'This needs the latest server. Ask to update the server.',
+          'इसके लिए नया सर्वर चाहिए। सर्वर अपडेट करवाएँ।',
+        );
+      }
+      return e.message;
+    }
+    return tr(
+      'Could not save. Check the network and try again.',
+      'सहेज नहीं सके। नेटवर्क देखकर दोबारा कोशिश करें।',
+    );
+  }
+
+  /// Rename and reorder answer with the full syllabus body: show it without refetching.
+  void _apply(dynamic r) {
+    if (r is! Map) return;
+    final m = r.cast<String, dynamic>();
+    setState(() {
+      _last = m;
+      _future = Future.value(m);
+    });
+  }
+
+  /// Ids of the topic's whole chapter in the last good response (ignores the filter).
+  List<String> _chapterIds(String chapter) {
+    for (final c in sylMaps(_last?['chapters'])) {
+      if ((c['chapter'] ?? '').toString() == chapter) {
+        return [
+          for (final t in sylMaps(c['topics'])) t['checkpoint_id'].toString(),
+        ];
+      }
+    }
+    return const [];
+  }
+
   // ---- actions
   Future<void> _openTopic(Map<String, dynamic> topic, String chapter) async {
+    final id = topic['checkpoint_id'].toString();
+    final siblings = _chapterIds(chapter);
+    final at = siblings.indexOf(id);
     final action = await showModalBottomSheet<String>(
       context: context,
       isScrollControlled: true,
@@ -131,10 +173,22 @@ class _SyllabusScreenState extends State<SyllabusScreen> {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(22)),
       ),
-      builder: (_) => SylTopicSheet(topic: topic, chapter: chapter),
+      builder: (_) => SylTopicSheet(
+        topic: topic,
+        chapter: chapter,
+        canMoveUp: at > 0,
+        canMoveDown: at >= 0 && at < siblings.length - 1,
+      ),
     );
     if (!mounted || action == null) return;
-    final id = topic['checkpoint_id'].toString();
+    if (action == 'up' || action == 'down') {
+      await _move(id, chapter, action == 'up' ? -1 : 1);
+      return;
+    }
+    if (action == 'rename') {
+      await _rename(topic);
+      return;
+    }
     if (action == 'check') {
       final changed = await showModalBottomSheet<bool>(
         context: context,
@@ -199,6 +253,114 @@ class _SyllabusScreenState extends State<SyllabusScreen> {
           ),
         );
       }
+    }
+  }
+
+  /// Swaps a topic with its neighbour inside its own chapter, then sends the full order.
+  /// Moves never cross a chapter: the server orders chapters by their first topic, so a
+  /// cross-chapter swap would reshuffle whole chapters.
+  Future<void> _move(String id, String chapter, int step) async {
+    final order = <String>[];
+    for (final c in sylMaps(_last?['chapters'])) {
+      final ids = [
+        for (final t in sylMaps(c['topics'])) t['checkpoint_id'].toString(),
+      ];
+      if ((c['chapter'] ?? '').toString() == chapter) {
+        final i = ids.indexOf(id);
+        final j = i + step;
+        if (i < 0 || j < 0 || j >= ids.length) return;
+        ids[i] = ids[j];
+        ids[j] = id;
+      }
+      order.addAll(ids);
+    }
+    try {
+      final r = await Api.i.postJson(
+        '/v1/classes/${widget.classId}/syllabus/reorder',
+        {'subject': _subject, 'order': order},
+      );
+      if (!mounted) return;
+      _open.add(chapter);
+      _apply(r);
+      _toast(tr('Moved.', 'क्रम बदल दिया।'));
+    } catch (e) {
+      if (mounted) _toast(_errText(e));
+    }
+  }
+
+  Future<void> _rename(Map<String, dynamic> topic) async {
+    final en = TextEditingController(
+      text: (topic['title_en'] ?? '').toString(),
+    );
+    final hi = TextEditingController(
+      text: (topic['title_hi'] ?? '').toString(),
+    );
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, setSt) {
+          final empty = en.text.trim().isEmpty && hi.text.trim().isEmpty;
+          return AlertDialog(
+            title: Text(tr('Rename topic', 'विषय का नाम बदलें')),
+            content: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    controller: en,
+                    autofocus: true,
+                    maxLength: 120,
+                    onChanged: (_) => setSt(() {}),
+                    decoration: InputDecoration(
+                      labelText: tr('Name in English', 'अंग्रेज़ी में नाम'),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  TextField(
+                    controller: hi,
+                    maxLength: 120,
+                    onChanged: (_) => setSt(() {}),
+                    decoration: InputDecoration(
+                      labelText: tr('Name in Hindi', 'हिन्दी में नाम'),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(ctx, false),
+                child: Text(tr('Cancel', 'रद्द करें')),
+              ),
+              FilledButton(
+                style: FilledButton.styleFrom(minimumSize: const Size(0, 44)),
+                onPressed: empty ? null : () => Navigator.pop(ctx, true),
+                child: Text(tr('Save', 'सहेजें')),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+    final titleEn = en.text.trim();
+    final titleHi = hi.text.trim();
+    // Not disposed here: the dialog's closing animation may still read them; GC frees them.
+    if (ok != true || !mounted) return;
+    try {
+      final cp = Uri.encodeComponent(topic['checkpoint_id'].toString());
+      final r = await Api.i.postJson(
+        '/v1/classes/${widget.classId}/syllabus/topics/$cp/rename',
+        {
+          'subject': _subject,
+          if (titleEn.isNotEmpty) 'title_en': titleEn,
+          if (titleHi.isNotEmpty) 'title_hi': titleHi,
+        },
+      );
+      if (!mounted) return;
+      _apply(r);
+      _toast(tr('Renamed.', 'नाम बदल दिया।'));
+    } catch (e) {
+      if (mounted) _toast(_errText(e));
     }
   }
 

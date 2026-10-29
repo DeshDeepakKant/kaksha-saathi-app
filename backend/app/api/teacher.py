@@ -25,10 +25,10 @@ from app.api.deps import current_teacher, image_media_type, owned_child, owned_c
 from app.core.security import make_token, verify_pin
 from app.db import get_db
 from app.models.tables import (
-    AiCall, Attendance, CaptureSession, Child, Classroom, Evidence, InterventionLog, Plan, Roadmap,
-    RoadmapItem, School, Teacher,
+    AiCall, Attendance, CaptureSession, Child, Classroom, Evidence, GroupSession, InterventionLog, LevelCheck,
+    Plan, Roadmap, RoadmapItem, School, Teacher,
 )
-from app.services import ledger
+from app.services import followups, ledger
 from app.services.subjects import resolve_subject
 from app.services.content import get_content
 from app.services.mastery import RESULT_VALUES
@@ -657,7 +657,8 @@ def plan_group_done(plan_id: int, group_key: str, teacher: Teacher = Depends(cur
     if not db.scalar(select(InterventionLog.id).where(InterventionLog.plan_id == plan.id,
                                                       InterventionLog.group_key == group_key).limit(1)):
         db.add(InterventionLog(school_id=plan.school_id, plan_id=plan.id, group_key=group_key))
-    return {"ok": True}
+    session = followups.record_done(db, plan, group_key, teacher.id)  # None for assess_first
+    return {"ok": True, "session_id": session.id if session else None}
 
 
 @router.get("/classes/{class_id}/board")
@@ -761,7 +762,7 @@ def child_history(child_id: int, limit: int = 40, subject: str | None = None,
         cps = get_content().checkpoints
         q = q.where(Evidence.checkpoint_id.in_([c for c, cp in cps.items() if cp.subject == subject]))
     rows = db.scalars(q.order_by(Evidence.at.desc()).limit(limit))
-    return [{"checkpoint_id": e.checkpoint_id, "result": e.result, "source": e.source,
+    return [{"id": e.id, "checkpoint_id": e.checkpoint_id, "result": e.result, "source": e.source,
              "misconception": e.misconception, "at": e.at.isoformat(), "quote": e.quote} for e in rows]
 
 
@@ -779,6 +780,7 @@ def delete_child_data(child_id: int, teacher: Teacher = Depends(current_teacher)
     ch = owned_child(child_id, teacher, db)
     db.execute(delete(Evidence).where(Evidence.child_id == ch.id))
     db.execute(delete(Attendance).where(Attendance.child_id == ch.id))
+    db.execute(delete(LevelCheck).where(LevelCheck.child_id == ch.id))
     return {"deleted": True}
 
 
@@ -789,7 +791,11 @@ def delete_class_data(class_id: int, teacher: Teacher = Depends(current_teacher)
     if ids:
         db.execute(delete(Evidence).where(Evidence.child_id.in_(ids)))
         db.execute(delete(Attendance).where(Attendance.class_id == cls.id))
+    db.execute(delete(LevelCheck).where(LevelCheck.class_id == cls.id))
     db.execute(delete(CaptureSession).where(CaptureSession.class_id == cls.id))
+    plans = select(Plan.id).where(Plan.class_id == cls.id)
+    db.execute(delete(GroupSession).where(GroupSession.plan_id.in_(plans)))
+    db.execute(delete(InterventionLog).where(InterventionLog.plan_id.in_(plans)))  # Done logs block the plan delete
     db.execute(delete(Plan).where(Plan.class_id == cls.id))
     return {"deleted": True}
 

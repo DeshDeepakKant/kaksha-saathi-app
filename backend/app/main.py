@@ -10,16 +10,18 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
-from app.api import parent, parent_insights, setup, teacher, voice
+from app.api import insights, level_check, manage, parent, parent_insights, setup, teacher, voice
 from app.config import get_settings
 from app.db import init_db
 from app.services.content import get_content, load_custom_checkpoints
+from app.services.level_check import load_ladders
 
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
     init_db()
     get_content()  # fail fast on bad content
+    load_ladders()  # and on a bad level-check ladder
     load_custom_checkpoints()  # teacher-made topics become real checkpoints (single-worker registry)
     if get_settings().seed_on_startup:
         from app.seed import reseed_demo_if_outdated, seed_if_empty
@@ -74,6 +76,9 @@ app.include_router(setup.router)
 app.include_router(parent.router)
 app.include_router(parent_insights.router)
 app.include_router(voice.router)
+app.include_router(level_check.router)
+app.include_router(manage.router)
+app.include_router(insights.router)
 
 # Mounted AFTER every route: serves the landing page at "/" and the two Flutter web builds.
 WEB_DIR = Path(__file__).resolve().parents[2] / "deploy" / "web"

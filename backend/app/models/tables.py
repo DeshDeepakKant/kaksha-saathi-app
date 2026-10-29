@@ -278,6 +278,44 @@ class VoiceTurn(Base):
     at: Mapped[datetime] = mapped_column(DateTime, default=utcnow)
 
 
+class LevelCheck(Base):
+    """One first-week / end-of-term level check of a child on a subject's ladder (content/level_check.json).
+
+    `level_index` is the highest level passed (-1 = beginner). The per-level results are stored as
+    `guided_probe` evidence; this row only keeps the placement so first vs latest can be compared.
+    """
+    __tablename__ = "level_checks"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    school_id: Mapped[int] = mapped_column(ForeignKey("schools.id"), index=True)
+    class_id: Mapped[int] = mapped_column(ForeignKey("classes.id"))
+    child_id: Mapped[int] = mapped_column(ForeignKey("children.id"), index=True)
+    subject: Mapped[str] = mapped_column(String(16))
+    level_index: Mapped[int] = mapped_column(Integer)
+    level_key: Mapped[str] = mapped_column(String(24))
+    at: Mapped[datetime] = mapped_column(DateTime, default=utcnow)
+    created_by: Mapped[int | None] = mapped_column(ForeignKey("teachers.id"))
+
+
+class GroupSession(Base):
+    """Snapshot of one group being taught (written when the teacher taps Done on a plan group).
+
+    Deleting a plan or class removes its sessions (the existing class/plan delete paths stay valid).
+    """
+    __tablename__ = "group_sessions"
+    __table_args__ = (UniqueConstraint("plan_id", "group_key"),)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    school_id: Mapped[int] = mapped_column(ForeignKey("schools.id"), index=True)
+    class_id: Mapped[int] = mapped_column(ForeignKey("classes.id", ondelete="CASCADE"), index=True)
+    plan_id: Mapped[int] = mapped_column(ForeignKey("plans.id", ondelete="CASCADE"))
+    subject: Mapped[str] = mapped_column(String(16))
+    group_key: Mapped[str] = mapped_column(String(80))
+    checkpoint_id: Mapped[str] = mapped_column(String(80))
+    activity_id: Mapped[str | None] = mapped_column(String(80))
+    member_ids: Mapped[list] = mapped_column(JSON, default=list)  # child ids, frozen at done time
+    done_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow)
+    done_by: Mapped[int | None] = mapped_column(ForeignKey("teachers.id"))
+
+
 class AppMeta(Base):
     """Small key/value facts about the deployment itself (e.g. which demo seed version is loaded)."""
     __tablename__ = "app_meta"
