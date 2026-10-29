@@ -10,7 +10,7 @@ from app.ai import features
 from app.models.tables import (
     Attendance, Child, Classroom, Evidence, Plan, Roadmap, RoadmapItem,
 )
-from app.services import mastery
+from app.services import content_lang, mastery
 from app.services.content import Content, get_content
 from app.services.grouping import group_class
 from app.services.plan_templates import render_group
@@ -140,11 +140,18 @@ def build_groups(db: Session, cls: Classroom, subject: str, now: datetime | None
     return group_class(get_content(), learning, needs), st, children, roadmap
 
 
+def plan_lang(payload: dict | None) -> str:
+    """The content language a saved plan was written in (plans before content languages are Hindi)."""
+    return (payload or {}).get("content_lang") or content_lang.SOURCE_LANG
+
+
 def todays_plan(db: Session, cls: Classroom, subject: str, for_date: date, content: Content,
-                force: bool = False) -> Plan:
+                force: bool = False, lang: str = content_lang.SOURCE_LANG) -> Plan:
+    """Today's plan, written in the teacher's content language `lang`. A saved plan in another language
+    is rewritten (as with `force`)."""
     existing = db.scalar(select(Plan).where(Plan.class_id == cls.id, Plan.subject == subject,
                                             Plan.for_date == for_date))
-    if existing and not force:
+    if existing and not force and plan_lang(existing.payload) == lang:
         return existing
     grouping, st, children, roadmap = build_groups(db, cls, subject)
     by_id = {c.id: c for c in children}
@@ -161,13 +168,16 @@ def todays_plan(db: Session, cls: Classroom, subject: str, for_date: date, conte
     real_groups = [g for g in groups if not g["unassessed"]]
     if real_groups:
         proposal = features.plan_day(db, school_id=cls.school_id, grade=cls.grade, subject=subject,
-                                     day=for_date.isoformat(), groups=real_groups, content=content)
+                                     day=for_date.isoformat(), groups=real_groups, content=content, lang=lang)
         payload = proposal.payload
         generated_by = "ai" if proposal.ai_status == "ready" else "fallback"
+        if generated_by == "fallback":
+            payload = _template_in_lang(db, payload, content, lang, cls.school_id)
     else:
         payload = {"groups": [], "whole_class_note_hi": "आज किसी समूह के लिए योजना की ज़रूरत नहीं — या मूल्यांकन बाकी है।",
                    "today_observation_to_collect_hi": ""}
         generated_by = "fallback"
+        payload = _template_in_lang(db, payload, content, lang, cls.school_id)
     by_roll = {c.roll_no: {"first_name": c.first_name, "id": c.id} for c in children}
     rendered = [render_group(g, by_roll) for g in payload.get("groups", [])]
     cp_of = {g["key"]: g["checkpoint_id"] for g in groups}
@@ -186,7 +196,9 @@ def todays_plan(db: Session, cls: Classroom, subject: str, for_date: date, conte
     payload = {"groups": rendered, "assess_first": assess,
                "whole_class_note_hi": payload.get("whole_class_note_hi", ""),
                "today_observation_to_collect_hi": payload.get("today_observation_to_collect_hi", ""),
-               "generated_by": generated_by}
+               "generated_by": generated_by, "content_lang": lang,
+               **({"machine_translated": bool(payload.get("machine_translated"))}
+                  if lang != content_lang.SOURCE_LANG else {})}
     if existing:
         existing.payload = payload
         existing.generated_by = generated_by
@@ -197,6 +209,54 @@ def todays_plan(db: Session, cls: Classroom, subject: str, for_date: date, conte
     db.add(plan)
     db.flush()
     return plan
+
+
+_TEMPLATE_TEXT = ("why_hi", "teacher_script_hi", "defer_note_hi")
+_PLAN_TEXT = ("whole_class_note_hi", "today_observation_to_collect_hi")
+
+
+def _template_in_lang(db: Session, payload: dict, content: Content, lang: str, school_id: int) -> dict:
+    """A template (fallback) plan's canned Hindi in `lang`: the script from the localized library activity,
+    the other canned lines machine-translated (cached). Hindi: unchanged."""
+    if lang == content_lang.SOURCE_LANG:
+        return payload
+    out = {**payload, "groups": [dict(g) for g in payload.get("groups", [])]}
+    mt = False
+    slots: list[tuple] = []  # (container, key) pairs whose Hindi text gets translated in one batch
+    for g in out["groups"]:
+        act = content_lang.activity(content.activities.get(g.get("activity_id")), lang)
+        if act is not None:
+            g["teacher_script_hi"] = " ".join(act["steps_hi"])[:600]
+            g["reassessment"] = act.get("reassessment", g.get("reassessment"))
+            mt = mt or act["machine_translated"]
+        else:
+            if isinstance(g.get("reassessment"), dict) and g["reassessment"].get("ask_hi"):
+                g["reassessment"] = dict(g["reassessment"])
+                slots.append((g["reassessment"], "ask_hi"))
+            if isinstance(g.get("generic_steps_hi"), list):
+                g["generic_steps_hi"] = list(g["generic_steps_hi"])
+                slots.extend((g["generic_steps_hi"], i) for i in range(len(g["generic_steps_hi"])))
+        slots.extend((g, k) for k in _TEMPLATE_TEXT if g.get(k) and (k != "teacher_script_hi" or act is None))
+    slots.extend((out, k) for k in _PLAN_TEXT if out.get(k))
+    texts, tmt = content_lang.translate(db, [obj[k] for obj, k in slots], lang, school_id)
+    for (obj, k), text in zip(slots, texts):
+        obj[k] = text
+    out["machine_translated"] = mt or tmt
+    return out
+
+
+def localize_plan(payload: dict, content: Content) -> dict:
+    """Response copy of a saved plan with each group's library activity in the plan's own language
+    (storage keeps the reviewed Hindi). Hindi plans are returned as they are."""
+    lang = plan_lang(payload)
+    if lang == content_lang.SOURCE_LANG:
+        return payload
+    out = dict(payload)
+    out["groups"] = [{**g, "activity": content_lang.activity(g["activity"], lang)} if g.get("activity") else g
+                     for g in payload.get("groups", [])]
+    if any((g.get("activity") or {}).get("machine_translated") for g in out["groups"]):
+        out["machine_translated"] = True
+    return out
 
 
 def upgrade_plan_payload(payload: dict, children: list[Child], content: Content) -> dict:

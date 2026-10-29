@@ -39,6 +39,7 @@ dependencies:
   shared_preferences: ^2.3.3
   web: ^1.1.0
   flutter_tts: ^4.2.0
+  audioplayers: ^6.5.1
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -64,6 +65,18 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+
+  # UI translation tables (tool/l10n_translate.py) and fonts for scripts phones often lack.
+  # Noto Sans Ol Chiki / Meetei Mayek: SIL Open Font License 1.1, see assets/fonts/OFL-*.txt.
+  assets:
+    - assets/i18n/
+  fonts:
+    - family: NotoSansOlChiki
+      fonts:
+        - asset: assets/fonts/NotoSansOlChiki-Regular.ttf
+    - family: NotoSansMeeteiMayek
+      fonts:
+        - asset: assets/fonts/NotoSansMeeteiMayek-Regular.ttf
 
   # To add assets to your application, add an assets section, like this:
   # assets:

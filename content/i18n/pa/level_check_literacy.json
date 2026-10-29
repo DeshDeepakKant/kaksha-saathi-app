@@ -1,0 +1,171 @@
+{
+ "lang": "pa",
+ "source_lang": "pa",
+ "machine_translated": true,
+ "reviewed": false,
+ "model": "claude-sonnet-5",
+ "generated_at": "2026-10-29T21:52:57+00:00",
+ "note": "Machine translated by scripts/translate_content.py; not reviewed by an educator.",
+ "generated_natively": true,
+ "title_en": "Punjabi reading level",
+ "title": "ਪੰਜਾਬੀ ਪੜ੍ਹਨ ਦਾ ਪੱਧਰ",
+ "beginner": {
+  "key": "beginner",
+  "title_en": "Beginner (not yet letters)",
+  "title": "ਸ਼ੁਰੂਆਤੀ (ਅੱਖਰ ਨਹੀਂ ਪਛਾਣਦਾ)"
+ },
+ "levels": [
+  {
+   "key": "letter",
+   "title_en": "Letters",
+   "title": "ਅੱਖਰ",
+   "checkpoint_id": "L.G1.vyanjan",
+   "ask_en": "Point to each letter. Ask the child to say it.",
+   "ask": "ਹਰੇਕ ਅੱਖਰ ਵੱਲ ਇਸ਼ਾਰਾ ਕਰੋ। ਬੱਚੇ ਨੂੰ ਬੋਲਣ ਲਈ ਕਹੋ।",
+   "items": [
+    {
+     "show": "ਕ"
+    },
+    {
+     "show": "ਮ"
+    },
+    {
+     "show": "ਲ"
+    },
+    {
+     "show": "ਰ"
+    },
+    {
+     "show": "ਸ"
+    }
+   ],
+   "pass_min": 4,
+   "of": 5,
+   "practice": [
+    {
+     "show": "ਨ"
+    },
+    {
+     "show": "ਤ"
+    },
+    {
+     "show": "ਪ"
+    },
+    {
+     "show": "ਗ"
+    },
+    {
+     "show": "ਦ"
+    }
+   ]
+  },
+  {
+   "key": "word",
+   "title_en": "Words",
+   "title": "ਸ਼ਬਦ",
+   "checkpoint_id": "L.G1.read_matra_words",
+   "ask_en": "Ask the child to read each word.",
+   "ask": "ਬੱਚੇ ਨੂੰ ਹਰੇਕ ਸ਼ਬਦ ਪੜ੍ਹਨ ਲਈ ਕਹੋ।",
+   "items": [
+    {
+     "show": "ਮਾਲਾ"
+    },
+    {
+     "show": "ਦਾਲ"
+    },
+    {
+     "show": "ਨਾਕ"
+    },
+    {
+     "show": "ਬੱਦਲ"
+    },
+    {
+     "show": "ਗਾਜਰ"
+    }
+   ],
+   "pass_min": 4,
+   "of": 5,
+   "practice": [
+    {
+     "show": "ਕੇਲਾ"
+    },
+    {
+     "show": "ਪਾਣੀ"
+    },
+    {
+     "show": "ਘੋੜਾ"
+    },
+    {
+     "show": "ਕਿਤਾਬ"
+    },
+    {
+     "show": "ਰੋਟੀ"
+    }
+   ]
+  },
+  {
+   "key": "sentence",
+   "title_en": "Sentences",
+   "title": "ਵਾਕ",
+   "checkpoint_id": "L.G1.read_short_sentences",
+   "ask_en": "Ask the child to read each sentence aloud.",
+   "ask": "ਬੱਚੇ ਨੂੰ ਹਰੇਕ ਵਾਕ ਉੱਚੀ ਆਵਾਜ਼ ਵਿੱਚ ਪੜ੍ਹਨ ਲਈ ਕਹੋ।",
+   "items": [
+    {
+     "show": "ਗਾਂ ਘਾਹ ਖਾਂਦੀ ਹੈ।"
+    },
+    {
+     "show": "ਮਾਂ ਰੋਟੀ ਬਣਾ ਰਹੀ ਹੈ।"
+    },
+    {
+     "show": "ਕੁੱਤਾ ਵਿਹੜੇ ਵਿੱਚ ਭੱਜਦਾ ਹੈ।"
+    }
+   ],
+   "pass_min": 2,
+   "of": 3,
+   "practice": [
+    {
+     "show": "ਬੱਚੇ ਸਕੂਲ ਜਾਂਦੇ ਹਨ।"
+    },
+    {
+     "show": "ਪਿਤਾ ਜੀ ਖੇਤ ਵਿੱਚ ਕੰਮ ਕਰਦੇ ਹਨ।"
+    },
+    {
+     "show": "ਦਾਦੀ ਕਹਾਣੀ ਸੁਣਾਉਂਦੀ ਹੈ।"
+    }
+   ]
+  },
+  {
+   "key": "story",
+   "title_en": "Short passage",
+   "title": "ਛੋਟੀ ਕਹਾਣੀ",
+   "checkpoint_id": "L.G2.fluency_45_60",
+   "ask_en": "Ask the child to read each line like a story. A line passes if it is smooth, with at most 1 mistake.",
+   "ask": "ਬੱਚੇ ਨੂੰ ਹਰੇਕ ਲਾਈਨ ਕਹਾਣੀ ਵਾਂਗ ਪੜ੍ਹਨ ਲਈ ਕਹੋ। ਜੇ ਲਾਈਨ ਸੁਚੱਜੇ ਢੰਗ ਨਾਲ ਪੜ੍ਹੀ ਜਾਵੇ, ਵੱਧ ਤੋਂ ਵੱਧ 1 ਗ਼ਲਤੀ ਨਾਲ, ਤਾਂ ਉਹ ਪਾਸ ਮੰਨੀ ਜਾਂਦੀ ਹੈ।",
+   "items": [
+    {
+     "show": "ਗਰਮੀਆਂ ਦੀਆਂ ਛੁੱਟੀਆਂ ਵਿੱਚ ਅਸੀਂ ਨਾਨੀ ਦੇ ਪਿੰਡ ਜਾਂਦੇ ਹਾਂ।"
+    },
+    {
+     "show": "ਉੱਥੇ ਅਸੀਂ ਬਾਗ ਵਿੱਚ ਖੇਡਦੇ ਹਾਂ ਅਤੇ ਅੰਬ ਖਾਂਦੇ ਹਾਂ।"
+    },
+    {
+     "show": "ਸ਼ਾਮ ਨੂੰ ਨਾਨੀ ਸਾਨੂੰ ਮਿੱਠੀਆਂ ਕਹਾਣੀਆਂ ਸੁਣਾਉਂਦੀ ਹੈ।"
+    }
+   ],
+   "pass_min": 2,
+   "of": 3,
+   "practice": [
+    {
+     "show": "ਇੱਕ ਛੋਟਾ ਜਿਹਾ ਪੰਛੀ ਰੁੱਖ ਉੱਤੇ ਆਲ੍ਹਣਾ ਬਣਾਉਂਦਾ ਹੈ।"
+    },
+    {
+     "show": "ਉਹ ਹਰ ਰੋਜ਼ ਤਿਣਕੇ ਲਿਆ ਕੇ ਆਲ੍ਹਣਾ ਤਿਆਰ ਕਰਦਾ ਹੈ।"
+    },
+    {
+     "show": "ਅੰਤ ਵਿੱਚ ਪੰਛੀ ਆਪਣੇ ਨਵੇਂ ਘਰ ਵਿੱਚ ਖੁਸ਼ੀ ਨਾਲ ਰਹਿੰਦਾ ਹੈ।"
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,443 @@
+{
+ "as": {
+  "code": "as",
+  "requested": 18,
+  "first_pass_failures": 0,
+  "placeholder_failures_first_pass": 0,
+  "fixed_on_retry": 0,
+  "still_failing": {},
+  "missing": [],
+  "tables": {
+   "teacher": {
+    "translated": 613,
+    "total": 613,
+    "bytes": 65926
+   },
+   "parent": {
+    "translated": 244,
+    "total": 244,
+    "bytes": 26879
+   }
+  }
+ },
+ "bn": {
+  "code": "bn",
+  "requested": 18,
+  "first_pass_failures": 0,
+  "placeholder_failures_first_pass": 0,
+  "fixed_on_retry": 0,
+  "still_failing": {},
+  "missing": [],
+  "tables": {
+   "teacher": {
+    "translated": 613,
+    "total": 613,
+    "bytes": 65543
+   },
+   "parent": {
+    "translated": 244,
+    "total": 244,
+    "bytes": 26523
+   }
+  }
+ },
+ "brx": {
+  "code": "brx",
+  "requested": 18,
+  "first_pass_failures": 0,
+  "placeholder_failures_first_pass": 0,
+  "fixed_on_retry": 0,
+  "still_failing": {},
+  "missing": [],
+  "tables": {
+   "teacher": {
+    "translated": 613,
+    "total": 613,
+    "bytes": 64452
+   },
+   "parent": {
+    "translated": 244,
+    "total": 244,
+    "bytes": 26869
+   }
+  }
+ },
+ "doi": {
+  "code": "doi",
+  "requested": 18,
+  "first_pass_failures": 0,
+  "placeholder_failures_first_pass": 0,
+  "fixed_on_retry": 0,
+  "still_failing": {},
+  "missing": [],
+  "tables": {
+   "teacher": {
+    "translated": 613,
+    "total": 613,
+    "bytes": 63062
+   },
+   "parent": {
+    "translated": 244,
+    "total": 244,
+    "bytes": 26319
+   }
+  }
+ },
+ "gu": {
+  "code": "gu",
+  "requested": 18,
+  "first_pass_failures": 0,
+  "placeholder_failures_first_pass": 0,
+  "fixed_on_retry": 0,
+  "still_failing": {},
+  "missing": [],
+  "tables": {
+   "teacher": {
+    "translated": 613,
+    "total": 613,
+    "bytes": 62628
+   },
+   "parent": {
+    "translated": 244,
+    "total": 244,
+    "bytes": 26074
+   }
+  }
+ },
+ "kn": {
+  "code": "kn",
+  "requested": 18,
+  "first_pass_failures": 0,
+  "placeholder_failures_first_pass": 0,
+  "fixed_on_retry": 0,
+  "still_failing": {},
+  "missing": [],
+  "tables": {
+   "teacher": {
+    "translated": 613,
+    "total": 613,
+    "bytes": 70267
+   },
+   "parent": {
+    "translated": 244,
+    "total": 244,
+    "bytes": 28205
+   }
+  }
+ },
+ "kok": {
+  "code": "kok",
+  "requested": 18,
+  "first_pass_failures": 0,
+  "placeholder_failures_first_pass": 0,
+  "fixed_on_retry": 0,
+  "still_failing": {},
+  "missing": [],
+  "tables": {
+   "teacher": {
+    "translated": 613,
+    "total": 613,
+    "bytes": 63925
+   },
+   "parent": {
+    "translated": 244,
+    "total": 244,
+    "bytes": 26403
+   }
+  }
+ },
+ "ks": {
+  "code": "ks",
+  "requested": 18,
+  "first_pass_failures": 0,
+  "placeholder_failures_first_pass": 0,
+  "fixed_on_retry": 0,
+  "still_failing": {},
+  "missing": [],
+  "tables": {
+   "teacher": {
+    "translated": 613,
+    "total": 613,
+    "bytes": 53052
+   },
+   "parent": {
+    "translated": 244,
+    "total": 244,
+    "bytes": 22414
+   }
+  }
+ },
+ "mai": {
+  "code": "mai",
+  "requested": 18,
+  "first_pass_failures": 0,
+  "placeholder_failures_first_pass": 0,
+  "fixed_on_retry": 0,
+  "still_failing": {},
+  "missing": [],
+  "tables": {
+   "teacher": {
+    "translated": 613,
+    "total": 613,
+    "bytes": 61004
+   },
+   "parent": {
+    "translated": 244,
+    "total": 244,
+    "bytes": 25103
+   }
+  }
+ },
+ "ml": {
+  "code": "ml",
+  "requested": 18,
+  "first_pass_failures": 0,
+  "placeholder_failures_first_pass": 0,
+  "fixed_on_retry": 0,
+  "still_failing": {},
+  "missing": [],
+  "tables": {
+   "teacher": {
+    "translated": 613,
+    "total": 613,
+    "bytes": 76175
+   },
+   "parent": {
+    "translated": 244,
+    "total": 244,
+    "bytes": 29820
+   }
+  }
+ },
+ "mni": {
+  "code": "mni",
+  "requested": 18,
+  "first_pass_failures": 0,
+  "placeholder_failures_first_pass": 0,
+  "fixed_on_retry": 0,
+  "still_failing": {},
+  "missing": [],
+  "tables": {
+   "teacher": {
+    "translated": 613,
+    "total": 613,
+    "bytes": 62795
+   },
+   "parent": {
+    "translated": 244,
+    "total": 244,
+    "bytes": 25620
+   }
+  }
+ },
+ "mr": {
+  "code": "mr",
+  "requested": 18,
+  "first_pass_failures": 0,
+  "placeholder_failures_first_pass": 0,
+  "fixed_on_retry": 0,
+  "still_failing": {},
+  "missing": [],
+  "tables": {
+   "teacher": {
+    "translated": 613,
+    "total": 613,
+    "bytes": 64164
+   },
+   "parent": {
+    "translated": 244,
+    "total": 244,
+    "bytes": 26557
+   }
+  }
+ },
+ "ne": {
+  "code": "ne",
+  "requested": 18,
+  "first_pass_failures": 0,
+  "placeholder_failures_first_pass": 0,
+  "fixed_on_retry": 0,
+  "still_failing": {},
+  "missing": [],
+  "tables": {
+   "teacher": {
+    "translated": 613,
+    "total": 613,
+    "bytes": 66639
+   },
+   "parent": {
+    "translated": 244,
+    "total": 244,
+    "bytes": 27044
+   }
+  }
+ },
+ "or": {
+  "code": "or",
+  "requested": 18,
+  "first_pass_failures": 0,
+  "placeholder_failures_first_pass": 0,
+  "fixed_on_retry": 0,
+  "still_failing": {},
+  "missing": [],
+  "tables": {
+   "teacher": {
+    "translated": 613,
+    "total": 613,
+    "bytes": 67479
+   },
+   "parent": {
+    "translated": 244,
+    "total": 244,
+    "bytes": 27557
+   }
+  }
+ },
+ "pa": {
+  "code": "pa",
+  "requested": 18,
+  "first_pass_failures": 0,
+  "placeholder_failures_first_pass": 0,
+  "fixed_on_retry": 0,
+  "still_failing": {},
+  "missing": [],
+  "tables": {
+   "teacher": {
+    "translated": 613,
+    "total": 613,
+    "bytes": 62535
+   },
+   "parent": {
+    "translated": 244,
+    "total": 244,
+    "bytes": 26222
+   }
+  }
+ },
+ "sa": {
+  "code": "sa",
+  "requested": 18,
+  "first_pass_failures": 0,
+  "placeholder_failures_first_pass": 0,
+  "fixed_on_retry": 0,
+  "still_failing": {},
+  "missing": [],
+  "tables": {
+   "teacher": {
+    "translated": 613,
+    "total": 613,
+    "bytes": 70627
+   },
+   "parent": {
+    "translated": 244,
+    "total": 244,
+    "bytes": 28266
+   }
+  }
+ },
+ "sat": {
+  "code": "sat",
+  "requested": 18,
+  "first_pass_failures": 0,
+  "placeholder_failures_first_pass": 0,
+  "fixed_on_retry": 0,
+  "still_failing": {},
+  "missing": [],
+  "tables": {
+   "teacher": {
+    "translated": 613,
+    "total": 613,
+    "bytes": 68961
+   },
+   "parent": {
+    "translated": 244,
+    "total": 244,
+    "bytes": 28896
+   }
+  }
+ },
+ "sd": {
+  "code": "sd",
+  "requested": 18,
+  "first_pass_failures": 0,
+  "placeholder_failures_first_pass": 0,
+  "fixed_on_retry": 0,
+  "still_failing": {},
+  "missing": [],
+  "tables": {
+   "teacher": {
+    "translated": 613,
+    "total": 613,
+    "bytes": 50452
+   },
+   "parent": {
+    "translated": 244,
+    "total": 244,
+    "bytes": 20986
+   }
+  }
+ },
+ "ta": {
+  "code": "ta",
+  "requested": 18,
+  "first_pass_failures": 0,
+  "placeholder_failures_first_pass": 0,
+  "fixed_on_retry": 0,
+  "still_failing": {},
+  "missing": [],
+  "tables": {
+   "teacher": {
+    "translated": 613,
+    "total": 613,
+    "bytes": 79942
+   },
+   "parent": {
+    "translated": 244,
+    "total": 244,
+    "bytes": 31370
+   }
+  }
+ },
+ "te": {
+  "code": "te",
+  "requested": 18,
+  "first_pass_failures": 0,
+  "placeholder_failures_first_pass": 0,
+  "fixed_on_retry": 0,
+  "still_failing": {},
+  "missing": [],
+  "tables": {
+   "teacher": {
+    "translated": 613,
+    "total": 613,
+    "bytes": 71809
+   },
+   "parent": {
+    "translated": 244,
+    "total": 244,
+    "bytes": 29126
+   }
+  }
+ },
+ "ur": {
+  "code": "ur",
+  "requested": 18,
+  "first_pass_failures": 0,
+  "placeholder_failures_first_pass": 0,
+  "fixed_on_retry": 0,
+  "still_failing": {},
+  "missing": [],
+  "tables": {
+   "teacher": {
+    "translated": 613,
+    "total": 613,
+    "bytes": 51283
+   },
+   "parent": {
+    "translated": 244,
+    "total": 244,
+    "bytes": 21140
+   }
+  }
+ }
+}

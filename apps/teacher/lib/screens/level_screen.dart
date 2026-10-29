@@ -190,7 +190,7 @@ class _LevelScreenState extends State<LevelScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            tr('Could not load questions: $e', 'प्रश्न नहीं मिले: $e'),
+            trf('Could not load questions: {e}', 'प्रश्न नहीं मिले: {e}', {'e': e}),
           ),
         ),
       );
@@ -229,9 +229,9 @@ class _LevelScreenState extends State<LevelScreen> {
                 ),
                 const SizedBox(height: 6),
                 Text(
-                  tr(
-                    'Ask ${widget.childName}:',
-                    '${widget.childName} से पूछें:',
+                  trf(
+                    'Ask {childName}:',
+                    '{childName} से पूछें:', {'childName': widget.childName},
                   ),
                   style: const TextStyle(color: Ks.muted),
                 ),
@@ -337,9 +337,9 @@ class _LevelScreenState extends State<LevelScreen> {
                               if (!ctx.mounted) return;
                               setSt(() {
                                 saving = false;
-                                saveError = tr(
-                                  'Could not save the check. Try again. ($e)',
-                                  'जाँच दर्ज नहीं हो पाई। दोबारा कोशिश करें। ($e)',
+                                saveError = trf(
+                                  'Could not save the check. Try again. ({e})',
+                                  'जाँच दर्ज नहीं हो पाई। दोबारा कोशिश करें। ({e})', {'e': e},
                                 );
                               });
                             }
@@ -348,9 +348,9 @@ class _LevelScreenState extends State<LevelScreen> {
                     label: Text(
                       saving
                           ? tr('Saving…', 'दर्ज हो रहा है…')
-                          : tr(
-                              'Save check ($passed/${items.length})',
-                              'जाँच दर्ज करें ($passed/${items.length})',
+                          : trf(
+                              'Save check ({passed}/{itemsCount})',
+                              'जाँच दर्ज करें ({passed}/{itemsCount})', {'passed': passed, 'itemsCount': items.length},
                             ),
                     ),
                   ),
@@ -394,9 +394,9 @@ class _LevelScreenState extends State<LevelScreen> {
         children: [
           EmptyState(
             icon: Icons.error_outline,
-            text: tr(
-              'Could not load ${widget.childName}\'s profile.\n${_error ?? ''}',
-              '${widget.childName} की प्रोफ़ाइल नहीं खुल पाई।\n${_error ?? ''}',
+            text: trf(
+              'Could not load {childName}\'s profile.\n{v}',
+              '{childName} की प्रोफ़ाइल नहीं खुल पाई।\n{v}', {'childName': widget.childName, 'v': _error ?? ''},
             ),
           ),
           FilledButton.icon(
@@ -443,9 +443,9 @@ class _LevelScreenState extends State<LevelScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    tr(
-                      '$assessed / ${items.length} lessons assessed',
-                      '$assessed / ${items.length} सबक जाँचे गए',
+                    trf(
+                      '{assessed} / {itemsCount} lessons assessed',
+                      '{assessed} / {itemsCount} सबक जाँचे गए', {'assessed': assessed, 'itemsCount': items.length},
                     ),
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
@@ -544,7 +544,7 @@ class _LevelScreenState extends State<LevelScreen> {
                 ),
                 if (improving)
                   Padding(
-                    padding: EdgeInsets.only(right: 6),
+                    padding: EdgeInsetsDirectional.only(end: 6),
                     child: Tooltip(
                       message: tr('Improving', 'सुधर रहा है'),
                       child: Icon(
@@ -562,9 +562,9 @@ class _LevelScreenState extends State<LevelScreen> {
               Padding(
                 padding: const EdgeInsets.only(top: 6),
                 child: Text(
-                  tr(
-                    'Likely gap: ${_miscHi(misc)}',
-                    'संभावित चूक: ${_miscHi(misc)}',
+                  trf(
+                    'Likely gap: {miscHi}',
+                    'संभावित चूक: {miscHi}', {'miscHi': _miscHi(misc)},
                   ),
                   style: const TextStyle(color: Ks.rose, fontSize: 14),
                 ),
@@ -617,7 +617,7 @@ class _LevelScreenState extends State<LevelScreen> {
   Widget _nipunChip(Map<String, dynamic> i) => Padding(
     padding: const EdgeInsets.only(top: 4),
     child: Align(
-      alignment: Alignment.centerLeft,
+      alignment: AlignmentDirectional.centerStart,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
         decoration: BoxDecoration(
@@ -738,9 +738,9 @@ class _LevelScreenState extends State<LevelScreen> {
       builder: (ctx) => AlertDialog(
         title: Text(tr('Undo this entry?', 'यह एंट्री वापस लें?')),
         content: Text(
-          tr(
-            '"$lesson" ($when) will stop counting for ${widget.childName}. Use this for an entry saved by mistake.',
-            '"$lesson" ($when) अब ${widget.childName} के लिए नहीं गिना जाएगा। गलती से दर्ज एंट्री के लिए इसका इस्तेमाल करें।',
+          trf(
+            '"{lesson}" ({when}) will stop counting for {childName}. Use this for an entry saved by mistake.',
+            '"{lesson}" ({when}) अब {childName} के लिए नहीं गिना जाएगा। गलती से दर्ज एंट्री के लिए इसका इस्तेमाल करें।', {'lesson': lesson, 'when': when, 'childName': widget.childName},
           ),
         ),
         actions: [

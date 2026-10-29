@@ -37,7 +37,7 @@ String journeyShortDate(Object? iso) {
     'नव',
     'दिस',
   ];
-  return '${d.day} ${(Lang.isHi ? hi : en)[d.month - 1]}';
+  return '${d.day} ${tr(en[d.month - 1], hi[d.month - 1])}';
 }
 
 /// Small line of how many steps were learned by each of the last weeks (contract `growth`).

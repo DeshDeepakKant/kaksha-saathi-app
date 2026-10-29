@@ -14,7 +14,7 @@ from sqlalchemy.orm import Session
 from app.api.deps import current_teacher, owned_class
 from app.db import get_db
 from app.models.tables import Classroom, Teacher, TextbookMap
-from app.services import coverage
+from app.services import content_lang, coverage
 from app.services.content import get_content
 from app.services.subjects import create_custom_subject, resolve_subject, subject_names
 
@@ -91,6 +91,8 @@ def _book_out(row: TextbookMap | None) -> dict | None:
         return None
     return {"id": row.id, "title": row.title, "grade": row.grade, "board": row.board, "publisher": row.publisher,
             "chapters": (row.mapping or {}).get("chapters", []),
+            # language the chapter/topic names were written in (books saved before content languages: Hindi)
+            "content_lang": (row.mapping or {}).get("content_lang") or content_lang.SOURCE_LANG,
             "saved_at": row.created_at.isoformat() if row.created_at else None}
 
 
@@ -206,7 +208,8 @@ def _save_book(db: Session, cls: Classroom, teacher: Teacher, subject: str, book
                          "topics": topics})
     db.add(TextbookMap(school_id=cls.school_id, class_id=cls.id, subject=subject, title=_clean(book.title),
                        grade=book.grade, board=_clean(book.board), publisher=_clean(book.publisher),
-                       mapping={"chapters": chapters}, created_by=teacher.id))
+                       mapping={"chapters": chapters, "content_lang": content_lang.for_teacher(db, teacher)[0]},
+                       created_by=teacher.id))
     db.flush()
 
 

@@ -1,0 +1,171 @@
+{
+ "lang": "mr",
+ "source_lang": "mr",
+ "machine_translated": true,
+ "reviewed": false,
+ "model": "claude-sonnet-5",
+ "generated_at": "2026-10-29T21:50:59+00:00",
+ "note": "Machine translated by scripts/translate_content.py; not reviewed by an educator.",
+ "generated_natively": true,
+ "title_en": "Marathi reading level",
+ "title": "मराठी वाचन पातळी",
+ "beginner": {
+  "key": "beginner",
+  "title_en": "Beginner (not yet letters)",
+  "title": "सुरुवातीचा (अक्षरे येत नाहीत)"
+ },
+ "levels": [
+  {
+   "key": "letter",
+   "title_en": "Letters",
+   "title": "अक्षरे",
+   "checkpoint_id": "L.G1.vyanjan",
+   "ask_en": "Point to each letter. Ask the child to say it.",
+   "ask": "प्रत्येक अक्षराकडे बोट दाखवा. मुलाला ते वाचायला सांगा.",
+   "items": [
+    {
+     "show": "क"
+    },
+    {
+     "show": "म"
+    },
+    {
+     "show": "ल"
+    },
+    {
+     "show": "र"
+    },
+    {
+     "show": "स"
+    }
+   ],
+   "pass_min": 4,
+   "of": 5,
+   "practice": [
+    {
+     "show": "न"
+    },
+    {
+     "show": "त"
+    },
+    {
+     "show": "प"
+    },
+    {
+     "show": "ब"
+    },
+    {
+     "show": "द"
+    }
+   ]
+  },
+  {
+   "key": "word",
+   "title_en": "Words",
+   "title": "शब्द",
+   "checkpoint_id": "L.G1.read_matra_words",
+   "ask_en": "Ask the child to read each word.",
+   "ask": "मुलाला प्रत्येक शब्द वाचायला सांगा.",
+   "items": [
+    {
+     "show": "आई"
+    },
+    {
+     "show": "बाबा"
+    },
+    {
+     "show": "पाणी"
+    },
+    {
+     "show": "घर"
+    },
+    {
+     "show": "शाळा"
+    }
+   ],
+   "pass_min": 4,
+   "of": 5,
+   "practice": [
+    {
+     "show": "फुल"
+    },
+    {
+     "show": "गाय"
+    },
+    {
+     "show": "केळ"
+    },
+    {
+     "show": "नदी"
+    },
+    {
+     "show": "झाड"
+    }
+   ]
+  },
+  {
+   "key": "sentence",
+   "title_en": "Sentences",
+   "title": "वाक्ये",
+   "checkpoint_id": "L.G1.read_short_sentences",
+   "ask_en": "Ask the child to read each sentence aloud.",
+   "ask": "मुलाला प्रत्येक वाक्य मोठ्याने वाचायला सांगा.",
+   "items": [
+    {
+     "show": "आई घरी आहे."
+    },
+    {
+     "show": "बाबा शेतात जातात."
+    },
+    {
+     "show": "गाय गवत खाते."
+    }
+   ],
+   "pass_min": 2,
+   "of": 3,
+   "practice": [
+    {
+     "show": "मला आंबा आवडतो."
+    },
+    {
+     "show": "ताई शाळेत जाते."
+    },
+    {
+     "show": "आजी गोष्ट सांगते."
+    }
+   ]
+  },
+  {
+   "key": "story",
+   "title_en": "Short passage",
+   "title": "छोटा उतारा",
+   "checkpoint_id": "L.G2.fluency_45_60",
+   "ask_en": "Ask the child to read each line like a story. A line passes if it is smooth, with at most 1 mistake.",
+   "ask": "मुलाला प्रत्येक ओळ गोष्टीसारखी वाचायला सांगा. जर ओळ सलग वाचली आणि जास्तीत जास्त 1 चूक असेल, तर ती पास समजा.",
+   "items": [
+    {
+     "show": "रोज सकाळी राम शाळेत जातो."
+    },
+    {
+     "show": "वाटेत त्याला त्याचा मित्र भेटतो."
+    },
+    {
+     "show": "दोघे मिळून आनंदाने शाळेत पोहोचतात."
+    }
+   ],
+   "pass_min": 2,
+   "of": 3,
+   "practice": [
+    {
+     "show": "गावात एक छोटी नदी वाहते."
+    },
+    {
+     "show": "मुले रोज नदीत पाणी भरतात."
+    },
+    {
+     "show": "संध्याकाळी सगळे घरी परत येतात."
+    }
+   ]
+  }
+ ]
+}

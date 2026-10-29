@@ -61,9 +61,9 @@ class _VoiceClockState extends State<VoiceClock> {
         : widget.elapsedS;
     final left = target - e;
     return Semantics(
-      label: tr(
-        '${_mmss(e)} done, ${_mmss(left)} left',
-        '${_mmss(e)} हुए, ${_mmss(left)} बाकी',
+      label: trf(
+        '{mmss} done, {mmss2} left',
+        '{mmss} हुए, {mmss2} बाकी', {'mmss': _mmss(e), 'mmss2': _mmss(left)},
       ),
       child: Row(
         children: [
@@ -93,7 +93,7 @@ class _VoiceClockState extends State<VoiceClock> {
           Flexible(
             child: Text(
               left > 0
-                  ? tr('${_mmss(left)} left', '${_mmss(left)} बाकी')
+                  ? trf('{mmss} left', '{mmss} बाकी', {'mmss': _mmss(left)})
                   : tr('Time up', 'समय पूरा'),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,

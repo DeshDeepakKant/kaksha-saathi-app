@@ -1,0 +1,171 @@
+{
+ "lang": "or",
+ "source_lang": "or",
+ "machine_translated": true,
+ "reviewed": false,
+ "model": "claude-sonnet-5",
+ "generated_at": "2026-10-29T21:53:31+00:00",
+ "note": "Machine translated by scripts/translate_content.py; not reviewed by an educator.",
+ "generated_natively": true,
+ "title_en": "Odia reading level",
+ "title": "ଓଡ଼ିଆ ପଢ଼ିବା ସ୍ତର",
+ "beginner": {
+  "key": "beginner",
+  "title_en": "Beginner (not yet letters)",
+  "title": "ପ୍ରାରମ୍ଭିକ (ଅକ୍ଷର ଜାଣି ନାହାଁନ୍ତି)"
+ },
+ "levels": [
+  {
+   "key": "letter",
+   "title_en": "Letters",
+   "title": "ଅକ୍ଷର",
+   "checkpoint_id": "L.G1.vyanjan",
+   "ask_en": "Point to each letter. Ask the child to say it.",
+   "ask": "ପ୍ରତ୍ୟେକ ଅକ୍ଷରକୁ ଦେଖାନ୍ତୁ। ପିଲାକୁ ତାହା କହିବାକୁ କୁହନ୍ତୁ।",
+   "items": [
+    {
+     "show": "କ"
+    },
+    {
+     "show": "ମ"
+    },
+    {
+     "show": "ଲ"
+    },
+    {
+     "show": "ର"
+    },
+    {
+     "show": "ସ"
+    }
+   ],
+   "pass_min": 4,
+   "of": 5,
+   "practice": [
+    {
+     "show": "ବ"
+    },
+    {
+     "show": "ନ"
+    },
+    {
+     "show": "ତ"
+    },
+    {
+     "show": "ଗ"
+    },
+    {
+     "show": "ପ"
+    }
+   ]
+  },
+  {
+   "key": "word",
+   "title_en": "Words",
+   "title": "ଶବ୍ଦ",
+   "checkpoint_id": "L.G1.read_matra_words",
+   "ask_en": "Ask the child to read each word.",
+   "ask": "ପିଲାକୁ ପ୍ରତ୍ୟେକ ଶବ୍ଦ ପଢ଼ିବାକୁ କୁହନ୍ତୁ।",
+   "items": [
+    {
+     "show": "କଲମ"
+    },
+    {
+     "show": "ଘର"
+    },
+    {
+     "show": "ପାଣି"
+    },
+    {
+     "show": "ମାଛ"
+    },
+    {
+     "show": "ଗାଈ"
+    }
+   ],
+   "pass_min": 4,
+   "of": 5,
+   "practice": [
+    {
+     "show": "ଭାତ"
+    },
+    {
+     "show": "ଫୁଲ"
+    },
+    {
+     "show": "ବାପା"
+    },
+    {
+     "show": "ମାଆ"
+    },
+    {
+     "show": "କଦଳୀ"
+    }
+   ]
+  },
+  {
+   "key": "sentence",
+   "title_en": "Sentences",
+   "title": "ବାକ୍ୟ",
+   "checkpoint_id": "L.G1.read_short_sentences",
+   "ask_en": "Ask the child to read each sentence aloud.",
+   "ask": "ପିଲାକୁ ପ୍ରତ୍ୟେକ ବାକ୍ୟ ଜୋରରେ ପଢ଼ିବାକୁ କୁହନ୍ତୁ।",
+   "items": [
+    {
+     "show": "ଗାଈ ଘାସ ଖାଏ।"
+    },
+    {
+     "show": "ମାଆ ଭାତ ରାନ୍ଧନ୍ତି।"
+    },
+    {
+     "show": "ବାପା ଜଳ ଆଣନ୍ତି।"
+    }
+   ],
+   "pass_min": 2,
+   "of": 3,
+   "practice": [
+    {
+     "show": "ଭାଇ ବଲ ଖେଳେ।"
+    },
+    {
+     "show": "ମୁଁ ବହି ପଢ଼େ।"
+    },
+    {
+     "show": "ଆମେ ଘରେ ଥାଉ।"
+    }
+   ]
+  },
+  {
+   "key": "story",
+   "title_en": "Short passage",
+   "title": "ଛୋଟ ଗପ",
+   "checkpoint_id": "L.G2.fluency_45_60",
+   "ask_en": "Ask the child to read each line like a story. A line passes if it is smooth, with at most 1 mistake.",
+   "ask": "ପିଲାକୁ ପ୍ରତ୍ୟେକ ଧାଡ଼ି ଗପ ପରି ପଢ଼ିବାକୁ କୁହନ୍ତୁ। ଯଦି ଧାଡ଼ିଟି ସାବଲୀଳ ଭାବେ ପଢ଼ାଯାଏ, ଅଧିକରେ 1ଟି ଭୁଲ ସହିତ, ତେବେ ସେ ଉତ୍ତୀର୍ଣ୍ଣ।",
+   "items": [
+    {
+     "show": "ଗାଁରେ ଗୋଟିଏ ଛୋଟ ପିଲା ଥିଲା।"
+    },
+    {
+     "show": "ସେ ପ୍ରତିଦିନ ସ୍କୁଲକୁ ଯାଉଥିଲା।"
+    },
+    {
+     "show": "ସନ୍ଧ୍ୟାରେ ସେ ବାପା ସହ ଖେଳୁଥିଲା।"
+    }
+   ],
+   "pass_min": 2,
+   "of": 3,
+   "practice": [
+    {
+     "show": "ଗୋଟିଏ ଛୋଟ ଗାଁରେ ଏକ ବୃଦ୍ଧା ରହୁଥିଲେ।"
+    },
+    {
+     "show": "ସେ ପ୍ରତିଦିନ ବଗିଚାରେ ଫୁଲ ଲଗାଉଥିଲେ।"
+    },
+    {
+     "show": "ପିଲାମାନେ ତାଙ୍କୁ ଦେଖି ଖୁସି ହେଉଥିଲେ।"
+    }
+   ]
+  }
+ ]
+}

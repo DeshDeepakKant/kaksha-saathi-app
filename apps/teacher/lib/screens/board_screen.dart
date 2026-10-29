@@ -672,7 +672,7 @@ class _BoardScreenState extends State<BoardScreen> {
       ],
       if (onTrack.isNotEmpty) ...[
         SectionTitle(
-          tr('On track (${onTrack.length})', 'अपनी गति पर (${onTrack.length})'),
+          trf('On track ({onTrackCount})', 'अपनी गति पर ({onTrackCount})', {'onTrackCount': onTrack.length}),
         ),
         Card(
           child: Padding(
@@ -754,9 +754,9 @@ class _BoardScreenState extends State<BoardScreen> {
                           crossAxisAlignment: WrapCrossAlignment.center,
                           children: [
                             Text(
-                              tr(
-                                '${g['chapter']} · ${members.length} children',
-                                '${g['chapter']} · ${members.length} बच्चे',
+                              trf(
+                                '{chapter} · {membersCount} children',
+                                '{chapter} · {membersCount} बच्चे', {'chapter': g['chapter'], 'membersCount': members.length},
                               ),
                               style: const TextStyle(
                                 color: Ks.muted,

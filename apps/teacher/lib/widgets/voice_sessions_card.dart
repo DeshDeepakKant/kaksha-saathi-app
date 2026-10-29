@@ -147,9 +147,9 @@ class _VoiceSessionsCardState extends State<VoiceSessionsCard> {
                         child: Text(
                           _showAll
                               ? tr('Show fewer', 'कम दिखाएँ')
-                              : tr(
-                                  'Show all (${sessions.length})',
-                                  'सभी दिखाएँ (${sessions.length})',
+                              : trf(
+                                  'Show all ({sessionsCount})',
+                                  'सभी दिखाएँ ({sessionsCount})', {'sessionsCount': sessions.length},
                                 ),
                         ),
                       ),
@@ -169,16 +169,16 @@ class _VoiceSessionsCardState extends State<VoiceSessionsCard> {
       voiceLangLabel(s['lang'] as String?),
       if (active) tr('In progress', 'चल रहा है'),
     ].where((t) => t.isNotEmpty).join(' · ');
-    final detail = tr(
-      '${voiceMinutes(s['minutes'])} min · $items items · '
-          '${voiceStageLabel(s['highest_stage'] as String?)}',
-      '${voiceMinutes(s['minutes'])} मिनट · $items प्रश्न · '
-          '${voiceStageLabel(s['highest_stage'] as String?)}',
+    final detail = trf(
+      '{minutes} min · {items} items · '
+          '{highest_stage}',
+      '{minutes} मिनट · {items} प्रश्न · '
+          '{highest_stage}', {'minutes': voiceMinutes(s['minutes']), 'items': items, 'highest_stage': voiceStageLabel(s['highest_stage'] as String?)},
     );
     return InkWell(
       onTap: () => _open(s),
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(14, 12, 8, 12),
+        padding: const EdgeInsetsDirectional.fromSTEB(14, 12, 8, 12),
         child: Row(
           children: [
             Expanded(
@@ -208,7 +208,7 @@ class _VoiceSessionsCardState extends State<VoiceSessionsCard> {
                         ),
                         const SizedBox(width: 8),
                         Text(
-                          tr('$pct% right', '$pct% सही'),
+                          trf('{pct}% right', '{pct}% सही', {'pct': pct}),
                           style: TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.w700,

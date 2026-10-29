@@ -57,6 +57,31 @@ def ladder(subject: str) -> dict | None:
     return load_ladders().get(subject)
 
 
+def ladder_in(subject: str, lang: str) -> dict | None:
+    """The subject's ladder for a class whose learning language is `lang`.
+
+    Hindi: the reviewed ladder unchanged. Literacy in another language: the same levels (keys, lesson ids,
+    pass rules, UI titles and instructions) with the reading items generated in that language's own script
+    (`content/i18n/<lang>/level_check_literacy.json`, not educator-reviewed, so `machine_translated`).
+    Numeracy items are numbers and sums, so they need no change. Falls back to the reviewed ladder when
+    the generated one is missing or doesn't line up level by level."""
+    base = ladder(subject)
+    if base is None or lang == "hi" or subject != "literacy":
+        return base
+    from app.i18n import library
+    gen = library.literacy_ladder(lang)
+    levels = (gen or {}).get("levels") or []
+    if [lv.get("key") for lv in levels] != [lv["key"] for lv in base["levels"]]:
+        return base
+    out = {**base, "content_lang": lang, "machine_translated": True, "levels": []}
+    for src, lv in zip(base["levels"], levels):
+        items = [{"show": i["show"]} for i in lv.get("items", []) if i.get("show")]
+        if len(items) != src["of"]:
+            return base
+        out["levels"].append({**src, "items": items, "ask_content": lv.get("ask") or ""})
+    return out
+
+
 def level_ref(lad: dict, index: int) -> dict:
     """Key and titles for a placement index (-1 = beginner)."""
     lv = lad["beginner"] if index == BEGINNER else lad["levels"][index]
@@ -131,7 +156,7 @@ def class_view(db: Session, cls: Classroom, subject: str, lad: dict) -> dict:
         counts_first[first[cid].level_key] = counts_first.get(first[cid].level_key, 0) + 1
         counts_latest[latest[cid].level_key] = counts_latest.get(latest[cid].level_key, 0) + 1
         moved_up += latest[cid].level_index > first[cid].level_index
-    return {
+    out = {
         "subject": subject, "title_en": lad["title_en"], "title_hi": lad["title_hi"],
         "beginner": {k: lad["beginner"][k] for k in ("key", "title_en", "title_hi")},
         "levels": [{"index": i, "key": lv["key"], "title_en": lv["title_en"], "title_hi": lv["title_hi"],
@@ -143,6 +168,11 @@ def class_view(db: Session, cls: Classroom, subject: str, lad: dict) -> dict:
         "summary": {"total": len(children), "checked": len(first), "moved_up": moved_up,
                     "first": counts_first, "latest": counts_latest},
     }
+    if lad.get("content_lang"):  # items in another learning language (Hindi payload stays as it was)
+        out["content_lang"], out["machine_translated"] = lad["content_lang"], True
+        for lv_out, lv in zip(out["levels"], lad["levels"]):
+            lv_out["ask_content"] = lv.get("ask_content", "")
+    return out
 
 
 # ------------------------------------------------------------------ demo data

@@ -133,7 +133,7 @@ class _ClassSetupScreenState extends State<ClassSetupScreen> {
       });
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(tr('Subject "$name" added', 'विषय "$name" जुड़ गया')),
+          content: Text(trf('Subject "{name}" added', 'विषय "{name}" जुड़ गया', {'name': name})),
         ),
       );
     } catch (e) {
@@ -230,9 +230,9 @@ class _ClassSetupScreenState extends State<ClassSetupScreen> {
               labelText: tr('Name (optional)', 'नाम (वैकल्पिक)'),
               hintText: _grade == null
                   ? null
-                  : tr(
-                      'Class $_grade $_sectionText',
-                      'कक्षा $_grade $_sectionText',
+                  : trf(
+                      'Class {grade} {sectionText}',
+                      'कक्षा {grade} {sectionText}', {'grade': _grade, 'sectionText': _sectionText},
                     ),
             ),
           ),
@@ -269,7 +269,7 @@ class _ClassSetupScreenState extends State<ClassSetupScreen> {
                 const SizedBox(width: 10),
                 Expanded(
                   child: Text(
-                    tr('$label created', '$label बन गई'),
+                    trf('{label} created', '{label} बन गई', {'label': label}),
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                 ),

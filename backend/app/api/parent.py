@@ -2,6 +2,11 @@
 
 A child can only start a session after the parent gate (phone + PIN). The session needs a
 downloaded pack; when offline the app runs the same harness locally with canned lines.
+
+Content language: Hindi/English responses are unchanged. For a parent whose content language is
+another one, the parent-facing texts gain machine-translated `<base>_<lang>` fields (labelled
+`content_lang` / `machine_translated`). The practice activities themselves are reviewed Hindi content
+judged against Hindi targets, so their speech-to-text stays Hindi (with the parent's provider).
 """
 from __future__ import annotations
 
@@ -19,7 +24,7 @@ from app.core.security import hash_phone, hash_pin, make_token, verify_pin
 from app.db import get_db
 from app.models.tables import (Child, Classroom, Evidence, HomeSession, ParentAccount, School, VoiceSession,
                                VoiceTurn)
-from app.services import ledger, tutor
+from app.services import ledger, parent_insights, tutor
 from app.services.mastery import find_gap
 from app.services.content import get_content
 from app.speech import get_asr
@@ -109,7 +114,49 @@ def parent_child(parent: ParentAccount = Depends(current_parent), db: Session = 
               "label_hi": label.get(f["status"], ""),
               "label_en": label_en.get(f["status"], "")} for f in focus]
     # The home screen reads `child` verbatim; merge the school-gate identity into it.
-    return {"child": {**_pub(child), "class": cls.label}, "focus": names, "streak": _streak(db, child.id)}
+    return _localized(db, parent, child, {"child": {**_pub(child), "class": cls.label}, "focus": names,
+                                          "streak": _streak(db, child.id)})
+
+
+def _localized(db: Session, parent: ParentAccount, child: Child, payload: dict) -> dict:
+    """Additive `<base>_<lang>` fields for a parent whose content language is not hi/en."""
+    lang = parent_insights.parent_content_lang(db, parent)
+    if lang in ("hi", "en"):
+        return payload
+    return parent_insights.localize(db, payload, lang, school_id=parent.school_id, name=child.first_name)
+
+
+def _hindi_extra(db: Session, parent: ParentAccount, texts: list[str]) -> tuple[str, list[str], bool] | None:
+    """Hindi-only texts (home summaries) in the parent's content language, or None for hi/en."""
+    lang = parent_insights.parent_content_lang(db, parent)
+    if lang in ("hi", "en"):
+        return None
+    child = db.get(Child, parent.child_id)
+    got = parent_insights.translate_en(db, texts, lang, school_id=parent.school_id, source="hi",
+                                       name=child.first_name if child else None)
+    return lang, [t for t, _ in got], any(ok for _, ok in got)
+
+
+def _stt_configured(lang: str) -> bool:
+    try:
+        from app.speech import capabilities
+        return bool(capabilities.providers_for("stt", lang))
+    except Exception:
+        return False
+
+
+def _transcribe(db: Session, parent: ParentAccount, audio: bytes, filename: str, lang: str = "hi") -> str:
+    """Speech-to-text with the parent's preferred provider (the speech layer falls back)."""
+    from app import speech
+    fn = getattr(speech, "transcribe", None)
+    if fn is None or not _stt_configured(lang):  # no provider set up: the legacy (mock) recogniser
+        return get_asr().transcribe(audio, filename).text
+    try:
+        from app.services import prefs
+        preferred = prefs.provider_for(db, parent=parent)
+    except Exception:
+        preferred = "sarvam"
+    return fn(audio, filename, lang=lang, preferred=preferred).text
 
 
 def _streak(db: Session, child_id: int) -> int:
@@ -189,7 +236,7 @@ async def session_turn(session_id: int, meta: str = Form(...), audio: UploadFile
     asr_status = "provided"
     if not transcript and audio_bytes:
         try:
-            transcript = get_asr().transcribe(audio_bytes, audio.filename or "turn.wav").text
+            transcript = _transcribe(db, parent, audio_bytes, audio.filename or "turn.wav")
             asr_status = "asr" if transcript else "silent"
         except Exception:  # ASR outage: judge as unheard rather than failing the turn
             transcript, asr_status = "", "failed"
@@ -233,7 +280,12 @@ def end_session(session_id: int, summary: str | None = Form(None), parent: Paren
                                           struggles=[get_content().checkpoints[s].title_hi for s in struggles
                                                      if s in get_content().checkpoints])
     hs.summary_hi = text
-    return {"summary_hi": text, "summary_status": status, "evidence": hs.evidence_count}
+    out = {"summary_hi": text, "summary_status": status, "evidence": hs.evidence_count}
+    extra = _hindi_extra(db, parent, [text]) if text else None
+    if extra:
+        lang, (local,), mt = extra
+        out.update({f"summary_{lang}": local, "content_lang": lang, "machine_translated": mt})
+    return out
 
 
 class OfflineItem(BaseModel):
@@ -296,8 +348,18 @@ def sync_offline_session(body: OfflineSync, parent: ParentAccount = Depends(curr
 def parent_history(parent: ParentAccount = Depends(current_parent), db: Session = Depends(get_db)):
     rows = list(db.scalars(select(HomeSession).where(HomeSession.child_id == parent.child_id)
                            .order_by(HomeSession.started_at.desc()).limit(20)))
-    return [{"id": s.id, "started_at": s.started_at.isoformat(), "ended_at": s.ended_at.isoformat() if s.ended_at else None,
-             "activities": s.evidence_count, "summary_hi": s.summary_hi, "offline": s.offline} for s in rows]
+    out = [{"id": s.id, "started_at": s.started_at.isoformat(), "ended_at": s.ended_at.isoformat() if s.ended_at else None,
+            "activities": s.evidence_count, "summary_hi": s.summary_hi, "offline": s.offline} for s in rows]
+    texts = list(dict.fromkeys(r["summary_hi"] for r in out if r["summary_hi"]))
+    extra = _hindi_extra(db, parent, texts) if texts else None
+    if extra:
+        lang, local, mt = extra
+        by_src = dict(zip(texts, local))
+        for r in out:
+            if r["summary_hi"]:
+                r[f"summary_{lang}"] = by_src[r["summary_hi"]]
+                r["machine_translated"] = mt
+    return out
 
 
 @router.delete("/parent/child/data")
@@ -320,5 +382,6 @@ def teacher_note(parent: ParentAccount = Depends(current_parent), db: Session = 
     if not g:
         return {"has_gap": False}
     cp = get_content().checkpoints.get(g.checkpoint_id)
-    return {"has_gap": True, "title_hi": cp.title_hi if cp else g.checkpoint_id,
-            "title_en": cp.title_en if cp else g.checkpoint_id, "chapter": cp.chapter if cp else "", "status": g.status}
+    return _localized(db, parent, child, {
+        "has_gap": True, "title_hi": cp.title_hi if cp else g.checkpoint_id,
+        "title_en": cp.title_en if cp else g.checkpoint_id, "chapter": cp.chapter if cp else "", "status": g.status})

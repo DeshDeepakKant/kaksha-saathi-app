@@ -33,17 +33,17 @@ class _BoardMovedBannerState extends State<BoardMovedBanner> {
   String _phrase(Map<String, dynamic> m) {
     switch (m['direction']) {
       case 'improved':
-        return tr('moved to ${_dest(m)}', '${_dest(m)} पर पहुँचा');
+        return trf('moved to {dest}', '{dest} पर पहुँचा', {'dest': _dest(m)});
       case 'slipped':
         final to = m['to'];
         return (to is Map && to.isNotEmpty)
-            ? tr(
-                'needs practice: ${cpTitle(to)}',
-                'अभ्यास चाहिए: ${cpTitle(to)}',
+            ? trf(
+                'needs practice: {title}',
+                'अभ्यास चाहिए: {title}', {'title': cpTitle(to)},
               )
             : tr('needs practice', 'अभ्यास चाहिए');
       default:
-        return tr('moved to ${_dest(m)}', '${_dest(m)} में बदला');
+        return trf('moved to {dest}', '{dest} में बदला', {'dest': _dest(m)});
     }
   }
 
@@ -86,7 +86,7 @@ class _BoardMovedBannerState extends State<BoardMovedBanner> {
       margin: const EdgeInsets.only(bottom: 10),
       color: Ks.accentSoft,
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(14, 6, 4, 6),
+        padding: const EdgeInsetsDirectional.fromSTEB(14, 6, 4, 6),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -112,7 +112,7 @@ class _BoardMovedBannerState extends State<BoardMovedBanner> {
               ],
             ),
             Padding(
-              padding: const EdgeInsets.only(right: 10, bottom: 4),
+              padding: const EdgeInsetsDirectional.only(end: 10, bottom: 4),
               child: _all
                   ? Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -136,7 +136,7 @@ class _BoardMovedBannerState extends State<BoardMovedBanner> {
                           ],
                           if (more > 0)
                             TextSpan(
-                              text: tr('  +$more more', '  +$more और'),
+                              text: trf('  +{more} more', '  +{more} और', {'more': more}),
                               style: const TextStyle(color: Ks.muted),
                             ),
                         ],
@@ -146,7 +146,7 @@ class _BoardMovedBannerState extends State<BoardMovedBanner> {
             ),
             if (moves.length > _preview)
               Align(
-                alignment: Alignment.centerLeft,
+                alignment: AlignmentDirectional.centerStart,
                 child: TextButton(
                   style: TextButton.styleFrom(
                     minimumSize: const Size(48, 48),
@@ -156,9 +156,9 @@ class _BoardMovedBannerState extends State<BoardMovedBanner> {
                   child: Text(
                     _all
                         ? tr('Show less', 'कम दिखाएँ')
-                        : tr(
-                            'See all (${moves.length})',
-                            'सभी देखें (${moves.length})',
+                        : trf(
+                            'See all ({movesCount})',
+                            'सभी देखें ({movesCount})', {'movesCount': moves.length},
                           ),
                   ),
                 ),

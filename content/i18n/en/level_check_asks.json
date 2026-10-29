@@ -1,0 +1,59 @@
+{
+ "lang": "en",
+ "source_lang": "en",
+ "machine_translated": false,
+ "reviewed": false,
+ "model": "claude-sonnet-5",
+ "generated_at": "2026-10-29T21:49:21+00:00",
+ "note": "Machine translated by scripts/translate_content.py; not reviewed by an educator.",
+ "subjects": {
+  "literacy": {
+   "title": "English reading level",
+   "beginner": "Beginner (not yet letters)",
+   "levels": {
+    "letter": {
+     "title": "Letters",
+     "ask": "Point to each letter. Ask the child to say it."
+    },
+    "word": {
+     "title": "Words",
+     "ask": "Ask the child to read each word."
+    },
+    "sentence": {
+     "title": "Sentences",
+     "ask": "Ask the child to read each sentence aloud."
+    },
+    "story": {
+     "title": "Short passage",
+     "ask": "Ask the child to read each line like a story. A line passes if it is smooth, with at most 1 mistake."
+    }
+   }
+  },
+  "numeracy": {
+   "title": "Maths level",
+   "beginner": "Beginner (not yet 1–9)",
+   "levels": {
+    "num_1_9": {
+     "title": "Numbers 1–9",
+     "ask": "Point to each number. Ask the child to say it."
+    },
+    "num_10_99": {
+     "title": "Numbers 10–99",
+     "ask": "Point to each number. Ask the child to say it."
+    },
+    "add_single": {
+     "title": "Single-digit sums",
+     "ask": "Read each sum aloud. The child answers (fingers or objects are fine)."
+    },
+    "sub_borrow": {
+     "title": "2-digit subtraction (borrowing)",
+     "ask": "Write each sum on the slate. The child solves it."
+    },
+    "mult": {
+     "title": "Multiplication",
+     "ask": "Read each question aloud. The child answers."
+    }
+   }
+  }
+ }
+}

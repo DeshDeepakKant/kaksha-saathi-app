@@ -14,7 +14,7 @@ import re
 import uuid
 from datetime import date, datetime, timedelta, timezone
 
-from fastapi import APIRouter, Body, Depends, File, Form, HTTPException, Query, UploadFile
+from fastapi import APIRouter, Body, Depends, File, Form, Header, HTTPException, Query, UploadFile
 from pydantic import BaseModel, Field
 from sqlalchemy import delete, func, select
 from sqlalchemy.orm import Session
@@ -22,18 +22,18 @@ from sqlalchemy.orm import Session
 from app.ai import features
 from app.ai.llm import budget_remaining
 from app.api.deps import current_teacher, image_media_type, owned_child, owned_class, validate_media
-from app.core.security import make_token, verify_pin
+from app.core.security import decode_token, make_token, verify_pin
 from app.db import get_db
 from app.models.tables import (
     AiCall, Attendance, CaptureSession, Child, Classroom, Evidence, GroupSession, InterventionLog, LevelCheck,
-    Plan, Roadmap, RoadmapItem, School, Teacher,
+    ParentAccount, Plan, Roadmap, RoadmapItem, School, Teacher,
 )
-from app.services import followups, ledger
+from app.services import content_lang, followups, ledger, prefs
 from app.services.subjects import resolve_subject
 from app.services.content import get_content, match_checkpoint
 from app.services.mastery import RESULT_VALUES
 from app.services.resolver import resolve_names
-from app.speech import get_asr, has_asr
+from app.speech import get_asr, has_asr  # noqa: F401 - get_asr unused here now (STT: content_lang.transcribe); tests still patch it
 from app.speech.scorer import score_read
 
 router = APIRouter(prefix="/v1")
@@ -246,8 +246,9 @@ async def draft_roadmap(class_id: int, subject: str = Form(...), image: UploadFi
     data = await image.read()
     validate_media(None, data)
     content = get_content()
+    lang, _provider = content_lang.for_teacher(db, teacher)
     p = features.draft_roadmap(db, school_id=cls.school_id, image=data,
-                               media_type=image_media_type(data), subject=subject, grade=cls.grade)
+                               media_type=image_media_type(data), subject=subject, grade=cls.grade, lang=lang)
     items = []
     for ch in p.payload.get("chapters", []):
         # a chapter with no sub-topics is itself a topic: match it to an existing lesson when possible
@@ -258,7 +259,8 @@ async def draft_roadmap(class_id: int, subject: str = Form(...), image: UploadFi
             match = _match_checkpoint(content, sub["text"], subject, cls.grade)
             items.append({"chapter": ch["title"], "checkpoint_id": match,
                           "custom_title": None if match else sub["text"], "position": len(items)})
-    return {"status": p.ai_status, "note": p.note, "confidence": p.payload.get("confidence", 0), "items": items}
+    return {"status": p.ai_status, "note": p.note, "confidence": p.payload.get("confidence", 0), "items": items,
+            "content_lang": lang}
 
 
 _match_checkpoint = match_checkpoint  # shared with the textbook mapper (services/content.py)
@@ -288,10 +290,12 @@ async def capture_note(class_id: int, transcript: str | None = Form(None), audio
     cls = owned_class(class_id, teacher, db)
     audio_bytes = await audio.read() if audio else None
     validate_media(audio_bytes, None)
+    lang, provider = content_lang.for_teacher(db, teacher)
     text = (transcript or "").strip()
     if not text and audio_bytes:
         try:
-            text = get_asr().transcribe(audio_bytes, audio.filename or "note.m4a").text
+            text = content_lang.transcribe(audio_bytes, audio.filename or "note.m4a", lang=lang,
+                                           preferred=provider).text
         except Exception:
             text = ""
     if not text:
@@ -302,7 +306,7 @@ async def capture_note(class_id: int, transcript: str | None = Form(None), audio
     children = ledger.class_children(db, cls.id)
     p = features.extract_note(db, school_id=cls.school_id, transcript=text,
                               roster=[(c.roll_no, c.first_name) for c in children],
-                              checkpoint_ids=cids, content=content, subject=subject)
+                              checkpoint_ids=cids, content=content, subject=subject, lang=lang)
     drafts, unresolved = [], []
     for item in p.payload.get("children", []):
         if item.get("roll") is not None:
@@ -324,7 +328,8 @@ async def capture_note(class_id: int, transcript: str | None = Form(None), audio
     return {"capture_id": cap.id, "ai_status": p.ai_status, "note": p.note,
             "transcript": text, "drafts": drafts, "unresolved": payload["unresolved"],
             "taught": payload["taught"], "checkpoints": _cp_labels(content, cids),
-            "children": [{"id": c.id, "roll_no": c.roll_no, "first_name": c.first_name} for c in children]}
+            "children": [{"id": c.id, "roll_no": c.roll_no, "first_name": c.first_name} for c in children],
+            "content_lang": lang}
 
 
 @router.post("/classes/{class_id}/captures/photo")
@@ -341,8 +346,9 @@ async def capture_photo(class_id: int, child_id: int = Form(...), image: UploadF
     content = get_content()
     rm = ledger.current_roadmap(db, cls.id, subject)
     cids = ledger.roadmap_checkpoint_ids(rm) or [c.id for c in content.for_grade(subject, cls.grade)]
+    lang, _provider = content_lang.for_teacher(db, teacher)
     p = features.analyze_photo(db, school_id=cls.school_id, image=data,
-                               media_type=image_media_type(data), checkpoint_ids=cids, content=content)
+                               media_type=image_media_type(data), checkpoint_ids=cids, content=content, lang=lang)
     page = p.payload.get("page", {})
     if p.ai_status == "ready" and not page.get("legible", True):
         return {"capture_id": None, "ai_status": "retake", "reason": "illegible",
@@ -354,7 +360,7 @@ async def capture_photo(class_id: int, child_id: int = Form(...), image: UploadF
                    ai_status=p.ai_status)
     return {"capture_id": cap.id, "ai_status": p.ai_status, "note": p.note, "questions": questions,
             "checkpoints": _cp_labels(content, cids), "page": page,
-            "child": {"id": ch.id, "first_name": ch.first_name}}
+            "child": {"id": ch.id, "first_name": ch.first_name}, "content_lang": lang}
 
 
 def _verify_arithmetic(q: dict) -> dict:
@@ -404,10 +410,12 @@ async def capture_voice(class_id: int, body_json: str = Form(...), audio: Upload
     targets = [str(t) for t in raw_targets][:6]
     audio_bytes = await audio.read() if audio else b""
     validate_media(audio_bytes, None)
+    lang, provider = content_lang.for_teacher(db, teacher)
     text = (transcript or "").strip()
     if not text and audio_bytes:
         try:
-            text = get_asr().transcribe(audio_bytes, audio.filename or "voice.m4a", keyterms=targets).text
+            text = content_lang.transcribe(audio_bytes, audio.filename or "voice.m4a", lang=lang, keyterms=targets,
+                                           preferred=provider).text
         except Exception:
             text = ""
     if not text:
@@ -415,14 +423,14 @@ async def capture_voice(class_id: int, body_json: str = Form(...), audio: Upload
                 "message": "आवाज़ ठीक से नहीं सुनाई दी। शांत जगह पर दोबारा रिकॉर्ड करें।"}
     score = score_read(targets, text)
     p = features.interpret_voice(db, school_id=cls.school_id, checkpoint_id=cp.id, score=score.to_dict(),
-                                 transcript=text, content=content)
+                                 transcript=text, content=content, lang=lang)
     payload = {"child_id": ch.id, "roll_no": ch.roll_no, "checkpoint_id": cp.id, "targets": targets,
                "transcript": text, "score": score.to_dict(), "proposal": p.payload}
     cap = _capture(db, cls, teacher, "voice", payload, input_text=text, ai_status=p.ai_status)
     return {"capture_id": cap.id, "ai_status": p.ai_status, "score": score.to_dict(), "proposal": p.payload,
             "checkpoint": {"id": cp.id, "title_hi": cp.title_hi, "title_en": cp.title_en,
                            "misconceptions": list(cp.misconceptions)},
-            "child": {"id": ch.id, "first_name": ch.first_name}}
+            "child": {"id": ch.id, "first_name": ch.first_name}, "content_lang": lang}
 
 
 @router.get("/checkpoints/{checkpoint_id}/targets")
@@ -518,14 +526,21 @@ def capture_probe(class_id: int, child_id: int, checkpoint_id: str, passed: int,
 
 
 @router.get("/checkpoints/{checkpoint_id}/probe")
-def get_probe(checkpoint_id: str, teacher: Teacher = Depends(current_teacher)):
+def get_probe(checkpoint_id: str, teacher: Teacher = Depends(current_teacher), db: Session = Depends(get_db)):
     content = get_content()
     cp = _cp(content, checkpoint_id, teacher.school_id)
     if not cp:
         raise HTTPException(404, "unknown checkpoint")
-    p = content.probes.get(checkpoint_id)
-    return {"checkpoint": {"id": cp.id, "title_hi": cp.title_hi, "title_en": cp.title_en}, "probe": p,
-            "suggestion": p["title_hi"] if p else "प्रश्न पूछकर जाँचें"}
+    lang, _provider = content_lang.for_teacher(db, teacher)
+    p = content_lang.probe(content.probes.get(checkpoint_id), checkpoint_id, lang)
+    out = {"checkpoint": {"id": cp.id, "title_hi": cp.title_hi, "title_en": cp.title_en}, "probe": p,
+           "suggestion": p["title_hi"] if p else "प्रश्न पूछकर जाँचें", "content_lang": lang}
+    if lang != content_lang.SOURCE_LANG:
+        out["machine_translated"] = bool(p and p.get("machine_translated"))
+        if not p:  # the canned hint
+            [out["suggestion"]], out["machine_translated"] = content_lang.translate(
+                db, [out["suggestion"]], lang, teacher.school_id)
+    return out
 
 
 @router.get("/captures/{capture_id}")
@@ -620,8 +635,10 @@ def make_plan(class_id: int, subject: str, for_date: date | None = None, force: 
     subject = _subject(subject, db, teacher)
     cls = owned_class(class_id, teacher, db)
     content = get_content()
-    plan = ledger.todays_plan(db, cls, subject, for_date or ledger.school_today(), content, force=force)
-    payload = ledger.upgrade_plan_payload(plan.payload, ledger.class_children(db, cls.id), content)
+    lang, _provider = content_lang.for_teacher(db, teacher)
+    plan = ledger.todays_plan(db, cls, subject, for_date or ledger.school_today(), content, force=force, lang=lang)
+    payload = ledger.localize_plan(ledger.upgrade_plan_payload(plan.payload, ledger.class_children(db, cls.id),
+                                                               content), content)
     return {"id": plan.id, "subject": plan.subject, "for_date": plan.for_date.isoformat(),
             "generated_by": plan.generated_by, **payload}
 
@@ -635,7 +652,9 @@ def latest_plan(class_id: int, subject: str, teacher: Teacher = Depends(current_
                      .order_by(Plan.for_date.desc()).limit(1))
     if not plan:
         return {"exists": False}
-    payload = ledger.upgrade_plan_payload(plan.payload, ledger.class_children(db, cls.id), get_content())
+    content = get_content()
+    payload = ledger.localize_plan(ledger.upgrade_plan_payload(plan.payload, ledger.class_children(db, cls.id),
+                                                               content), content)
     return {"exists": True, "id": plan.id, "for_date": plan.for_date.isoformat(),
             "generated_by": plan.generated_by, **payload}
 
@@ -809,6 +828,34 @@ def list_checkpoints(subject: str | None = None, grade: int | None = None,
                     "title_hi": c.title_hi, "title_en": c.title_en, "misconceptions": list(c.misconceptions),
                     "nipun_ref": c.nipun_ref, "assess_via": list(c.assess_via)})
     return out
+
+
+def _content_reader(authorization: str | None = Header(default=None), db: Session = Depends(get_db)):
+    """A teacher or a parent (both apps show lesson titles): (school_id, content language)."""
+    if not authorization or not authorization.lower().startswith("bearer "):
+        raise HTTPException(401, "missing token")
+    try:
+        payload = decode_token(authorization.split(" ", 1)[1])
+    except Exception:
+        raise HTTPException(401, "invalid token")
+    kind, sub = payload.get("kind"), int(payload.get("sub") or 0)
+    if kind == "teacher" and (t := db.get(Teacher, sub)):
+        return t.school_id, prefs.content_lang_for(db, teacher=t)
+    if kind == "parent" and (pa := db.get(ParentAccount, sub)):
+        return pa.school_id, prefs.content_lang_for(db, parent=pa)
+    raise HTTPException(401, "user not found")
+
+
+@router.get("/content/titles")
+def content_titles(lang: str | None = None, who=Depends(_content_reader)):
+    """Lesson titles in a content language: {lang, titles: {checkpoint_id: title}, machine_translated}.
+    Without `lang`, the caller's own content language."""
+    from app.i18n.languages import LANGUAGES
+    school_id, own = who
+    lang = (lang or own).strip()
+    if lang not in LANGUAGES:
+        raise HTTPException(422, f"unknown language {lang}")
+    return content_lang.titles(get_content(), lang, school_id)
 
 
 @router.get("/content/status")

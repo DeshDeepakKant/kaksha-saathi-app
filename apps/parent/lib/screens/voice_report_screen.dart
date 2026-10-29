@@ -106,11 +106,11 @@ class _VoiceReportScreenState extends State<VoiceReportScreen> {
     final items = _int(r['items_attempted']);
     final acc = _pct(r['accuracy']);
     final stage = voiceStageLabel(r['highest_stage'] as String?);
-    return tr(
-      'Your child practised for $mins minutes and tried $items questions, getting $acc% right. '
-          'The highest level reached was "$stage".',
-      'आपके बच्चे ने $mins मिनट अभ्यास किया और $items सवाल किए, जिनमें $acc% सही रहे। '
-          'सबसे ऊँचा स्तर "$stage" रहा।',
+    return trf(
+      'Your child practised for {mins} minutes and tried {items} questions, getting {acc}% right. '
+          'The highest level reached was "{stage}".',
+      'आपके बच्चे ने {mins} मिनट अभ्यास किया और {items} सवाल किए, जिनमें {acc}% सही रहे। '
+          'सबसे ऊँचा स्तर "{stage}" रहा।', {'mins': mins, 'items': items, 'acc': acc, 'stage': stage},
     );
   }
 
@@ -313,15 +313,15 @@ class _VoiceReportScreenState extends State<VoiceReportScreen> {
             child: ListTile(
               leading: const Icon(Icons.speed_rounded, color: Ks.accent),
               title: Text(
-                tr(
-                  'Reading speed: ${wcpm.round()} words a minute',
-                  'पढ़ने की गति: ${wcpm.round()} शब्द प्रति मिनट',
+                trf(
+                  'Reading speed: {wcpm} words a minute',
+                  'पढ़ने की गति: {wcpm} शब्द प्रति मिनट', {'wcpm': wcpm.round()},
                 ),
               ),
               subtitle: Text(
-                tr(
-                  'Paragraphs read: ${_int((r['fluency'] as Map?)?['paragraphs'])}',
-                  'पढ़े गए अनुच्छेद: ${_int((r['fluency'] as Map?)?['paragraphs'])}',
+                trf(
+                  'Paragraphs read: {paragraphs}',
+                  'पढ़े गए अनुच्छेद: {paragraphs}', {'paragraphs': _int((r['fluency'] as Map?)?['paragraphs'])},
                 ),
               ),
             ),
@@ -459,9 +459,9 @@ class _VoiceReportScreenState extends State<VoiceReportScreen> {
                 ),
               ),
               Text(
-                tr(
-                  '$correct of $attempted right',
-                  '$attempted में से $correct सही',
+                trf(
+                  '{correct} of {attempted} right',
+                  '{attempted} में से {correct} सही', {'correct': correct, 'attempted': attempted},
                 ),
                 style: const TextStyle(color: Ks.muted, fontSize: 14),
               ),
@@ -543,12 +543,12 @@ class _VoiceReportScreenState extends State<VoiceReportScreen> {
                       'Saathi heard: (nothing clear)',
                       'साथी ने सुना: (कुछ साफ़ नहीं)',
                     )
-                  : tr('Saathi heard: $heard', 'साथी ने सुना: $heard'),
+                  : trf('Saathi heard: {heard}', 'साथी ने सुना: {heard}', {'heard': heard}),
               style: const TextStyle(color: Ks.rose, fontSize: 15),
             ),
             if (attempts > 0)
               Text(
-                tr('Tries: $attempts', 'कोशिशें: $attempts'),
+                trf('Tries: {attempts}', 'कोशिशें: {attempts}', {'attempts': attempts}),
                 style: const TextStyle(color: Ks.muted, fontSize: 14),
               ),
             if (errors.isNotEmpty)
@@ -676,7 +676,7 @@ class _TranscriptLoaderState extends State<_TranscriptLoader> {
           )
         : Text(text, style: const TextStyle(fontSize: 16, color: Ks.ink));
     return Align(
-      alignment: tutor ? Alignment.centerLeft : Alignment.centerRight,
+      alignment: tutor ? AlignmentDirectional.centerStart : AlignmentDirectional.centerEnd,
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 320),
         child: Container(

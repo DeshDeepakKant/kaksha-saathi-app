@@ -52,7 +52,8 @@ class _VoiceSessionScreenState extends State<VoiceSessionScreen> {
 
   _Phase _phase = _Phase.choose;
   VoiceMicState _mic = VoiceMicState.idle;
-  String _lang = 'hi';
+  // The learning language by default; the parent may pick another content language.
+  String _lang = ContentLang.code.value;
   Object? _sid;
   Map<String, dynamic>? _item; // what the child answers next
   Map<String, dynamic>?
@@ -82,6 +83,50 @@ class _VoiceSessionScreenState extends State<VoiceSessionScreen> {
   int _gen = 0;
 
   static const _maxTries = 5;
+
+  @override
+  void initState() {
+    super.initState();
+    // Refresh the content-language list (the last copy shows at once).
+    Api.i.languages().then((_) => _set(() {})).catchError((_) {});
+  }
+
+  /// Languages Saathi can teach in, the learning language first. Hindi and English when the
+  /// server's list was never loaded.
+  List<String> get _sessionLangs {
+    final codes = <String>[
+      for (final m
+          in ((Api.i.languagesData?['content_languages'] as List?) ?? const [])
+              .whereType<Map>())
+        '${m['code']}',
+    ];
+    if (codes.isEmpty) codes.addAll(const ['hi', 'en']);
+    final first = ContentLang.code.value;
+    codes.remove(first);
+    return [first, ...codes];
+  }
+
+  /// Native name of a language code (`मराठी`), from the server list or the app's own.
+  static String _nativeName(String code) {
+    for (final m
+        in ((Api.i.languagesData?['content_languages'] as List?) ?? const [])
+            .whereType<Map>()) {
+      if (m['code'] == code && m['name_native'] != null) {
+        return '${m['name_native']}';
+      }
+    }
+    for (final l in appLanguages()) {
+      if (l.code == code) return l.nativeName;
+    }
+    return code;
+  }
+
+  static String? _englishName(String code) {
+    for (final l in appLanguages()) {
+      if (l.code == code) return l.englishName;
+    }
+    return null;
+  }
 
   @override
   void dispose() {
@@ -139,17 +184,18 @@ class _VoiceSessionScreenState extends State<VoiceSessionScreen> {
     });
     Speak.hasVoice(_tutorLang).then((ok) {
       if (!ok) {
-        _toast(
-          _tutorLang == 'en'
-              ? tr(
-                  'No English (India) voice on this phone — read Saathi\'s words from the screen.',
-                  'इस फ़ोन पर अंग्रेज़ी आवाज़ नहीं है — साथी की बात स्क्रीन से पढ़कर सुनाइए।',
-                )
-              : tr(
-                  'No Hindi voice on this phone — install it in Settings › Text-to-speech, or read Saathi\'s words aloud.',
-                  'इस फ़ोन पर हिंदी आवाज़ नहीं है — सेटिंग › टेक्स्ट-टू-स्पीच में डालें, या साथी की बात पढ़कर सुनाइए।',
-                ),
-        );
+        _toast(switch (_tutorLang) {
+          'en' => tr(
+            'No English (India) voice on this phone — read Saathi\'s words from the screen.',
+            'इस फ़ोन पर अंग्रेज़ी आवाज़ नहीं है — साथी की बात स्क्रीन से पढ़कर सुनाइए।',
+          ),
+          'hi' => tr(
+            'No Hindi voice on this phone — install it in Settings › Text-to-speech, or read Saathi\'s words aloud.',
+            'इस फ़ोन पर हिंदी आवाज़ नहीं है — सेटिंग › टेक्स्ट-टू-स्पीच में डालें, या साथी की बात पढ़कर सुनाइए।',
+          ),
+          _ =>
+            '${_nativeName(_tutorLang)}: ${tr('no voice for this language on this phone — install it in Settings › Text-to-speech, or read Saathi\'s words aloud.', 'इस भाषा की आवाज़ इस फ़ोन पर नहीं है — सेटिंग › टेक्स्ट-टू-स्पीच में डालें, या साथी की बात पढ़कर सुनाइए।')}',
+        });
       }
     });
     _cycle();
@@ -379,9 +425,9 @@ class _VoiceSessionScreenState extends State<VoiceSessionScreen> {
     if (stageUp) {
       return (
         emoji: '⭐',
-        text: tr(
-          'New level: ${voiceStageLabel(stage)}!',
-          'नया स्तर: ${voiceStageLabel(stage)}!',
+        text: trf(
+          'New level: {voiceStageLabel}!',
+          'नया स्तर: {voiceStageLabel}!', {'voiceStageLabel': voiceStageLabel(stage)},
         ),
         fg: Ks.green,
         bg: Ks.greenSoft,
@@ -608,9 +654,11 @@ class _VoiceSessionScreenState extends State<VoiceSessionScreen> {
           title: Text(
             _sid == null
                 ? tr('Voice session with Saathi', 'साथी के साथ आवाज़ सत्र')
-                : (_lang == 'en'
-                      ? tr('Saathi · English', 'साथी · अंग्रेज़ी')
-                      : tr('Saathi · Hindi', 'साथी · हिंदी')),
+                : switch (_lang) {
+                    'en' => tr('Saathi · English', 'साथी · अंग्रेज़ी'),
+                    'hi' => tr('Saathi · Hindi', 'साथी · हिंदी'),
+                    _ => '${tr('Saathi', 'साथी')} · ${_nativeName(_lang)}',
+                  },
           ),
         ),
         body: SafeArea(child: _body()),
@@ -651,12 +699,21 @@ class _VoiceSessionScreenState extends State<VoiceSessionScreen> {
   };
 
   Widget _chooseView() {
+    final langs = _sessionLangs;
+    String sub(String code) => switch (code) {
+      'hi' => tr('Hindi reading', 'हिंदी पढ़ना'),
+      'en' => tr('English reading', 'अंग्रेज़ी पढ़ना'),
+      _ => _englishName(code) ?? code,
+    };
     Widget langButton(String code, String label, String sub) => Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: FilledButton(
         style: FilledButton.styleFrom(
-          minimumSize: const Size.fromHeight(76),
-          backgroundColor: code == 'hi' ? Ks.accent : Ks.ink,
+          // Many languages: the others are shorter so the tips stay in reach.
+          minimumSize: Size.fromHeight(
+            code == langs.first || langs.length <= 2 ? 76 : 60,
+          ),
+          backgroundColor: code == langs.first ? Ks.accent : Ks.ink,
         ),
         onPressed: () => _start(code),
         child: Column(
@@ -700,12 +757,9 @@ class _VoiceSessionScreenState extends State<VoiceSessionScreen> {
                   ?.copyWith(fontSize: 24),
             ),
             const SizedBox(height: 20),
-            langButton('hi', 'हिंदी', tr('Hindi reading', 'हिंदी पढ़ना')),
-            langButton(
-              'en',
-              'English',
-              tr('English reading', 'अंग्रेज़ी पढ़ना'),
-            ),
+            // The learning language first (highlighted), then the other content languages.
+            for (final code in langs)
+              langButton(code, _nativeName(code), sub(code)),
             const SizedBox(height: 10),
             tip(
               Icons.volume_off_rounded,
@@ -843,7 +897,7 @@ class _VoiceSessionScreenState extends State<VoiceSessionScreen> {
 
   Widget _tutorCard() => Card(
     child: Padding(
-      padding: const EdgeInsets.fromLTRB(14, 10, 6, 10),
+      padding: const EdgeInsetsDirectional.fromSTEB(14, 10, 6, 10),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -894,7 +948,7 @@ class _VoiceSessionScreenState extends State<VoiceSessionScreen> {
                 borderRadius: BorderRadius.circular(99),
               ),
               child: Text(
-                tr('Try $_try of $_maxTries', 'कोशिश $_try / $_maxTries'),
+                trf('Try {try} of {maxTries}', 'कोशिश {try} / {maxTries}', {'try': _try, 'maxTries': _maxTries}),
                 style: const TextStyle(
                   color: Ks.amber,
                   fontWeight: FontWeight.w700,
@@ -1078,9 +1132,9 @@ class _VoiceSessionScreenState extends State<VoiceSessionScreen> {
           const SizedBox(width: 8),
           Expanded(
             child: Text(
-              tr(
-                'Conversation (${_lines.length})',
-                'बातचीत (${_lines.length})',
+              trf(
+                'Conversation ({linesCount})',
+                'बातचीत ({linesCount})', {'linesCount': _lines.length},
               ),
               style: const TextStyle(
                 fontWeight: FontWeight.w600,

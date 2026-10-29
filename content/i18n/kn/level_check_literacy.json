@@ -1,0 +1,171 @@
+{
+ "lang": "kn",
+ "source_lang": "kn",
+ "machine_translated": true,
+ "reviewed": false,
+ "model": "claude-sonnet-5",
+ "generated_at": "2026-10-29T21:52:07+00:00",
+ "note": "Machine translated by scripts/translate_content.py; not reviewed by an educator.",
+ "generated_natively": true,
+ "title_en": "Kannada reading level",
+ "title": "ಕನ್ನಡ ಓದುವ ಹಂತ",
+ "beginner": {
+  "key": "beginner",
+  "title_en": "Beginner (not yet letters)",
+  "title": "ಆರಂಭಿಕ (ಅಕ್ಷರ ಗೊತ್ತಿಲ್ಲ)"
+ },
+ "levels": [
+  {
+   "key": "letter",
+   "title_en": "Letters",
+   "title": "ಅಕ್ಷರಗಳು",
+   "checkpoint_id": "L.G1.vyanjan",
+   "ask_en": "Point to each letter. Ask the child to say it.",
+   "ask": "ಪ್ರತಿ ಅಕ್ಷರವನ್ನು ತೋರಿಸಿ. ಮಗುವಿಗೆ ಅದನ್ನು ಹೇಳಲು ಹೇಳಿ.",
+   "items": [
+    {
+     "show": "ಕ"
+    },
+    {
+     "show": "ಮ"
+    },
+    {
+     "show": "ನ"
+    },
+    {
+     "show": "ರ"
+    },
+    {
+     "show": "ಸ"
+    }
+   ],
+   "pass_min": 4,
+   "of": 5,
+   "practice": [
+    {
+     "show": "ಲ"
+    },
+    {
+     "show": "ದ"
+    },
+    {
+     "show": "ಹ"
+    },
+    {
+     "show": "ಗ"
+    },
+    {
+     "show": "ಪ"
+    }
+   ]
+  },
+  {
+   "key": "word",
+   "title_en": "Words",
+   "title": "ಪದಗಳು",
+   "checkpoint_id": "L.G1.read_matra_words",
+   "ask_en": "Ask the child to read each word.",
+   "ask": "ಮಗುವಿಗೆ ಪ್ರತಿ ಪದವನ್ನು ಓದಲು ಹೇಳಿ.",
+   "items": [
+    {
+     "show": "ಮನೆ"
+    },
+    {
+     "show": "ಅಮ್ಮ"
+    },
+    {
+     "show": "ಅಪ್ಪ"
+    },
+    {
+     "show": "ಹಸು"
+    },
+    {
+     "show": "ಬಾಳೆ"
+    }
+   ],
+   "pass_min": 4,
+   "of": 5,
+   "practice": [
+    {
+     "show": "ನೀರು"
+    },
+    {
+     "show": "ಶಾಲೆ"
+    },
+    {
+     "show": "ಕುದುರೆ"
+    },
+    {
+     "show": "ಹಾಲು"
+    },
+    {
+     "show": "ಬೆಕ್ಕು"
+    }
+   ]
+  },
+  {
+   "key": "sentence",
+   "title_en": "Sentences",
+   "title": "ವಾಕ್ಯಗಳು",
+   "checkpoint_id": "L.G1.read_short_sentences",
+   "ask_en": "Ask the child to read each sentence aloud.",
+   "ask": "ಮಗುವಿಗೆ ಪ್ರತಿ ವಾಕ್ಯವನ್ನು ಗಟ್ಟಿಯಾಗಿ ಓದಲು ಹೇಳಿ.",
+   "items": [
+    {
+     "show": "ಹಸು ಹುಲ್ಲು ತಿನ್ನುತ್ತದೆ."
+    },
+    {
+     "show": "ಅಮ್ಮ ಅಡುಗೆ ಮಾಡುತ್ತಾಳೆ."
+    },
+    {
+     "show": "ನಾನು ಶಾಲೆಗೆ ಹೋಗುತ್ತೇನೆ."
+    }
+   ],
+   "pass_min": 2,
+   "of": 3,
+   "practice": [
+    {
+     "show": "ಅಪ್ಪ ಹೊಲಕ್ಕೆ ಹೋದರು."
+    },
+    {
+     "show": "ಮಗು ಹಾಲು ಕುಡಿಯಿತು."
+    },
+    {
+     "show": "ನಾಯಿ ಮನೆಯ ಮುಂದೆ ಕುಳಿತಿದೆ."
+    }
+   ]
+  },
+  {
+   "key": "story",
+   "title_en": "Short passage",
+   "title": "ಸಣ್ಣ ಪಠ್ಯ",
+   "checkpoint_id": "L.G2.fluency_45_60",
+   "ask_en": "Ask the child to read each line like a story. A line passes if it is smooth, with at most 1 mistake.",
+   "ask": "ಮಗುವಿಗೆ ಪ್ರತಿ ಸಾಲನ್ನು ಕಥೆಯಂತೆ ಓದಲು ಹೇಳಿ. ಸಾಲು ಸರಾಗವಾಗಿ ಓದಿದರೆ, ಹೆಚ್ಚೆಂದರೆ 1 ತಪ್ಪಿನೊಂದಿಗೆ, ಅದನ್ನು ಪಾಸ್ ಎಂದು ಪರಿಗಣಿಸಿ.",
+   "items": [
+    {
+     "show": "ಬೇಸಿಗೆ ರಜೆಯಲ್ಲಿ ನಾವು ಅಜ್ಜಿಯ ಊರಿಗೆ ಹೋಗುತ್ತೇವೆ."
+    },
+    {
+     "show": "ಅಲ್ಲಿ ನಾವು ಹೊಳೆಯಲ್ಲಿ ಆಟ ಆಡುತ್ತೇವೆ."
+    },
+    {
+     "show": "ಸಂಜೆ ಎಲ್ಲರೂ ಸೇರಿ ಕಥೆ ಕೇಳುತ್ತೇವೆ."
+    }
+   ],
+   "pass_min": 2,
+   "of": 3,
+   "practice": [
+    {
+     "show": "ಮಳೆಗಾಲದಲ್ಲಿ ಗದ್ದೆಯಲ್ಲಿ ಕೆಲಸ ಮಾಡಲು ರೈತರು ಹೋಗುತ್ತಾರೆ."
+    },
+    {
+     "show": "ಮಕ್ಕಳು ಕೊಡೆ ಹಿಡಿದು ಶಾಲೆಗೆ ಹೋಗುತ್ತಾರೆ."
+    },
+    {
+     "show": "ಮನೆಗೆ ಬಂದ ಮೇಲೆ ಎಲ್ಲರೂ ಬಿಸಿ ಹಾಲು ಕುಡಿಯುತ್ತಾರೆ."
+    }
+   ]
+  }
+ ]
+}

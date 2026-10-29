@@ -1,0 +1,171 @@
+{
+ "lang": "bn",
+ "source_lang": "bn",
+ "machine_translated": true,
+ "reviewed": false,
+ "model": "claude-sonnet-5",
+ "generated_at": "2026-10-29T21:50:13+00:00",
+ "note": "Machine translated by scripts/translate_content.py; not reviewed by an educator.",
+ "generated_natively": true,
+ "title_en": "Bengali reading level",
+ "title": "বাংলা পড়ার স্তর",
+ "beginner": {
+  "key": "beginner",
+  "title_en": "Beginner (not yet letters)",
+  "title": "শুরুয়াতি (অক্ষর জানা নেই)"
+ },
+ "levels": [
+  {
+   "key": "letter",
+   "title_en": "Letters",
+   "title": "অক্ষর",
+   "checkpoint_id": "L.G1.vyanjan",
+   "ask_en": "Point to each letter. Ask the child to say it.",
+   "ask": "প্রতিটা অক্ষর দেখিয়ে দাও। বাচ্চাকে বলতে বলো।",
+   "items": [
+    {
+     "show": "ক"
+    },
+    {
+     "show": "ম"
+    },
+    {
+     "show": "ল"
+    },
+    {
+     "show": "র"
+    },
+    {
+     "show": "স"
+    }
+   ],
+   "pass_min": 4,
+   "of": 5,
+   "practice": [
+    {
+     "show": "ন"
+    },
+    {
+     "show": "ত"
+    },
+    {
+     "show": "দ"
+    },
+    {
+     "show": "প"
+    },
+    {
+     "show": "ব"
+    }
+   ]
+  },
+  {
+   "key": "word",
+   "title_en": "Words",
+   "title": "শব্দ",
+   "checkpoint_id": "L.G1.read_matra_words",
+   "ask_en": "Ask the child to read each word.",
+   "ask": "বাচ্চাকে প্রতিটা শব্দ পড়তে বলো।",
+   "items": [
+    {
+     "show": "মালা"
+    },
+    {
+     "show": "ডাল"
+    },
+    {
+     "show": "নাক"
+    },
+    {
+     "show": "বাদল"
+    },
+    {
+     "show": "গাজর"
+    }
+   ],
+   "pass_min": 4,
+   "of": 5,
+   "practice": [
+    {
+     "show": "কলম"
+    },
+    {
+     "show": "আলু"
+    },
+    {
+     "show": "মাছ"
+    },
+    {
+     "show": "দরজা"
+    },
+    {
+     "show": "আকাশ"
+    }
+   ]
+  },
+  {
+   "key": "sentence",
+   "title_en": "Sentences",
+   "title": "বাক্য",
+   "checkpoint_id": "L.G1.read_short_sentences",
+   "ask_en": "Ask the child to read each sentence aloud.",
+   "ask": "বাচ্চাকে প্রতিটা বাক্য জোরে পড়তে বলো।",
+   "items": [
+    {
+     "show": "গরু ঘাস খায়।"
+    },
+    {
+     "show": "মা ভাত রাঁধছেন।"
+    },
+    {
+     "show": "বাবা মাঠে যান।"
+    }
+   ],
+   "pass_min": 2,
+   "of": 3,
+   "practice": [
+    {
+     "show": "আমি স্কুলে যাই।"
+    },
+    {
+     "show": "দাদু বাগানে বসে আছেন।"
+    },
+    {
+     "show": "বোন জল আনছে।"
+    }
+   ]
+  },
+  {
+   "key": "story",
+   "title_en": "Short passage",
+   "title": "ছোট গল্প",
+   "checkpoint_id": "L.G2.fluency_45_60",
+   "ask_en": "Ask the child to read each line like a story. A line passes if it is smooth, with at most 1 mistake.",
+   "ask": "বাচ্চাকে প্রতিটা লাইন গল্পের মতো পড়তে বলো। লাইনটা যদি মসৃণভাবে পড়ে, বড়জোর ১টা ভুল হলে, সেটা পাস হবে।",
+   "items": [
+    {
+     "show": "গরমের ছুটিতে আমরা দিদার গ্রামে যাই।"
+    },
+    {
+     "show": "সেখানে আমরা নদীতে স্নান করি।"
+    },
+    {
+     "show": "রাতে আমরা সবাই মিলে গল্প শুনি।"
+    }
+   ],
+   "pass_min": 2,
+   "of": 3,
+   "practice": [
+    {
+     "show": "বর্ষার দিনে আকাশে কালো মেঘ জমে।"
+    },
+    {
+     "show": "আমরা জানালা দিয়ে বৃষ্টি দেখি।"
+    },
+    {
+     "show": "পরে আমরা সবাই মিলে খিচুড়ি খাই।"
+    }
+   ]
+  }
+ ]
+}

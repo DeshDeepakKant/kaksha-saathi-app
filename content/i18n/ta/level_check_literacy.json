@@ -1,0 +1,171 @@
+{
+ "lang": "ta",
+ "source_lang": "ta",
+ "machine_translated": true,
+ "reviewed": false,
+ "model": "claude-sonnet-5",
+ "generated_at": "2026-10-29T21:53:49+00:00",
+ "note": "Machine translated by scripts/translate_content.py; not reviewed by an educator.",
+ "generated_natively": true,
+ "title_en": "Tamil reading level",
+ "title": "தமிழ் படிப்பு நிலை",
+ "beginner": {
+  "key": "beginner",
+  "title_en": "Beginner (not yet letters)",
+  "title": "ஆரம்பநிலை (எழுத்து அறியாதவர்)"
+ },
+ "levels": [
+  {
+   "key": "letter",
+   "title_en": "Letters",
+   "title": "எழுத்துகள்",
+   "checkpoint_id": "L.G1.vyanjan",
+   "ask_en": "Point to each letter. Ask the child to say it.",
+   "ask": "ஒவ்வொரு எழுத்தையும் சுட்டிக்காட்டுங்கள். குழந்தையை அதைச் சொல்லச் சொல்லுங்கள்.",
+   "items": [
+    {
+     "show": "க"
+    },
+    {
+     "show": "ம"
+    },
+    {
+     "show": "ல"
+    },
+    {
+     "show": "ர"
+    },
+    {
+     "show": "ப"
+    }
+   ],
+   "pass_min": 4,
+   "of": 5,
+   "practice": [
+    {
+     "show": "ட"
+    },
+    {
+     "show": "ன"
+    },
+    {
+     "show": "வ"
+    },
+    {
+     "show": "ச"
+    },
+    {
+     "show": "த"
+    }
+   ]
+  },
+  {
+   "key": "word",
+   "title_en": "Words",
+   "title": "சொற்கள்",
+   "checkpoint_id": "L.G1.read_matra_words",
+   "ask_en": "Ask the child to read each word.",
+   "ask": "ஒவ்வொரு சொல்லையும் குழந்தையைப் படிக்கச் சொல்லுங்கள்.",
+   "items": [
+    {
+     "show": "பூனை"
+    },
+    {
+     "show": "பழம்"
+    },
+    {
+     "show": "அம்மா"
+    },
+    {
+     "show": "அப்பா"
+    },
+    {
+     "show": "மரம்"
+    }
+   ],
+   "pass_min": 4,
+   "of": 5,
+   "practice": [
+    {
+     "show": "பாலை"
+    },
+    {
+     "show": "குடை"
+    },
+    {
+     "show": "நாய்"
+    },
+    {
+     "show": "வீடு"
+    },
+    {
+     "show": "சோறு"
+    }
+   ]
+  },
+  {
+   "key": "sentence",
+   "title_en": "Sentences",
+   "title": "வாக்கியங்கள்",
+   "checkpoint_id": "L.G1.read_short_sentences",
+   "ask_en": "Ask the child to read each sentence aloud.",
+   "ask": "ஒவ்வொரு வாக்கியத்தையும் குழந்தையை சத்தமாகப் படிக்கச் சொல்லுங்கள்.",
+   "items": [
+    {
+     "show": "பசு புல் தின்கிறது."
+    },
+    {
+     "show": "அம்மா சோறு வைக்கிறாள்."
+    },
+    {
+     "show": "நான் பள்ளி செல்கிறேன்."
+    }
+   ],
+   "pass_min": 2,
+   "of": 3,
+   "practice": [
+    {
+     "show": "அப்பா வயலுக்கு செல்கிறார்."
+    },
+    {
+     "show": "நாய் வீட்டில் உறங்குகிறது."
+    },
+    {
+     "show": "குழந்தை பந்து விளையாடுகிறது."
+    }
+   ]
+  },
+  {
+   "key": "story",
+   "title_en": "Short passage",
+   "title": "சிறு பத்தி",
+   "checkpoint_id": "L.G2.fluency_45_60",
+   "ask_en": "Ask the child to read each line like a story. A line passes if it is smooth, with at most 1 mistake.",
+   "ask": "ஒவ்வொரு வரியையும் குழந்தையை ஒரு கதை போல படிக்கச் சொல்லுங்கள். ஒரு வரி சரளமாக, அதிகபட்சம் 1 தவறுடன் படிக்கப்பட்டால் அது தேர்ச்சி பெற்றதாகக் கருதப்படும்.",
+   "items": [
+    {
+     "show": "விடுமுறையில் நாங்கள் பாட்டி வீட்டிற்கு செல்கிறோம்."
+    },
+    {
+     "show": "அங்கே பசுக்களும் ஆடுகளும் உள்ளன."
+    },
+    {
+     "show": "நாங்கள் தினமும் வயலில் விளையாடுகிறோம்."
+    }
+   ],
+   "pass_min": 2,
+   "of": 3,
+   "practice": [
+    {
+     "show": "கிராமத்தில் ஒரு சிறிய குளம் இருக்கிறது."
+    },
+    {
+     "show": "குழந்தைகள் தினமும் அங்கே நீந்துகிறார்கள்."
+    },
+    {
+     "show": "மாலையில் எல்லோரும் வீடு திரும்புகிறார்கள்."
+    }
+   ]
+  }
+ ]
+}

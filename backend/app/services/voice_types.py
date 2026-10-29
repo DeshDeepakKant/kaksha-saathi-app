@@ -9,7 +9,25 @@ from dataclasses import asdict, dataclass, field
 
 TARGET_MINUTES = 30
 MAX_ATTEMPTS = 5          # tries per item before moving on and recording the difficulty
-LANGS = ("hi", "en")
+LANGS = ("hi", "en")        # languages with a reviewed item bank and hand-written Saathi lines
+# Every content language a session can run in (docs/lang_provider_contract.md): hi/en as above;
+# the others get per-language ladder/voice files or Claude-written items, and translated lines.
+VOICE_LANGS = ("en", "hi", "bn", "mr", "te", "ta", "gu", "kn", "ml", "or", "pa")
+
+
+def voice_lang(lang: str | None) -> str:
+    """A language the session supports (unknown codes fall back to Hindi, as before)."""
+    return lang if lang in VOICE_LANGS else "hi"
+
+
+def is_reviewed_lang(lang: str | None) -> bool:
+    return lang in LANGS
+
+
+def is_home_lang(lang: str | None) -> bool:
+    """The child's own (classroom) language: every language except English, which is taught as a
+    second language. Home-language sessions practise the built-in literacy checkpoints."""
+    return lang != "en"
 
 # The reading ladder, easiest first (the order the session climbs).
 STAGES = ("letter", "word_build", "word_read", "sentence_build", "reading")

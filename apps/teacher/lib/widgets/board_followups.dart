@@ -136,11 +136,11 @@ class _BoardFollowupsCardState extends State<BoardFollowupsCard> {
 
   /// Short chip label, e.g. "Re-check 3".
   String _chipLabel(String key, int n) => switch (key) {
-    'recheck' => tr('Re-check $n', 'फिर जाँचें $n'),
-    'stuck' => tr('Not moving $n', 'अटके $n'),
-    'missed' => tr('Missed $n', 'छूटे $n'),
-    'not_checked' => tr('Not checked $n', 'जाँच नहीं $n'),
-    _ => tr('Fading $n', 'पुराना $n'),
+    'recheck' => trf('Re-check {n}', 'फिर जाँचें {n}', {'n': n}),
+    'stuck' => trf('Not moving {n}', 'अटके {n}', {'n': n}),
+    'missed' => trf('Missed {n}', 'छूटे {n}', {'n': n}),
+    'not_checked' => trf('Not checked {n}', 'जाँच नहीं {n}', {'n': n}),
+    _ => trf('Fading {n}', 'पुराना {n}', {'n': n}),
   };
 
   /// One line under the section title saying what the list means.
@@ -171,7 +171,7 @@ class _BoardFollowupsCardState extends State<BoardFollowupsCard> {
     if (d == null) return '';
     if (d <= 0) return tr('taught today', 'आज पढ़ाया');
     if (d == 1) return tr('taught yesterday', 'कल पढ़ाया');
-    return tr('taught $d days ago', '$d दिन पहले पढ़ाया');
+    return trf('taught {d} days ago', '{d} दिन पहले पढ़ाया', {'d': d});
   }
 
   String _status(Object? s) =>
@@ -194,13 +194,13 @@ class _BoardFollowupsCardState extends State<BoardFollowupsCard> {
         final tip = pick(r, 'suggestion').trim();
         return [
           withLesson(
-            tr(
-              '$n sessions, still ${_status(r['status']).toLowerCase()}',
-              '$n बार, अब भी ${_status(r['status'])}',
+            trf(
+              '{n} sessions, still {status}',
+              '{n} बार, अब भी {status2}', {'n': n, 'status': _status(r['status']).toLowerCase(), 'status2': _status(r['status'])},
             ),
           ),
           if (alt.isNotEmpty)
-            tr('Try instead: $alt', 'इसके बजाय आज़माएँ: $alt')
+            trf('Try instead: {alt}', 'इसके बजाय आज़माएँ: {alt}', {'alt': alt})
           else if (tip.isNotEmpty)
             tip,
         ];
@@ -209,9 +209,9 @@ class _BoardFollowupsCardState extends State<BoardFollowupsCard> {
         final of = _int(r['of']) ?? 0;
         return [
           withLesson(
-            tr(
-              'missed $m of $of group sessions',
-              '$of में से $m समूह सत्र छूटे',
+            trf(
+              'missed {m} of {of} group sessions',
+              '{of} में से {m} समूह सत्र छूटे', {'m': m, 'of': of},
             ),
           ),
         ];
@@ -221,21 +221,21 @@ class _BoardFollowupsCardState extends State<BoardFollowupsCard> {
         return [
           n == 0
               ? tr('No check in 14 days', '14 दिन में कोई जाँच नहीं')
-              : tr('$n check in 14 days', '14 दिन में $n जाँच'),
-          if (last.isNotEmpty) tr('Last checked $last', 'आख़िरी जाँच $last'),
+              : trf('{n} check in 14 days', '14 दिन में {n} जाँच', {'n': n}),
+          if (last.isNotEmpty) trf('Last checked {last}', 'आख़िरी जाँच {last}', {'last': last}),
         ];
       default:
         final d = _int(r['expires_in_days']) ?? 0;
         return [
           withLesson(
             d <= 0
-                ? tr(
-                    '${_status(r['status'])}, fades today',
-                    '${_status(r['status'])}, आज पुराना होगा',
+                ? trf(
+                    '{status}, fades today',
+                    '{status}, आज पुराना होगा', {'status': _status(r['status'])},
                   )
-                : tr(
-                    '${_status(r['status'])}, fades in $d days',
-                    '${_status(r['status'])}, $d दिन में पुराना होगा',
+                : trf(
+                    '{status}, fades in {d} days',
+                    '{status}, {d} दिन में पुराना होगा', {'status': _status(r['status']), 'd': d},
                   ),
           ),
         ];
@@ -265,14 +265,14 @@ class _BoardFollowupsCardState extends State<BoardFollowupsCard> {
           InkWell(
             onTap: () => setState(() => _expanded = !_expanded),
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 12, 8, 4),
+              padding: const EdgeInsetsDirectional.fromSTEB(16, 12, 8, 4),
               child: Row(
                 children: [
                   const Icon(Icons.flag_rounded, color: Ks.accent),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
-                      tr('Follow-ups ($total)', 'आगे क्या करें ($total)'),
+                      trf('Follow-ups ({total})', 'आगे क्या करें ({total})', {'total': total}),
                       style: const TextStyle(
                         fontWeight: FontWeight.w700,
                         fontSize: 16,
@@ -321,7 +321,7 @@ class _BoardFollowupsCardState extends State<BoardFollowupsCard> {
           Padding(
             padding: const EdgeInsets.fromLTRB(8, 0, 8, 4),
             child: Align(
-              alignment: Alignment.centerLeft,
+              alignment: AlignmentDirectional.centerStart,
               child: TextButton.icon(
                 style: TextButton.styleFrom(
                   minimumSize: const Size(48, 48),
@@ -401,7 +401,7 @@ class _BoardFollowupsCardState extends State<BoardFollowupsCard> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.fromLTRB(44, 0, 16, 4),
+          padding: const EdgeInsetsDirectional.fromSTEB(44, 0, 16, 4),
           child: Text(
             _hint(s.key),
             style: const TextStyle(color: Ks.muted, fontSize: 13),
@@ -410,9 +410,9 @@ class _BoardFollowupsCardState extends State<BoardFollowupsCard> {
         for (final r in shown) _row(s, r),
         if (rows.length > _preview)
           Padding(
-            padding: const EdgeInsets.only(left: 36),
+            padding: const EdgeInsetsDirectional.only(start: 36),
             child: Align(
-              alignment: Alignment.centerLeft,
+              alignment: AlignmentDirectional.centerStart,
               child: TextButton(
                 style: TextButton.styleFrom(
                   minimumSize: const Size(48, 48),
@@ -424,9 +424,9 @@ class _BoardFollowupsCardState extends State<BoardFollowupsCard> {
                 child: Text(
                   all
                       ? tr('Show less', 'कम दिखाएँ')
-                      : tr(
-                          'See all (${rows.length})',
-                          'सभी देखें (${rows.length})',
+                      : trf(
+                          'See all ({rowsCount})',
+                          'सभी देखें ({rowsCount})', {'rowsCount': rows.length},
                         ),
                 ),
               ),
@@ -446,7 +446,7 @@ class _BoardFollowupsCardState extends State<BoardFollowupsCard> {
       child: ConstrainedBox(
         constraints: const BoxConstraints(minHeight: 56),
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(16, 8, 8, 8),
+          padding: const EdgeInsetsDirectional.fromSTEB(16, 8, 8, 8),
           child: Row(
             children: [
               CircleAvatar(

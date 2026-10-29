@@ -25,16 +25,30 @@ class KakshaParentApp extends StatelessWidget {
       builder: (_, _, _) => MaterialApp(
         title: tr('Kaksha Saathi — Practice', 'कक्षा साथी — अभ्यास'),
         debugShowCheckedModeBanner: false,
-        theme: Ks.theme(),
+        theme: _theme(),
         locale: Lang.locale,
-        supportedLocales: const [Locale('en', 'IN'), Locale('hi', 'IN')],
+        supportedLocales: Lang.supportedLocales,
         localizationsDelegates: const [
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
         ],
+        // Urdu, Kashmiri and Sindhi lay out right to left, whatever Flutter locale they borrow.
+        builder: (_, child) => Directionality(
+          textDirection: Lang.isRtl ? TextDirection.rtl : TextDirection.ltr,
+          child: child!,
+        ),
         home: Api.i.signedIn ? const HomeScreen() : const GateScreen(),
       ),
     );
   }
+}
+
+/// The app theme, with bundled fonts as fallback for Ol Chiki and Meetei Mayek text.
+ThemeData _theme() {
+  final t = Ks.theme();
+  return t.copyWith(
+    textTheme: t.textTheme.apply(fontFamilyFallback: Lang.fontFallback),
+    primaryTextTheme: t.primaryTextTheme.apply(fontFamilyFallback: Lang.fontFallback),
+  );
 }

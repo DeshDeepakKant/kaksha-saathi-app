@@ -12,6 +12,12 @@ same word; ड़/ड and ढ़/ढ are different sounds, so they are close, no
 letter by letter, case- and punctuation-insensitive, and words that sound identical (to/two/too,
 write/right) count as read correctly because the recogniser cannot tell them apart.
 
+Other languages (`lang` not hi/en): the same comparison at the grapheme-cluster level of their own
+script (app.i18n.script.graphemes for Bengali, Tamil, ...; aksharas for Marathi's Devanagari), with
+no Hindi-specific rules: no Hindi spelling folds (गयी/गई, Urdu nukta), no Hindi stems or fillers, no
+Hindi number words (digits of any script count as the same number), and no matra analysis outside
+Devanagari (a different cluster is a substitution; the same base letter earns partial credit).
+
 See docs/voice_session_contract.md; shapes come from app/services/voice_types.py.
 """
 from __future__ import annotations
@@ -34,12 +40,22 @@ MATCH_USED = 0.75    # sentence/answer: a heard word this similar counts as "the
 _BRACKETED = re.compile(r"[\[<{][^\]>}]*[\]>}]")      # ASR tags: [noise], <unk>, {laugh}
 _ZERO_WIDTH = re.compile("[​‌‍﻿]")
 _APOSTROPHES = re.compile(r"['’‘`]")
-_FILLERS = {
-    # Hindi hesitations (a filler that is also the target, e.g. the vowel ओ, is kept)
-    "हम्म", "हम", "ह्म्म", "हां", "हाँ", "अं", "उं", "उम्म", "अम्म", "अजी", "ओ", "आं",
-    # English hesitations
+_FILLERS_EN = {  # English hesitations
     "um", "umm", "uh", "uhh", "hmm", "hm", "mm", "mmm", "erm", "er", "ah", "eh", "oh",
 }
+_FILLERS = _FILLERS_EN | {
+    # Hindi hesitations (a filler that is also the target, e.g. the vowel ओ, is kept)
+    "हम्म", "हम", "ह्म्म", "हां", "हाँ", "अं", "उं", "उम्म", "अम्म", "अजी", "ओ", "आं",
+}
+
+
+def _hindi_rules(lang: str | None) -> bool:
+    """Hindi/English keep their original rules; every other language skips the Hindi-only ones."""
+    return (lang or "hi") in ("hi", "en")
+
+
+def _ascii_digits(t: str) -> str:
+    return "".join(str(unicodedata.decimal(c)) if unicodedata.decimal(c, None) is not None else c for c in t)
 
 
 MAX_PLAUSIBLE_WCPM = 250
@@ -50,14 +66,15 @@ def _tokens(text: str, lang: str, keep: frozenset[str] = frozenset()) -> list[st
     t = unicodedata.normalize("NFC", text or "")
     t = _BRACKETED.sub(" ", t)
     t = _ZERO_WIDTH.sub("", t)
-    t = t.translate(_DEV_DIGITS).lower()
+    t = (t.translate(_DEV_DIGITS) if _hindi_rules(lang) else _ascii_digits(t)).lower()
     if lang == "en":
         t = _APOSTROPHES.sub("", t)
     t = _PUNCT.sub(" ", t)
+    fillers = _FILLERS if _hindi_rules(lang) else _FILLERS_EN
     out = []
     for w in t.split():
         w = "".join(ch for ch in w if unicodedata.category(ch)[0] in "LMN")
-        if not w or (w in _FILLERS and w not in keep):
+        if not w or (w in fillers and w not in keep):
             continue
         out.append(w)
     return out
@@ -73,13 +90,22 @@ _URDU_NUKTA_BASES = set("कखगजफ")       # क़ ख़ ग़ ज़ �
 _NASALS = "ङञणनम"
 
 
+def _is_other_indic(c: str) -> bool:
+    """A character of an Indic script other than Devanagari (Bengali U+0980 … Malayalam U+0D7F)."""
+    return 0x980 <= ord(c) <= 0xD7F
+
+
 def _is_consonant(c: str) -> bool:
     o = ord(c)
+    if _is_other_indic(c):  # the Brahmic blocks share one layout: consonants at +0x15..+0x39
+        return 0x15 <= (o & 0x7F) <= 0x39 and unicodedata.category(c) == "Lo"
     return 0x915 <= o <= 0x939 or 0x958 <= o <= 0x95F or 0x978 <= o <= 0x97F
 
 
 def _is_vowel_letter(c: str) -> bool:
     o = ord(c)
+    if _is_other_indic(c):  # independent vowels at +0x05..+0x14
+        return 0x05 <= (o & 0x7F) <= 0x14 and unicodedata.category(c) == "Lo"
     return 0x904 <= o <= 0x914 or o in (0x960, 0x961) or 0x972 <= o <= 0x977
 
 
@@ -97,8 +123,16 @@ def _is_mark(c: str) -> bool:
     return c in (_NUKTA, _VIRAMA) or _is_matra(c) or _is_modifier(c)
 
 
+def _other_script(word: str) -> bool:
+    return any(_is_other_indic(ch) for ch in word or "")
+
+
 def aksharas(word: str) -> list[str]:
-    """Split a word into grapheme clusters: क्षे, त्र, ज़ि, ...; Latin words split into letters."""
+    """Split a word into grapheme clusters: क्षे, त्र, ज़ि, ...; other Indic scripts via
+    app.i18n.script.graphemes (க்ஷே, ...); Latin words split into letters."""
+    if _other_script(word):
+        from app.i18n import script
+        return script.graphemes(word)
     out: list[str] = []
     prev_virama = False
     for ch in word:
@@ -111,7 +145,10 @@ def aksharas(word: str) -> list[str]:
 
 
 def _split(cluster: str) -> tuple[str, str]:
-    """(base consonant/vowel letter incl. conjunct and nukta, vowel sign + nasal/visarga)."""
+    """(base consonant/vowel letter incl. conjunct and nukta, vowel sign + nasal/visarga).
+    Other Indic scripts: (first letter, the rest), used only to compare base letters."""
+    if _other_script(cluster):
+        return cluster[:1], cluster[1:]
     base = "".join(c for c in cluster if not (_is_matra(c) or _is_modifier(c)))
     vowel = "".join(c for c in cluster if _is_matra(c) or _is_modifier(c))
     return base, vowel
@@ -121,20 +158,24 @@ _MATRA_AFTER = re.compile("(?<=[\u0901-\u094c\u0950-\u097f])य([\u0940\u0947])"
 _NASAL_CLUSTER = re.compile(f"[{_NASALS}]{_VIRAMA}(?=[क-ह])")  # पन्द्रह→पंद्रह
 
 
-def _fold_soft(word: str) -> str:
-    """Spelling-only variants the recogniser produces for the same sound -> one form."""
+def _fold_soft(word: str, lang: str = "hi") -> str:
+    """Spelling-only variants the recogniser produces for the same sound -> one form. The Urdu-nukta
+    and गयी/गई folds are Hindi spelling habits, so other languages (e.g. Marathi) skip them."""
     w = unicodedata.normalize("NFC", word)      # NFC keeps nukta as a separate mark
-    w = "".join(c for i, c in enumerate(w)
-                if not (c == _NUKTA and i and w[i - 1] in _URDU_NUKTA_BASES))
+    hindi = _hindi_rules(lang)
+    if hindi:
+        w = "".join(c for i, c in enumerate(w)
+                    if not (c == _NUKTA and i and w[i - 1] in _URDU_NUKTA_BASES))
     w = w.replace(_CHANDRABINDU, _ANUSVARA)
     w = _NASAL_CLUSTER.sub(_ANUSVARA, w)
-    w = _MATRA_AFTER.sub(lambda m: {"ी": "ई", "े": "ए"}[m.group(1)], w)
+    if hindi:
+        w = _MATRA_AFTER.sub(lambda m: {"ी": "ई", "े": "ए"}[m.group(1)], w)
     return w
 
 
-def _fold_hard(word: str) -> str:
+def _fold_hard(word: str, lang: str = "hi") -> str:
     """Also drop the nukta of ड़/ढ़ (a real sound difference: close, not correct)."""
-    return _fold_soft(word).replace(_NUKTA, "")
+    return _fold_soft(word, lang).replace(_NUKTA, "")
 
 
 # Pairs a child (or the recogniser) easily mixes up: a substitution among them is "closer".
@@ -185,6 +226,10 @@ def _is_latin(w: str) -> bool:
 
 def _cluster_pair(tc: str, hc: str) -> tuple[float, list[tuple[str, str, str]]]:
     """Credit (0..1) and errors for one target akshara heard as another."""
+    if _other_script(tc) or _other_script(hc):
+        # No matra analysis outside Devanagari: a different cluster is a substitution, with partial
+        # credit when the base letter is the same (கா read as கி).
+        return (0.6 if tc[:1] == hc[:1] else 0.35), [("substitution", tc, hc)]
     tb, tv = _split(tc)
     hb, hv = _split(hc)
     if tb == hb:                                   # same consonant, different vowel sign
@@ -197,14 +242,14 @@ def _cluster_pair(tc: str, hc: str) -> tuple[float, list[tuple[str, str, str]]]:
 
 
 @lru_cache(maxsize=8192)
-def _cmp(target: str, heard: str) -> tuple[float, tuple[tuple[str, str, str], ...]]:
+def _cmp(target: str, heard: str, lang: str = "hi") -> tuple[float, tuple[tuple[str, str, str], ...]]:
     """Similarity of one target word to one heard word (0..1) and the akshara-level errors.
 
     Errors are (type, target_part, heard_part) with type substitution|matra|omission|insertion|order.
     """
     if target == heard:
         return 1.0, ()
-    ft, fh = _fold_soft(target), _fold_soft(heard)
+    ft, fh = _fold_soft(target, lang), _fold_soft(heard, lang)
     if ft == fh or (_is_latin(ft) and _homophones(ft, fh)):
         return 1.0, ()
     at, ah = aksharas(ft), aksharas(fh)
@@ -231,7 +276,7 @@ def _cmp(target: str, heard: str) -> tuple[float, tuple[tuple[str, str, str], ..
                 else:
                     errs.append(("insertion", "", hs[k]))
     score = credit / max(len(at), len(ah), 1)
-    if _fold_hard(target) == _fold_hard(heard):    # only ड़/ड, ढ़/ढ differ: a real but small slip
+    if _fold_hard(target, lang) == _fold_hard(heard, lang):  # only ड़/ड, ढ़/ढ differ: a real but small slip
         score = min(score, 0.85)
     return round(score, 3), tuple(errs)
 
@@ -244,8 +289,8 @@ def _err(kind: str, target: str, heard: str, word: str) -> dict:
     return {"type": kind, "target": target, "heard": heard, "word": word}
 
 
-def _word_errors(target: str, heard: str) -> list[dict]:
-    return [_err(k, t, h, target) for k, t, h in _cmp(target, heard)[1]]
+def _word_errors(target: str, heard: str, lang: str = "hi") -> list[dict]:
+    return [_err(k, t, h, target) for k, t, h in _cmp(target, heard, lang)[1]]
 
 
 def _silent(heard_tokens: list[str]) -> bool:
@@ -267,14 +312,14 @@ def _silent_assessment(notes: str = "nothing heard") -> Assessment:
 
 # --------------------------------------------------------------------------- alignment
 
-def _align(targets: list[str], heard: list[str]) -> list[tuple[int | None, int | None]]:
+def _align(targets: list[str], heard: list[str], lang: str = "hi") -> list[tuple[int | None, int | None]]:
     """Monotonic alignment maximising total similarity (tolerates skipped and repeated words).
 
     Returns (target_index, heard_index) pairs in reading order; None on one side means a missed
     target word or an extra heard word.
     """
     n, m = len(targets), len(heard)
-    sim = [[_cmp(t, h)[0] for h in heard] for t in targets]
+    sim = [[_cmp(t, h, lang)[0] for h in heard] for t in targets]
     best = [[0.0] * (m + 1) for _ in range(n + 1)]
     for i in range(n - 1, -1, -1):
         for j in range(m - 1, -1, -1):
@@ -309,7 +354,7 @@ def _align(targets: list[str], heard: list[str]) -> list[tuple[int | None, int |
             ti, hj = pairs[k]
             if ti is not None:
                 gap_t.append(ti)
-            elif _is_repeat(heard, hj):
+            elif _is_repeat(heard, hj, lang):
                 repeats.append(hj)               # "गया गया": a re-read is extra, not a wrong word
             else:
                 gap_h.append(hj)
@@ -320,9 +365,9 @@ def _align(targets: list[str], heard: list[str]) -> list[tuple[int | None, int |
     return out
 
 
-def _is_repeat(heard: list[str], j: int) -> bool:
-    return ((j > 0 and _cmp(heard[j - 1], heard[j])[0] >= CORRECT)
-            or (j + 1 < len(heard) and _cmp(heard[j + 1], heard[j])[0] >= CORRECT))
+def _is_repeat(heard: list[str], j: int, lang: str = "hi") -> bool:
+    return ((j > 0 and _cmp(heard[j - 1], heard[j], lang)[0] >= CORRECT)
+            or (j + 1 < len(heard) and _cmp(heard[j + 1], heard[j], lang)[0] >= CORRECT))
 
 
 # --------------------------------------------------------------------------- letters
@@ -335,6 +380,8 @@ def _is_bare_letter(target: str, lang: str) -> bool:
     if len(cl) != 1:
         return False
     base, vowel = _split(cl[0])
+    if _other_script(t):  # a bare consonant or an independent vowel
+        return not vowel or _is_vowel_letter(base[:1])
     return not vowel.strip(_ANUSVARA + _CHANDRABINDU + "ः") or _is_vowel_letter(base[0])
 
 
@@ -343,35 +390,41 @@ def _letter_variants(letter: str, lang: str) -> set[str]:
     if lang == "en" or _is_latin(letter):
         names = _EN_LETTER_NAMES.get(letter, "").split()
         return {letter, *names, letter + "uh", letter + "ah"}
+    if _other_script(letter):
+        out = {letter}
+        if len(letter) == 1 and _is_consonant(letter):   # with the aa sign or the virama: கா, க்
+            block = ord(letter) & ~0x7F
+            out |= {letter + chr(block + 0x3E), letter + chr(block + 0x4D)}
+        return out
     out = {letter, letter + "ः"}                        # कः
     base, vowel = _split(letter)
     if _is_consonant(letter[0]) and not vowel:
         out |= {letter + "ा", letter + "े", letter + _VIRAMA,   # का, के, क्
                 letter + "अ", letter + "कार"}                             # ककार
-    return {_fold_soft(v) for v in out}
+    return {_fold_soft(v, lang) for v in out}
 
 
 def _first_base(tok: str, lang: str) -> str:
     if lang == "en" or _is_latin(tok):
         return _EN_NAME_TO_LETTER.get(tok, tok[:1])
-    cl = aksharas(_fold_soft(tok))
+    cl = aksharas(_fold_soft(tok, lang))
     return _split(cl[0])[0] if cl else ""
 
 
 def _assess_letter(target: str, raw: str, lang: str, accept=()) -> Assessment:
     letter = unicodedata.normalize("NFC", target.strip()).lower()
-    variants = _letter_variants(letter, lang) | {_fold_soft(a) for a in _keep(accept)}
+    variants = _letter_variants(letter, lang) | {_fold_soft(a, lang) for a in _keep(accept)}
     toks = _tokens(raw, lang, keep=frozenset(variants) | _keep([letter]))
     if _silent(toks):
         return _silent_assessment()
     heard = " ".join(toks)
-    t_base = _split(_fold_soft(letter))[0]
+    t_base = _split(_fold_soft(letter, lang))[0]
     for tok in toks:                                   # "क", "का", "क से कमल", "bee", "b for ball"
-        if _fold_soft(tok) in variants:
+        if _fold_soft(tok, lang) in variants:
             return Assessment("correct", 1.0, heard,
                               words=[{"target": target, "heard": tok, "status": "correct"}])
     for tok in toks:
-        if _fold_hard(tok) == _fold_hard(letter):      # ड for ड़
+        if _fold_hard(tok, lang) == _fold_hard(letter, lang):  # ड for ड़
             return Assessment("close", 0.8, heard,
                               words=[{"target": target, "heard": tok, "status": "close"}],
                               errors=[_err("substitution", t_base, _first_base(tok, lang), target)],
@@ -402,9 +455,9 @@ def _sounds_said_separately(target: str, toks: list[str], lang: str) -> bool:
         return _cmp(target, "".join(parts))[0] >= CLOSE
     if any(len(aksharas(t)) != 1 for t in toks):
         return False
-    t_bases = [_split(c)[0] for c in aksharas(_fold_hard(target))]
-    h_bases = [_split(aksharas(_fold_hard(t))[0])[0] for t in toks]
-    return t_bases == h_bases or _cmp(target, "".join(toks))[0] >= CLOSE
+    t_bases = [_split(c)[0] for c in aksharas(_fold_hard(target, lang))]
+    h_bases = [_split(aksharas(_fold_hard(t, lang))[0])[0] for t in toks]
+    return t_bases == h_bases or _cmp(target, "".join(toks), lang)[0] >= CLOSE
 
 
 def _not_blended(target: str, toks: list[str], heard: str, score: float = 0.7) -> Assessment:
@@ -450,7 +503,7 @@ def _assess_single_word(target: str, toks: list[str], heard: str, lang: str, acc
     best_score, best_tok, best_target = -1.0, toks[0], target
     for opt in options:
         for tok in toks:
-            s = _cmp(opt, tok)[0]
+            s = _cmp(opt, tok, lang)[0]
             if s > best_score:
                 best_score, best_tok, best_target = s, tok, opt
     if best_score >= CORRECT:
@@ -459,8 +512,8 @@ def _assess_single_word(target: str, toks: list[str], heard: str, lang: str, acc
     if _sounds_said_separately(target, toks, lang):
         return _not_blended(target, toks, heard)
     joined = "".join(toks)                             # recogniser split one word: "कम ल"
-    if len(toks) > 1 and _cmp(target, joined)[0] > best_score:
-        best_score, best_tok, best_target = _cmp(target, joined)[0], joined, target
+    if len(toks) > 1 and _cmp(target, joined, lang)[0] > best_score:
+        best_score, best_tok, best_target = _cmp(target, joined, lang)[0], joined, target
     status = _status(best_score)
     note = ""
     if status != "correct":
@@ -468,7 +521,7 @@ def _assess_single_word(target: str, toks: list[str], heard: str, lang: str, acc
                 else f"heard '{best_tok}' for '{target}'")
     return Assessment(status, round(best_score, 3), heard,
                       words=[{"target": target, "heard": best_tok, "status": status}],
-                      errors=_word_errors(best_target, best_tok), notes=note)
+                      errors=_word_errors(best_target, best_tok, lang), notes=note)
 
 
 def _assess_passage(targets: list[str], toks: list[str], heard: str, lang: str,
@@ -476,17 +529,17 @@ def _assess_passage(targets: list[str], toks: list[str], heard: str, lang: str,
     words: list[dict] = []
     errors: list[dict] = []
     n_correct = n_close = 0
-    for ti, hi in _align(targets, toks):
+    for ti, hi in _align(targets, toks, lang):
         if ti is not None and hi is not None:
             t, h = targets[ti], toks[hi]
-            score = _cmp(t, h)[0]
+            score = _cmp(t, h, lang)[0]
             status = _status(score)
             words.append({"target": t, "heard": h, "status": status})
             if status == "correct":
                 n_correct += 1
             elif status == "close":
                 n_close += 1
-                errors += _word_errors(t, h)
+                errors += _word_errors(t, h, lang)
             else:
                 errors.append(_err("substitution", t, h, t))
         elif ti is not None:
@@ -545,20 +598,33 @@ def _en_stem(w: str) -> str:
 def _match_word(word: str, toks: list[str], lang: str, used: set[int]) -> tuple[int | None, str]:
     """Find a heard token that uses `word` (exact, inflection/matra variant or close match).
     Returns (token index, "correct"|"close") or (None, "missed")."""
-    stem = _en_stem if (lang == "en" or _is_latin(word)) else _hi_stem
+    latin = lang == "en" or _is_latin(word)
+    stem = _en_stem if latin else _hi_stem if _hindi_rules(lang) else None
     best: tuple[float, int | None] = (0.0, None)
     for i, tok in enumerate(toks):
         if i in used:
             continue
-        s = _cmp(word, tok)[0]
-        if s < CORRECT and stem(_fold_hard(word)) == stem(_fold_hard(tok)):
+        s = _cmp(word, tok, lang)[0]
+        if s < CORRECT and stem is not None and stem(_fold_hard(word, lang)) == stem(_fold_hard(tok, lang)):
             s = max(s, CORRECT)                      # खाना ~ खाती ~ खाया, run ~ running
+        elif s < CORRECT and stem is None and _ending_added(word, tok):
+            s = max(s, CORRECT)                      # other languages: case ending (शाळा -> शाळेला, பூனை -> பூனையை)
         if s > best[0]:
             best = (s, i)
     s, i = best
     if i is None or s < MATCH_USED:
         return None, "missed"
     return i, "correct" if s >= CORRECT else "close"
+
+
+def _ending_added(word: str, tok: str) -> bool:
+    """Languages without a stem list: `tok` is `word` with an ending added, allowing the word's final
+    vowel sign to change before it (Marathi oblique शाळा -> शाळेला). Needs a 2+ akshara stem."""
+    if len(tok) <= len(word) - 1:
+        return False
+    stem = word[:-1] if word and unicodedata.category(word[-1]) in ("Mn", "Mc") \
+        and not unicodedata.name(word[-1], "").endswith("VIRAMA") else word
+    return len(aksharas(stem)) >= 2 and tok.startswith(stem) and tok != stem
 
 
 def _uses_all(words: list[str], toks: list[str], lang: str) -> bool:

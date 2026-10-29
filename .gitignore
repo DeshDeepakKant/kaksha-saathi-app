@@ -46,3 +46,6 @@ dist/*.apk
 .env.*.local
 node_modules/
 .neon
+
+# --- l10n translation cache (regenerable, large)
+tool/i18n/cache/

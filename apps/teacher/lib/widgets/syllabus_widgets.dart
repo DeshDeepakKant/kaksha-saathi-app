@@ -117,10 +117,10 @@ String sylChapterName(String? raw) {
 
 /// "8 done · 3 practising · 2 struggling · 17 not started" as plain text (for screen readers).
 String sylCountsText(SylCounts c) => [
-  tr('${c.onTrack} done', '${c.onTrack} पूरा'),
-  tr('${c.practice} practising', '${c.practice} अभ्यास में'),
-  tr('${c.struggling} struggling', '${c.struggling} कठिनाई में'),
-  tr('${c.notStarted} not started', '${c.notStarted} शुरू नहीं'),
+  trf('{onTrack} done', '{onTrack} पूरा', {'onTrack': c.onTrack}),
+  trf('{practice} practising', '{practice} अभ्यास में', {'practice': c.practice}),
+  trf('{struggling} struggling', '{struggling} कठिनाई में', {'struggling': c.struggling}),
+  trf('{notStarted} not started', '{notStarted} शुरू नहीं', {'notStarted': c.notStarted}),
 ].join(' · ');
 
 /// Stacked bar: on track (green), needs practice (amber), needs attention (red), not started (grey).
@@ -193,24 +193,24 @@ class SylCountsLine extends StatelessWidget {
       children: [
         item(
           'on_track',
-          tr('${counts.onTrack} done', '${counts.onTrack} पूरा'),
+          trf('{onTrack} done', '{onTrack} पूरा', {'onTrack': counts.onTrack}),
         ),
         item(
           'needs_practice',
-          tr('${counts.practice} practising', '${counts.practice} अभ्यास में'),
+          trf('{practice} practising', '{practice} अभ्यास में', {'practice': counts.practice}),
         ),
         item(
           'needs_intervention',
-          tr(
-            '${counts.struggling} struggling',
-            '${counts.struggling} कठिनाई में',
+          trf(
+            '{struggling} struggling',
+            '{struggling} कठिनाई में', {'struggling': counts.struggling},
           ),
         ),
         item(
           'not_started',
-          tr(
-            '${counts.notStarted} not started',
-            '${counts.notStarted} शुरू नहीं',
+          trf(
+            '{notStarted} not started',
+            '{notStarted} शुरू नहीं', {'notStarted': counts.notStarted},
           ),
         ),
       ],
@@ -401,7 +401,7 @@ class SylTopicTile extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 12, 12, 12),
+        padding: const EdgeInsetsDirectional.fromSTEB(16, 12, 12, 12),
         child: Row(
           children: [
             Expanded(
@@ -482,7 +482,7 @@ class SylChapterCard extends StatelessWidget {
             child: InkWell(
               onTap: onToggle,
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(16, 12, 8, 12),
+                padding: const EdgeInsetsDirectional.fromSTEB(16, 12, 8, 12),
                 child: Row(
                   children: [
                     Expanded(
@@ -495,9 +495,9 @@ class SylChapterCard extends StatelessWidget {
                           ),
                           const SizedBox(height: 2),
                           Text(
-                            tr(
-                              '$done of ${topics.length} topics done',
-                              '${topics.length} में से $done विषय पूरे',
+                            trf(
+                              '{done} of {topicsCount} topics done',
+                              '{topicsCount} में से {done} विषय पूरे', {'done': done, 'topicsCount': topics.length},
                             ),
                             style: const TextStyle(
                               fontSize: 13.5,
@@ -632,9 +632,9 @@ class SylTopicSheet extends StatelessWidget {
               ),
               const SizedBox(height: 4),
               Text(
-                tr(
-                  '$pct% of ${counts.total} children are on track.',
-                  '${counts.total} में से $pct% बच्चे ठीक चल रहे हैं।',
+                trf(
+                  '{pct}% of {total} children are on track.',
+                  '{total} में से {pct}% बच्चे ठीक चल रहे हैं।', {'pct': pct, 'total': counts.total},
                 ),
                 style: const TextStyle(fontSize: 14, color: Ks.muted),
               ),

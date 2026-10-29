@@ -428,9 +428,9 @@ class _LevelCheckScreenState extends State<LevelCheckScreen> {
             ),
             const SizedBox(height: 4),
             Text(
-              tr(
-                '$checked of $total children checked · $moved moved up',
-                '$total में से $checked बच्चे जाँचे गए · $moved आगे बढ़े',
+              trf(
+                '{checked} of {total} children checked · {moved} moved up',
+                '{total} में से {checked} बच्चे जाँचे गए · {moved} आगे बढ़े', {'checked': checked, 'total': total, 'moved': moved},
               ),
               style: const TextStyle(color: Ks.muted, fontSize: 14),
             ),
@@ -519,7 +519,7 @@ class _LevelCheckScreenState extends State<LevelCheckScreen> {
           children: [
             if (up)
               const Padding(
-                padding: EdgeInsets.only(right: 4),
+                padding: EdgeInsetsDirectional.only(end: 4),
                 child: Icon(
                   Icons.trending_up_rounded,
                   size: 16,
@@ -574,9 +574,9 @@ class _LevelCheckScreenState extends State<LevelCheckScreen> {
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
             children: [
               Text(
-                tr(
-                  'Level ${_level + 1} of ${levels.length} · ${pick(lv, 'title')}',
-                  'स्तर ${_level + 1} / ${levels.length} · ${pick(lv, 'title')}',
+                trf(
+                  'Level {level} of {levelsCount} · {pick}',
+                  'स्तर {level} / {levelsCount} · {pick}', {'level': _level + 1, 'levelsCount': levels.length, 'pick': pick(lv, 'title')},
                 ),
                 style: Theme.of(context).textTheme.titleMedium,
               ),
@@ -626,9 +626,9 @@ class _LevelCheckScreenState extends State<LevelCheckScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(
-                  tr(
-                    '$_right right of ${items.length} · $passMin needed to pass',
-                    '${items.length} में से $_right सही · पास के लिए $passMin चाहिए',
+                  trf(
+                    '{right} right of {itemsCount} · {passMin} needed to pass',
+                    '{itemsCount} में से {right} सही · पास के लिए {passMin} चाहिए', {'right': _right, 'itemsCount': items.length, 'passMin': passMin},
                   ),
                   textAlign: TextAlign.center,
                   style: const TextStyle(color: Ks.muted, fontSize: 14),
@@ -693,7 +693,7 @@ class _LevelCheckScreenState extends State<LevelCheckScreen> {
               Padding(
                 padding: const EdgeInsets.only(top: 4),
                 child: Text(
-                  tr('Answer: $expect', 'उत्तर: $expect'),
+                  trf('Answer: {expect}', 'उत्तर: {expect}', {'expect': expect}),
                   textAlign: TextAlign.center,
                   style: const TextStyle(color: Ks.muted, fontSize: 14),
                 ),
@@ -789,7 +789,7 @@ class _LevelCheckScreenState extends State<LevelCheckScreen> {
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
       children: [
         _placedCard(
-          tr('${child['first_name']} is at', '${child['first_name']} का स्तर'),
+          trf('{first_name} is at', '{first_name} का स्तर', {'first_name': child['first_name']}),
           _titleAt(_placedIndex),
         ),
         const SizedBox(height: 12),
@@ -878,7 +878,7 @@ class _LevelCheckScreenState extends State<LevelCheckScreen> {
         ),
         const SizedBox(height: 16),
         _placedCard(
-          tr('${child['first_name']} is at', '${child['first_name']} का स्तर'),
+          trf('{first_name} is at', '{first_name} का स्तर', {'first_name': child['first_name']}),
           title,
         ),
         const SizedBox(height: 20),
@@ -890,9 +890,9 @@ class _LevelCheckScreenState extends State<LevelCheckScreen> {
             onPressed: () => _start(next),
             icon: const Icon(Icons.arrow_forward_rounded),
             label: Text(
-              tr(
-                'Next child: ${next['first_name']}',
-                'अगला बच्चा: ${next['first_name']}',
+              trf(
+                'Next child: {first_name}',
+                'अगला बच्चा: {first_name}', {'first_name': next['first_name']},
               ),
               style: const TextStyle(fontSize: 17),
             ),

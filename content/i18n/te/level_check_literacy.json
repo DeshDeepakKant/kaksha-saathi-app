@@ -1,0 +1,171 @@
+{
+ "lang": "te",
+ "source_lang": "te",
+ "machine_translated": true,
+ "reviewed": false,
+ "model": "claude-sonnet-5",
+ "generated_at": "2026-10-29T21:53:48+00:00",
+ "note": "Machine translated by scripts/translate_content.py; not reviewed by an educator.",
+ "generated_natively": true,
+ "title_en": "Telugu reading level",
+ "title": "తెలుగు చదవడం స్థాయి",
+ "beginner": {
+  "key": "beginner",
+  "title_en": "Beginner (not yet letters)",
+  "title": "ప్రారంభ స్థాయి (ఇంకా అక్షరాలు రాలేదు)"
+ },
+ "levels": [
+  {
+   "key": "letter",
+   "title_en": "Letters",
+   "title": "అక్షరాలు",
+   "checkpoint_id": "L.G1.vyanjan",
+   "ask_en": "Point to each letter. Ask the child to say it.",
+   "ask": "ప్రతి అక్షరాన్ని చూపించండి. పిల్లవాడిని చదవమని అడగండి.",
+   "items": [
+    {
+     "show": "క"
+    },
+    {
+     "show": "మ"
+    },
+    {
+     "show": "ల"
+    },
+    {
+     "show": "ర"
+    },
+    {
+     "show": "స"
+    }
+   ],
+   "pass_min": 4,
+   "of": 5,
+   "practice": [
+    {
+     "show": "న"
+    },
+    {
+     "show": "ద"
+    },
+    {
+     "show": "బ"
+    },
+    {
+     "show": "ప"
+    },
+    {
+     "show": "త"
+    }
+   ]
+  },
+  {
+   "key": "word",
+   "title_en": "Words",
+   "title": "పదాలు",
+   "checkpoint_id": "L.G1.read_matra_words",
+   "ask_en": "Ask the child to read each word.",
+   "ask": "పిల్లవాడిని ప్రతి పదాన్ని చదవమని అడగండి.",
+   "items": [
+    {
+     "show": "అమ్మ"
+    },
+    {
+     "show": "నాన్న"
+    },
+    {
+     "show": "బడి"
+    },
+    {
+     "show": "పాలు"
+    },
+    {
+     "show": "అరటి"
+    }
+   ],
+   "pass_min": 4,
+   "of": 5,
+   "practice": [
+    {
+     "show": "బొమ్మ"
+    },
+    {
+     "show": "పువ్వు"
+    },
+    {
+     "show": "నీళ్లు"
+    },
+    {
+     "show": "చెట్టు"
+    },
+    {
+     "show": "పుస్తకం"
+    }
+   ]
+  },
+  {
+   "key": "sentence",
+   "title_en": "Sentences",
+   "title": "వాక్యాలు",
+   "checkpoint_id": "L.G1.read_short_sentences",
+   "ask_en": "Ask the child to read each sentence aloud.",
+   "ask": "పిల్లవాడిని ప్రతి వాక్యాన్ని బిగ్గరగా చదవమని అడగండి.",
+   "items": [
+    {
+     "show": "అమ్మ అన్నం వండుతుంది."
+    },
+    {
+     "show": "నాన్న పొలం వెళ్తాడు."
+    },
+    {
+     "show": "ఆవు గడ్డి తింటుంది."
+    }
+   ],
+   "pass_min": 2,
+   "of": 3,
+   "practice": [
+    {
+     "show": "నేను బడికి వెళ్తాను."
+    },
+    {
+     "show": "పిల్లి పాలు తాగుతుంది."
+    },
+    {
+     "show": "మేము కలిసి ఆడుకుంటాము."
+    }
+   ]
+  },
+  {
+   "key": "story",
+   "title_en": "Short passage",
+   "title": "చిన్న పేరా",
+   "checkpoint_id": "L.G2.fluency_45_60",
+   "ask_en": "Ask the child to read each line like a story. A line passes if it is smooth, with at most 1 mistake.",
+   "ask": "పిల్లవాడిని ప్రతి వాక్యాన్ని కథలా చదవమని అడగండి. ఒక వాక్యం సాఫీగా, ఎక్కువలో ఎక్కువ 1 తప్పుతో చదివితే పాస్ అవుతుంది.",
+   "items": [
+    {
+     "show": "ప్రతి రోజు ఉదయం రాము తన అమ్మతో కలిసి పొలానికి వెళ్తాడు."
+    },
+    {
+     "show": "అక్కడ వారు కూరగాయలు పండిస్తారు, ఆవులకు గడ్డి పెడతారు."
+    },
+    {
+     "show": "సాయంత్రం ఇంటికి వచ్చి రాము సంతోషంగా చదువుకుంటాడు."
+    }
+   ],
+   "pass_min": 2,
+   "of": 3,
+   "practice": [
+    {
+     "show": "చిన్న గ్రామంలో సీత తన తాతయ్యతో కలిసి నివసిస్తుంది."
+    },
+    {
+     "show": "ప్రతి రోజు వారు తోటలో పూలు, పండ్లు పెంచుతారు."
+    },
+    {
+     "show": "సాయంత్రం అందరూ కలిసి కథలు చెప్పుకుంటూ నవ్వుతారు."
+    }
+   ]
+  }
+ ]
+}

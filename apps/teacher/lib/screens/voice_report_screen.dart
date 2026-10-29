@@ -146,9 +146,9 @@ class _VoiceReportScreenState extends State<VoiceReportScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          tr(
-            '${widget.childName}: voice session',
-            '${widget.childName}: आवाज़ सत्र',
+          trf(
+            '{childName}: voice session',
+            '{childName}: आवाज़ सत्र', {'childName': widget.childName},
           ),
         ),
         actions: [
@@ -173,9 +173,9 @@ class _VoiceReportScreenState extends State<VoiceReportScreen> {
                   children: [
                     EmptyState(
                       icon: Icons.error_outline,
-                      text: tr(
-                        'Could not load this session.\n${snap.error ?? ''}',
-                        'यह सत्र नहीं खुल पाया।\n${snap.error ?? ''}',
+                      text: trf(
+                        'Could not load this session.\n{v}',
+                        'यह सत्र नहीं खुल पाया।\n{v}', {'v': snap.error ?? ''},
                       ),
                     ),
                     FilledButton.icon(
@@ -307,11 +307,11 @@ class _VoiceReportScreenState extends State<VoiceReportScreen> {
       ),
       const SizedBox(height: 8),
       Text(
-        tr(
-          'First try: ${_n(r['first_try'])} · after hints: ${_n(r['after_retry'])} · '
-              'not yet: ${_n(r['failed'])} · skipped: ${_n(r['skipped'])}',
-          'पहली बार में: ${_n(r['first_try'])} · संकेत के बाद: ${_n(r['after_retry'])} · '
-              'अभी नहीं: ${_n(r['failed'])} · छोड़े: ${_n(r['skipped'])}',
+        trf(
+          'First try: {first_try} · after hints: {after_retry} · '
+              'not yet: {failed} · skipped: {skipped}',
+          'पहली बार में: {first_try} · संकेत के बाद: {after_retry} · '
+              'अभी नहीं: {failed} · छोड़े: {skipped}', {'first_try': _n(r['first_try']), 'after_retry': _n(r['after_retry']), 'failed': _n(r['failed']), 'skipped': _n(r['skipped'])},
         ),
         style: const TextStyle(color: Ks.muted, fontSize: 14),
       ),
@@ -408,11 +408,11 @@ class _VoiceReportScreenState extends State<VoiceReportScreen> {
           child: Padding(
             padding: const EdgeInsets.all(14),
             child: Text(
-              tr(
-                '${wcpm.round()} correct words per minute '
-                    '(${_n(fluency['paragraphs'])} paragraph(s) read)',
-                '${wcpm.round()} सही शब्द प्रति मिनट '
-                    '(${_n(fluency['paragraphs'])} अनुच्छेद पढ़े)',
+              trf(
+                '{wcpm} correct words per minute '
+                    '({paragraphs} paragraph(s) read)',
+                '{wcpm} सही शब्द प्रति मिनट '
+                    '({paragraphs} अनुच्छेद पढ़े)', {'wcpm': wcpm.round(), 'paragraphs': _n(fluency['paragraphs'])},
               ),
               style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
             ),
@@ -554,9 +554,9 @@ class _VoiceReportScreenState extends State<VoiceReportScreen> {
       if (count > 1) '×$count',
     ].join('  ');
     return Semantics(
-      label: tr(
-        '$sound said as $with_, $count times',
-        '$sound को $with_ बोला, $count बार',
+      label: trf(
+        '{sound} said as {with_}, {count} times',
+        '{sound} को {with_} बोला, {count} बार', {'sound': sound, 'with_': with_, 'count': count},
       ),
       excludeSemantics: true,
       child: _chip(text, Ks.amber, Ks.amberSoft, fontSize: 17),
@@ -623,9 +623,9 @@ class _VoiceReportScreenState extends State<VoiceReportScreen> {
     final correct = _n(s['correct']);
     final failed = _n(s['failed']);
     final rest = (attempted - correct - failed).clamp(0, attempted);
-    final label = tr(
-      '$correct of $attempted right · $failed not yet',
-      '$attempted में से $correct सही · $failed अभी नहीं',
+    final label = trf(
+      '{correct} of {attempted} right · {failed} not yet',
+      '{attempted} में से {correct} सही · {failed} अभी नहीं', {'correct': correct, 'attempted': attempted, 'failed': failed},
     );
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
@@ -696,7 +696,7 @@ class _VoiceReportScreenState extends State<VoiceReportScreen> {
           style: const TextStyle(fontWeight: FontWeight.w600),
         ),
         subtitle: Text(
-          tr('${lines.length} lines', '${lines.length} पंक्तियाँ'),
+          trf('{linesCount} lines', '{linesCount} पंक्तियाँ', {'linesCount': lines.length}),
           style: const TextStyle(color: Ks.muted, fontSize: 13),
         ),
         childrenPadding: const EdgeInsets.fromLTRB(14, 0, 14, 14),
@@ -771,7 +771,7 @@ class _VoiceReportScreenState extends State<VoiceReportScreen> {
       label: [
         shown,
         _wordStatusLabel(st),
-        if (showTarget) tr('should be $target', 'सही: $target'),
+        if (showTarget) trf('should be {target}', 'सही: {target}', {'target': target}),
       ].join(', '),
       excludeSemantics: true,
       child: Container(

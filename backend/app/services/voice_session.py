@@ -8,6 +8,12 @@ so a session keeps running if one of them fails.
 
 All working memory lives in `VoiceSession.state` (JSON), so turns survive restarts. Turns are
 idempotent by `client_turn_id`: the stored response is returned on a retry.
+
+Language: a session runs in one content language (`state["lang"]`, default the parent's content
+language, chosen by the API). It reaches every seam: items, judging (the item's `lang`), Saathi's
+lines, speech-to-text (with the parent's preferred provider, `state["provider"]`) and the report.
+Hindi and English behave exactly as before; other languages get their fixed lines translated once
+at start (`voice_tutor.prepare_language`) and fall back to English lines, never to an empty turn.
 """
 from __future__ import annotations
 
@@ -28,7 +34,9 @@ from app.models.tables import (
 )
 from app.services import ledger
 from app.services.content import get_content
-from app.services.voice_types import MAX_ATTEMPTS, KINDS, STAGE_CHECKPOINTS, STAGES, TARGET_MINUTES, Assessment
+from app.services.voice_types import (
+    MAX_ATTEMPTS, KINDS, STAGE_CHECKPOINTS, STAGES, TARGET_MINUTES, Assessment, is_reviewed_lang, voice_lang,
+)
 
 # The clock is injectable so tests can run a 30-minute session in milliseconds.
 CLOCK: Callable[[], datetime] = lambda: datetime.now(timezone.utc)  # noqa: E731
@@ -147,9 +155,26 @@ def build_report(**kw) -> dict:
     return voice_report.build_report(**kw)
 
 
+_ASR_CTX = threading.local()  # the turn's preferred speech provider (keeps the seam's 3-argument shape)
+
+
 def transcribe(audio: bytes, filename: str, lang: str) -> str:
-    from app.speech import get_asr
-    return get_asr().transcribe(audio, filename, language=lang).text or ""
+    """Speech-to-text in the session language with the parent's preferred provider; the speech layer
+    falls back to the other provider. Older speech modules without `transcribe` use `get_asr()`."""
+    from app import speech
+    preferred = getattr(_ASR_CTX, "provider", None) or "sarvam"
+    fn = getattr(speech, "transcribe", None)
+    if fn is not None and _stt_configured(lang):
+        return (fn(audio, filename, lang=lang, preferred=preferred).text or "")
+    return speech.get_asr().transcribe(audio, filename, language=lang).text or ""  # no provider: mock
+
+
+def _stt_configured(lang: str) -> bool:
+    try:
+        from app.speech import capabilities
+        return bool(capabilities.providers_for("stt", lang))
+    except Exception:
+        return False
 
 
 # ------------------------------------------------------------------ small helpers
@@ -292,8 +317,31 @@ _EMERGENCY_PROMPT = {
 }
 
 
+# Other languages: the same six letters (ka ma la ra sa na) in each script. Letters are the one thing
+# that is certainly right without a reviewed bank, so every stage falls back to reading them.
+_EMERGENCY_LETTERS = {
+    "mr": "कमलरसन", "bn": "কমলরসন", "gu": "કમલરસન", "pa": "ਕਮਲਰਸਨ", "or": "କମଲରସନ",
+    "ta": "கமலரபந", "te": "కమలరసన", "kn": "ಕಮಲರಸನ", "ml": "കമലരസന",
+}
+
+
+def _fixed(table: dict, lang: str, key: str) -> str:
+    """A fixed line in the session language: hand-written for hi/en, else translated English."""
+    if lang in table:
+        return table[lang].get(key, "") if isinstance(table[lang], dict) else table[lang]
+    from app.ai import voice_tutor
+    en = table["en"].get(key, "") if isinstance(table["en"], dict) else table["en"]
+    return voice_tutor.local(lang, en) if en else ""
+
+
 def _emergency_items(lang: str, stage: str) -> list[dict]:
     """Last resort when item generation fails outright. No checkpoint, so no evidence is written."""
+    if lang not in _EMERGENCY:
+        letters = _EMERGENCY_LETTERS.get(lang) or _EMERGENCY_LETTERS["mr"]
+        return [{"id": f"x-{stage}-{n}", "stage": stage, "kind": "read_letter", "lang": lang, "checkpoint_id": None,
+                 "prompt": _fixed(_EMERGENCY_PROMPT, lang, "read_letter"), "display": {"text": x}, "target": x,
+                 "accept": [], "required_words": [], "keywords": [], "difficulty": 1 + n % 3, "source": "bank"}
+                for n, x in enumerate(letters)]
     out = []
     for n, x in enumerate(_EMERGENCY[lang][stage]):
         kind = {"letter": "read_letter", "word_build": "build_word", "word_read": "read_word",
@@ -375,6 +423,13 @@ def _refill(db: Session, st: dict, stage: str) -> None:
             raw, source = generate_items(db, use_ai=False, **_gen_kwargs(st, stage, avoid))
         except Exception:
             raw, source = [], "failed"
+    if not raw and not queue and not is_reviewed_lang(st["lang"]):
+        # Nothing left to serve and no reviewed bank (or per-language file) for this language: wait
+        # for Claude this once rather than serve only letters; later refills use the background batch.
+        try:
+            raw, source = generate_items(db, use_ai=True, **_gen_kwargs(st, stage, avoid))
+        except Exception:
+            raw, source = [], "failed"
     cleaned = [c for c in (_clean_item(r, stage, st["lang"]) for r in raw or []) if c and c["stage"] == stage]
     seen = {_norm(s) for s in st["seen"]} | queued
     fresh = [c for c in cleaned if _norm(item_key(c)) not in seen]
@@ -447,7 +502,7 @@ def _line(db: Session, st: dict, situation: str, item: dict | None = None, asses
         pass
     if situation == "intro_item":
         return (item or {}).get("prompt") or ""
-    return _FALLBACK[st["lang"]].get(situation, "")
+    return _fixed(_FALLBACK, st["lang"], situation)
 
 
 def _join(*parts: str) -> str:
@@ -455,14 +510,18 @@ def _join(*parts: str) -> str:
 
 
 # ------------------------------------------------------------------ judging
-def _hear(audio: bytes, filename: str, transcript: str | None, lang: str) -> tuple[str, str]:
+def _hear(audio: bytes, filename: str, transcript: str | None, lang: str,
+          provider: str | None = None) -> tuple[str, str]:
     if transcript is not None and transcript.strip():
         return transcript.strip(), "provided"
     if audio:
+        _ASR_CTX.provider = provider
         try:
             text = transcribe(audio, filename or "turn.wav", lang).strip()
         except Exception:  # ASR outage: treated as unheard rather than failing the turn
             return "", "failed"
+        finally:
+            _ASR_CTX.provider = None
         return (text, "asr") if text else ("", "silent")
     return "", "silent"
 
@@ -572,8 +631,30 @@ def _replay(db: Session, vs: VoiceSession, client_turn_id: str | None) -> dict |
 
 
 # ------------------------------------------------------------------ public engine API
-def start(db: Session, *, child: Child, lang: str) -> VoiceSession:
+def _tutor(text: str, lang: str) -> dict:
+    """The `tutor` payload; lines of a language without hand-written text are labelled."""
+    out = {"text": text, "lang": lang}
+    if not is_reviewed_lang(lang):
+        out["machine_translated"] = True
+    return out
+
+
+def _extra_lines() -> list[str]:
+    """The engine's own English fallback lines, translated with Saathi's templates at start."""
+    from app.services import voice_bank
+    return (list(_FALLBACK["en"].values()) + [SAFETY_LINE["en"]] + list(_EMERGENCY_PROMPT["en"].values())
+            + list(voice_bank._LADDER_PROMPT_EN.values()))
+
+
+def start(db: Session, *, child: Child, lang: str, provider: str | None = None) -> VoiceSession:
     cls = db.get(Classroom, child.class_id)
+    lang = voice_lang(lang)
+    if not is_reviewed_lang(lang):
+        from app.ai import voice_tutor
+        try:  # once per language (cached); bounded wait, English lines meanwhile
+            voice_tutor.prepare_language(db, lang, school_id=cls.school_id, extra=_extra_lines())
+        except Exception:
+            pass
     now = _now()
     syl = _syllabus(db, cls, lang)
     idx = start_stage(db, child, lang, syl["english"])
@@ -583,7 +664,7 @@ def start(db: Session, *, child: Child, lang: str) -> VoiceSession:
           "current": None, "attempt": 1, "success_streak": 0, "fail_streak": 0, "silent_streak": 0,
           "difficulty": 1, "weak_sounds": [], "sound_counts": {}, "seen": [], "sources": {},
           "break_given": False, "done": False, "wrap_up": None, "elapsed_s": 0.0, "last_at": now.isoformat(),
-          "safety_flags": [], "evidence": 0}
+          "safety_flags": [], "evidence": 0, "provider": provider}
     vs = VoiceSession(school_id=cls.school_id, child_id=child.id, lang=lang, status="active",
                       stage=st["stage"], started_at=_naive(now), state={})
     db.add(vs)
@@ -609,7 +690,7 @@ def session_view(db: Session, vs: VoiceSession) -> dict:
             "item": copy.deepcopy(st["items"][cur]) if cur and vs.status == "active" and not st.get("done") else None,
             "attempt": st.get("attempt", 1), "attempts_left": MAX_ATTEMPTS - st.get("attempt", 1) + 1,
             "done": bool(st.get("done")) or vs.status == "ended", "transcript": lines,
-            "tutor": {"text": last_tutor, "lang": vs.lang}, "safety_flag": vs.safety_flag}
+            "tutor": _tutor(last_tutor, vs.lang), "safety_flag": vs.safety_flag}
 
 
 def _turn_base(st: dict, **kw) -> dict:
@@ -631,7 +712,7 @@ def _finish_turn(db: Session, vs: VoiceSession, st: dict, *, client_turn_id: str
                  client_turn_id=client_turn_id, at=now)
     tutor = _row(db, vs, "tutor", tutor_text, item_id=st["current"] if not st["done"] else None, at=now)
     resp = _turn_base(st, **base)
-    resp["tutor"] = {"text": tutor_text, "lang": st["lang"]}
+    resp["tutor"] = _tutor(tutor_text, st["lang"])
     resp["transcript_append"] = [line_view(r) for r in (child, tutor) if r.text]
     child.response = resp
     if st["done"] and st["wrap_up"] is None:
@@ -648,7 +729,7 @@ def _wrap_reply(db: Session, vs: VoiceSession, st: dict) -> dict:
         st["current"] = None
         text = _line(db, st, "wrap_up")
         _row(db, vs, "tutor", text)
-        st["wrap_up"] = {**_turn_base(st), "tutor": {"text": text, "lang": st["lang"]}, "transcript_append": []}
+        st["wrap_up"] = {**_turn_base(st), "tutor": _tutor(text, st["lang"]), "transcript_append": []}
         _save(vs, st)
         db.flush()
     return copy.deepcopy(st["wrap_up"])
@@ -699,7 +780,7 @@ def turn(db: Session, vs: VoiceSession, *, item_id: str, client_turn_id: str, tr
     _tick(st, _now())
     item = st["items"][st["current"]]
     lang = st["lang"]
-    heard, asr = _hear(audio, filename, transcript_text, lang)
+    heard, asr = _hear(audio, filename, transcript_text, lang, st.get("provider"))
     time_up = _time_up(st)
     breather = ""
     if not time_up and not st["break_given"] and st["elapsed_s"] >= BREAK_AT_S:
@@ -715,7 +796,7 @@ def turn(db: Session, vs: VoiceSession, *, item_id: str, client_turn_id: str, tr
             vs.safety_flag = category
             if time_up:
                 st["done"], st["current"] = True, None
-            text = _join(SAFETY_LINE[lang], _line(db, st, "wrap_up") if time_up else "")
+            text = _join(_fixed(SAFETY_LINE, lang, ""), _line(db, st, "wrap_up") if time_up else "")
             return _finish_turn(db, vs, st, client_turn_id=client_turn_id, child_text="", child_verdict="flagged",
                                 child_item=item["id"], words=None, tutor_text=text,
                                 base={"verdict": "none", "safety_flag": category, "asr": asr})
@@ -816,7 +897,7 @@ def skip(db: Session, vs: VoiceSession, *, item_id: str, client_turn_id: str | N
         return _wrap_reply(db, vs, st)
     if item_id != st["current"]:
         # a double tap: the item already moved on, so report where we are without changing anything
-        return {**_turn_base(st, verdict="skipped"), "tutor": {"text": "", "lang": st["lang"]},
+        return {**_turn_base(st, verdict="skipped"), "tutor": _tutor("", st["lang"]),
                 "transcript_append": []}
     _tick(st, _now())
     item = st["items"][st["current"]]
@@ -928,6 +1009,7 @@ def end(db: Session, vs: VoiceSession, *, reason: str = "parent_stop") -> dict:
         else:  # no key: the templated narrative is instant
             narr, status = write_narrative(db, school_id=vs.school_id, lang=vs.lang, report=copy.deepcopy(report))
             _apply_narrative(report, narr, status)
+            report = _localize(db, vs.school_id, vs.lang, report)
     except Exception:
         report["narrative"] = _fallback_narrative(report)
         report["narrative_status"] = "fallback"
@@ -943,8 +1025,26 @@ def end(db: Session, vs: VoiceSession, *, reason: str = "parent_stop") -> dict:
     return copy.deepcopy(report)
 
 
+def localize_report(db: Session, **kw) -> dict:
+    from app.ai import voice_tutor
+    return voice_tutor.localize_report(db, **kw)
+
+
+def _localize(db: Session, school_id: int, lang: str, report: dict) -> dict:
+    """Report texts in the session language (other languages only; hi/en reports are unchanged)."""
+    if is_reviewed_lang(lang):
+        return report
+    try:
+        return localize_report(db, school_id=school_id, lang=lang, report=report)
+    except Exception:
+        return report
+
+
 def _apply_narrative(report: dict, narr: dict, status: str) -> None:
     narr = dict(narr or {})
+    for k in ("content_lang", "machine_translated", "untranslated"):  # labels of a translated narrative
+        if k in narr:
+            report[f"narrative_{k}" if k != "content_lang" else k] = narr.pop(k)
     if "narrative" in narr:
         report["narrative"] = narr["narrative"]
         if narr.get("next_steps"):
@@ -969,6 +1069,14 @@ def _narrate_later(session_id: int, school_id: int, lang: str, report: dict) -> 
                 s.commit()
         except Exception:
             narr, status = None, "fallback"
+        local = None
+        if not is_reviewed_lang(lang):
+            try:
+                with SessionLocal() as s:
+                    local = _localize(s, school_id, lang, copy.deepcopy(report))
+                    s.commit()
+            except Exception:
+                local = None
         for _ in range(20):  # the ending request may not have committed yet
             with SessionLocal() as s:
                 vs = s.get(VoiceSession, session_id)
@@ -978,8 +1086,14 @@ def _narrate_later(session_id: int, school_id: int, lang: str, report: dict) -> 
                     time.sleep(1)
                     continue
                 new = copy.deepcopy(vs.report)
+                if local:  # translated report texts (additive keys only)
+                    new.update({k: v for k, v in local.items()
+                                if k in ("strengths", "weaknesses", "topics_attention", "mistakes",
+                                         "content_lang", "machine_translated")})
                 if status == "ai" and narr:
                     _apply_narrative(new, narr, "ai")
+                elif narr and not is_reviewed_lang(lang):
+                    _apply_narrative(new, narr, "fallback")  # templated, plus its translation
                 else:
                     new["narrative_status"] = "fallback"
                 vs.report = new

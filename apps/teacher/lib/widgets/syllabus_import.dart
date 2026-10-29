@@ -741,9 +741,9 @@ class _SylImportScreenState extends State<SylImportScreen> {
         ),
         const SizedBox(height: 6),
         Text(
-          tr(
-            '${_photos.length} of $_maxPhotos photos',
-            '$_maxPhotos में से ${_photos.length} फ़ोटो',
+          trf(
+            '{photosCount} of {maxPhotos} photos',
+            '{maxPhotos} में से {photosCount} फ़ोटो', {'photosCount': _photos.length, 'maxPhotos': _maxPhotos},
           ),
           style: const TextStyle(color: Ks.muted, fontSize: 13.5),
         ),
@@ -1051,9 +1051,9 @@ class _SylImportScreenState extends State<SylImportScreen> {
               ],
               const SizedBox(height: 12),
               Text(
-                tr(
-                  '$n topics: $matched match lessons already in Kaksha Saathi, ${n - matched} are new.',
-                  '$n विषय: $matched कक्षा साथी के मौजूदा पाठों से मिलते हैं, ${n - matched} नए हैं।',
+                trf(
+                  '{n} topics: {matched} match lessons already in Kaksha Saathi, {n2} are new.',
+                  '{n} विषय: {matched} कक्षा साथी के मौजूदा पाठों से मिलते हैं, {n2} नए हैं।', {'n': n, 'matched': matched, 'n2': n - matched},
                 ),
                 style: const TextStyle(fontSize: 14.5, color: Ks.ink),
               ),
@@ -1063,9 +1063,9 @@ class _SylImportScreenState extends State<SylImportScreen> {
                   value: _keep,
                   onChanged: _busy ? null : (v) => setState(() => _keep = v),
                   title: Text(
-                    tr(
-                      'Keep my current $_existingCount topics',
-                      'मेरे मौजूदा $_existingCount विषय रखें',
+                    trf(
+                      'Keep my current {existingCount} topics',
+                      'मेरे मौजूदा {existingCount} विषय रखें', {'existingCount': _existingCount},
                     ),
                   ),
                   subtitle: Text(
@@ -1138,9 +1138,9 @@ class _SylImportScreenState extends State<SylImportScreen> {
                           ),
                     label: Text(
                       _saveError == null
-                          ? tr(
-                              'Confirm syllabus ($n topics)',
-                              'पक्का करें ($n विषय)',
+                          ? trf(
+                              'Confirm syllabus ({n} topics)',
+                              'पक्का करें ({n} विषय)', {'n': n},
                             )
                           : tr('Try again', 'दोबारा कोशिश करें'),
                     ),
@@ -1184,7 +1184,7 @@ class _SylImportScreenState extends State<SylImportScreen> {
         ? b['publisher'] as String
         : b['board'] as String;
     final parts = [
-      if (b['grade'] != null) tr('Class ${b['grade']}', 'कक्षा ${b['grade']}'),
+      if (b['grade'] != null) trf('Class {grade}', 'कक्षा {grade}', {'grade': b['grade']}),
       if (board.isNotEmpty) board,
     ];
     return Row(
@@ -1320,7 +1320,7 @@ class _SylImportScreenState extends State<SylImportScreen> {
           if (_heard != null && _heard!.isNotEmpty) ...[
             const SizedBox(height: 8),
             Text(
-              tr('Heard: "$_heard"', 'सुना: "$_heard"'),
+              trf('Heard: "{heard}"', 'सुना: "{heard}"', {'heard': _heard}),
               style: const TextStyle(
                 color: Ks.muted,
                 fontSize: 13.5,
@@ -1339,7 +1339,7 @@ class _SylImportScreenState extends State<SylImportScreen> {
       padding: const EdgeInsets.only(bottom: 12),
       child: Card(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(12, 10, 4, 8),
+          padding: const EdgeInsetsDirectional.fromSTEB(12, 10, 4, 8),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -1372,7 +1372,7 @@ class _SylImportScreenState extends State<SylImportScreen> {
               ),
               if (_inferredText(chap) case final t?)
                 Padding(
-                  padding: const EdgeInsets.only(top: 8, right: 8),
+                  padding: const EdgeInsetsDirectional.only(top: 8, end: 8),
                   child: SylTag(
                     t,
                     icon: chap.basis == 'web'
@@ -1401,7 +1401,7 @@ class _SylImportScreenState extends State<SylImportScreen> {
   Widget _rowTile(_Chap chap, _Row r) {
     return Padding(
       key: ObjectKey(r),
-      padding: const EdgeInsets.only(bottom: 10, right: 8),
+      padding: const EdgeInsetsDirectional.only(bottom: 10, end: 8),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

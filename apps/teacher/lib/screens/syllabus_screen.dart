@@ -215,9 +215,9 @@ class _SyllabusScreenState extends State<SyllabusScreen> {
       builder: (ctx) => AlertDialog(
         title: Text(tr('Remove this topic?', 'यह विषय हटाएँ?')),
         content: Text(
-          tr(
-            '"${cpTitle(topic)}" will leave the syllabus. Evidence already recorded for it is not deleted.',
-            '"${cpTitle(topic)}" पाठ्यक्रम से हट जाएगा। इसके लिए दर्ज प्रमाण नहीं मिटेंगे।',
+          trf(
+            '"{title}" will leave the syllabus. Evidence already recorded for it is not deleted.',
+            '"{title}" पाठ्यक्रम से हट जाएगा। इसके लिए दर्ज प्रमाण नहीं मिटेंगे।', {'title': cpTitle(topic)},
           ),
         ),
         actions: [
@@ -610,7 +610,7 @@ class _SyllabusScreenState extends State<SyllabusScreen> {
             Padding(
               padding: const EdgeInsets.only(bottom: 10),
               child: Align(
-                alignment: Alignment.centerLeft,
+                alignment: AlignmentDirectional.centerStart,
                 child: SylTag(
                   tr(
                     'Offline: showing the last saved copy',
@@ -626,9 +626,9 @@ class _SyllabusScreenState extends State<SyllabusScreen> {
             Padding(
               padding: const EdgeInsets.only(bottom: 10),
               child: Align(
-                alignment: Alignment.centerLeft,
+                alignment: AlignmentDirectional.centerStart,
                 child: SylTag(
-                  tr('Mapped from: $bookTitle', 'किताब से: $bookTitle'),
+                  trf('Mapped from: {bookTitle}', 'किताब से: {bookTitle}', {'bookTitle': bookTitle}),
                   icon: Icons.menu_book_rounded,
                   bg: Ks.accentSoft,
                   fg: Ks.accent,
@@ -693,9 +693,9 @@ class _SyllabusScreenState extends State<SyllabusScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              tr(
-                '$n topics · $done done · $progress in progress · $notStarted not started',
-                '$n विषय · $done पूरे · $progress चल रहे · $notStarted शुरू नहीं',
+              trf(
+                '{n} topics · {done} done · {progress} in progress · {notStarted} not started',
+                '{n} विषय · {done} पूरे · {progress} चल रहे · {notStarted} शुरू नहीं', {'n': n, 'done': done, 'progress': progress, 'notStarted': notStarted},
               ),
               style: const TextStyle(
                 fontSize: 16,
@@ -724,7 +724,7 @@ class _SyllabusScreenState extends State<SyllabusScreen> {
             if (kids > 0) ...[
               const SizedBox(height: 8),
               Text(
-                tr('$kids children in the class', 'कक्षा में $kids बच्चे'),
+                trf('{kids} children in the class', 'कक्षा में {kids} बच्चे', {'kids': kids}),
                 style: const TextStyle(fontSize: 13.5, color: Ks.muted),
               ),
             ],

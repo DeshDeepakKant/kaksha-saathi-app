@@ -2,6 +2,9 @@
 
 Compares an ASR transcript against a *known* target text. The LLM never scores
 pronunciation; it only interprets these judgments afterwards.
+
+`lang` (default "hi") selects the language rules: Hindi number words and Hindi fillers apply only
+to Hindi; every other language compares numbers as digits (of any script) only.
 """
 from __future__ import annotations
 
@@ -42,11 +45,17 @@ _PUNCT = re.compile(r"[।॥,.;:!?\"'“”‘’()\[\]…\-–—]")
 _FILLERS = {"हम्म", "हां", "हाँ", "अं", "उं", "अजी", "ओ"}
 
 
-def normalize(text: str) -> list[str]:
-    t = unicodedata.normalize("NFC", text or "").translate(_DEV_DIGITS).lower()
+def _ascii_digits(t: str) -> str:
+    return "".join(str(unicodedata.decimal(c)) if unicodedata.decimal(c, None) is not None else c for c in t)
+
+
+def normalize(text: str, lang: str = "hi") -> list[str]:
+    t = unicodedata.normalize("NFC", text or "")
+    t = (t.translate(_DEV_DIGITS) if lang == "hi" else _ascii_digits(t)).lower()
     t = _PUNCT.sub(" ", t)
     t = re.sub(r"\s+", " ", t).strip()
-    return [w for w in t.split(" ") if w and w not in _FILLERS]
+    fillers = _FILLERS if lang == "hi" else ()
+    return [w for w in t.split(" ") if w and w not in fillers]
 
 
 def similarity(a: str, b: str) -> float:
@@ -86,21 +95,21 @@ class ScoreResult:
         }
 
 
-def _is_number_token(t: str) -> bool:
-    return t.isdigit() or t in NUMBER_WORD_TO_DIGIT
+def _is_number_token(t: str, lang: str = "hi") -> bool:
+    return t.isdigit() or (lang == "hi" and t in NUMBER_WORD_TO_DIGIT)
 
 
-def _as_number(t: str) -> int | None:
+def _as_number(t: str, lang: str = "hi") -> int | None:
     if t.isdigit():
         return int(t)
-    return NUMBER_WORD_TO_DIGIT.get(t)
+    return NUMBER_WORD_TO_DIGIT.get(t) if lang == "hi" else None  # no number-word table: digits only
 
 
-def _pair_sim(target: str, heard: str) -> float:
+def _pair_sim(target: str, heard: str, lang: str = "hi") -> float:
     """Similarity of one target token to one heard token, with number equivalence."""
     if target == heard:
         return 1.0
-    a, b = _as_number(target), _as_number(heard)
+    a, b = _as_number(target, lang), _as_number(heard, lang)
     if a is not None and b is not None:
         return 1.0 if a == b else 0.0
     if a is not None or b is not None:
@@ -118,7 +127,7 @@ CLOSE_SIM = 0.65
 ATTEMPT_SIM = 0.45
 
 
-def score_read(target_items: list[str], transcript: str) -> ScoreResult:
+def score_read(target_items: list[str], transcript: str, lang: str = "hi") -> ScoreResult:
     """Judge each target item against a monotonic reading of the transcript.
 
     The child reads left to right, so alignment is strictly sequential: target i is compared
@@ -126,11 +135,11 @@ def score_read(target_items: list[str], transcript: str) -> ScoreResult:
     *omitted* means the child produced no token there at all (silence / shorter reading).
     """
     res = ScoreResult()
-    heard_all = normalize(transcript)
+    heard_all = normalize(transcript, lang)
     used: set[int] = set()
     cursor = 0
     for target in target_items:
-        t_tokens = normalize(target)
+        t_tokens = normalize(target, lang)
         if not t_tokens:
             continue
         n = len(t_tokens)
@@ -139,7 +148,7 @@ def score_read(target_items: list[str], transcript: str) -> ScoreResult:
             res.items.append(ItemScore(target, None, "omitted", 0.0))
             res.n_omitted += 1
             continue
-        sims = [_pair_sim(a, b) for a, b in zip(t_tokens, window)]
+        sims = [_pair_sim(a, b, lang) for a, b in zip(t_tokens, window)]
         sim = sum(sims) / len(sims)
         used.update(range(cursor, cursor + len(window)))
         if sim >= CORRECT_SIM:
@@ -148,7 +157,7 @@ def score_read(target_items: list[str], transcript: str) -> ScoreResult:
             judged = "close"
         else:
             judged = "wrong"
-        note = _diff_note_hi(t_tokens, window) if judged == "close" else ""
+        note = _diff_note_hi(t_tokens, window) if judged == "close" and lang == "hi" else ""
         res.items.append(ItemScore(target, " ".join(window), judged, round(sim, 3), note))
         if judged == "correct":
             res.n_correct += 1

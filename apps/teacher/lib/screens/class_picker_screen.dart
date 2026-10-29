@@ -181,9 +181,9 @@ class _ClassPickerScreenState extends State<ClassPickerScreen> {
               style: const TextStyle(fontSize: 19, fontWeight: FontWeight.w600),
             ),
             subtitle: Text(
-              tr(
-                '${c['children']} children · consent ${c['consented']}',
-                '${c['children']} बच्चे · सहमति ${c['consented']}',
+              trf(
+                '{children} children · consent {consented}',
+                '{children} बच्चे · सहमति {consented}', {'children': c['children'], 'consented': c['consented']},
               ),
             ),
             trailing: const Icon(Icons.chevron_right_rounded),

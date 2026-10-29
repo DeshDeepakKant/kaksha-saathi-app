@@ -151,7 +151,7 @@ class _InsightFrame extends StatelessWidget {
     color: color,
     margin: const EdgeInsets.only(bottom: 12),
     child: Padding(
-      padding: EdgeInsets.fromLTRB(16, 14, onDismiss == null ? 16 : 4, 16),
+      padding: EdgeInsetsDirectional.fromSTEB(16, 14, onDismiss == null ? 16 : 4, 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -177,7 +177,7 @@ class _InsightFrame extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Padding(
-            padding: EdgeInsets.only(right: onDismiss == null ? 0 : 12),
+            padding: EdgeInsetsDirectional.only(end: onDismiss == null ? 0 : 12),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: children,
@@ -347,13 +347,13 @@ class CatchUpCard extends StatelessWidget {
               Expanded(
                 child: Text(
                   actTitle.isEmpty
-                      ? tr(
-                          '$minutes-minute home version',
-                          'घर पर $minutes मिनट का तरीका',
+                      ? trf(
+                          '{minutes}-minute home version',
+                          'घर पर {minutes} मिनट का तरीका', {'minutes': minutes},
                         )
-                      : tr(
-                          '$minutes-minute home version: $actTitle',
-                          'घर पर $minutes मिनट: $actTitle',
+                      : trf(
+                          '{minutes}-minute home version: {actTitle}',
+                          'घर पर {minutes} मिनट: {actTitle}', {'minutes': minutes, 'actTitle': actTitle},
                         ),
                   style: const TextStyle(
                     color: Ks.accent,

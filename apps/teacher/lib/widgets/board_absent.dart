@@ -27,7 +27,7 @@ class BoardAbsentStrip extends StatelessWidget {
     return Card(
       margin: const EdgeInsets.only(bottom: 10),
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(14, 4, 6, 4),
+        padding: const EdgeInsetsDirectional.fromSTEB(14, 4, 6, 4),
         child: Row(
           children: [
             const Icon(Icons.event_busy_rounded, color: Ks.muted),
@@ -37,7 +37,7 @@ class BoardAbsentStrip extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    tr('Absent today ($count)', 'आज अनुपस्थित ($count)'),
+                    trf('Absent today ({count})', 'आज अनुपस्थित ({count})', {'count': count}),
                     style: const TextStyle(
                       fontWeight: FontWeight.w700,
                       fontSize: 15,
@@ -174,7 +174,7 @@ class _AbsentSheetState extends State<_AbsentSheet> {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(20, 18, 8, 4),
+              padding: const EdgeInsetsDirectional.fromSTEB(20, 18, 8, 4),
               child: Row(
                 children: [
                   Expanded(
@@ -194,7 +194,7 @@ class _AbsentSheetState extends State<_AbsentSheet> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Align(
-                alignment: Alignment.centerLeft,
+                alignment: AlignmentDirectional.centerStart,
                 child: Text(
                   tr(
                     'Switch on the children who are absent.',

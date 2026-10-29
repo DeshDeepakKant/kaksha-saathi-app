@@ -19,7 +19,7 @@ String journeyChapterLabel(Object? c) {
   if (c is Map) return cpTitle(c);
   final s = (c ?? '').toString().trim();
   if (s.isEmpty) return '';
-  if (int.tryParse(s) != null) return tr('Chapter $s', 'अध्याय $s');
+  if (int.tryParse(s) != null) return trf('Chapter {s}', 'अध्याय {s}', {'s': s});
   return s;
 }
 
@@ -127,7 +127,7 @@ class _ChapterRow extends StatelessWidget {
         ),
         Expanded(
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(4, 14, 0, 8),
+            padding: const EdgeInsetsDirectional.fromSTEB(4, 14, 0, 8),
             child: Semantics(
               header: true,
               child: Text(
@@ -203,7 +203,7 @@ class _MilestoneRow extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(vertical: 6),
                   child: Container(
                     constraints: const BoxConstraints(minHeight: 56),
-                    padding: const EdgeInsets.fromLTRB(14, 10, 12, 10),
+                    padding: const EdgeInsetsDirectional.fromSTEB(14, 10, 12, 10),
                     decoration: BoxDecoration(
                       color: bg,
                       borderRadius: BorderRadius.circular(14),

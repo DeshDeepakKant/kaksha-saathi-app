@@ -7,6 +7,7 @@ import '../tts.dart';
 import '../widgets/insight_cards.dart';
 import 'gate_screen.dart';
 import 'journey_screen.dart';
+import 'settings_screen.dart';
 import 'voice_history_screen.dart';
 import 'voice_session_screen.dart';
 import 'weekly_screen.dart';
@@ -150,15 +151,10 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           IconButton(
-            icon: const Icon(Icons.logout_rounded),
-            onPressed: () async {
-              await Api.i.logout();
-              if (!context.mounted) return;
-              Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (_) => const GateScreen()),
-                (_) => false,
-              );
-            },
+            icon: const Icon(Icons.settings_rounded),
+            tooltip: tr('Settings', 'सेटिंग्स'),
+            // Language and voice, and Log out.
+            onPressed: () => _open(const SettingsScreen()),
           ),
         ],
       ),
@@ -229,7 +225,7 @@ class _HomeScreenState extends State<HomeScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                tr('Hello, ${c['first_name']}!', 'नमस्ते, ${c['first_name']}!'),
+                trf('Hello, {first_name}!', 'नमस्ते, {first_name}!', {'first_name': c['first_name']}),
                 style: Theme.of(context).textTheme.titleLarge
                     ?.copyWith(fontSize: 26),
               ),
@@ -254,9 +250,9 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(width: 8),
             Expanded(
               child: Text(
-                tr(
-                  '${profile['streak']}-day practice streak — well done!',
-                  '${profile['streak']} दिन लगातार अभ्यास — शाबाश!',
+                trf(
+                  '{streak}-day practice streak — well done!',
+                  '{streak} दिन लगातार अभ्यास — शाबाश!', {'streak': profile['streak']},
                 ),
                 style: const TextStyle(
                   color: Ks.amber,

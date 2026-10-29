@@ -100,7 +100,7 @@ class _RosterScreenState extends State<RosterScreen> {
     if (r.removed) {
       final id = (c['id'] as num).toInt();
       _toast(
-        tr('Removed $name from the class', '$name को कक्षा से हटाया'),
+        trf('Removed {name} from the class', '{name} को कक्षा से हटाया', {'name': name}),
         action: SnackBarAction(
           label: tr('Restore', 'वापस लाएँ'),
           onPressed: () => _restore({...c, 'id': id}),
@@ -108,9 +108,9 @@ class _RosterScreenState extends State<RosterScreen> {
       );
     } else if (r.movedTo != null) {
       _toast(
-        tr(
-          'Moved ${r.name} to ${r.movedTo}',
-          '${r.name} को ${r.movedTo} में भेजा',
+        trf(
+          'Moved {name} to {movedTo}',
+          '{name} को {movedTo} में भेजा', {'name': r.name, 'movedTo': r.movedTo},
         ),
       );
     } else {
@@ -141,7 +141,7 @@ class _RosterScreenState extends State<RosterScreen> {
         }
       }
       if (!mounted) return;
-      _toast(tr('Restored $name', '$name वापस आ गया'));
+      _toast(trf('Restored {name}', '{name} वापस आ गया', {'name': name}));
       _reload();
     } catch (e) {
       if (mounted) _toast(_errText(e));
@@ -166,13 +166,13 @@ class _RosterScreenState extends State<RosterScreen> {
             children: [
               Text(
                 taken == null
-                    ? tr(
-                        'That roll number is now used by another student. Restore $name with a new roll number:',
-                        'वह रोल नंबर अब किसी और बच्चे का है। $name को नए रोल नंबर के साथ वापस लाएँ:',
+                    ? trf(
+                        'That roll number is now used by another student. Restore {name} with a new roll number:',
+                        'वह रोल नंबर अब किसी और बच्चे का है। {name} को नए रोल नंबर के साथ वापस लाएँ:', {'name': name},
                       )
-                    : tr(
-                        'Roll $taken is now used by another student. Restore $name with a new roll number:',
-                        'रोल $taken अब किसी और बच्चे का है। $name को नए रोल नंबर के साथ वापस लाएँ:',
+                    : trf(
+                        'Roll {taken} is now used by another student. Restore {name} with a new roll number:',
+                        'रोल {taken} अब किसी और बच्चे का है। {name} को नए रोल नंबर के साथ वापस लाएँ:', {'taken': taken, 'name': name},
                       ),
               ),
               const SizedBox(height: 12),
@@ -256,9 +256,9 @@ class _RosterScreenState extends State<RosterScreen> {
       builder: (ctx) => AlertDialog(
         title: Text(tr('Record consent?', 'सहमति दर्ज करें?')),
         content: Text(
-          tr(
-            'Only record this if you have the parent\'s signed consent form for $name.',
-            '$name के लिए माता-पिता का हस्ताक्षर वाला सहमति पत्र हो, तभी इसे दर्ज करें।',
+          trf(
+            'Only record this if you have the parent\'s signed consent form for {name}.',
+            '{name} के लिए माता-पिता का हस्ताक्षर वाला सहमति पत्र हो, तभी इसे दर्ज करें।', {'name': name},
           ),
         ),
         actions: [
@@ -282,7 +282,7 @@ class _RosterScreenState extends State<RosterScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            tr('Consent recorded for $name', '$name की सहमति दर्ज हुई'),
+            trf('Consent recorded for {name}', '{name} की सहमति दर्ज हुई', {'name': name}),
           ),
         ),
       );
@@ -301,7 +301,7 @@ class _RosterScreenState extends State<RosterScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          tr('Students · ${widget.className}', 'बच्चे · ${widget.className}'),
+          trf('Students · {className}', 'बच्चे · {className}', {'className': widget.className}),
         ),
         actions: [
           TextButton.icon(
@@ -371,9 +371,9 @@ class _RosterScreenState extends State<RosterScreen> {
                   )
                 else ...[
                   Text(
-                    tr(
-                      '${list.length} students · consent recorded for $consented',
-                      '${list.length} बच्चे · $consented की सहमति दर्ज',
+                    trf(
+                      '{listCount} students · consent recorded for {consented}',
+                      '{listCount} बच्चे · {consented} की सहमति दर्ज', {'listCount': list.length, 'consented': consented},
                     ),
                     style: const TextStyle(color: Ks.muted),
                   ),
@@ -506,9 +506,9 @@ class _RosterScreenState extends State<RosterScreen> {
     child: ExpansionTile(
       leading: const Icon(Icons.person_off_rounded, color: Ks.muted),
       title: Text(
-        tr(
-          'Removed students (${_inactive.length})',
-          'हटाए गए बच्चे (${_inactive.length})',
+        trf(
+          'Removed students ({inactiveCount})',
+          'हटाए गए बच्चे ({inactiveCount})', {'inactiveCount': _inactive.length},
         ),
         style: const TextStyle(fontWeight: FontWeight.w600),
       ),
@@ -800,9 +800,9 @@ class _PasteManySheetState extends State<_PasteManySheet> {
       _addedSome = _addedSome || ok > 0;
       _start += ok;
       _text.text = rest.join('\n');
-      _err = tr(
-        'Saved $ok of ${names.length}. $problem The remaining names are still in the box.',
-        '${names.length} में से $ok सहेजे गए। $problem बाकी नाम बॉक्स में हैं।',
+      _err = trf(
+        'Saved {ok} of {namesCount}. {problem} The remaining names are still in the box.',
+        '{namesCount} में से {ok} सहेजे गए। {problem} बाकी नाम बॉक्स में हैं।', {'ok': ok, 'namesCount': names.length, 'problem': problem},
       );
     });
   }
@@ -831,9 +831,9 @@ class _PasteManySheetState extends State<_PasteManySheet> {
               ),
               const SizedBox(height: 4),
               Text(
-                tr(
-                  'One first name per line. Roll numbers continue from $_start.',
-                  'हर लाइन में एक पहला नाम। रोल नंबर $_start से आगे चलेंगे।',
+                trf(
+                  'One first name per line. Roll numbers continue from {start}.',
+                  'हर लाइन में एक पहला नाम। रोल नंबर {start} से आगे चलेंगे।', {'start': _start},
                 ),
                 style: const TextStyle(color: Ks.muted),
               ),
@@ -860,9 +860,9 @@ class _PasteManySheetState extends State<_PasteManySheet> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
-                    tr(
-                      '${names.length} students will be added, roll $_start–${_start + names.length - 1}: ${names.take(3).join(', ')}${names.length > 3 ? '…' : ''}',
-                      '${names.length} बच्चे जुड़ेंगे, रोल $_start–${_start + names.length - 1}: ${names.take(3).join(', ')}${names.length > 3 ? '…' : ''}',
+                    trf(
+                      '{namesCount} students will be added, roll {start}–{start2}: {names}{v}',
+                      '{namesCount} बच्चे जुड़ेंगे, रोल {start}–{start2}: {names}{v}', {'namesCount': names.length, 'start': _start, 'start2': _start + names.length - 1, 'names': names.take(3).join(', '), 'v': names.length > 3 ? '…' : ''},
                     ),
                     style: const TextStyle(
                       color: Ks.accent,
@@ -893,15 +893,15 @@ class _PasteManySheetState extends State<_PasteManySheet> {
                 onPressed: (_saving || names.isEmpty) ? null : _save,
                 child: Text(
                   _saving
-                      ? tr(
-                          'Saving $_done of $_total…',
-                          '$_done / $_total सहेजे…',
+                      ? trf(
+                          'Saving {done} of {total}…',
+                          '{done} / {total} सहेजे…', {'done': _done, 'total': _total},
                         )
                       : names.isEmpty
                       ? tr('Add students', 'बच्चे जोड़ें')
-                      : tr(
-                          'Add ${names.length} students',
-                          '${names.length} बच्चे जोड़ें',
+                      : trf(
+                          'Add {namesCount} students',
+                          '{namesCount} बच्चे जोड़ें', {'namesCount': names.length},
                         ),
                 ),
               ),
@@ -1039,9 +1039,9 @@ class _EditStudentSheetState extends State<_EditStudentSheet> {
       setState(() {
         _saving = false;
         _err = e is ApiError && e.status == 409
-            ? tr(
-                'Roll $roll is already used in ${_classLabel(_target)}. Pick another number.',
-                '${_classLabel(_target)} में रोल $roll पहले से है। दूसरा नंबर चुनें।',
+            ? trf(
+                'Roll {roll} is already used in {classLabel}. Pick another number.',
+                '{classLabel} में रोल {roll} पहले से है। दूसरा नंबर चुनें।', {'roll': roll, 'classLabel': _classLabel(_target)},
               )
             : _errText(e);
       });
@@ -1053,11 +1053,11 @@ class _EditStudentSheetState extends State<_EditStudentSheet> {
     final yes = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: Text(tr('Remove $name?', '$name को हटाएँ?')),
+        title: Text(trf('Remove {name}?', '{name} को हटाएँ?', {'name': name})),
         content: Text(
-          tr(
-            '$name leaves this class list. Their records are kept, and you can bring them back from "Removed students".',
-            '$name इस कक्षा की सूची से हट जाएगा। रिकॉर्ड रखा रहेगा, और "हटाए गए बच्चे" से वापस ला सकते हैं।',
+          trf(
+            '{name} leaves this class list. Their records are kept, and you can bring them back from "Removed students".',
+            '{name} इस कक्षा की सूची से हट जाएगा। रिकॉर्ड रखा रहेगा, और "हटाए गए बच्चे" से वापस ला सकते हैं।', {'name': name},
           ),
         ),
         actions: [
@@ -1153,9 +1153,9 @@ class _EditStudentSheetState extends State<_EditStudentSheet> {
                 Padding(
                   padding: const EdgeInsets.only(top: 6),
                   child: Text(
-                    tr(
-                      'The student and their records move to ${_classLabel(_target)}.',
-                      'बच्चा और उसका रिकॉर्ड ${_classLabel(_target)} में चला जाएगा।',
+                    trf(
+                      'The student and their records move to {classLabel}.',
+                      'बच्चा और उसका रिकॉर्ड {classLabel} में चला जाएगा।', {'classLabel': _classLabel(_target)},
                     ),
                     style: const TextStyle(color: Ks.muted, fontSize: 13),
                   ),

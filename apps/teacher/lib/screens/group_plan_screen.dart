@@ -141,9 +141,9 @@ class _GroupPlanScreenState extends State<GroupPlanScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              tr(
-                'Could not refresh — showing the saved plan. ($e)',
-                'ताज़ा नहीं हो सका — सहेजी योजना दिख रही है। ($e)',
+              trf(
+                'Could not refresh — showing the saved plan. ({e})',
+                'ताज़ा नहीं हो सका — सहेजी योजना दिख रही है। ({e})', {'e': e},
               ),
             ),
           ),
@@ -203,9 +203,9 @@ class _GroupPlanScreenState extends State<GroupPlanScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          tr(
-            'Plan for today · ${widget.subject == 'numeracy' ? 'Maths' : 'Hindi'}',
-            'आज की योजना · ${widget.subject == 'numeracy' ? 'गणित' : 'हिंदी'}',
+          trf(
+            'Plan for today · {v}',
+            'आज की योजना · {v2}', {'v': widget.subject == 'numeracy' ? 'Maths' : 'Hindi', 'v2': widget.subject == 'numeracy' ? 'गणित' : 'हिंदी'},
           ),
         ),
         actions: [
@@ -300,9 +300,9 @@ class _GroupPlanScreenState extends State<GroupPlanScreen> {
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
-                    tr(
-                      'Offline — showing the last saved plan (${p['for_date'] ?? ''}). It may be out of date.',
-                      'ऑफलाइन — आख़िरी सहेजी योजना (${p['for_date'] ?? ''}) दिख रही है। यह पुरानी हो सकती है।',
+                    trf(
+                      'Offline — showing the last saved plan ({for_date}). It may be out of date.',
+                      'ऑफलाइन — आख़िरी सहेजी योजना ({for_date}) दिख रही है। यह पुरानी हो सकती है।', {'for_date': p['for_date'] ?? ''},
                     ),
                     style: const TextStyle(fontSize: 13),
                   ),
@@ -360,9 +360,9 @@ class _GroupPlanScreenState extends State<GroupPlanScreen> {
             true) ...[
           const SizedBox(height: 10),
           Text(
-            tr(
-              'Check today: ${p['today_observation_to_collect_hi']}',
-              'आज जाँचें: ${p['today_observation_to_collect_hi']}',
+            trf(
+              'Check today: {today_observation_to_collect_hi}',
+              'आज जाँचें: {today_observation_to_collect_hi}', {'today_observation_to_collect_hi': p['today_observation_to_collect_hi']},
             ),
             style: const TextStyle(color: Ks.muted),
           ),
@@ -428,7 +428,7 @@ class _GroupPlanScreenState extends State<GroupPlanScreen> {
                   ),
                 ),
                 Text(
-                  tr('${g['time_min']} min', '${g['time_min']} मिनट'),
+                  trf('{time_min} min', '{time_min} मिनट', {'time_min': g['time_min']}),
                   style: const TextStyle(color: Ks.muted),
                 ),
                 IconButton(
@@ -466,9 +466,9 @@ class _GroupPlanScreenState extends State<GroupPlanScreen> {
             const SizedBox(height: 10),
             if (act != null)
               Text(
-                tr(
-                  'Activity: ${act['title_hi']}',
-                  'गतिविधि: ${act['title_hi']}',
+                trf(
+                  'Activity: {title_hi}',
+                  'गतिविधि: {title_hi}', {'title_hi': act['title_hi']},
                 ),
                 style: const TextStyle(
                   fontWeight: FontWeight.w600,
@@ -477,9 +477,9 @@ class _GroupPlanScreenState extends State<GroupPlanScreen> {
               ),
             if ((act?['materials_hi'] as String?)?.isNotEmpty == true)
               Text(
-                tr(
-                  'Materials: ${act!['materials_hi']}',
-                  'सामग्री: ${act['materials_hi']}',
+                trf(
+                  'Materials: {materials_hi}',
+                  'सामग्री: {materials_hi2}', {'materials_hi': act!['materials_hi'], 'materials_hi2': act['materials_hi']},
                 ),
                 style: const TextStyle(color: Ks.muted, fontSize: 14),
               ),
@@ -552,9 +552,9 @@ class _GroupPlanScreenState extends State<GroupPlanScreen> {
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
-                        tr(
-                          'Check again: ${reassess['ask_hi']}',
-                          'फिर जाँचें: ${reassess['ask_hi']}',
+                        trf(
+                          'Check again: {ask_hi}',
+                          'फिर जाँचें: {ask_hi}', {'ask_hi': reassess['ask_hi']},
                         ),
                         style: const TextStyle(fontSize: 15),
                       ),
@@ -682,9 +682,9 @@ class _GroupPlanScreenState extends State<GroupPlanScreen> {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        tr(
-                          '$count children still need checking — add evidence.',
-                          '$count बच्चों की जाँच बाकी — साक्ष्य जोड़ें।',
+                        trf(
+                          '{count} children still need checking — add evidence.',
+                          '{count} बच्चों की जाँच बाकी — साक्ष्य जोड़ें।', {'count': count},
                         ),
                         style: const TextStyle(color: Ks.muted),
                       ),
@@ -810,9 +810,9 @@ class _GroupPlanScreenState extends State<GroupPlanScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            tr(
-              'Could not save "Done" — tap again to retry. ($e)',
-              '"किया" दर्ज नहीं हो सका — फिर से दबाएँ। ($e)',
+            trf(
+              'Could not save "Done" — tap again to retry. ({e})',
+              '"किया" दर्ज नहीं हो सका — फिर से दबाएँ। ({e})', {'e': e},
             ),
           ),
         ),
@@ -836,7 +836,7 @@ class _GroupPlanScreenState extends State<GroupPlanScreen> {
     final nipun = (g['nipun_ref'] as String?)?.trim() ?? '';
     final ask = (g['reassessment'] as Map?)?['ask_hi'];
     final lines = <String>[
-      '${tr('Group', 'समूह')} ${g['order'] ?? ''}: ${_names(g)} (${tr('${g['time_min']} min', '${g['time_min']} मिनट')})',
+      '${tr('Group', 'समूह')} ${g['order'] ?? ''}: ${_names(g)} (${trf('{time_min} min', '{time_min} मिनट', {'time_min': g['time_min']})})',
       if (nipun.isNotEmpty) 'NIPUN $nipun',
       if ((g['why_hi'] as String?)?.isNotEmpty == true) '${g['why_hi']}',
       if (act != null) '${tr('Activity', 'गतिविधि')}: ${act['title_hi']}',

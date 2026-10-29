@@ -111,7 +111,7 @@ class _OutcomesScreenState extends State<OutcomesScreen> {
         : widget.subject;
     return Scaffold(
       appBar: AppBar(
-        title: Text(tr('Did it work? · $subject', 'क्या असर हुआ? · $subject')),
+        title: Text(trf('Did it work? · {subject}', 'क्या असर हुआ? · {subject}', {'subject': subject})),
       ),
       body: RefreshIndicator(
         onRefresh: () => _load(silent: _data != null),
@@ -232,10 +232,10 @@ class _OutcomesScreenState extends State<OutcomesScreen> {
     final down = _n(s['moved_down']);
     final not = _n(s['not_rechecked']);
     return [
-      tr('$up of $members moved up', '$members में से $up आगे बढ़े'),
-      if (same > 0) tr('$same same', '$same वहीं'),
-      if (down > 0) tr('$down slipped', '$down पीछे गए'),
-      if (not > 0) tr('$not not re-checked', '$not की फिर जाँच नहीं'),
+      trf('{up} of {members} moved up', '{members} में से {up} आगे बढ़े', {'up': up, 'members': members}),
+      if (same > 0) trf('{same} same', '{same} वहीं', {'same': same}),
+      if (down > 0) trf('{down} slipped', '{down} पीछे गए', {'down': down}),
+      if (not > 0) trf('{not} not re-checked', '{not} की फिर जाँच नहीं', {'not': not}),
     ].join(' · ');
   }
 
@@ -250,7 +250,7 @@ class _OutcomesScreenState extends State<OutcomesScreen> {
       child: ExpansionTile(
         shape: const Border(),
         collapsedShape: const Border(),
-        tilePadding: const EdgeInsets.fromLTRB(16, 6, 12, 6),
+        tilePadding: const EdgeInsetsDirectional.fromSTEB(16, 6, 12, 6),
         childrenPadding: const EdgeInsets.only(bottom: 8),
         title: Text(
           cpTitle(s).isEmpty ? '${s['checkpoint_id'] ?? ''}' : cpTitle(s),
@@ -332,7 +332,7 @@ class _OutcomesScreenState extends State<OutcomesScreen> {
       child: ConstrainedBox(
         constraints: const BoxConstraints(minHeight: 56),
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(16, 8, 8, 8),
+          padding: const EdgeInsetsDirectional.fromSTEB(16, 8, 8, 8),
           child: Row(
             children: [
               Expanded(
@@ -427,9 +427,9 @@ class _OutcomesScreenState extends State<OutcomesScreen> {
                     ),
                   ),
                   Text(
-                    tr(
-                      '$up of $rechecked re-checked moved up · $sessions sessions, $kids children',
-                      'फिर जाँचे गए $rechecked में से $up आगे बढ़े · $sessions सत्र, $kids बच्चे',
+                    trf(
+                      '{up} of {rechecked} re-checked moved up · {sessions} sessions, {kids} children',
+                      'फिर जाँचे गए {rechecked} में से {up} आगे बढ़े · {sessions} सत्र, {kids} बच्चे', {'up': up, 'rechecked': rechecked, 'sessions': sessions, 'kids': kids},
                     ),
                     style: const TextStyle(color: Ks.muted, fontSize: 14),
                   ),

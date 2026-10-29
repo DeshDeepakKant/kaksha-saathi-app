@@ -3,6 +3,10 @@
 The engine (`services/voice_session.py`) returns raw items; this layer fills the child's name into
 `{name}` placeholders and never sends the answer of an item the child must work out
 (`target`/`accept`/`keywords` of build_word, answer_question, say_sound).
+
+Language: `lang` may be any content language the speech providers can both hear and speak
+(`speech.capabilities.content_languages()`, plus hi/en which always work by typing and the phone's
+voice); omitted, it is the parent's content language (Settings), else Hindi.
 """
 from __future__ import annotations
 
@@ -16,7 +20,9 @@ from sqlalchemy.orm import Session
 from app.api.deps import current_parent, current_teacher, owned_child, validate_media
 from app.db import get_db
 from app.models.tables import Child, ParentAccount, Teacher, VoiceSession
-from app.services import voice_session as engine
+from app.services import prefs, voice_session as engine
+from app.services.voice_types import VOICE_LANGS
+from app.speech import capabilities
 
 router = APIRouter(prefix="/v1")
 
@@ -59,7 +65,36 @@ def _detail(db: Session, vs: VoiceSession, name: str) -> dict:
 
 # ------------------------------------------------------------------ parent
 class StartIn(BaseModel):
-    lang: Literal["hi", "en"] = "hi"
+    lang: str | None = Field(default=None, max_length=8)  # omitted: the parent's content language
+
+
+def session_langs() -> list[str]:
+    """Languages a voice session can run in right now (needs item, line and speech support)."""
+    try:
+        langs = list(capabilities.content_languages())
+    except Exception:
+        langs = []
+    return [c for c in dict.fromkeys(["hi", "en", *langs]) if c in VOICE_LANGS]
+
+
+def _session_lang(db: Session, parent: ParentAccount, asked: str | None) -> str:
+    allowed = session_langs()
+    if asked:
+        if asked not in allowed:
+            raise HTTPException(422, f"lang must be one of: {', '.join(allowed)}")
+        return asked
+    try:
+        mine = prefs.content_lang_for(db, parent=parent)
+    except Exception:
+        mine = "hi"
+    return mine if mine in allowed else "hi"
+
+
+def _provider(db: Session, parent: ParentAccount) -> str | None:
+    try:
+        return prefs.provider_for(db, parent=parent)
+    except Exception:
+        return None
 
 
 class TurnMeta(BaseModel):
@@ -93,7 +128,8 @@ def _name(db: Session, child_id: int) -> str:
 def start_voice_session(body: StartIn | None = None, parent: ParentAccount = Depends(current_parent),
                         db: Session = Depends(get_db)):
     child = db.get(Child, parent.child_id)
-    vs = engine.start(db, child=child, lang=(body or StartIn()).lang)
+    lang = _session_lang(db, parent, (body or StartIn()).lang)
+    vs = engine.start(db, child=child, lang=lang, provider=_provider(db, parent))
     return _public(engine.session_view(db, vs), child.first_name, "item")
 
 

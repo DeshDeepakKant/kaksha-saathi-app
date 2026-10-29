@@ -11,6 +11,7 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
+  audioplayers: ^6.5.1
   flutter_tts: ^4.2.0
   http: ^1.2.2
   record: ^6.2.1
@@ -25,3 +26,15 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+  # UI translation tables (tool/l10n_translate.py) and fonts for scripts phones often lack.
+  # Noto Sans Ol Chiki / Meetei Mayek: SIL Open Font License 1.1, see assets/fonts/OFL-*.txt.
+  assets:
+    - assets/i18n/
+  fonts:
+    - family: NotoSansOlChiki
+      fonts:
+        - asset: assets/fonts/NotoSansOlChiki-Regular.ttf
+    - family: NotoSansMeeteiMayek
+      fonts:
+        - asset: assets/fonts/NotoSansMeeteiMayek-Regular.ttf

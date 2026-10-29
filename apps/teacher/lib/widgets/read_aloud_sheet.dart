@@ -130,9 +130,9 @@ class _ReadAloudSheetState extends State<ReadAloudSheet> {
       if (!mounted) return;
       setState(() {
         _stage = _Stage.ready;
-        _notice = tr(
-          'Could not score the recording (${_short(e)}). Try again, or tick the words by hand.',
-          'रिकॉर्डिंग जाँच नहीं पाए (${_short(e)})। दोबारा करें, या शब्द हाथ से चुनें।',
+        _notice = trf(
+          'Could not score the recording ({short}). Try again, or tick the words by hand.',
+          'रिकॉर्डिंग जाँच नहीं पाए ({short})। दोबारा करें, या शब्द हाथ से चुनें।', {'short': _short(e)},
         );
       });
     }
@@ -221,9 +221,9 @@ class _ReadAloudSheetState extends State<ReadAloudSheet> {
     if (!mounted) return;
     setState(() {
       _saving = false;
-      _notice = tr(
-        'Could not save: ${_short(e)}',
-        'दर्ज नहीं हो पाया: ${_short(e)}',
+      _notice = trf(
+        'Could not save: {short}',
+        'दर्ज नहीं हो पाया: {short}', {'short': _short(e)},
       );
     });
   }
@@ -263,9 +263,9 @@ class _ReadAloudSheetState extends State<ReadAloudSheet> {
               Text(widget.title, style: const TextStyle(color: Ks.muted)),
               const SizedBox(height: 4),
               Text(
-                tr(
-                  'Ask ${widget.childName} to read these aloud.',
-                  '${widget.childName} से ये ज़ोर से पढ़वाएँ।',
+                trf(
+                  'Ask {childName} to read these aloud.',
+                  '{childName} से ये ज़ोर से पढ़वाएँ।', {'childName': widget.childName},
                 ),
               ),
               const SizedBox(height: 14),
@@ -496,7 +496,7 @@ class _ReadAloudSheetState extends State<ReadAloudSheet> {
             child: Text(
               ok || heard == null || heard.isEmpty
                   ? ''
-                  : tr('heard: $heard', 'सुना: $heard'),
+                  : trf('heard: {heard}', 'सुना: {heard}', {'heard': heard}),
               style: const TextStyle(color: Ks.muted, fontSize: 13),
             ),
           ),

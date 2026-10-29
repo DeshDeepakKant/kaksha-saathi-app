@@ -10,7 +10,7 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
-from app.api import books, insights, level_check, manage, parent, parent_insights, setup, teacher, voice
+from app.api import books, insights, level_check, manage, parent, parent_insights, prefs, setup, speech, teacher, voice
 from app.config import get_settings
 from app.db import init_db
 from app.services.content import get_content, load_custom_checkpoints
@@ -80,6 +80,8 @@ app.include_router(voice.router)
 app.include_router(level_check.router)
 app.include_router(manage.router)
 app.include_router(insights.router)
+app.include_router(speech.router)
+app.include_router(prefs.router)
 
 # Mounted AFTER every route: serves the landing page at "/" and the two Flutter web builds.
 WEB_DIR = Path(__file__).resolve().parents[2] / "deploy" / "web"

@@ -11,6 +11,7 @@ from sqlalchemy.orm import Session
 
 from app.api.deps import current_teacher, owned_child, owned_class
 from app.api.teacher import _remember, _replayed, _subject
+from app.services import prefs
 from app.db import get_db
 from app.models.tables import Teacher
 from app.services import level_check as lc
@@ -22,8 +23,8 @@ router = APIRouter(prefix="/v1")
 _REPLAY_KIND = "probe"
 
 
-def _ladder(subject: str) -> dict:
-    lad = lc.ladder(subject)
+def _ladder(subject: str, lang: str = "hi") -> dict:
+    lad = lc.ladder_in(subject, lang)
     if lad is None:
         raise HTTPException(422, f"no level check for subject '{subject}'")
     return lad
@@ -34,7 +35,7 @@ def get_level_check(class_id: int, subject: str, teacher: Teacher = Depends(curr
                     db: Session = Depends(get_db)):
     cls = owned_class(class_id, teacher, db)
     subject = _subject(subject, db, teacher)
-    return lc.class_view(db, cls, subject, _ladder(subject))
+    return lc.class_view(db, cls, subject, _ladder(subject, prefs.content_lang_for(db, teacher=teacher)))
 
 
 class LevelResultIn(BaseModel):
@@ -57,7 +58,7 @@ def post_level_check(class_id: int, body: LevelCheckIn, teacher: Teacher = Depen
     if (done := _replayed(db, teacher, _REPLAY_KIND, replay_id)) is not None:
         return done
     subject = _subject(body.subject, db, teacher)
-    lad = _ladder(subject)
+    lad = _ladder(subject, prefs.content_lang_for(db, teacher=teacher))
     ch = owned_child(body.child_id, teacher, db)
     if ch.class_id != cls.id or not ch.active:
         raise HTTPException(422, "child not in this class")

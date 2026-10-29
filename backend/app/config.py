@@ -36,6 +36,17 @@ class Settings(BaseSettings):
     # --- speech
     sarvam_api_key: str = ""
     sarvam_base: str = "https://api.sarvam.ai"
+    sarvam_stt_model: str = "saaras:v3"  # mode=transcribe; saarika:v2.5 is deprecated
+    sarvam_tts_model: str = "bulbul:v3"
+    sarvam_tts_speaker: str = "shubh"  # bulbul:v3 default; speaks all 11 TTS languages
+    gnani_api_key: str = ""  # Gnani stays off unless this is set
+    gnani_base: str = "https://api.vachana.ai"
+    gnani_stt_model: str = "prisma-v3.0"
+    gnani_tts_model: str = "timbre-v3.0"
+    gnani_tts_voice: str = "Shivani"  # timbre-v3.0 voice; covers all 10 Gnani languages
+    stt_timeout_s: float = 25.0  # per provider; the router then falls back to the next one
+    tts_timeout_s: float = 20.0
+    stt_max_seconds: float = 30.0  # REST limit of both providers; longer WAVs are clipped (and said so)
 
     # --- budgets / limits
     daily_budget_inr_per_school: float = 250.0

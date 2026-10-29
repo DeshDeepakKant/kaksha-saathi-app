@@ -29,17 +29,17 @@ class TrendCard extends StatelessWidget {
         _n(points.last, 'needs_practice') +
         _n(points.last, 'needs_intervention');
     final caption = first == last
-        ? tr(
-            'On track: $last lessons, no change in $weeks weeks',
-            'ठीक चल रहे: $last सबक, $weeks हफ़्तों में कोई बदलाव नहीं',
+        ? trf(
+            'On track: {last} lessons, no change in {weeks} weeks',
+            'ठीक चल रहे: {last} सबक, {weeks} हफ़्तों में कोई बदलाव नहीं', {'last': last, 'weeks': weeks},
           )
-        : tr(
-            'On track: $first → $last in $weeks weeks',
-            'ठीक चल रहे: $first → $last, $weeks हफ़्तों में',
+        : trf(
+            'On track: {first} → {last} in {weeks} weeks',
+            'ठीक चल रहे: {first} → {last}, {weeks} हफ़्तों में', {'first': first, 'last': last, 'weeks': weeks},
           );
-    final caption2 = tr(
-      'Needing help: $needsFirst → $needsLast',
-      'मदद चाहिए: $needsFirst → $needsLast',
+    final caption2 = trf(
+      'Needing help: {needsFirst} → {needsLast}',
+      'मदद चाहिए: {needsFirst} → {needsLast}', {'needsFirst': needsFirst, 'needsLast': needsLast},
     );
     return Card(
       margin: const EdgeInsets.only(bottom: 10),

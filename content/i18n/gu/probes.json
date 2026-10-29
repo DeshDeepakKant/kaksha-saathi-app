@@ -1,0 +1,67 @@
+{
+ "lang": "gu",
+ "source_lang": "hi",
+ "machine_translated": true,
+ "reviewed": false,
+ "model": "claude-sonnet-5",
+ "generated_at": "2026-10-29T21:50:40+00:00",
+ "note": "Machine translated by scripts/translate_content.py; not reviewed by an educator.",
+ "probes": {
+  "N.G2.sub_2digit_borrow": {
+   "title": "ઉધાર સમજે છે કે નહીં?",
+   "tell": "2/2 સાચા → ભૂલ બેદરકારીની; 1/2 → ઉધારમાં ફરી અભ્યાસ; 0/2 → પાયો નબળો.",
+   "pass_rule": "2/2 સાચા અને ઉધાર સમજાવ્યું",
+   "items": [
+    "53 − 27 કરો",
+    "40 − 16 કરો",
+    "સવાલ: 40 માંથી 16 બાદ કરવા માટે ઉધાર લીધું? ક્યાંથી?"
+   ],
+   "machine_translated": true
+  },
+  "L.G1.matra_basic": {
+   "title": "માત્રા ખબર નથી કે શબ્દ ખબર નથી?",
+   "tell": "હિન્દીમાં 1/4 પર ગૃહભાષામાં સાચા → ભાષાની વાત; બંનેમાં ઓછા → માત્રાનો પાયો નબળો.",
+   "pass_rule": "3/4 સાચા",
+   "items": [
+    "બોલો: કા",
+    "બોલો: કિ",
+    "કયો શબ્દ છે - 'કા' કે 'કામ'?",
+    "ગૃહભાષામાં એક શબ્દ બોલો જેમાં આ નો અવાજ છે"
+   ],
+   "machine_translated": true
+  },
+  "L.G1.vyanjan": {
+   "title": "કયા અક્ષરો ભળી જાય છે?",
+   "tell": "સ/શ માં ભૂલ → કાર્ડથી જોડી બનાવો.",
+   "pass_rule": "2/3 સાચા",
+   "items": [
+    "આ બોલો: સ, શ",
+    "આ બોલો: ન, ણ",
+    "સાંભળો અને કહો: શ"
+   ],
+   "machine_translated": true
+  },
+  "L.G2.all_matras": {
+   "title": "કઈ માત્રાઓ ભળી જાય છે?",
+   "tell": "જે જોડીમાં ઓછા → એ જ જોડીનો અભ્યાસ.",
+   "pass_rule": "4/6 સાચા",
+   "items": [
+    "વાંચો: કુ, કૂ",
+    "વાંચો: કે, કૈ",
+    "વાંચો: કો, કૌ"
+   ],
+   "machine_translated": true
+  },
+  "N.G2.place_value_99": {
+   "title": "દહાઈ-એકમની ખબર છે?",
+   "tell": "અંક ભેગા કરવામાં ભૂલ → સળીઓના બંડલ.",
+   "pass_rule": "2/3 સાચા",
+   "items": [
+    "47 માં કેટલી દહાઈ?",
+    "47 માં કેટલા એકમ?",
+    "દહાઈ ભેગી કરો: 3 દહાઈ + 2 દહાઈ"
+   ],
+   "machine_translated": true
+  }
+ }
+}

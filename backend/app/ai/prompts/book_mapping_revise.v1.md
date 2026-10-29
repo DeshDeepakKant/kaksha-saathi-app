@@ -1,3 +1,4 @@
+<!-- book_mapping_revise.v1: 2026-10-30 content-language change. The line {content_language_instruction} is replaced with the teacher's content-language instruction, or removed for Hindi (the default), so the Hindi prompt is byte-for-byte the previous v1. This comment is stripped before sending. -->
 You apply a teacher's correction to a DRAFT textbook mapping (book details + chapters, each with topics)
 and return the whole revised mapping through the tool.
 
@@ -17,3 +18,4 @@ HARD RULES:
 - If the correction is unclear or asks for nothing you can apply, return the draft unchanged and say so in
   note (one short line). confidence (0–1): how sure you are the result matches the book.
 - No child data is involved. Output only through the tool.
+{content_language_instruction}

@@ -1,0 +1,171 @@
+{
+ "lang": "en",
+ "source_lang": "en",
+ "machine_translated": true,
+ "reviewed": false,
+ "model": "claude-sonnet-5",
+ "generated_at": "2026-10-29T21:49:30+00:00",
+ "note": "Machine translated by scripts/translate_content.py; not reviewed by an educator.",
+ "generated_natively": true,
+ "title_en": "English reading level",
+ "title": "English reading level",
+ "beginner": {
+  "key": "beginner",
+  "title_en": "Beginner (not yet letters)",
+  "title": "Beginner (not yet letters)"
+ },
+ "levels": [
+  {
+   "key": "letter",
+   "title_en": "Letters",
+   "title": "Letters",
+   "checkpoint_id": "L.G1.vyanjan",
+   "ask_en": "Point to each letter. Ask the child to say it.",
+   "ask": "Point to each letter. Ask the child to say it.",
+   "items": [
+    {
+     "show": "m"
+    },
+    {
+     "show": "s"
+    },
+    {
+     "show": "t"
+    },
+    {
+     "show": "n"
+    },
+    {
+     "show": "r"
+    }
+   ],
+   "pass_min": 4,
+   "of": 5,
+   "practice": [
+    {
+     "show": "l"
+    },
+    {
+     "show": "k"
+    },
+    {
+     "show": "p"
+    },
+    {
+     "show": "d"
+    },
+    {
+     "show": "b"
+    }
+   ]
+  },
+  {
+   "key": "word",
+   "title_en": "Words",
+   "title": "Words",
+   "checkpoint_id": "L.G1.read_matra_words",
+   "ask_en": "Ask the child to read each word.",
+   "ask": "Ask the child to read each word.",
+   "items": [
+    {
+     "show": "mother"
+    },
+    {
+     "show": "water"
+    },
+    {
+     "show": "garden"
+    },
+    {
+     "show": "basket"
+    },
+    {
+     "show": "flower"
+    }
+   ],
+   "pass_min": 4,
+   "of": 5,
+   "practice": [
+    {
+     "show": "sister"
+    },
+    {
+     "show": "monkey"
+    },
+    {
+     "show": "window"
+    },
+    {
+     "show": "banana"
+    },
+    {
+     "show": "farmer"
+    }
+   ]
+  },
+  {
+   "key": "sentence",
+   "title_en": "Sentences",
+   "title": "Sentences",
+   "checkpoint_id": "L.G1.read_short_sentences",
+   "ask_en": "Ask the child to read each sentence aloud.",
+   "ask": "Ask the child to read each sentence aloud.",
+   "items": [
+    {
+     "show": "The cow eats grass."
+    },
+    {
+     "show": "Mother is making food."
+    },
+    {
+     "show": "The sun is bright."
+    }
+   ],
+   "pass_min": 2,
+   "of": 3,
+   "practice": [
+    {
+     "show": "I like my school."
+    },
+    {
+     "show": "The dog runs fast."
+    },
+    {
+     "show": "We play in the yard."
+    }
+   ]
+  },
+  {
+   "key": "story",
+   "title_en": "Short passage",
+   "title": "Short passage",
+   "checkpoint_id": "L.G2.fluency_45_60",
+   "ask_en": "Ask the child to read each line like a story. A line passes if it is smooth, with at most 1 mistake.",
+   "ask": "Ask the child to read each line like a story. A line passes if it is smooth, with at most 1 mistake.",
+   "items": [
+    {
+     "show": "Every summer we go to our grandmother's village."
+    },
+    {
+     "show": "We play all day near the big tree."
+    },
+    {
+     "show": "At night we eat together and tell stories."
+    }
+   ],
+   "pass_min": 2,
+   "of": 3,
+   "practice": [
+    {
+     "show": "Rani has a small red bag for school."
+    },
+    {
+     "show": "She walks with her friends every morning."
+    },
+    {
+     "show": "They sing songs on the way to class."
+    }
+   ]
+  }
+ ]
+}

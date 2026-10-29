@@ -115,7 +115,7 @@ class _BoardPendingChipState extends State<BoardPendingChip> {
       return Padding(
         padding: const EdgeInsets.only(bottom: 10),
         child: Align(
-          alignment: Alignment.centerLeft,
+          alignment: AlignmentDirectional.centerStart,
           child: Semantics(
             button: true,
             child: Material(
@@ -147,7 +147,7 @@ class _BoardPendingChipState extends State<BoardPendingChip> {
                               ),
                         const SizedBox(width: 8),
                         Text(
-                          tr('$n waiting to send', '$n भेजना बाकी'),
+                          trf('{n} waiting to send', '{n} भेजना बाकी', {'n': n}),
                           style: const TextStyle(
                             color: Ks.amber,
                             fontWeight: FontWeight.w600,

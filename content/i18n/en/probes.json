@@ -1,0 +1,67 @@
+{
+ "lang": "en",
+ "source_lang": "hi",
+ "machine_translated": true,
+ "reviewed": false,
+ "model": "claude-sonnet-5",
+ "generated_at": "2026-10-29T21:49:21+00:00",
+ "note": "Machine translated by scripts/translate_content.py; not reviewed by an educator.",
+ "probes": {
+  "N.G2.sub_2digit_borrow": {
+   "title": "Does the child understand borrowing or not?",
+   "tell": "2/2 correct → mistake was carelessness; 1/2 → practice borrowing again; 0/2 → basics are weak.",
+   "pass_rule": "2/2 correct and explained borrowing",
+   "items": [
+    "Do 53 − 27",
+    "Do 40 − 16",
+    "Question: Did you borrow to take 16 away from 40? From where?"
+   ],
+   "machine_translated": true
+  },
+  "L.G1.matra_basic": {
+   "title": "Does not know the vowel sign or does not know the word?",
+   "tell": "1/4 correct in English but correct in home language → it's a language issue; low in both → basics of vowel sign are weak.",
+   "pass_rule": "3/4 correct",
+   "items": [
+    "Say: ba",
+    "Say: bi",
+    "Which word is this - 'ba' or 'bat'?",
+    "Say a word in your home language that has the 'aa' sound"
+   ],
+   "machine_translated": true
+  },
+  "L.G1.vyanjan": {
+   "title": "Which letters are getting mixed up?",
+   "tell": "Mistake in s/sh → make pairs using cards.",
+   "pass_rule": "2/3 correct",
+   "items": [
+    "Say these: s, sh",
+    "Say these: n, ng",
+    "Listen and tell: sh"
+   ],
+   "machine_translated": true
+  },
+  "L.G2.all_matras": {
+   "title": "Which vowel signs are getting mixed up?",
+   "tell": "Whichever is weaker in the pair → practice that same pair.",
+   "pass_rule": "4/6 correct",
+   "items": [
+    "Read: bu, boo",
+    "Read: be, bai",
+    "Read: bo, bau"
+   ],
+   "machine_translated": true
+  },
+  "N.G2.place_value_99": {
+   "title": "Does the child know tens and ones?",
+   "tell": "Mistake in adding digits → use bundles of sticks.",
+   "pass_rule": "2/3 correct",
+   "items": [
+    "How many tens in 47?",
+    "How many ones in 47?",
+    "Add the tens: 3 tens + 2 tens"
+   ],
+   "machine_translated": true
+  }
+ }
+}

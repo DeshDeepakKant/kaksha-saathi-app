@@ -1,0 +1,171 @@
+{
+ "lang": "gu",
+ "source_lang": "gu",
+ "machine_translated": true,
+ "reviewed": false,
+ "model": "claude-sonnet-5",
+ "generated_at": "2026-10-29T21:51:48+00:00",
+ "note": "Machine translated by scripts/translate_content.py; not reviewed by an educator.",
+ "generated_natively": true,
+ "title_en": "Gujarati reading level",
+ "title": "ગુજરાતી વાંચન સ્તર",
+ "beginner": {
+  "key": "beginner",
+  "title_en": "Beginner (not yet letters)",
+  "title": "શરૂઆત (હજુ અક્ષરો નહીં)"
+ },
+ "levels": [
+  {
+   "key": "letter",
+   "title_en": "Letters",
+   "title": "અક્ષરો",
+   "checkpoint_id": "L.G1.vyanjan",
+   "ask_en": "Point to each letter. Ask the child to say it.",
+   "ask": "દરેક અક્ષર તરફ આંગળી ચીંધો. બાળકને તે બોલવા કહો.",
+   "items": [
+    {
+     "show": "ક"
+    },
+    {
+     "show": "મ"
+    },
+    {
+     "show": "લ"
+    },
+    {
+     "show": "ર"
+    },
+    {
+     "show": "સ"
+    }
+   ],
+   "pass_min": 4,
+   "of": 5,
+   "practice": [
+    {
+     "show": "ત"
+    },
+    {
+     "show": "ન"
+    },
+    {
+     "show": "બ"
+    },
+    {
+     "show": "દ"
+    },
+    {
+     "show": "ગ"
+    }
+   ]
+  },
+  {
+   "key": "word",
+   "title_en": "Words",
+   "title": "શબ્દો",
+   "checkpoint_id": "L.G1.read_matra_words",
+   "ask_en": "Ask the child to read each word.",
+   "ask": "બાળકને દરેક શબ્દ વાંચવા કહો.",
+   "items": [
+    {
+     "show": "માળા"
+    },
+    {
+     "show": "દાળ"
+    },
+    {
+     "show": "નાક"
+    },
+    {
+     "show": "વાદળ"
+    },
+    {
+     "show": "ગાજર"
+    }
+   ],
+   "pass_min": 4,
+   "of": 5,
+   "practice": [
+    {
+     "show": "કેળું"
+    },
+    {
+     "show": "પાણી"
+    },
+    {
+     "show": "બકરી"
+    },
+    {
+     "show": "ઘર"
+    },
+    {
+     "show": "ચોખા"
+    }
+   ]
+  },
+  {
+   "key": "sentence",
+   "title_en": "Sentences",
+   "title": "વાક્યો",
+   "checkpoint_id": "L.G1.read_short_sentences",
+   "ask_en": "Ask the child to read each sentence aloud.",
+   "ask": "બાળકને દરેક વાક્ય મોટેથી વાંચવા કહો.",
+   "items": [
+    {
+     "show": "ગાય ઘાસ ખાય છે."
+    },
+    {
+     "show": "મા રોટલી બનાવે છે."
+    },
+    {
+     "show": "બાબો દૂધ પીવે છે."
+    }
+   ],
+   "pass_min": 2,
+   "of": 3,
+   "practice": [
+    {
+     "show": "કૂતરો ઘરમાં સૂએ છે."
+    },
+    {
+     "show": "દાદા બગીચામાં ફરે છે."
+    },
+    {
+     "show": "બેન શાળાએ જાય છે."
+    }
+   ]
+  },
+  {
+   "key": "story",
+   "title_en": "Short passage",
+   "title": "ટૂંકી વાર્તા",
+   "checkpoint_id": "L.G2.fluency_45_60",
+   "ask_en": "Ask the child to read each line like a story. A line passes if it is smooth, with at most 1 mistake.",
+   "ask": "બાળકને દરેક લીટી વાર્તાની જેમ વાંચવા કહો. જો લીટી સરળતાથી વંચાય અને વધુમાં વધુ 1 ભૂલ હોય તો તે પાસ ગણાય.",
+   "items": [
+    {
+     "show": "ઉનાળાની રજાઓમાં અમે મામાના ગામ જઈએ છીએ."
+    },
+    {
+     "show": "ત્યાં અમે નદીમાં નાહીએ છીએ અને રમીએ છીએ."
+    },
+    {
+     "show": "સાંજે નાની અમને મીઠી વાર્તા કહે છે."
+    }
+   ],
+   "pass_min": 2,
+   "of": 3,
+   "practice": [
+    {
+     "show": "ગામમાં એક નાનું તળાવ હતું જેમાં માછલી રહેતી હતી."
+    },
+    {
+     "show": "રોજ સવારે બાળકો તળાવ કિનારે રમવા જતા હતા."
+    },
+    {
+     "show": "એક દિવસ તેમણે તળાવમાં સુંદર કમળ જોયું."
+    }
+   ]
+  }
+ ]
+}

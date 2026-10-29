@@ -5,9 +5,15 @@ templates plus reviewed content (see docs/parent_insights_contract.md). Rules ke
 - only the parent's own child; never group labels, classmates, scores or ranks;
 - "learned" comes from school evidence only (home evidence never makes anything learned);
 - every function returns sensible empty values for a brand-new child.
+
+Content language: when the parent's content language (Settings) is Hindi or English the payloads are
+exactly as before. For any other language every English text field `<base>_en` also gets a
+`<base>_<lang>` machine translation (labelled: `content_lang`, `machine_translated` on the payload;
+`untranslated: true` where the English stays). The child's name never goes to the translator.
 """
 from __future__ import annotations
 
+import re
 from collections import Counter
 from dataclasses import dataclass
 from datetime import date, datetime, time, timedelta, timezone
@@ -15,7 +21,7 @@ from datetime import date, datetime, time, timedelta, timezone
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app.models.tables import (Attendance, Child, Classroom, Evidence, HomeSession, Plan,
+from app.models.tables import (Attendance, Child, Classroom, Evidence, HomeSession, ParentAccount, Plan,
                                VoiceSession)
 from app.services import ledger, mastery, tips
 from app.services.content import Content, get_content
@@ -29,6 +35,95 @@ GROWTH_WEEKS = 6
 MAX_TIPS = 3
 
 WORKING = ("needs_intervention", "needs_practice")
+
+
+# ------------------------------------------------------------------ content language (additive)
+_PH = re.compile(r"\{\w+\}")
+
+
+def parent_content_lang(db: Session, parent: ParentAccount | None) -> str:
+    if parent is None:
+        return "hi"
+    try:
+        from app.services import prefs
+        return prefs.content_lang_for(db, parent=parent) or "hi"
+    except Exception:
+        return "hi"
+
+
+def translate_en(db: Session, texts: list[str], lang: str, *, school_id: int | None = None,
+                 name: str | None = None, source: str = "en") -> list[tuple[str, bool]]:
+    """(text in `lang`, machine_translated) per English (or `source`) text; the source text when
+    translation is unavailable or loses a placeholder. The child's name is sent as `{name}` and filled back in."""
+    if not texts:
+        return []
+    pat = re.compile(rf"(?<!\w){re.escape(name)}(?!\w)") if name else None
+    masked = [pat.sub("{name}", t) if pat else t for t in texts]
+    from app.i18n import translate
+    try:
+        outs = translate.translate_texts(db, masked, target=lang, source=source, school_id=school_id)
+    except Exception:
+        outs = []
+    res = []
+    for i, src in enumerate(masked):
+        out = outs[i] if i < len(outs or []) and isinstance(outs[i], dict) else {}
+        text = str(out.get("text") or "").strip()
+        ok = bool(text) and not out.get("untranslated") and sorted(_PH.findall(text)) == sorted(_PH.findall(src))
+        res.append(((text if ok else src).replace("{name}", name or "{name}"), ok))
+    return [(t if ok else texts[i], ok) for i, (t, ok) in enumerate(res)]
+
+
+def localize(db: Session, payload, lang: str, *, school_id: int | None = None, name: str | None = None):
+    """Add `<base>_<lang>` next to every English text field `<base>_en` (strings and lists of
+    strings, at any depth). hi/en: the payload is returned unchanged."""
+    if lang in ("hi", "en") or payload is None:
+        return payload
+    slots: list[tuple[dict, str, int | None]] = []
+    texts: list[str] = []
+
+    def walk(x):
+        if isinstance(x, dict):
+            for k, v in list(x.items()):
+                if k.endswith("_en") and isinstance(v, str) and v.strip():
+                    slots.append((x, k, None))
+                    texts.append(v)
+                elif k.endswith("_en") and isinstance(v, list) and all(isinstance(i, str) for i in v):
+                    x[k[:-3] + f"_{lang}"] = list(v)
+                    for n, item in enumerate(v):
+                        if item.strip():
+                            slots.append((x, k, n))
+                            texts.append(item)
+                else:
+                    walk(v)
+        elif isinstance(x, list):
+            for v in x:
+                walk(v)
+
+    walk(payload)
+    uniq = list(dict.fromkeys(texts))
+    got = dict(zip(uniq, translate_en(db, uniq, lang, school_id=school_id, name=name)))
+    for (d, k, n), src in zip(slots, texts):
+        text, _ = got[src]
+        if n is None:
+            d[k[:-3] + f"_{lang}"] = text
+        else:
+            d[k[:-3] + f"_{lang}"][n] = text
+    if isinstance(payload, dict):
+        payload["content_lang"] = lang
+        payload["machine_translated"] = any(ok for _, ok in got.values())
+        if not all(ok for _, ok in got.values()):
+            payload["untranslated"] = True
+    return payload
+
+
+def _for_parent(db: Session, child_id: int, payload: dict) -> dict:
+    """The payload in the parent's content language (additive fields; unchanged for hi/en)."""
+    parent = db.scalar(select(ParentAccount).where(ParentAccount.child_id == child_id))
+    lang = parent_content_lang(db, parent)
+    if lang in ("hi", "en"):
+        return payload
+    child = db.get(Child, child_id)
+    return localize(db, payload, lang, school_id=parent.school_id, name=child.first_name if child else None)
 
 
 # ------------------------------------------------------------------ time helpers
@@ -227,8 +322,8 @@ def school_week(db: Session, child_id: int, now: datetime | None = None) -> dict
     else:
         hi = f"इस हफ़्ते की जानकारी जल्द आएगी। तब तक {n} के साथ रोज़ थोड़ा पढ़ें।"
         en = f"This week's update is coming soon. Until then, read a little with {n} every day."
-    return {"class_topic": topic, "child_focus": focus, "line_hi": hi, "line_en": en,
-            "as_of": ledger.school_today(kid.now).isoformat()}
+    return _for_parent(db, child_id, {"class_topic": topic, "child_focus": focus, "line_hi": hi, "line_en": en,
+                                      "as_of": ledger.school_today(kid.now).isoformat()})
 
 
 # ------------------------------------------------------------------ 2. learning journey
@@ -303,7 +398,7 @@ def _journey(kid: Kid, subject: str) -> dict:
 
 
 def journey(db: Session, child_id: int, subject: str = "numeracy", now: datetime | None = None) -> dict:
-    return _journey(load_kid(db, child_id, now), subject)
+    return _for_parent(db, child_id, _journey(load_kid(db, child_id, now), subject))
 
 
 # ------------------------------------------------------------------ 3. tips for specific mistakes
@@ -331,7 +426,7 @@ def _tips(kid: Kid) -> list[dict]:
 
 
 def tips_for(db: Session, child_id: int, now: datetime | None = None) -> dict:
-    return {"tips": _tips(load_kid(db, child_id, now))}
+    return _for_parent(db, child_id, {"tips": _tips(load_kid(db, child_id, now))})
 
 
 # ------------------------------------------------------------------ 4. teacher noticed moments
@@ -416,7 +511,7 @@ def moments(db: Session, child_id: int, now: datetime | None = None) -> dict:
     kid = load_kid(db, child_id, now)
     cel = [{"kind": "celebration", "move": "learned", **c} for c in celebrations(kid)] + _getting_better(kid)
     cel.sort(key=lambda c: (c["at"], c["checkpoint_id"]), reverse=True)
-    return {"moments": _catch_ups(kid) + cel}
+    return _for_parent(db, child_id, {"moments": _catch_ups(kid) + cel})
 
 
 # ------------------------------------------------------------------ 5. weekly summary
@@ -478,8 +573,9 @@ def weekly(db: Session, child_id: int, now: datetime | None = None) -> dict:
     if learned:
         line_hi += f" ⭐ नया सीखा: “{learned[0]['title_hi']}”। शाबाश!"
         line_en += f" ⭐ Newly learned: “{learned[0]['title_en']}”. Well done!"
-    return {"week_start": week_start.isoformat(), "week_end": week_end.isoformat(),
-            "practice_days": practice_days, "voice_sessions": len(voice), "voice_minutes": voice_minutes,
-            "learned": learned, "working_on": [t(cp) for cp in working_cps][:3],
-            "next": [{"title_hi": m["title_hi"], "title_en": m["title_en"]} for m in nxt][:2],
-            "tip": tip_list[0] if tip_list else None, "line_hi": line_hi, "line_en": line_en}
+    return _for_parent(db, child_id, {
+        "week_start": week_start.isoformat(), "week_end": week_end.isoformat(),
+        "practice_days": practice_days, "voice_sessions": len(voice), "voice_minutes": voice_minutes,
+        "learned": learned, "working_on": [t(cp) for cp in working_cps][:3],
+        "next": [{"title_hi": m["title_hi"], "title_en": m["title_en"]} for m in nxt][:2],
+        "tip": tip_list[0] if tip_list else None, "line_hi": line_hi, "line_en": line_en})

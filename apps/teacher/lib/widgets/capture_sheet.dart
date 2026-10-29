@@ -126,7 +126,7 @@ class _CaptureSheetState extends State<CaptureSheet> {
                 child: Column(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(16, 12, 8, 6),
+                      padding: const EdgeInsetsDirectional.fromSTEB(16, 12, 8, 6),
                       child: Row(
                         children: [
                           Expanded(
@@ -451,7 +451,7 @@ class _TapPanelState extends State<_TapPanel> {
             Padding(
               padding: const EdgeInsets.fromLTRB(8, 2, 8, 0),
               child: Align(
-                alignment: Alignment.centerLeft,
+                alignment: AlignmentDirectional.centerStart,
                 child: TextButton.icon(
                   onPressed: unmarked ? () => _markRestCorrect(kids) : null,
                   style: TextButton.styleFrom(
@@ -481,9 +481,9 @@ class _TapPanelState extends State<_TapPanel> {
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 4, 16, 0),
                 child: Text(
-                  tr(
-                    'Includes marks for $_lessonsWithMarks lessons',
-                    '$_lessonsWithMarks सबक के निशान शामिल हैं',
+                  trf(
+                    'Includes marks for {lessonsWithMarks} lessons',
+                    '{lessonsWithMarks} सबक के निशान शामिल हैं', {'lessonsWithMarks': _lessonsWithMarks},
                   ),
                   style: const TextStyle(fontSize: 14, color: Ks.muted),
                 ),
@@ -498,7 +498,7 @@ class _TapPanelState extends State<_TapPanel> {
                   icon: Icon(
                     _busy ? Icons.hourglass_top_rounded : Icons.save_rounded,
                   ),
-                  label: Text(tr('Save ($_count)', 'सहेजें ($_count)')),
+                  label: Text(trf('Save ({count})', 'सहेजें ({count})', {'count': _count})),
                 ),
               ),
             ),
@@ -626,9 +626,9 @@ class _TapPanelState extends State<_TapPanel> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            tr(
-              'What went wrong for $name? (optional)',
-              '$name को क्या दिक्कत हुई? (वैकल्पिक)',
+            trf(
+              'What went wrong for {name}? (optional)',
+              '{name} को क्या दिक्कत हुई? (वैकल्पिक)', {'name': name},
             ),
             style: const TextStyle(fontSize: 14, color: Ks.muted),
           ),
@@ -638,7 +638,7 @@ class _TapPanelState extends State<_TapPanel> {
               children: [
                 for (final m in opts)
                   Padding(
-                    padding: const EdgeInsets.only(right: 6),
+                    padding: const EdgeInsetsDirectional.only(end: 6),
                     child: ChoiceChip(
                       label: Text(
                         m.replaceAll('_', ' '),
@@ -1124,9 +1124,9 @@ class _NotePanelState extends State<_NotePanel> {
         Padding(
           padding: const EdgeInsets.only(top: 8),
           child: Text(
-            tr(
-              'Not understood: ${unresolved.map((u) => u['name']).join(', ')}',
-              'समझ नहीं आया: ${unresolved.map((u) => u['name']).join(', ')}',
+            trf(
+              'Not understood: {name}',
+              'समझ नहीं आया: {name}', {'name': unresolved.map((u) => u['name']).join(', ')},
             ),
             style: const TextStyle(color: Ks.muted),
           ),
@@ -1370,9 +1370,9 @@ class _PhotoPanelState extends State<_PhotoPanel> {
     } catch (e) {
       if (mounted) {
         setState(
-          () => _message = tr(
-            'Could not open the photo: $e',
-            'फ़ोटो नहीं खुल सकी: $e',
+          () => _message = trf(
+            'Could not open the photo: {e}',
+            'फ़ोटो नहीं खुल सकी: {e}', {'e': e},
           ),
         );
       }
@@ -1390,9 +1390,9 @@ class _PhotoPanelState extends State<_PhotoPanel> {
     ];
     if (needLook.isNotEmpty) {
       _toast(
-        tr(
-          '${needLook.length} answer(s) need a look — choose Correct, Partly, Wrong or Skip.',
-          '${needLook.length} जवाब देखने हैं — सही, थोड़ा, गलत या छोड़ें चुनें।',
+        trf(
+          '{needLookCount} answer(s) need a look — choose Correct, Partly, Wrong or Skip.',
+          '{needLookCount} जवाब देखने हैं — सही, थोड़ा, गलत या छोड़ें चुनें।', {'needLookCount': needLook.length},
         ),
       );
       return;
@@ -1620,9 +1620,9 @@ class _PhotoPanelState extends State<_PhotoPanel> {
                 if (arith)
                   Tooltip(
                     message: q['expected'] != null
-                        ? tr(
-                            'Correct answer: ${q['expected']}',
-                            'सही उत्तर: ${q['expected']}',
+                        ? trf(
+                            'Correct answer: {expected}',
+                            'सही उत्तर: {expected}', {'expected': q['expected']},
                           )
                         : tr('Checked by code', 'कोड से जाँचा'),
                     child: const Padding(

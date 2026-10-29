@@ -147,12 +147,12 @@ class _VoiceHistoryScreenState extends State<VoiceHistoryScreen> {
                 spacing: 14,
                 runSpacing: 4,
                 children: [
-                  Text(tr('$minutes min', '$minutes मिनट')),
-                  Text(tr('$items questions', '$items सवाल')),
+                  Text(trf('{minutes} min', '{minutes} मिनट', {'minutes': minutes})),
+                  Text(trf('{items} questions', '{items} सवाल', {'items': items})),
                   Text(
-                    tr(
-                      '${_pct(s['accuracy'])}% right',
-                      '${_pct(s['accuracy'])}% सही',
+                    trf(
+                      '{accuracy}% right',
+                      '{accuracy}% सही', {'accuracy': _pct(s['accuracy'])},
                     ),
                   ),
                   if ((s['highest_stage'] as String?)?.isNotEmpty == true)

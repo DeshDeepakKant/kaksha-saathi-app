@@ -1,0 +1,171 @@
+{
+ "lang": "ml",
+ "source_lang": "ml",
+ "machine_translated": true,
+ "reviewed": false,
+ "model": "claude-sonnet-5",
+ "generated_at": "2026-10-29T21:52:00+00:00",
+ "note": "Machine translated by scripts/translate_content.py; not reviewed by an educator.",
+ "generated_natively": true,
+ "title_en": "Malayalam reading level",
+ "title": "മലയാളം വായനാ നിലവാരം",
+ "beginner": {
+  "key": "beginner",
+  "title_en": "Beginner (not yet letters)",
+  "title": "തുടക്കക്കാർ (അക്ഷരങ്ങൾ ഇതുവരെ ഇല്ല)"
+ },
+ "levels": [
+  {
+   "key": "letter",
+   "title_en": "Letters",
+   "title": "അക്ഷരങ്ങൾ",
+   "checkpoint_id": "L.G1.vyanjan",
+   "ask_en": "Point to each letter. Ask the child to say it.",
+   "ask": "ഓരോ അക്ഷരവും ചൂണ്ടിക്കാണിക്കുക. കുട്ടിയോട് അത് പറയാൻ പറയുക.",
+   "items": [
+    {
+     "show": "ക"
+    },
+    {
+     "show": "മ"
+    },
+    {
+     "show": "ല"
+    },
+    {
+     "show": "ര"
+    },
+    {
+     "show": "സ"
+    }
+   ],
+   "pass_min": 4,
+   "of": 5,
+   "practice": [
+    {
+     "show": "ന"
+    },
+    {
+     "show": "ത"
+    },
+    {
+     "show": "പ"
+    },
+    {
+     "show": "വ"
+    },
+    {
+     "show": "ട"
+    }
+   ]
+  },
+  {
+   "key": "word",
+   "title_en": "Words",
+   "title": "വാക്കുകൾ",
+   "checkpoint_id": "L.G1.read_matra_words",
+   "ask_en": "Ask the child to read each word.",
+   "ask": "ഓരോ വാക്കും വായിക്കാൻ കുട്ടിയോട് പറയുക.",
+   "items": [
+    {
+     "show": "അമ്മ"
+    },
+    {
+     "show": "അച്ഛൻ"
+    },
+    {
+     "show": "പശു"
+    },
+    {
+     "show": "പൂച്ച"
+    },
+    {
+     "show": "വാഴപ്പഴം"
+    }
+   ],
+   "pass_min": 4,
+   "of": 5,
+   "practice": [
+    {
+     "show": "ചോറ്"
+    },
+    {
+     "show": "പുസ്തകം"
+    },
+    {
+     "show": "മഴ"
+    },
+    {
+     "show": "പൂവ്"
+    },
+    {
+     "show": "നദി"
+    }
+   ]
+  },
+  {
+   "key": "sentence",
+   "title_en": "Sentences",
+   "title": "വാക്യങ്ങൾ",
+   "checkpoint_id": "L.G1.read_short_sentences",
+   "ask_en": "Ask the child to read each sentence aloud.",
+   "ask": "ഓരോ വാക്യവും ഉറക്കെ വായിക്കാൻ കുട്ടിയോട് പറയുക.",
+   "items": [
+    {
+     "show": "പശു പുല്ല് തിന്നുന്നു."
+    },
+    {
+     "show": "അമ്മ ചോറ് വെക്കുന്നു."
+    },
+    {
+     "show": "മഴ പെയ്യുന്നു."
+    }
+   ],
+   "pass_min": 2,
+   "of": 3,
+   "practice": [
+    {
+     "show": "അച്ഛൻ പാടത്ത് പോയി."
+    },
+    {
+     "show": "കുട്ടി പാട്ട് പാടുന്നു."
+    },
+    {
+     "show": "നായ വീട്ടിൽ ഇരിക്കുന്നു."
+    }
+   ]
+  },
+  {
+   "key": "story",
+   "title_en": "Short passage",
+   "title": "ചെറുകഥ",
+   "checkpoint_id": "L.G2.fluency_45_60",
+   "ask_en": "Ask the child to read each line like a story. A line passes if it is smooth, with at most 1 mistake.",
+   "ask": "ഓരോ വരിയും ഒരു കഥ പോലെ വായിക്കാൻ കുട്ടിയോട് പറയുക. തടസ്സമില്ലാതെ, കൂടിയാൽ 1 തെറ്റോടെ വായിച്ചാൽ ആ വരി പാസായി.",
+   "items": [
+    {
+     "show": "വേനൽ അവധിക്ക് ഞങ്ങൾ അമ്മൂമ്മയുടെ വീട്ടിൽ പോയി."
+    },
+    {
+     "show": "അവിടെ ഞങ്ങൾ പുഴയിൽ നീന്തി കളിച്ചു."
+    },
+    {
+     "show": "രാത്രി എല്ലാവരും ഒരുമിച്ച് ചോറ് കഴിച്ചു."
+    }
+   ],
+   "pass_min": 2,
+   "of": 3,
+   "practice": [
+    {
+     "show": "ഒരു ദിവസം കുട്ടി കാട്ടിലേക്ക് നടന്നു പോയി."
+    },
+    {
+     "show": "അവിടെ അവൻ ഒരു ചെറിയ മുയലിനെ കണ്ടു."
+    },
+    {
+     "show": "അവർ രണ്ടുപേരും കൂട്ടുകാരായി കളിച്ചു."
+    }
+   ]
+  }
+ ]
+}

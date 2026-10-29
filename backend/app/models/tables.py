@@ -342,3 +342,34 @@ class TextbookMap(Base):
     mapping: Mapped[dict] = mapped_column(JSON, default=dict)
     created_by: Mapped[int | None] = mapped_column(ForeignKey("teachers.id"))
     created_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow)
+
+
+class UserPrefs(Base):
+    """One teacher's or parent's language and voice choices (docs/lang_provider_contract.md section 3).
+
+    `kind` + `user_id` point at teachers.id or parent_accounts.id; no row means the defaults
+    (Sarvam, English app, Hindi content), which is exactly how the apps behaved before prefs existed.
+    """
+    __tablename__ = "user_prefs"
+    __table_args__ = (UniqueConstraint("kind", "user_id"),)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    kind: Mapped[str] = mapped_column(String(8))  # teacher | parent
+    user_id: Mapped[int] = mapped_column(Integer)
+    school_id: Mapped[int] = mapped_column(ForeignKey("schools.id"), index=True)
+    voice_provider: Mapped[str] = mapped_column(String(12), default="sarvam")
+    app_lang: Mapped[str] = mapped_column(String(8), default="en")
+    content_lang: Mapped[str] = mapped_column(String(8), default="hi")
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow, onupdate=utcnow)
+
+
+class TranslationCache(Base):
+    """Machine translations already paid for, keyed by (source lang, target lang, sha256 of source)."""
+    __tablename__ = "translation_cache"
+    __table_args__ = (UniqueConstraint("src_lang", "tgt_lang", "src_hash"),)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    src_lang: Mapped[str] = mapped_column(String(8))
+    tgt_lang: Mapped[str] = mapped_column(String(8))
+    src_hash: Mapped[str] = mapped_column(String(64))
+    src: Mapped[str] = mapped_column(Text)
+    text: Mapped[str] = mapped_column(Text)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow)

@@ -12,7 +12,7 @@ import re
 import unicodedata
 
 from app.ai.schemas import BANNED_PERSONAL, BANNED_SHAME, INJECTION_MARKERS
-from app.services.voice_types import KINDS, LANGS, STAGES
+from app.services.voice_types import KINDS, LANGS, STAGES, VOICE_LANGS
 
 # ---------------------------------------------------------------- item shape rules
 STAGE_KINDS: dict[str, tuple[str, ...]] = {
@@ -27,6 +27,7 @@ RECORD_S = {"read_letter": 4, "say_sound": 4, "build_word": 5, "read_word": 5, "
             "read_sentence": 8, "read_paragraph": 30, "answer_question": 10}
 PARA_MAX_WORDS = {1: 45, 2: 60}        # grade -> longest paragraph; grade 3+ -> 70
 PARA_MIN_WORDS, PARA_MAX_WORDS_TOP = 25, 70
+PARA_MIN_WORDS_OTHER = 15              # other languages: fewer, longer words (Dravidian agglutination)
 SENTENCE_WORDS = (3, 10)
 WORD_CHARS = (1, 12)
 ITEM_KEYS = ("id", "stage", "kind", "lang", "checkpoint_id", "prompt", "display", "target", "accept",
@@ -85,8 +86,17 @@ def _is_deva_mark(ch: str) -> bool:
             or 0x0962 <= o <= 0x0963 or ch in "‌‍")
 
 
+def _other_script(s: str) -> bool:
+    """Letters of an Indic script other than Devanagari (Tamil, Bengali, ...)."""
+    return any(ord(ch) > 0x7F and not _is_deva(ch) and unicodedata.category(ch)[0] in "LM" for ch in s)
+
+
 def graphemes(s: str) -> list[str]:
-    """Aksharas for Devanagari (base + matras/nukta/virama-joined consonants), chars otherwise."""
+    """Aksharas for Devanagari (base + matras/nukta/virama-joined consonants), Brahmic clusters for
+    the other Indic scripts (app.i18n.script), chars otherwise."""
+    if _other_script(s or "") and not any(_is_deva(ch) for ch in s):
+        from app.i18n import script
+        return script.graphemes(nfc(s).strip())
     out: list[str] = []
     for ch in nfc(s).strip():
         if out and (_is_deva_mark(ch) or out[-1].endswith("्")):
@@ -97,12 +107,18 @@ def graphemes(s: str) -> list[str]:
 
 
 def script_ok(text: str, lang: str, *, allow_name: bool = False) -> bool:
-    """hi: Devanagari letters only; en: ASCII letters only. Spaces/punctuation allowed either way."""
+    """hi: Devanagari letters only; en: ASCII letters only; other languages: letters of their own
+    script only (app.i18n.script), no digits. Spaces/punctuation allowed either way."""
     t = nfc(text)
     if allow_name:
         t = t.replace(_NAME, " ")
     if "{" in t or "}" in t:
         return False
+    if lang not in LANGS:
+        from app.i18n import script
+        if any(unicodedata.category(ch) == "Nd" for ch in t) or not script.in_script(t, lang):
+            return False
+        return any(unicodedata.category(ch)[0] == "L" for ch in t)
     has_letter = False
     for ch in t:
         if ch.isspace() or ch in PUNCT:
@@ -117,6 +133,14 @@ def script_ok(text: str, lang: str, *, allow_name: bool = False) -> bool:
                 return False
         has_letter = True
     return has_letter
+
+
+def english_gloss(gloss) -> bool:
+    """A plain-English gloss: mainly Latin letters (quoting a native letter or word is fine)."""
+    if not isinstance(gloss, str) or not gloss.strip():
+        return False
+    letters = [c for c in gloss if c.isalpha()]
+    return bool(letters) and sum(c.isascii() for c in letters) * 3 >= 2 * len(letters)
 
 
 def unsafe_words(text: str) -> list[str]:
@@ -136,7 +160,8 @@ def para_max_words(grade: int | None) -> int:
 
 
 def _contains(hay: str, needle: str, lang: str) -> bool:
-    """Whole-word containment for English, substring for Devanagari (aksharas glue inside words)."""
+    """Whole-word containment for English, substring for Indic scripts (aksharas glue inside words,
+    and case endings attach to the word)."""
     h, n = norm(hay), norm(needle)
     if not n:
         return False
@@ -162,7 +187,7 @@ def item_problems(item: dict, *, lang: str, stage: str | None = None, grade: int
     if p:
         return p
     kind, st = item["kind"], item["stage"]
-    if item["lang"] != lang or lang not in LANGS:
+    if item["lang"] != lang or lang not in VOICE_LANGS:
         p.append("wrong lang")
     if st not in STAGES or (stage and st != stage):
         p.append(f"wrong stage {st}")
@@ -204,6 +229,14 @@ def item_problems(item: dict, *, lang: str, stage: str | None = None, grade: int
     bad = unsafe_words(" ".join(texts))
     if bad:
         p.append(f"unsafe words: {bad}")
+    if lang not in LANGS and item["source"] == "ai":
+        # No word blocklist exists for this language, so Claude glosses each item in English and the
+        # English blocklist checks the gloss (an extra gate on top of the prompt's safety rules).
+        gloss = item.get("gloss_en")
+        if not english_gloss(gloss):
+            p.append("gloss_en (plain English meaning) required")
+        elif unsafe_words(gloss) or SHAME_EN.search(gloss) or INJECTION_MARKERS.search(gloss):
+            p.append("unsafe gloss")
     if avoid:
         for v in (item["id"], target or "", text or ""):
             if v and (v in avoid or norm(v) in avoid):
@@ -211,7 +244,10 @@ def item_problems(item: dict, *, lang: str, stage: str | None = None, grade: int
                 break
 
     def single_word(w) -> bool:
-        return isinstance(w, str) and len(tokens(w)) == 1 and WORD_CHARS[0] <= len(norm(w)) <= WORD_CHARS[1]
+        if not isinstance(w, str) or len(tokens(w)) != 1:
+            return False
+        size = len(norm(w)) if lang in LANGS else len(graphemes(norm(w)))  # other scripts: count aksharas
+        return WORD_CHARS[0] <= size <= WORD_CHARS[1]
 
     if kind == "read_letter":
         if not isinstance(target, str) or text != target:
@@ -235,6 +271,11 @@ def item_problems(item: dict, *, lang: str, stage: str | None = None, grade: int
             p.append("build_word: tiles do not join to target")
         elif lang == "hi" and any(_is_deva_mark(t[0]) or t.endswith("\u094d") for t in map(nfc, tiles)):
             p.append("build_word: each Hindi tile must be a whole akshara (no lone matra or half letter)")
+        elif lang not in LANGS and any(
+                unicodedata.category(t[0]) in ("Mn", "Mc")
+                or (k < len(tiles) - 1 and unicodedata.name(t[-1], "").endswith("VIRAMA"))  # final: மரம்
+                for k, t in enumerate(map(nfc, tiles))):
+            p.append("build_word: each tile must be a whole akshara (no lone vowel sign or half letter)")
         if text:
             p.append("build_word: display.text would reveal the answer")
         if isinstance(target, str) and isinstance(prompt, str) and _contains(prompt, target, lang):
@@ -268,8 +309,9 @@ def item_problems(item: dict, *, lang: str, stage: str | None = None, grade: int
             p.append("read_paragraph: display.text must equal target")
         else:
             wc = word_count(target)
-            if not PARA_MIN_WORDS <= wc <= para_max_words(grade):
-                p.append(f"read_paragraph: {wc} words, allowed {PARA_MIN_WORDS}-{para_max_words(grade)}")
+            lo = PARA_MIN_WORDS if lang in LANGS else PARA_MIN_WORDS_OTHER
+            if not lo <= wc <= para_max_words(grade):
+                p.append(f"read_paragraph: {wc} words, allowed {lo}-{para_max_words(grade)}")
         if not 1 <= len(fus) <= 2:
             p.append("read_paragraph: needs 1-2 answer_question followups")
         for f in fus:
@@ -316,6 +358,7 @@ ITEMS_SCHEMA = {
         "accept": {"type": "array", "items": {"type": "string"}},
         "example": {"type": "string"},
         "difficulty": {"type": "integer", "enum": [1, 2, 3]},
+        "gloss_en": {"type": "string"},
         "followups": {"type": "array", "items": _RAW_FOLLOWUP},
     }, "required": ["kind", "prompt", "difficulty"]}}},
     "required": ["items"],
@@ -327,6 +370,25 @@ TUTOR_LINE_SCHEMA = {
     "properties": {"line": {"type": "string"}},
     "required": ["line"],
 }
+# Other languages: Saathi's line plus its plain-English meaning, which the English blocklist checks.
+TUTOR_LINE_SCHEMA_GLOSSED = {
+    "type": "object",
+    "properties": {"line": {"type": "string"}, "gloss_en": {"type": "string"}},
+    "required": ["line", "gloss_en"],
+}
+
+
+def _lang_name(lang: str) -> str:
+    if lang == "hi":
+        return "Devanagari Hindi"
+    if lang == "en":
+        return "plain English"
+    try:
+        from app.i18n.languages import language
+        lg = language(lang)
+        return f"{lg.name_en} ({lg.script} script)"
+    except KeyError:
+        return lang
 
 
 def validate_tutor_text(text: str, *, lang: str, item: dict | None = None, attempt: int = 1) -> str:
@@ -340,7 +402,7 @@ def validate_tutor_text(text: str, *, lang: str, item: dict | None = None, attem
     if len(sentences) > 2:
         raise ValueError("more than 2 sentences")
     if not script_ok(t, lang, allow_name=True):
-        raise ValueError(f"line must be in {'Devanagari Hindi' if lang == 'hi' else 'plain English'} only")
+        raise ValueError(f"line must be in {_lang_name(lang)} only")
     if unsafe_words(t) or BANNED_PERSONAL.search(t) or BANNED_SHAME.search(t) or SHAME_EN.search(t):
         raise ValueError("line contains blocked words")
     if INJECTION_MARKERS.search(t):
@@ -394,7 +456,37 @@ NARRATIVE_SCHEMA = {
     },
     "required": ["narrative", "next_steps"],
 }
-_NUM_RE = re.compile(r"[0-9०-९]+(?:[.,][0-9०-९]+)?")
+
+
+def narrative_schema(lang: str) -> dict:
+    """NARRATIVE_SCHEMA, plus parent_<lang> / teacher_<lang> / next_steps.<lang> for a session in a
+    language other than Hindi or English (the hi/en texts stay for the teacher's app)."""
+    if lang in LANGS:
+        return NARRATIVE_SCHEMA
+    nar = dict(NARRATIVE_SCHEMA["properties"]["narrative"])
+    nar["properties"] = {**nar["properties"], f"parent_{lang}": {"type": "string"},
+                         f"teacher_{lang}": {"type": "string"}}
+    nar["required"] = [*nar["required"], f"parent_{lang}", f"teacher_{lang}"]
+    steps = dict(NARRATIVE_SCHEMA["properties"]["next_steps"])
+    steps["properties"] = {**steps["properties"], lang: {"type": "array", "items": {"type": "string"}}}
+    steps["required"] = [*steps["required"], lang]
+    return {"type": "object", "properties": {"narrative": nar, "next_steps": steps},
+            "required": ["narrative", "next_steps"]}
+
+
+def _script_of(lang: str) -> str:
+    if lang == "en":
+        return "Latin"
+    if lang == "hi":
+        return "Devanagari"
+    try:
+        from app.i18n.languages import language
+        return language(lang).script
+    except KeyError:
+        return lang
+
+
+_NUM_RE = re.compile(r"\d+(?:[.,]\d+)?")  # any script's digits (Devanagari, Bengali, ...)
 _QUOTED_RE = re.compile(r"[\"'“‘]([^\"'”’]{1,40})[\"'”’]")
 _DEVA_DIGITS = str.maketrans("०१२३४५६७८९", "0123456789")
 
@@ -403,7 +495,7 @@ def _numbers(text: str) -> list[float]:
     out = []
     for m in _NUM_RE.findall(text):
         try:
-            out.append(float(m.translate(_DEVA_DIGITS).replace(",", ".")))
+            out.append(float("".join(str(unicodedata.digit(c)) if c.isdigit() else c for c in m).replace(",", ".")))
         except ValueError:
             pass
     return out
@@ -461,56 +553,70 @@ def report_vocab(report: dict) -> set[str]:
 
 def validate_narrative(data: dict, *, report: dict, steps_fallback: dict | None = None) -> dict:
     """Narrative texts are strict (any problem rejects the output); next steps are lenient: a step that
-    fails a check is dropped, and fewer than 2 surviving steps fall back to `steps_fallback`."""
+    fails a check is dropped, and fewer than 2 surviving steps fall back to `steps_fallback`.
+    A session in another language also needs parent_<lang>, teacher_<lang> and next_steps.<lang>,
+    written mainly in that language's script."""
     nar = data.get("narrative") or {}
     steps = data.get("next_steps") or {}
     out = {"narrative": {}, "next_steps": {}}
     lang = report.get("lang", "hi")
+    extra = lang if lang not in LANGS else None
     vocab = report_vocab(report)
     nums = report_numbers(report)
-    for key in ("parent_hi", "parent_en", "teacher_en", "teacher_hi"):
+    keys = ["parent_hi", "parent_en", "teacher_en", "teacher_hi"]
+    step_keys = ["hi", "en"]
+    if extra:
+        keys += [f"parent_{extra}", f"teacher_{extra}"]
+        step_keys.append(extra)
+    for key in keys:
         t = " ".join(str(nar.get(key, "")).split())
         if not t:
             raise ValueError(f"{key} is empty")
-        if len(t) > 700:
+        if len(t) > (700 if key[-2:] in ("hi", "en") else 900):
             raise ValueError(f"{key} is too long")
         n_sent = len([s for s in re.split(r"[।.?!]+", t) if s.strip()])
         if key.startswith("parent") and not 2 <= n_sent <= 6:
             raise ValueError(f"{key} must be 3-5 short sentences")
         out["narrative"][key] = t
     raw_steps = {}
-    for key in ("hi", "en"):
+    for key in step_keys:
         v = steps.get(key) or []
         if isinstance(v, str):  # one string with several steps
             v = re.split(r"\n+|(?<=[।.!?])\s+(?=\d|[-•])|^\s*\d+[.)]\s*", v)
         raw_steps[key] = [" ".join(str(x).split())[:200] for x in v if str(x).strip()]
 
     def check(key: str, t: str) -> None:
-        text_lang = "hi" if key.endswith("hi") else "en"
+        text_lang = key.rsplit("_", 1)[-1]
         if "{" in t or "}" in t:
             raise ValueError("placeholders are not allowed in the narrative")
         if unsafe_words(t) or BANNED_SHAME.search(t) or SHAME_EN.search(t) or INJECTION_MARKERS.search(t):
             raise ValueError(f"{key}: blocked words")
         letters = [c for c in t if c.isalpha() or _is_deva(c)]
-        deva = sum(1 for c in letters if _is_deva(c))
-        if letters and (deva / len(letters) < 0.5 if text_lang == "hi" else deva / len(letters) > 0.5):
-            raise ValueError(f"{key} is not mainly in {'Hindi' if text_lang == 'hi' else 'English'}")
+        if text_lang in LANGS:
+            deva = sum(1 for c in letters if _is_deva(c))
+            if letters and (deva / len(letters) < 0.5 if text_lang == "hi" else deva / len(letters) > 0.5):
+                raise ValueError(f"{key} is not mainly in {'Hindi' if text_lang == 'hi' else 'English'}")
+        else:
+            from app.i18n import script
+            own = sum(1 for c in letters if script.in_script(c, text_lang))
+            if not letters or own / len(letters) < 0.5:
+                raise ValueError(f"{key} is not mainly in {_lang_name(text_lang)}")
         # Practice words must come from the report: anything quoted, and any word in the
-        # session language's script inside text written in the other language.
+        # session language's script inside text written in another script.
         named = [q for q in _QUOTED_RE.findall(t)]
-        if text_lang != lang:
+        if text_lang != lang and _script_of(text_lang) != _script_of(lang):
             named += [w for w in tokens(t) if script_ok(w, lang)]
         for w in named:
             if norm(w) and norm(w) not in vocab and not all(x in vocab for x in tokens(w)):
                 raise ValueError(f"{key} mentions '{w}', which is not in the report")
-        is_step = key in ("hi", "en")
+        is_step = key in step_keys
         for x in _numbers(t):
             if x not in nums and not (is_step and x <= 10):
                 raise ValueError(f"{key} uses the number {x:g}, which is not in the report")
 
     for key, t in out["narrative"].items():
         check(key, t)
-    for key in ("hi", "en"):
+    for key in step_keys:
         good = []
         for t in raw_steps[key]:
             try:

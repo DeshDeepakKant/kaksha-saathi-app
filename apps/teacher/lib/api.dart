@@ -31,6 +31,7 @@ class Api {
   @visibleForTesting
   Duration queuedTimeout = const Duration(seconds: 30);
   static const _define = String.fromEnvironment('API_BASE');
+
   /// The live server (Render). Every build talks to it unless a developer deliberately overrides
   /// it with `--dart-define=API_BASE=...`; nothing falls back to a server on a laptop.
   static const productionBase = 'https://kaksha-saathi-558g.onrender.com';
@@ -52,6 +53,7 @@ class Api {
     if (cache != null && cache.isNotEmpty) {
       _cacheStore.addAll(jsonDecode(cache) as Map<String, dynamic>);
     }
+    await _startPrefs();
   }
 
   Future<void> _save() async {
@@ -345,6 +347,7 @@ class Api {
     // Writes parked by a different teacher never go out under this login.
     await _outbox.removeWhere((e) => e.owner != _teacherId);
     await _save();
+    await _prefsAfterLogin();
     return r;
   }
 
@@ -364,9 +367,218 @@ class Api {
   Future<void> logout() async {
     _token = null;
     _cacheStore.clear();
+    prefs = null; // the phone copy (per teacher) stays for their next sign-in
     final p = await SharedPreferences.getInstance();
     await p.remove('token');
     await p.remove('cache');
+  }
+
+  // ---- language and voice (docs/lang_provider_contract.md §3, §5)
+
+  static const _prefsPath = '/v1/me/prefs';
+  static const _prefFields = ['voice_provider', 'app_lang', 'content_lang'];
+
+  /// This teacher's `{voice_provider, app_lang, content_lang, stored}`; null when signed out.
+  Map<String, dynamic>? prefs;
+  bool _prefsDirty = false; // changed while offline; sent before the next read
+  String? _titlesLang;
+  Map<String, String> _titles = const {};
+  bool _langHooked = false;
+
+  String get _prefsKey => 'prefs.${_teacherId ?? ''}';
+
+  static Map<String, dynamic> _pickPrefs(Object? m) {
+    final src = m is Map ? m : const {};
+    return {
+      'voice_provider': src['voice_provider'] ?? 'sarvam',
+      'app_lang': src['app_lang'] ?? 'en',
+      'content_lang': src['content_lang'] ?? 'hi',
+      'stored': src['stored'] == true,
+    };
+  }
+
+  /// App start: apply the phone's copy at once (works offline), then refresh from the server.
+  Future<void> _startPrefs() async {
+    _hookLang();
+    if (!loggedIn) return;
+    await _loadLocalPrefs();
+    unawaited(refreshPrefs().catchError((_) {}));
+  }
+
+  /// After sign-in: this teacher's phone copy, then the server's (briefly awaited so the first
+  /// screen already shows the right languages).
+  Future<void> _prefsAfterLogin() async {
+    _hookLang();
+    prefs = null;
+    _prefsDirty = false;
+    _titlesLang = null;
+    _titles = const {};
+    await _loadLocalPrefs();
+    try {
+      await refreshPrefs().timeout(const Duration(seconds: 10));
+    } catch (_) {}
+  }
+
+  /// A language switched elsewhere (the English | हिंदी toggle) is saved for this teacher too.
+  void _hookLang() {
+    if (_langHooked) return;
+    _langHooked = true;
+    Lang.code.addListener(() {
+      final p = prefs;
+      if (!loggedIn || p == null || p['app_lang'] == Lang.code.value) return;
+      unawaited(setPref('app_lang', Lang.code.value).catchError((_) => false));
+    });
+  }
+
+  Future<void> _loadLocalPrefs() async {
+    try {
+      final p = await SharedPreferences.getInstance();
+      final raw = p.getString(_prefsKey);
+      if (raw == null || raw.isEmpty) return;
+      final m = jsonDecode(raw) as Map;
+      prefs = _pickPrefs(m);
+      _prefsDirty = m['dirty'] == true;
+      _titlesLang = m['titles_lang'] as String?;
+      _titles = ((m['titles'] as Map?) ?? const {}).map(
+        (k, v) => MapEntry('$k', '$v'),
+      );
+      await _applyPrefs(fetchTitles: false);
+    } catch (_) {}
+  }
+
+  Future<void> _saveLocalPrefs() async {
+    final cur = prefs;
+    if (cur == null) return;
+    try {
+      final p = await SharedPreferences.getInstance();
+      await p.setString(
+        _prefsKey,
+        jsonEncode({
+          ...cur,
+          'dirty': _prefsDirty,
+          'titles_lang': _titlesLang,
+          'titles': _titles,
+        }),
+      );
+    } catch (_) {}
+  }
+
+  Future<Map<String, dynamic>> _sendPrefs(Map<String, dynamic> p) async {
+    http.Response r;
+    try {
+      r = await _postRaw(_prefsPath, {
+        for (final f in _prefFields) f: p[f],
+      }, const Duration(seconds: 20));
+    } catch (_) {
+      throw ApiError.network();
+    }
+    if (r.statusCode >= 400) throw _fail(r);
+    return _pickPrefs(jsonDecode(utf8.decode(r.bodyBytes)));
+  }
+
+  /// Reads this teacher's prefs from the server (first sending a change made offline) and
+  /// applies them. Throws when the server can't be reached.
+  Future<void> refreshPrefs() async {
+    if (!loggedIn) return;
+    Map<String, dynamic> server;
+    if (_prefsDirty && prefs != null) {
+      server = await _sendPrefs(prefs!);
+    } else {
+      final r = await _getRaw(_prefsPath);
+      if (r.statusCode >= 400) throw _fail(r);
+      server = _pickPrefs(jsonDecode(utf8.decode(r.bodyBytes)));
+      // Never saved yet: keep the app language the teacher picked before signing in.
+      if (server['stored'] != true && server['app_lang'] != Lang.code.value) {
+        try {
+          server = await _sendPrefs({...server, 'app_lang': Lang.code.value});
+        } catch (_) {}
+      }
+    }
+    prefs = server;
+    _prefsDirty = false;
+    await _applyPrefs();
+  }
+
+  /// Saves one setting (`voice_provider` / `app_lang` / `content_lang`) right away: applied on
+  /// the phone first, then sent. Returns false when only the phone has it (no network, or a
+  /// server without prefs); it is sent on the next start. Throws [ApiError] when the server
+  /// refuses the value (the change is undone).
+  Future<bool> setPref(String field, String value) async {
+    final before = Map<String, dynamic>.of(prefs ?? _pickPrefs(null));
+    prefs = {...before, field: value};
+    await _applyPrefs(fetchTitles: false);
+    try {
+      prefs = await _sendPrefs(prefs!);
+      _prefsDirty = false;
+      await _applyPrefs();
+      return true;
+    } on ApiError catch (e) {
+      if (e.status == 0 || e.status == 404 || e.status >= 500) {
+        _prefsDirty = e.status != 404;
+        await _applyPrefs();
+        return false;
+      }
+      if (e.status != 401) {
+        prefs = before;
+        await _applyPrefs(fetchTitles: false);
+      }
+      rethrow;
+    }
+  }
+
+  /// Lang + ContentLang from [prefs]; checkpoint titles for languages other than hi/en come from
+  /// `/v1/content/titles` (the last copy is kept for offline starts).
+  Future<void> _applyPrefs({bool fetchTitles = true}) async {
+    final p = prefs;
+    if (p == null) return;
+    final app = '${p['app_lang']}';
+    final content = '${p['content_lang']}';
+    if (Lang.code.value != app) await Lang.set(app);
+    var titles = const <String, String>{};
+    if (content != 'hi' && content != 'en') {
+      if (fetchTitles && loggedIn) {
+        try {
+          final r = await _getRaw('/v1/content/titles?lang=$content');
+          if (r.statusCode < 400) {
+            final j = jsonDecode(utf8.decode(r.bodyBytes));
+            final t = j is Map ? j['titles'] : null;
+            if (t is Map) {
+              _titles = t.map((k, v) => MapEntry('$k', '$v'));
+              _titlesLang = content;
+            }
+          }
+        } catch (_) {}
+      }
+      if (_titlesLang == content) titles = _titles;
+    }
+    ContentLang.apply(content, titles);
+    await _saveLocalPrefs();
+  }
+
+  /// `GET /v1/languages`: app languages, content languages and voice services (last copy offline).
+  Future<Map<String, dynamic>> languages() async =>
+      ((await get('/v1/languages')) as Map).cast<String, dynamic>();
+
+  /// Server voice for [text] (`POST /v1/speech/tts`). Status 200 carries the audio; 204 = no
+  /// service speaks [lang]; 0 = no network / not signed in. Never throws.
+  Future<({int status, Uint8List? audio, String? mime})> speechTts(
+    String text,
+    String lang, {
+    Duration timeout = const Duration(seconds: 12),
+  }) async {
+    if (!loggedIn) return (status: 0, audio: null, mime: null);
+    try {
+      final r = await _postRaw('/v1/speech/tts', {
+        'text': text,
+        'lang': lang,
+      }, timeout);
+      if (r.statusCode != 200 || r.bodyBytes.isEmpty) {
+        return (status: r.statusCode, audio: null, mime: null);
+      }
+      return (status: 200, audio: r.bodyBytes, mime: r.headers['content-type']);
+    } catch (_) {
+      return (status: 0, audio: null, mime: null);
+    }
   }
 
   // ---- convenience wrappers
@@ -475,7 +687,7 @@ class ApiError implements Exception {
           '${parts.where((x) => x.isNotEmpty).join('; ')}';
     }
     if (detail != null) return detail.toString();
-    return tr('Request failed ($status)', 'अनुरोध सफल नहीं हुआ ($status)');
+    return trf('Request failed ({status})', 'अनुरोध सफल नहीं हुआ ({status})', {'status': '$status'});
   }
 
   @override

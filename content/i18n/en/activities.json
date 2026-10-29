@@ -1,0 +1,245 @@
+{
+ "lang": "en",
+ "source_lang": "hi",
+ "machine_translated": true,
+ "reviewed": false,
+ "model": "claude-sonnet-5",
+ "generated_at": "2026-10-29T21:49:16+00:00",
+ "note": "Machine translated by scripts/translate_content.py; not reviewed by an educator.",
+ "activities": {
+  "act_borrow_sticks": {
+   "title": "Subtraction with borrowing using sticks",
+   "materials": "Sticks/matchsticks, rubber bands",
+   "steps": [
+    "Write 52 and 28 on the board. For 52, keep 5 bundles (each bundle of 10) and 2 loose sticks.",
+    "Ask: How do we take out 8 sticks when there are only 2?",
+    "Ask: Open one bundle — now there are 4 bundles and 12 sticks. 10 + 2 = 12. This is borrowing.",
+    "Now take 8 away from 12 → 4 left. 4 bundles − 2 bundles = 2 bundles, that is 20. Answer 24.",
+    "Let each child do 63 − 27 the same way using sticks."
+   ],
+   "blackboard": "₹52 − ₹28: 8 cannot be taken from 2 → borrow one ten (10 + 2 = 12). 12 − 8 = 4, 4 − 2 = 2 tens. Answer 24.",
+   "reassessment_ask": "45 − 18 = ?",
+   "machine_translated": true
+  },
+  "act_noborrow_sticks": {
+   "title": "Subtract tens and ones separately",
+   "materials": "Sticks",
+   "steps": [
+    "Write 47 − 23 on the board. 4 tens, 7 ones.",
+    "Ones: 7 − 3 = 4. Tens: 4 − 2 = 2.",
+    "Answer 24. Show it clearly by writing tens and ones separately.",
+    "Let children do 3 more questions in their notebooks."
+   ],
+   "blackboard": "47 − 23: ones 7 − 3 = 4, tens 4 − 2 = 2 → 24",
+   "reassessment_ask": "68 − 45 = ?",
+   "machine_translated": true
+  },
+  "act_add_nocarry_sticks": {
+   "title": "Join the bundles: addition without carrying",
+   "materials": "Sticks, rubber bands",
+   "steps": [
+    "Write 32 + 45 on the board.",
+    "Add the ones: 2 + 5 = 7.",
+    "Add the tens: 3 + 4 = 7. Answer 77.",
+    "Let children do 4 questions with sticks and write them in their notebooks."
+   ],
+   "blackboard": "32 + 45 = 77 (ones: 2+5=7, tens: 3+4=7)",
+   "reassessment_ask": "23 + 54 = ?",
+   "machine_translated": true
+  },
+  "act_add_carry_sticks": {
+   "title": "The story of carrying: 10 ones = 1 ten",
+   "materials": "Sticks, rubber bands",
+   "steps": [
+    "Write 28 + 15 on the board.",
+    "Ones: 8 + 5 = 13. Ask: Take 10 out of 13 and make a bundle.",
+    "Ask: Now how many tens are there? 2 + 1 + 1 = 4. How many ones? 3. Answer 43.",
+    "Let children do 3 questions the same way."
+   ],
+   "blackboard": "28 + 15: 8+5=13 → carry 1 ten. Tens 2+1+1=4, ones 3 → 43",
+   "reassessment_ask": "37 + 25 = ?",
+   "machine_translated": true
+  },
+  "act_add_single_fingers": {
+   "title": "Addition using fingers",
+   "materials": "Nothing",
+   "steps": [
+    "Start with 3 + 4. First raise 3 fingers, then 4 more.",
+    "Count: 7.",
+    "Then 2 + 6, 5 + 3.",
+    "Also tell the answer without using fingers."
+   ],
+   "blackboard": "3 + 4 = 7",
+   "reassessment_ask": "6 + 3 = ?",
+   "machine_translated": true
+  },
+  "act_sub_single_fingers": {
+   "title": "Subtraction using objects",
+   "materials": "Sticks/buttons",
+   "steps": [
+    "Keep 5 sticks. Remove 2. How many are left?",
+    "Symbol: 5 − 2 = 3.",
+    "Let children do 4 questions on their own."
+   ],
+   "blackboard": "5 − 2 = 3",
+   "reassessment_ask": "8 − 3 = ?",
+   "machine_translated": true
+  },
+  "act_place_value_bundles": {
+   "title": "Tens-ones using bundles of sticks",
+   "materials": "Sticks/broom sticks, rubber bands",
+   "steps": [
+    "Make a bundle of 10 sticks — this is one ten.",
+    "Teacher says a number (like 34); children keep 3 bundles and 4 loose sticks.",
+    "Each child says: '3 tens, 4 ones = 34'.",
+    "Reverse it: children show bundles, tell the number."
+   ],
+   "blackboard": "1 ten = 10",
+   "reassessment_ask": "How many tens and ones are in 56?",
+   "machine_translated": true
+  },
+  "act_tables_chant": {
+   "title": "Sing times tables, then questions",
+   "materials": "Nothing",
+   "steps": [
+    "Sing the table of 2 together.",
+    "Stop in between and ask: 2 × 6?",
+    "Repeat the tables of 3 and 4.",
+    "Ask 4 questions without singing the table."
+   ],
+   "blackboard": "2×6=12, 3×4=12, 5×3=15",
+   "reassessment_ask": "4 × 3 = ?",
+   "machine_translated": true
+  },
+  "act_word_vyanjan": {
+   "title": "Pick up the consonant card",
+   "materials": "Letter cards or blackboard",
+   "steps": [
+    "Write K, Kh, G, Gh on the blackboard.",
+    "Tell a child: 'Touch G'.",
+    "Repeat with 5 more letters.",
+    "Mix the first 3 letters — which one is different?"
+   ],
+   "blackboard": "K Kh G Gh",
+   "reassessment_ask": "Say the sound of G — which letter is it?",
+   "machine_translated": true
+  },
+  "act_matra_aa": {
+   "title": "The vowel sign for 'aa': a straight line",
+   "materials": "Nothing",
+   "steps": [
+    "Without vowel sign: K. Add the 'aa' sign: Kaa.",
+    "Recognise the vowel sign: adding a straight line to K makes Kaa.",
+    "The vowel sign for short 'i': Ki (before), for long 'ee': Kee (after).",
+    "Children read 4 words: Kaa, Gaa, Ki, Kee."
+   ],
+   "blackboard": "K + aa = Kaa; K + i = Ki; K + ee = Kee",
+   "reassessment_ask": "Teach 'Kaa', 'Ki', 'Kee'",
+   "machine_translated": true
+  },
+  "act_blend_read": {
+   "title": "Join letters and read the word",
+   "materials": "Letter cards",
+   "steps": [
+    "K + M + L → Kamal. Join slowly.",
+    "Children read together, then alone.",
+    "Repeat words like Ghar, Kal, Mal.",
+    "Call aside those who get stuck and repeat the letters."
+   ],
+   "blackboard": "K+M+L = Kamal",
+   "reassessment_ask": "Make a word from K, L, M",
+   "machine_translated": true
+  },
+  "act_count_20": {
+   "title": "Count the seeds",
+   "materials": "Seeds/pebbles",
+   "steps": [
+    "Give each child 15 seeds.",
+    "Count and keep them, then give 5 more — how many in total?",
+    "Count from 1 to 20 with empty hands.",
+    "Ask a child to say the numbers from 10 to 20."
+   ],
+   "blackboard": "1 2 3 … 20",
+   "reassessment_ask": "Count from 1 to 20 without stopping",
+   "machine_translated": true
+  },
+  "act_smaller_minus_larger_fix": {
+   "title": "Big on top, small below",
+   "materials": "Nothing",
+   "steps": [
+    "Write 62 − 45. A child makes the mistake of doing 5 minus 2.",
+    "Ask: Is 45 bigger than 62? No. So we need borrowing.",
+    "Explain clearly: if the top number is smaller, borrow.",
+    "Do two more examples like this on the blackboard."
+   ],
+   "blackboard": "62 − 45 → 6 2 ; 2<5 → borrowing",
+   "reassessment_ask": "51 − 27 = ?",
+   "machine_translated": true
+  },
+  "act_mult_repeated_add": {
+   "title": "Multiplication = repeated addition",
+   "materials": "Buttons",
+   "steps": [
+    "3 × 4 means 4 + 4 + 4.",
+    "Use buttons to make 3 plates, put 4 in each plate.",
+    "First add it up and check, then write the answer 12.",
+    "Do 2 × 5 and 3 × 3."
+   ],
+   "blackboard": "3 × 4 = 4 + 4 + 4 = 12",
+   "reassessment_ask": "3 × 5 = ?",
+   "machine_translated": true
+  },
+  "act_read_aloud": {
+   "title": "Read one line at a time",
+   "materials": "Nothing",
+   "steps": [
+    "Write 4 sentences on the blackboard.",
+    "Let each child read 1 sentence, others listen.",
+    "Where they stumble, tell them to read slowly.",
+    "Read it a second time and notice if their speed improves."
+   ],
+   "blackboard": "Ram's house. Sita's pen.",
+   "reassessment_ask": "Read one sentence aloud",
+   "machine_translated": true
+  },
+  "act_all_matras_contrast": {
+   "title": "Recognize the vowel-sign pairs",
+   "materials": "Nothing",
+   "steps": [
+    "Write ba / bi / bu / boo and have them read it.",
+    "Ask: Where is the short vowel sign in 'bi'?",
+    "Build recognition using pairs like ba-bi, bu-boo.",
+    "Have them read 5 words with vowel signs."
+   ],
+   "blackboard": "ba bi bu boo",
+   "reassessment_ask": "What is the difference between 'bu' and 'boo'?",
+   "machine_translated": true
+  },
+  "act_word_formation_build": {
+   "title": "Add a vowel sign to make a word",
+   "materials": "Letter cards",
+   "steps": [
+    "Show c — a — t.",
+    "Add the vowel sign 'a' in the middle → caat? No.",
+    "Correct: cat without the long vowel sign, cart with long 'a' sound.",
+    "Children make 3 words: cat, cart, cot."
+   ],
+   "blackboard": "c + a + t = cat",
+   "reassessment_ask": "Add the vowel sign 'a' to 'c'",
+   "machine_translated": true
+  },
+  "act_read_999": {
+   "title": "Read and write the numbers",
+   "materials": "Nothing",
+   "steps": [
+    "Write 236, 305, 470 on the blackboard.",
+    "Children read together: two hundred thirty-six…",
+    "Then the teacher says it, children write it.",
+    "Question on the place of zero: Where is the 0 in 305?"
+   ],
+   "blackboard": "236, 305, 470",
+   "reassessment_ask": "Write 305 in words",
+   "machine_translated": true
+  }
+ }
+}

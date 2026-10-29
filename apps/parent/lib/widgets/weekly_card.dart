@@ -103,7 +103,7 @@ const _daysEn = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
 const _daysHi = ['सो', 'मं', 'बु', 'गु', 'शु', 'श', 'र'];
 
 String _day(DateTime d) =>
-    '${d.day} ${(Lang.isHi ? _monthsHi : _monthsEn)[d.month - 1]}';
+    '${d.day} ${tr(_monthsEn[d.month - 1], _monthsHi[d.month - 1])}';
 
 /// "27 Oct – 2 Nov" (Hindi month names in Hindi); empty when the server sent no dates.
 String weekRange(DateTime? start, DateTime? end) {
@@ -120,12 +120,12 @@ String weeklyLine(WeeklyData w, String name) {
   if (w.line.isNotEmpty) return w.line;
   final n = weeklyName(name);
   if (w.isQuiet) {
-    return tr(
-      'A new week is a fresh start. Try one short practice with $n today.',
-      'नया हफ़्ता, नई शुरुआत। आज $n के साथ एक छोटा-सा अभ्यास करें।',
+    return trf(
+      'A new week is a fresh start. Try one short practice with {n} today.',
+      'नया हफ़्ता, नई शुरुआत। आज {n} के साथ एक छोटा-सा अभ्यास करें।', {'n': n},
     );
   }
-  return tr('Here is $n\'s week.', 'यह रहा $n का हफ़्ता।');
+  return trf('Here is {n}\'s week.', 'यह रहा {n} का हफ़्ता।', {'n': n});
 }
 
 String _practiceText(int n) {
@@ -141,9 +141,9 @@ String _practiceText(int n) {
       'इस हफ़्ते 1 दिन घर पर अभ्यास किया',
     );
   }
-  return tr(
-    'Practised at home on $n days this week',
-    'इस हफ़्ते $n दिन घर पर अभ्यास किया',
+  return trf(
+    'Practised at home on {n} days this week',
+    'इस हफ़्ते {n} दिन घर पर अभ्यास किया', {'n': n},
   );
 }
 
@@ -154,22 +154,22 @@ String weeklySpeech(WeeklyData w, String name) {
   final parts = [weeklyLine(w, name)];
   if (w.learned.isNotEmpty) {
     parts.add(
-      tr(
-        'Learned this week: ${_join(w.learned)}.',
-        'इस हफ़्ते सीखा: ${_join(w.learned)}।',
+      trf(
+        'Learned this week: {join}.',
+        'इस हफ़्ते सीखा: {join}।', {'join': _join(w.learned)},
       ),
     );
   }
   if (w.working.isNotEmpty) {
     parts.add(
-      tr(
-        'Working on: ${_join(w.working)}.',
-        'अभी सीख रहे हैं: ${_join(w.working)}।',
+      trf(
+        'Working on: {join}.',
+        'अभी सीख रहे हैं: {join}।', {'join': _join(w.working)},
       ),
     );
   }
   if (w.next.isNotEmpty) {
-    parts.add(tr('Next: ${_join(w.next)}.', 'आगे सीखेंगे: ${_join(w.next)}।'));
+    parts.add(trf('Next: {join}.', 'आगे सीखेंगे: {join}।', {'join': _join(w.next)}));
   }
   return parts.join(' ');
 }
@@ -180,7 +180,7 @@ String weeklyShareText(WeeklyData w, String name) {
   final dates = weekRange(w.start, w.end);
   final b = StringBuffer()
     ..writeln(
-      tr("$n's week", '$n का हफ़्ता') + (dates.isEmpty ? '' : ' ($dates)'),
+      trf("{n}'s week", '{n} का हफ़्ता', {'n': n}) + (dates.isEmpty ? '' : ' ($dates)'),
     )
     ..writeln(weeklyLine(w, name))
     ..writeln(_practiceText(w.practiceDays));
@@ -259,7 +259,7 @@ class WeeklyCard extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            tr("$n's week", '$n का हफ़्ता'),
+                            trf("{n}'s week", '{n} का हफ़्ता', {'n': n}),
                             style: Theme.of(context).textTheme.titleLarge,
                           ),
                           if (dates.isNotEmpty)
@@ -298,9 +298,9 @@ class WeeklyCard extends StatelessWidget {
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
-                          tr(
-                            'Talked with Saathi for ${w.voiceMinutes} minutes',
-                            'साथी के साथ ${w.voiceMinutes} मिनट बात की',
+                          trf(
+                            'Talked with Saathi for {voiceMinutes} minutes',
+                            'साथी के साथ {voiceMinutes} मिनट बात की', {'voiceMinutes': w.voiceMinutes},
                           ),
                           style: const TextStyle(fontSize: 16, color: Ks.ink),
                         ),
@@ -335,7 +335,7 @@ class WeeklyCard extends StatelessWidget {
                 if (t != null) _tip(t),
                 const SizedBox(height: 14),
                 Align(
-                  alignment: Alignment.centerRight,
+                  alignment: AlignmentDirectional.centerEnd,
                   child: Text(
                     tr('Kaksha Saathi', 'कक्षा साथी'),
                     style: const TextStyle(
@@ -355,7 +355,7 @@ class WeeklyCard extends StatelessWidget {
 
   Widget _practice(WeeklyData w) {
     final days = w.days;
-    final labels = Lang.isHi ? _daysHi : _daysEn;
+    final labels = [for (var i = 0; i < 7; i++) tr(_daysEn[i], _daysHi[i])];
     final text = _practiceText(w.practiceDays);
     return Semantics(
       label: text,
@@ -451,7 +451,7 @@ class WeeklyCard extends StatelessWidget {
         const SizedBox(height: 6),
         for (final m in items)
           Padding(
-            padding: const EdgeInsets.only(left: 6, top: 4),
+            padding: const EdgeInsetsDirectional.only(start: 6, top: 4),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -510,7 +510,7 @@ class WeeklyCard extends StatelessWidget {
           if (example.isNotEmpty) ...[
             const SizedBox(height: 4),
             Text(
-              tr('Example: $example', 'उदाहरण: $example'),
+              trf('Example: {example}', 'उदाहरण: {example}', {'example': example}),
               style: const TextStyle(
                 fontSize: 15,
                 color: Ks.ink,

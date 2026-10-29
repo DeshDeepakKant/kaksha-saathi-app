@@ -33,7 +33,7 @@ class _JourneyCelebrationsState extends State<JourneyCelebrations> {
     final line = pick(c, 'line');
     return line.trim().isNotEmpty
         ? line
-        : tr('Learned: ${cpTitle(c)}', 'सीख लिया: ${cpTitle(c)}');
+        : trf('Learned: {title}', 'सीख लिया: {title}', {'title': cpTitle(c)});
   }
 
   Future<void> _toggle(int i) async {
@@ -57,7 +57,7 @@ class _JourneyCelebrationsState extends State<JourneyCelebrations> {
           Padding(
             padding: const EdgeInsets.only(bottom: 8),
             child: Container(
-              padding: const EdgeInsets.fromLTRB(14, 10, 4, 10),
+              padding: const EdgeInsetsDirectional.fromSTEB(14, 10, 4, 10),
               decoration: BoxDecoration(
                 color: _starBg,
                 borderRadius: BorderRadius.circular(16),

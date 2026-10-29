@@ -227,11 +227,11 @@ class _JourneyScreenState extends State<JourneyScreen> {
         const SizedBox(height: 24),
         EmptyState(
           icon: Icons.route_rounded,
-          text: tr(
+          text: trf(
             'The journey will appear here once the teacher starts this subject with the class. '
-                'Every step $_name learns will light up as a star.',
+                'Every step {name} learns will light up as a star.',
             'जब टीचर कक्षा में यह विषय शुरू करेंगे, सफ़र यहाँ दिखेगा। '
-                '$_name जो भी कदम सीखेंगे, वह तारे की तरह चमकेगा।',
+                '{name} जो भी कदम सीखेंगे, वह तारे की तरह चमकेगा।', {'name': _name},
           ),
         ),
       ]);
@@ -303,21 +303,21 @@ class _JourneyScreenState extends State<JourneyScreen> {
 
     final String sentence;
     if (total == 0) {
-      sentence = tr(
-        '$name’s $subject journey is about to begin.',
-        '$name का $subject का सफ़र बस शुरू होने वाला है।',
+      sentence = trf(
+        '{name}’s {subject} journey is about to begin.',
+        '{name} का {subject} का सफ़र बस शुरू होने वाला है।', {'name': name, 'subject': subject},
       );
     } else if (learned == 0) {
-      sentence = tr(
-        '$name is just starting the $subject path of $total steps. '
+      sentence = trf(
+        '{name} is just starting the {subject} path of {total} steps. '
             'Each step learned at school will turn into a star.',
-        '$name ने $subject के $total कदमों का सफ़र अभी शुरू किया है। '
-            'स्कूल में सीखा हर कदम एक तारा बन जाएगा।',
+        '{name} ने {subject} के {total} कदमों का सफ़र अभी शुरू किया है। '
+            'स्कूल में सीखा हर कदम एक तारा बन जाएगा।', {'name': name, 'subject': subject, 'total': total},
       );
     } else {
-      sentence = tr(
-        '$name has learned $learned of $total steps.',
-        '$name ने $total में से $learned कदम सीख लिए हैं।',
+      sentence = trf(
+        '{name} has learned {learned} of {total} steps.',
+        '{name} ने {total} में से {learned} कदम सीख लिए हैं।', {'name': name, 'learned': learned, 'total': total},
       );
     }
 
@@ -346,12 +346,12 @@ class _JourneyScreenState extends State<JourneyScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    tr('$name’s journey', '$name का सफ़र'),
+                    trf('{name}’s journey', '{name} का सफ़र', {'name': name}),
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                   if (grade.isNotEmpty)
                     Text(
-                      tr('Class $grade · $subject', 'कक्षा $grade · $subject'),
+                      trf('Class {grade} · {subject}', 'कक्षा {grade} · {subject}', {'grade': grade, 'subject': subject}),
                       style: const TextStyle(color: Ks.muted, fontSize: 14),
                     ),
                   const SizedBox(height: 6),
@@ -368,9 +368,9 @@ class _JourneyScreenState extends State<JourneyScreen> {
                                 'Working on 1 step right now.',
                                 'अभी 1 कदम पर काम चल रहा है।',
                               )
-                            : tr(
-                                'Working on $working steps right now.',
-                                'अभी $working कदमों पर काम चल रहा है।',
+                            : trf(
+                                'Working on {working} steps right now.',
+                                'अभी {working} कदमों पर काम चल रहा है।', {'working': working},
                               ),
                         style: const TextStyle(
                           fontSize: 15,
