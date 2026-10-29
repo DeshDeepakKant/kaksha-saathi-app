@@ -8,9 +8,10 @@ class Api {
   Api._();
   static final Api i = Api._();
   static const _define = String.fromEnvironment('API_BASE');
-  late final String base = _define.isNotEmpty
-      ? _define
-      : (kIsWeb ? Uri.base.origin : 'http://10.0.2.2:8000');
+  /// The live server (Render). Every build talks to it unless a developer deliberately overrides
+  /// it with `--dart-define=API_BASE=...`; nothing falls back to a server on a laptop.
+  static const productionBase = 'https://kaksha-saathi-558g.onrender.com';
+  late final String base = _define.isNotEmpty ? _define : productionBase;
 
   String? _token;
 

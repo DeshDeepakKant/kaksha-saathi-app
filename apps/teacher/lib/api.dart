@@ -10,7 +10,6 @@ import 'outbox.dart';
 
 /// API base. Override at build time:
 ///   flutter build web --dart-define=API_BASE=https://host
-/// Defaults: web → same origin; Android emulator → host machine.
 class Api {
   Api._([http.Client? client, Outbox? outbox])
     : _client = client ?? http.Client(),
@@ -32,9 +31,10 @@ class Api {
   @visibleForTesting
   Duration queuedTimeout = const Duration(seconds: 30);
   static const _define = String.fromEnvironment('API_BASE');
-  late final String base = _define.isNotEmpty
-      ? _define
-      : (kIsWeb ? Uri.base.origin : 'http://10.0.2.2:8000');
+  /// The live server (Render). Every build talks to it unless a developer deliberately overrides
+  /// it with `--dart-define=API_BASE=...`; nothing falls back to a server on a laptop.
+  static const productionBase = 'https://kaksha-saathi-558g.onrender.com';
+  late final String base = _define.isNotEmpty ? _define : productionBase;
 
   String? _token;
   String? _teacherId; // owner stamp for outbox entries
