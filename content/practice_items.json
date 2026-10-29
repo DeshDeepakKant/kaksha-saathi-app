@@ -45,6 +45,19 @@
     {"id":"pi_tab1","checkpoint_id":"N.G3.tables_2_5","type":"say_answer","prompt_hi":"4 का पहाड़ा: 4 × 3?","expression":"4*3","answer":"12","accept":["12","बारह"],"tier":1,"language":"numeracy","reviewed":false},
     {"id":"pi_tab2","checkpoint_id":"N.G3.tables_2_5","type":"say_answer","prompt_hi":"2 का पहाड़ा: 2 × 7?","expression":"2*7","answer":"14","accept":["14","चौदह"],"tier":1,"language":"numeracy","reviewed":false},
     {"id":"pi_1001","checkpoint_id":"N.G2.read_write_to_999","type":"say_number","target":"236","accept":["236","दो सौ छत्तीस"],"tier":1,"language":"numeracy","reviewed":false},
-    {"id":"pi_1002","checkpoint_id":"N.G2.read_write_to_999","type":"say_number","target":"305","accept":["305","तीन सौ पाँच","तीन सौ पांच"],"tier":2,"language":"numeracy","reviewed":false}
+    {"id":"pi_1002","checkpoint_id":"N.G2.read_write_to_999","type":"say_number","target":"305","accept":["305","तीन सौ पाँच","तीन सौ पांच"],"tier":2,"language":"numeracy","reviewed":false},
+    {"id":"pi_en_ln_b","checkpoint_id":"E.G1.letter_names","type":"tap_choice","prompt_hi":"'b' कौन सा है? Which one is 'b'?","options":["b","d","p","q"],"correct":"b","tier":1,"language":"en","reviewed":false},
+    {"id":"pi_en_ln_d","checkpoint_id":"E.G1.letter_names","type":"tap_choice","prompt_hi":"'d' कौन सा है? Which one is 'd'?","options":["b","d","p","q"],"correct":"d","tier":1,"language":"en","reviewed":false},
+    {"id":"pi_en_ln_a","checkpoint_id":"E.G1.letter_names","type":"say_word","target":"a","accept":["a","ay","ah"],"tier":1,"language":"en","reviewed":false},
+    {"id":"pi_en_ln_m","checkpoint_id":"E.G1.letter_names","type":"say_word","target":"m","accept":["m","em"],"tier":2,"language":"en","reviewed":false},
+    {"id":"pi_en_ls_s","checkpoint_id":"E.G1.letter_sounds","type":"tap_choice","prompt_hi":"'sun' की पहली आवाज़ कौन सी है? First sound of 'sun'?","options":["s","m","t","p"],"correct":"s","tier":1,"language":"en","reviewed":false},
+    {"id":"pi_en_ls_p","checkpoint_id":"E.G1.letter_sounds","type":"tap_choice","prompt_hi":"'pen' की पहली आवाज़ कौन सी है? First sound of 'pen'?","options":["b","p","t","m"],"correct":"p","tier":2,"language":"en","reviewed":false},
+    {"id":"pi_en_cvc_cat","checkpoint_id":"E.G1.read_cvc","type":"say_word","target":"cat","accept":["cat"],"tier":1,"language":"en","reviewed":false},
+    {"id":"pi_en_cvc_pen","checkpoint_id":"E.G1.read_cvc","type":"say_word","target":"pen","accept":["pen"],"tier":1,"language":"en","reviewed":false},
+    {"id":"pi_en_cvc_sun","checkpoint_id":"E.G1.read_cvc","type":"say_word","target":"sun","accept":["sun"],"tier":1,"language":"en","reviewed":false},
+    {"id":"pi_en_cvc_bag","checkpoint_id":"E.G1.read_cvc","type":"say_word","target":"bag","accept":["bag"],"tier":2,"language":"en","reviewed":false},
+    {"id":"pi_en_ss_cat","checkpoint_id":"E.G1.read_short_sent","type":"say_word","target":"I see a cat.","accept":["I see a cat","I see a cat."],"tier":1,"language":"en","reviewed":false},
+    {"id":"pi_en_ss_sun","checkpoint_id":"E.G1.read_short_sent","type":"say_word","target":"The sun is hot.","accept":["The sun is hot","The sun is hot."],"tier":1,"language":"en","reviewed":false},
+    {"id":"pi_en_ss_pen","checkpoint_id":"E.G1.read_short_sent","type":"say_word","target":"I have a red pen.","accept":["I have a red pen","I have a red pen."],"tier":2,"language":"en","reviewed":false}
   ]
 }

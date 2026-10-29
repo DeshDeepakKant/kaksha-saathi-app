@@ -40,7 +40,7 @@
     {
      "text": "\"{lesson}\" ({when}) अब {childName} के लिए नहीं गिना जाएगा। गलती से दर्ज एंट्री के लिए इसका इस्तेमाल करें।",
      "where": [
-      "apps/teacher/lib/screens/level_screen.dart:741"
+      "apps/teacher/lib/screens/level_screen.dart:738"
      ]
     }
    ],
@@ -59,7 +59,7 @@
     {
      "text": "\"{title}\" पाठ्यक्रम से हट जाएगा। इसके लिए दर्ज प्रमाण नहीं मिटेंगे।",
      "where": [
-      "apps/teacher/lib/screens/syllabus_screen.dart:218"
+      "apps/teacher/lib/screens/syllabus_screen.dart:219"
      ]
     }
    ],
@@ -76,7 +76,7 @@
     {
      "text": "(कुछ नहीं सुना)",
      "where": [
-      "apps/teacher/lib/screens/voice_report_screen.dart:872"
+      "apps/teacher/lib/screens/voice_report_screen.dart:877"
      ]
     },
     {
@@ -281,7 +281,7 @@
     {
      "text": "AI तैयार की गई — सबकी समीक्षा की गई गतिविधियों से चुनी गई",
      "where": [
-      "apps/teacher/lib/screens/group_plan_screen.dart:324"
+      "apps/teacher/lib/screens/group_plan_screen.dart:325"
      ]
     }
    ],
@@ -391,7 +391,7 @@
     {
      "text": "जिन गतिविधियों से बच्चे आगे बढ़े",
      "where": [
-      "apps/teacher/lib/screens/outcomes_screen.dart:207"
+      "apps/teacher/lib/screens/outcomes_screen.dart:204"
      ]
     }
    ],
@@ -406,7 +406,7 @@
     {
      "text": "गतिविधि",
      "where": [
-      "apps/teacher/lib/screens/group_plan_screen.dart:842"
+      "apps/teacher/lib/screens/group_plan_screen.dart:843"
      ]
     }
    ],
@@ -421,7 +421,7 @@
     {
      "text": "गतिविधि: {title_hi}",
      "where": [
-      "apps/teacher/lib/screens/group_plan_screen.dart:469"
+      "apps/teacher/lib/screens/group_plan_screen.dart:470"
      ]
     }
    ],
@@ -561,8 +561,8 @@
     {
      "text": "साक्ष्य जोड़ें",
      "where": [
-      "apps/teacher/lib/screens/board_screen.dart:524",
-      "apps/teacher/lib/screens/level_screen.dart:469",
+      "apps/teacher/lib/screens/board_screen.dart:526",
+      "apps/teacher/lib/screens/level_screen.dart:466",
       "apps/teacher/lib/widgets/capture_sheet.dart:134"
      ]
     }
@@ -668,7 +668,7 @@
     {
      "text": "विषय जोड़ें",
      "where": [
-      "apps/teacher/lib/screens/syllabus_screen.dart:466"
+      "apps/teacher/lib/screens/syllabus_screen.dart:467"
      ]
     }
    ],
@@ -730,7 +730,7 @@
     {
      "text": "सभी",
      "where": [
-      "apps/teacher/lib/screens/syllabus_screen.dart:747"
+      "apps/teacher/lib/screens/syllabus_screen.dart:748"
      ]
     }
    ],
@@ -745,7 +745,7 @@
     {
      "text": "सब सही",
      "where": [
-      "apps/teacher/lib/screens/level_screen.dart:290"
+      "apps/teacher/lib/screens/level_screen.dart:291"
      ]
     }
    ],
@@ -760,8 +760,8 @@
     {
      "text": "लगभग",
      "where": [
-      "apps/teacher/lib/screens/voice_report_screen.dart:730",
-      "apps/teacher/lib/screens/voice_report_screen.dart:888"
+      "apps/teacher/lib/screens/voice_report_screen.dart:735",
+      "apps/teacher/lib/screens/voice_report_screen.dart:893"
      ]
     }
    ],
@@ -806,7 +806,7 @@
     {
      "text": "उत्तर: {expect}",
      "where": [
-      "apps/teacher/lib/screens/level_check_screen.dart:696"
+      "apps/teacher/lib/screens/level_check_screen.dart:692"
      ]
     }
    ],
@@ -913,7 +913,7 @@
     {
      "text": "{childName} से पूछें:",
      "where": [
-      "apps/teacher/lib/screens/level_screen.dart:232"
+      "apps/teacher/lib/screens/level_screen.dart:233"
      ]
     }
    ],
@@ -930,7 +930,7 @@
     {
      "text": "जाँच बाकी",
      "where": [
-      "apps/teacher/lib/screens/group_plan_screen.dart:680"
+      "apps/teacher/lib/screens/group_plan_screen.dart:681"
      ]
     }
    ],
@@ -982,7 +982,7 @@
     {
      "text": "कक्षा की सूची पर लौटें",
      "where": [
-      "apps/teacher/lib/screens/level_check_screen.dart:907"
+      "apps/teacher/lib/screens/level_check_screen.dart:903"
      ]
     }
    ],
@@ -1012,7 +1012,7 @@
     {
      "text": "शुरुआत",
      "where": [
-      "apps/teacher/lib/screens/level_check_screen.dart:109"
+      "apps/teacher/lib/screens/level_check_screen.dart:112"
      ]
     }
    ],
@@ -1072,7 +1072,7 @@
     {
      "text": "उधार गलत जगह से",
      "where": [
-      "apps/teacher/lib/screens/level_screen.dart:811"
+      "apps/teacher/lib/screens/level_screen.dart:808"
      ]
     }
    ],
@@ -1102,7 +1102,7 @@
     {
      "text": "समूहों के लिए योजना बन रही है…",
      "where": [
-      "apps/teacher/lib/screens/group_plan_screen.dart:245"
+      "apps/teacher/lib/screens/group_plan_screen.dart:246"
      ]
     }
    ],
@@ -1132,7 +1132,7 @@
     {
      "text": "स्तर अनुसार",
      "where": [
-      "apps/teacher/lib/screens/voice_report_screen.dart:394"
+      "apps/teacher/lib/screens/voice_report_screen.dart:399"
      ]
     }
    ],
@@ -1162,7 +1162,7 @@
     {
      "text": "सर्वर से जुड़ नहीं पा रहे। इंटरनेट देखें और दोबारा कोशिश करें।",
      "where": [
-      "apps/teacher/lib/screens/outcomes_screen.dart:69"
+      "apps/teacher/lib/screens/outcomes_screen.dart:70"
      ]
     }
    ],
@@ -1177,7 +1177,7 @@
     {
      "text": "सर्वर से जुड़ नहीं पा रहे। हो सकता है वह अभी चालू हो रहा हो। इंटरनेट देखें और दोबारा कोशिश करें।",
      "where": [
-      "apps/teacher/lib/screens/board_screen.dart:104"
+      "apps/teacher/lib/screens/board_screen.dart:106"
      ]
     }
    ],
@@ -1192,14 +1192,14 @@
     {
      "text": "रद्द करें",
      "where": [
-      "apps/teacher/lib/screens/group_plan_screen.dart:181",
-      "apps/teacher/lib/screens/level_screen.dart:749",
+      "apps/teacher/lib/screens/group_plan_screen.dart:182",
+      "apps/teacher/lib/screens/level_screen.dart:746",
       "apps/teacher/lib/screens/roster_screen.dart:193",
       "apps/teacher/lib/screens/roster_screen.dart:267",
       "apps/teacher/lib/screens/roster_screen.dart:1066",
       "apps/teacher/lib/screens/settings_screen.dart:733",
-      "apps/teacher/lib/screens/syllabus_screen.dart:226",
-      "apps/teacher/lib/screens/syllabus_screen.dart:333",
+      "apps/teacher/lib/screens/syllabus_screen.dart:227",
+      "apps/teacher/lib/screens/syllabus_screen.dart:334",
       "apps/parent/lib/screens/voice_session_screen.dart:1269"
      ]
     }
@@ -1281,8 +1281,8 @@
     {
      "text": "जाँच",
      "where": [
-      "apps/teacher/lib/screens/level_screen.dart:227",
-      "apps/teacher/lib/screens/level_screen.dart:800"
+      "apps/teacher/lib/screens/level_screen.dart:228",
+      "apps/teacher/lib/screens/level_screen.dart:797"
      ]
     }
    ],
@@ -1297,7 +1297,7 @@
     {
      "text": "फिर जाँचें",
      "where": [
-      "apps/teacher/lib/screens/group_plan_screen.dart:851"
+      "apps/teacher/lib/screens/group_plan_screen.dart:852"
      ]
     }
    ],
@@ -1312,7 +1312,7 @@
     {
      "text": "फिर जाँचें: {ask_hi}",
      "where": [
-      "apps/teacher/lib/screens/group_plan_screen.dart:555"
+      "apps/teacher/lib/screens/group_plan_screen.dart:556"
      ]
     }
    ],
@@ -1329,7 +1329,7 @@
     {
      "text": "2 मिनट में जाँचें (प्रश्न सहित)",
      "where": [
-      "apps/teacher/lib/screens/level_screen.dart:591"
+      "apps/teacher/lib/screens/level_screen.dart:588"
      ]
     }
    ],
@@ -1344,13 +1344,13 @@
     {
      "text": "तीन टैप में जाँचें",
      "where": [
-      "apps/teacher/lib/screens/board_screen.dart:845"
+      "apps/teacher/lib/screens/board_screen.dart:840"
      ]
     },
     {
      "text": "3 टैप में जाँचें",
      "where": [
-      "apps/teacher/lib/screens/group_plan_screen.dart:706"
+      "apps/teacher/lib/screens/group_plan_screen.dart:707"
      ]
     }
    ],
@@ -1365,7 +1365,7 @@
     {
      "text": "कक्षा में जाँचें",
      "where": [
-      "apps/teacher/lib/screens/voice_report_screen.dart:539"
+      "apps/teacher/lib/screens/voice_report_screen.dart:544"
      ]
     }
    ],
@@ -1380,7 +1380,7 @@
     {
      "text": "अभी जाँचें",
      "where": [
-      "apps/teacher/lib/screens/group_plan_screen.dart:587",
+      "apps/teacher/lib/screens/group_plan_screen.dart:588",
       "apps/teacher/lib/widgets/syllabus_widgets.dart:646"
      ]
     }
@@ -1396,7 +1396,7 @@
     {
      "text": "जाँच बाकी — 3 टैप",
      "where": [
-      "apps/teacher/lib/screens/board_screen.dart:670"
+      "apps/teacher/lib/screens/board_screen.dart:665"
      ]
     }
    ],
@@ -1411,7 +1411,7 @@
     {
      "text": "जाँच दर्ज हो गई।",
      "where": [
-      "apps/teacher/lib/screens/level_screen.dart:328"
+      "apps/teacher/lib/screens/level_screen.dart:329"
      ]
     }
    ],
@@ -1426,7 +1426,7 @@
     {
      "text": "यह जाँचें",
      "where": [
-      "apps/teacher/lib/screens/level_screen.dart:655"
+      "apps/teacher/lib/screens/level_screen.dart:652"
      ]
     }
    ],
@@ -1441,7 +1441,7 @@
     {
      "text": "आज जाँचें: {today_observation_to_collect_hi}",
      "where": [
-      "apps/teacher/lib/screens/group_plan_screen.dart:363"
+      "apps/teacher/lib/screens/group_plan_screen.dart:364"
      ]
     }
    ],
@@ -1473,7 +1473,7 @@
     {
      "text": "अभी जाँचा गया",
      "where": [
-      "apps/teacher/lib/screens/level_check_screen.dart:492"
+      "apps/teacher/lib/screens/level_check_screen.dart:488"
      ]
     }
    ],
@@ -1675,7 +1675,7 @@
     {
      "text": "कक्षा {grade} · {subject}",
      "where": [
-      "apps/parent/lib/screens/journey_screen.dart:354"
+      "apps/parent/lib/screens/journey_screen.dart:361"
      ]
     }
    ],
@@ -1693,7 +1693,7 @@
     {
      "text": "कक्षाएँ",
      "where": [
-      "apps/teacher/lib/screens/board_screen.dart:457",
+      "apps/teacher/lib/screens/board_screen.dart:459",
       "apps/teacher/lib/screens/class_picker_screen.dart:74"
      ]
     }
@@ -1811,7 +1811,7 @@
     {
      "text": "इ और ई की मात्रा में फर्क नहीं",
      "where": [
-      "apps/teacher/lib/screens/level_screen.dart:821"
+      "apps/teacher/lib/screens/level_screen.dart:818"
      ]
     }
    ],
@@ -1826,7 +1826,7 @@
     {
      "text": "स और श में फर्क नहीं",
      "where": [
-      "apps/teacher/lib/screens/level_screen.dart:820"
+      "apps/teacher/lib/screens/level_screen.dart:817"
      ]
     }
    ],
@@ -1980,7 +1980,7 @@
     {
      "text": "कॉपी हो गया — WhatsApp में पेस्ट करें",
      "where": [
-      "apps/teacher/lib/screens/group_plan_screen.dart:863"
+      "apps/teacher/lib/screens/group_plan_screen.dart:864"
      ]
     },
     {
@@ -2002,7 +2002,7 @@
     {
      "text": "कॉपी",
      "where": [
-      "apps/teacher/lib/screens/group_plan_screen.dart:573"
+      "apps/teacher/lib/screens/group_plan_screen.dart:574"
      ]
     },
     {
@@ -2023,7 +2023,7 @@
     {
      "text": "पूरी योजना कॉपी करें",
      "where": [
-      "apps/teacher/lib/screens/group_plan_screen.dart:223"
+      "apps/teacher/lib/screens/group_plan_screen.dart:224"
      ]
     }
    ],
@@ -2150,7 +2150,7 @@
     {
      "text": "प्रश्न नहीं मिले: {e}",
      "where": [
-      "apps/teacher/lib/screens/level_screen.dart:193"
+      "apps/teacher/lib/screens/level_screen.dart:194"
      ]
     }
    ],
@@ -2182,7 +2182,7 @@
     {
      "text": "स्तर जाँच नहीं खुल सकी। नेटवर्क देखें।",
      "where": [
-      "apps/teacher/lib/screens/level_check_screen.dart:94"
+      "apps/teacher/lib/screens/level_check_screen.dart:97"
      ]
     }
    ],
@@ -2197,7 +2197,7 @@
     {
      "text": "पाठ्यक्रम नहीं खुल सका। नेटवर्क देखें।",
      "where": [
-      "apps/teacher/lib/screens/syllabus_screen.dart:534"
+      "apps/teacher/lib/screens/syllabus_screen.dart:535"
      ]
     }
    ],
@@ -2212,7 +2212,7 @@
     {
      "text": "यह सत्र नहीं खुल पाया।\n{v}",
      "where": [
-      "apps/teacher/lib/screens/voice_report_screen.dart:176"
+      "apps/teacher/lib/screens/voice_report_screen.dart:180"
      ]
     }
    ],
@@ -2244,7 +2244,7 @@
     {
      "text": "{childName} की प्रोफ़ाइल नहीं खुल पाई।\n{v}",
      "where": [
-      "apps/teacher/lib/screens/level_screen.dart:397"
+      "apps/teacher/lib/screens/level_screen.dart:398"
      ]
     }
    ],
@@ -2354,7 +2354,7 @@
     {
      "text": "ताज़ा नहीं हो सका — सहेजी योजना दिख रही है। ({e})",
      "where": [
-      "apps/teacher/lib/screens/group_plan_screen.dart:144"
+      "apps/teacher/lib/screens/group_plan_screen.dart:145"
      ]
     }
    ],
@@ -2371,7 +2371,7 @@
     {
      "text": "ताज़ा नहीं हो पाया। पिछली जानकारी दिख रही है।",
      "where": [
-      "apps/teacher/lib/screens/level_screen.dart:92"
+      "apps/teacher/lib/screens/level_screen.dart:93"
      ]
     }
    ],
@@ -2401,7 +2401,7 @@
     {
      "text": "हटा नहीं सके। नेटवर्क देखकर दोबारा कोशिश करें।",
      "where": [
-      "apps/teacher/lib/screens/syllabus_screen.dart:250"
+      "apps/teacher/lib/screens/syllabus_screen.dart:251"
      ]
     }
    ],
@@ -2416,7 +2416,7 @@
     {
      "text": "\"किया\" दर्ज नहीं हो सका — फिर से दबाएँ। ({e})",
      "where": [
-      "apps/teacher/lib/screens/group_plan_screen.dart:813"
+      "apps/teacher/lib/screens/group_plan_screen.dart:814"
      ]
     }
    ],
@@ -2433,7 +2433,7 @@
     {
      "text": "जाँच दर्ज नहीं हो पाई। दोबारा कोशिश करें। ({e})",
      "where": [
-      "apps/teacher/lib/screens/level_screen.dart:340"
+      "apps/teacher/lib/screens/level_screen.dart:341"
      ]
     }
    ],
@@ -2450,7 +2450,7 @@
     {
      "text": "सहेज नहीं सके। नेटवर्क देखकर दोबारा कोशिश करें।",
      "where": [
-      "apps/teacher/lib/screens/syllabus_screen.dart:136",
+      "apps/teacher/lib/screens/syllabus_screen.dart:137",
       "apps/teacher/lib/widgets/syllabus_add_topic.dart:83"
      ]
     }
@@ -2769,8 +2769,8 @@
     {
      "text": "क्या असर हुआ?",
      "where": [
-      "apps/teacher/lib/screens/board_screen.dart:447",
-      "apps/teacher/lib/screens/group_plan_screen.dart:213",
+      "apps/teacher/lib/screens/board_screen.dart:449",
+      "apps/teacher/lib/screens/group_plan_screen.dart:214",
       "apps/teacher/lib/widgets/board_followups.dart:332"
      ]
     }
@@ -2786,7 +2786,7 @@
     {
      "text": "क्या असर हुआ? पिछले समूह देखें",
      "where": [
-      "apps/teacher/lib/screens/group_plan_screen.dart:375"
+      "apps/teacher/lib/screens/group_plan_screen.dart:376"
      ]
     }
    ],
@@ -2801,7 +2801,7 @@
     {
      "text": "क्या असर हुआ? · {subject}",
      "where": [
-      "apps/teacher/lib/screens/outcomes_screen.dart:114"
+      "apps/teacher/lib/screens/outcomes_screen.dart:111"
      ]
     }
    ],
@@ -2833,7 +2833,7 @@
     {
      "text": "कठिन ध्वनियाँ",
      "where": [
-      "apps/teacher/lib/screens/voice_report_screen.dart:365"
+      "apps/teacher/lib/screens/voice_report_screen.dart:370"
      ]
     }
    ],
@@ -2848,7 +2848,7 @@
     {
      "text": "कठिन शब्द",
      "where": [
-      "apps/teacher/lib/screens/voice_report_screen.dart:374"
+      "apps/teacher/lib/screens/voice_report_screen.dart:379"
      ]
     }
    ],
@@ -2923,7 +2923,7 @@
     {
      "text": "शून्य वाला उधार नहीं समझा",
      "where": [
-      "apps/teacher/lib/screens/level_screen.dart:815"
+      "apps/teacher/lib/screens/level_screen.dart:812"
      ]
     }
    ],
@@ -2963,13 +2963,13 @@
     {
      "text": "किया",
      "where": [
-      "apps/teacher/lib/screens/group_plan_screen.dart:648"
+      "apps/teacher/lib/screens/group_plan_screen.dart:649"
      ]
     },
     {
      "text": "पूरा",
      "where": [
-      "apps/teacher/lib/screens/syllabus_screen.dart:750",
+      "apps/teacher/lib/screens/syllabus_screen.dart:751",
       "apps/teacher/lib/widgets/syllabus_widgets.dart:88"
      ]
     }
@@ -3015,7 +3015,7 @@
     {
      "text": "किया ✓ — अब फिर जाँचें",
      "where": [
-      "apps/teacher/lib/screens/group_plan_screen.dart:621"
+      "apps/teacher/lib/screens/group_plan_screen.dart:622"
      ]
     }
    ],
@@ -3030,7 +3030,7 @@
     {
      "text": "किया ✓ — नेट आने पर भेजा जाएगा। अब फिर जाँचें",
      "where": [
-      "apps/teacher/lib/screens/group_plan_screen.dart:617"
+      "apps/teacher/lib/screens/group_plan_screen.dart:618"
      ]
     }
    ],
@@ -3060,7 +3060,7 @@
     {
      "text": "मात्रा छोड़ देता है",
      "where": [
-      "apps/teacher/lib/screens/level_screen.dart:825"
+      "apps/teacher/lib/screens/level_screen.dart:822"
      ]
     }
    ],
@@ -3135,11 +3135,15 @@
     {
      "text": "अंग्रेज़ी",
      "where": [
-      "apps/teacher/lib/screens/voice_report_screen.dart:21"
+      "apps/teacher/lib/screens/voice_report_screen.dart:24",
+      "apps/teacher/lib/subjects.dart:12",
+      "apps/parent/lib/screens/journey_screen.dart:186",
+      "apps/parent/lib/screens/journey_screen.dart:306"
      ]
     }
    ],
    "apps": [
+    "parent",
     "teacher"
    ],
    "placeholders": []
@@ -3165,7 +3169,7 @@
     {
      "text": "एंट्री वापस आ गई।",
      "where": [
-      "apps/teacher/lib/screens/level_screen.dart:790"
+      "apps/teacher/lib/screens/level_screen.dart:787"
      ]
     }
    ],
@@ -3180,7 +3184,7 @@
     {
      "text": "एंट्री वापस ली गई।",
      "where": [
-      "apps/teacher/lib/screens/level_screen.dart:773"
+      "apps/teacher/lib/screens/level_screen.dart:770"
      ]
     }
    ],
@@ -3195,7 +3199,7 @@
     {
      "text": "चूक",
      "where": [
-      "apps/teacher/lib/screens/voice_report_screen.dart:596"
+      "apps/teacher/lib/screens/voice_report_screen.dart:601"
      ]
     }
    ],
@@ -3225,7 +3229,7 @@
     {
      "text": "साक्ष्य दर्ज — समूह अपडेट करने के लिए योजना फिर से बनाएँ।",
      "where": [
-      "apps/teacher/lib/screens/group_plan_screen.dart:749"
+      "apps/teacher/lib/screens/group_plan_screen.dart:750"
      ]
     }
    ],
@@ -3287,7 +3291,7 @@
     {
      "text": "अतिरिक्त",
      "where": [
-      "apps/teacher/lib/screens/voice_report_screen.dart:733"
+      "apps/teacher/lib/screens/voice_report_screen.dart:738"
      ]
     }
    ],
@@ -3433,7 +3437,7 @@
     {
      "text": "पहली बार में: {first_try} · संकेत के बाद: {after_retry} · अभी नहीं: {failed} · छोड़े: {skipped}",
      "where": [
-      "apps/teacher/lib/screens/voice_report_screen.dart:310"
+      "apps/teacher/lib/screens/voice_report_screen.dart:315"
      ]
     }
    ],
@@ -3470,8 +3474,8 @@
     {
      "text": "पूरी कक्षा के लिए",
      "where": [
-      "apps/teacher/lib/screens/group_plan_screen.dart:351",
-      "apps/teacher/lib/screens/group_plan_screen.dart:882"
+      "apps/teacher/lib/screens/group_plan_screen.dart:352",
+      "apps/teacher/lib/screens/group_plan_screen.dart:883"
      ]
     }
    ],
@@ -3486,7 +3490,7 @@
     {
      "text": "हासिल भूल रहा है",
      "where": [
-      "apps/teacher/lib/screens/level_screen.dart:819"
+      "apps/teacher/lib/screens/level_screen.dart:816"
      ]
     }
    ],
@@ -3501,7 +3505,7 @@
     {
      "text": "आधार की चूक — पहले यहीं से शुरू करें",
      "where": [
-      "apps/teacher/lib/screens/board_screen.dart:720"
+      "apps/teacher/lib/screens/board_screen.dart:715"
      ]
     }
    ],
@@ -3531,7 +3535,7 @@
     {
      "text": "पूरा नक्शा",
      "where": [
-      "apps/teacher/lib/screens/level_screen.dart:499"
+      "apps/teacher/lib/screens/level_screen.dart:496"
      ]
     }
    ],
@@ -3546,7 +3550,7 @@
     {
      "text": "पूरी बातचीत",
      "where": [
-      "apps/teacher/lib/screens/voice_report_screen.dart:695"
+      "apps/teacher/lib/screens/voice_report_screen.dart:700"
      ]
     }
    ],
@@ -3606,7 +3610,7 @@
     {
      "text": "सफ़र तैयार हो रहा है…",
      "where": [
-      "apps/parent/lib/screens/journey_screen.dart:200"
+      "apps/parent/lib/screens/journey_screen.dart:205"
      ]
     }
    ],
@@ -3651,7 +3655,7 @@
     {
      "text": "समूह",
      "where": [
-      "apps/teacher/lib/screens/group_plan_screen.dart:839"
+      "apps/teacher/lib/screens/group_plan_screen.dart:840"
      ]
     }
    ],
@@ -3666,7 +3670,7 @@
     {
      "text": "समूह सत्र",
      "where": [
-      "apps/teacher/lib/screens/outcomes_screen.dart:201"
+      "apps/teacher/lib/screens/outcomes_screen.dart:198"
      ]
     }
    ],
@@ -3681,7 +3685,7 @@
     {
      "text": "पिछले 6 हफ़्तों में जिन समूहों को \"किया\" दबाया। बच्चा तभी गिना जाता है जब उसी सबक पर उसकी फिर जाँच हो।",
      "where": [
-      "apps/teacher/lib/screens/outcomes_screen.dart:185"
+      "apps/teacher/lib/screens/outcomes_screen.dart:182"
      ]
     }
    ],
@@ -3696,7 +3700,7 @@
     {
      "text": "सुना",
      "where": [
-      "apps/teacher/lib/screens/voice_report_screen.dart:594"
+      "apps/teacher/lib/screens/voice_report_screen.dart:599"
      ]
     }
    ],
@@ -3792,13 +3796,10 @@
     {
      "text": "हिंदी",
      "where": [
-      "apps/teacher/lib/screens/board_screen.dart:533",
-      "apps/teacher/lib/screens/level_check_screen.dart:118",
-      "apps/teacher/lib/screens/level_screen.dart:456",
-      "apps/teacher/lib/screens/outcomes_screen.dart:110",
-      "apps/teacher/lib/screens/voice_report_screen.dart:21",
+      "apps/teacher/lib/screens/voice_report_screen.dart:24",
+      "apps/teacher/lib/subjects.dart:11",
       "apps/parent/lib/screens/journey_screen.dart:181",
-      "apps/parent/lib/screens/journey_screen.dart:300"
+      "apps/parent/lib/screens/journey_screen.dart:305"
      ]
     }
    ],
@@ -3829,8 +3830,8 @@
     {
      "text": "घर",
      "where": [
-      "apps/teacher/lib/screens/level_screen.dart:801",
-      "apps/teacher/lib/screens/level_screen.dart:802"
+      "apps/teacher/lib/screens/level_screen.dart:798",
+      "apps/teacher/lib/screens/level_screen.dart:799"
      ]
     }
    ],
@@ -3860,7 +3861,7 @@
     {
      "text": "इसे कैसे पढ़ें",
      "where": [
-      "apps/teacher/lib/screens/syllabus_screen.dart:423"
+      "apps/teacher/lib/screens/syllabus_screen.dart:424"
      ]
     }
    ],
@@ -3920,7 +3921,7 @@
     {
      "text": "सुधर रहा है",
      "where": [
-      "apps/teacher/lib/screens/level_screen.dart:549"
+      "apps/teacher/lib/screens/level_screen.dart:546"
      ]
     }
    ],
@@ -3935,8 +3936,8 @@
     {
      "text": "चल रहा है",
      "where": [
-      "apps/teacher/lib/screens/syllabus_screen.dart:749",
-      "apps/teacher/lib/screens/voice_report_screen.dart:219",
+      "apps/teacher/lib/screens/syllabus_screen.dart:750",
+      "apps/teacher/lib/screens/voice_report_screen.dart:224",
       "apps/teacher/lib/widgets/syllabus_widgets.dart:89",
       "apps/teacher/lib/widgets/voice_sessions_card.dart:170",
       "apps/parent/lib/screens/voice_history_screen.dart:133"
@@ -3987,7 +3988,7 @@
     {
      "text": "प्रश्न",
      "where": [
-      "apps/teacher/lib/screens/voice_report_screen.dart:593"
+      "apps/teacher/lib/screens/voice_report_screen.dart:598"
      ]
     }
    ],
@@ -4078,7 +4079,7 @@
     {
      "text": "कक्षा साथी",
      "where": [
-      "apps/teacher/lib/screens/board_screen.dart:433",
+      "apps/teacher/lib/screens/board_screen.dart:435",
       "apps/teacher/lib/screens/login_screen.dart:68",
       "apps/parent/lib/screens/gate_screen.dart:107",
       "apps/parent/lib/screens/home_screen.dart:140",
@@ -4128,7 +4129,7 @@
     {
      "text": "जाँच जारी रखें",
      "where": [
-      "apps/teacher/lib/screens/level_check_screen.dart:161"
+      "apps/teacher/lib/screens/level_check_screen.dart:163"
      ]
     }
    ],
@@ -4254,7 +4255,7 @@
     {
      "text": "बाद में",
      "where": [
-      "apps/parent/lib/screens/journey_screen.dart:440",
+      "apps/parent/lib/screens/journey_screen.dart:447",
       "apps/parent/lib/widgets/journey_path.dart:14"
      ]
     }
@@ -4270,7 +4271,7 @@
     {
      "text": "सीख लिया",
      "where": [
-      "apps/parent/lib/screens/journey_screen.dart:422",
+      "apps/parent/lib/screens/journey_screen.dart:429",
       "apps/parent/lib/widgets/journey_path.dart:11"
      ]
     }
@@ -4462,8 +4463,8 @@
     {
      "text": "स्तर जाँच",
      "where": [
-      "apps/teacher/lib/screens/board_screen.dart:850",
-      "apps/teacher/lib/screens/level_check_screen.dart:276",
+      "apps/teacher/lib/screens/board_screen.dart:845",
+      "apps/teacher/lib/screens/level_check_screen.dart:278",
       "apps/teacher/lib/screens/roster_screen.dart:311"
      ]
     }
@@ -4479,7 +4480,7 @@
     {
      "text": "स्तर {level} / {levelsCount} · {pick}",
      "where": [
-      "apps/teacher/lib/screens/level_check_screen.dart:577"
+      "apps/teacher/lib/screens/level_check_screen.dart:573"
      ]
     }
    ],
@@ -4513,7 +4514,7 @@
     {
      "text": "संभावित चूक: {miscHi}",
      "where": [
-      "apps/teacher/lib/screens/level_screen.dart:565"
+      "apps/teacher/lib/screens/level_screen.dart:562"
      ]
     }
    ],
@@ -4530,8 +4531,8 @@
     {
      "text": "सुनें",
      "where": [
-      "apps/teacher/lib/screens/group_plan_screen.dart:228",
-      "apps/teacher/lib/screens/level_screen.dart:251",
+      "apps/teacher/lib/screens/group_plan_screen.dart:229",
+      "apps/teacher/lib/screens/level_screen.dart:252",
       "apps/parent/lib/widgets/insight_cards.dart:84"
      ]
     }
@@ -4578,7 +4579,7 @@
     {
      "text": "इस समूह को सुनें",
      "where": [
-      "apps/teacher/lib/screens/group_plan_screen.dart:435"
+      "apps/teacher/lib/screens/group_plan_screen.dart:436"
      ]
     }
    ],
@@ -4653,7 +4654,7 @@
     {
      "text": "सबूत कम — टैप से जाँचें",
      "where": [
-      "apps/teacher/lib/screens/level_screen.dart:576"
+      "apps/teacher/lib/screens/level_screen.dart:573"
      ]
     }
    ],
@@ -4668,7 +4669,7 @@
     {
      "text": "कक्षा की स्थिति आ रही है…",
      "where": [
-      "apps/teacher/lib/screens/board_screen.dart:604"
+      "apps/teacher/lib/screens/board_screen.dart:599"
      ]
     }
    ],
@@ -4823,7 +4824,7 @@
     {
      "text": "अपनी किताब से अध्याय जोड़ें",
      "where": [
-      "apps/teacher/lib/screens/syllabus_screen.dart:678"
+      "apps/teacher/lib/screens/syllabus_screen.dart:679"
      ]
     }
    ],
@@ -4838,7 +4839,7 @@
     {
      "text": "किताब से: {bookTitle}",
      "where": [
-      "apps/teacher/lib/screens/syllabus_screen.dart:631"
+      "apps/teacher/lib/screens/syllabus_screen.dart:632"
      ]
     }
    ],
@@ -4887,7 +4888,7 @@
     {
      "text": "हर सवाल पर निशान लगाएँ",
      "where": [
-      "apps/teacher/lib/screens/level_check_screen.dart:652"
+      "apps/teacher/lib/screens/level_check_screen.dart:648"
      ]
     }
    ],
@@ -4917,7 +4918,7 @@
     {
      "text": "सामग्री",
      "where": [
-      "apps/teacher/lib/screens/group_plan_screen.dart:844"
+      "apps/teacher/lib/screens/group_plan_screen.dart:845"
      ]
     }
    ],
@@ -4932,7 +4933,7 @@
     {
      "text": "सामग्री: {materials_hi2}",
      "where": [
-      "apps/teacher/lib/screens/group_plan_screen.dart:480"
+      "apps/teacher/lib/screens/group_plan_screen.dart:481"
      ]
     }
    ],
@@ -4949,12 +4950,9 @@
     {
      "text": "गणित",
      "where": [
-      "apps/teacher/lib/screens/board_screen.dart:532",
-      "apps/teacher/lib/screens/level_check_screen.dart:118",
-      "apps/teacher/lib/screens/level_screen.dart:454",
-      "apps/teacher/lib/screens/outcomes_screen.dart:108",
+      "apps/teacher/lib/subjects.dart:10",
       "apps/parent/lib/screens/journey_screen.dart:176",
-      "apps/parent/lib/screens/journey_screen.dart:301"
+      "apps/parent/lib/screens/journey_screen.dart:307"
      ]
     }
    ],
@@ -5032,7 +5030,7 @@
     {
      "text": "छूटा",
      "where": [
-      "apps/teacher/lib/screens/voice_report_screen.dart:732",
+      "apps/teacher/lib/screens/voice_report_screen.dart:737",
       "apps/teacher/lib/widgets/read_aloud_sheet.dart:388"
      ]
     }
@@ -5080,7 +5078,7 @@
     {
      "text": "गलतियाँ",
      "where": [
-      "apps/teacher/lib/screens/voice_report_screen.dart:387"
+      "apps/teacher/lib/screens/voice_report_screen.dart:392"
      ]
     }
    ],
@@ -5143,7 +5141,7 @@
     {
      "text": "क्रम बदल दिया।",
      "where": [
-      "apps/teacher/lib/screens/syllabus_screen.dart:285"
+      "apps/teacher/lib/screens/syllabus_screen.dart:286"
      ]
     }
    ],
@@ -5173,7 +5171,7 @@
     {
      "text": "अंग्रेज़ी में नाम",
      "where": [
-      "apps/teacher/lib/screens/syllabus_screen.dart:315"
+      "apps/teacher/lib/screens/syllabus_screen.dart:316"
      ]
     }
    ],
@@ -5188,7 +5186,7 @@
     {
      "text": "हिन्दी में नाम",
      "where": [
-      "apps/teacher/lib/screens/syllabus_screen.dart:324"
+      "apps/teacher/lib/screens/syllabus_screen.dart:325"
      ]
     }
    ],
@@ -5269,7 +5267,7 @@
     {
      "text": "अभी ध्यान दें",
      "where": [
-      "apps/teacher/lib/screens/level_screen.dart:477"
+      "apps/teacher/lib/screens/level_screen.dart:474"
      ]
     }
    ],
@@ -5394,7 +5392,7 @@
     {
      "text": "अगला",
      "where": [
-      "apps/parent/lib/screens/journey_screen.dart:434"
+      "apps/parent/lib/screens/journey_screen.dart:441"
      ]
     },
     {
@@ -5416,7 +5414,7 @@
     {
      "text": "अगला बच्चा: {first_name}",
      "where": [
-      "apps/teacher/lib/screens/level_check_screen.dart:893"
+      "apps/teacher/lib/screens/level_check_screen.dart:889"
      ]
     }
    ],
@@ -5448,7 +5446,7 @@
     {
      "text": "आगे क्या करें",
      "where": [
-      "apps/teacher/lib/screens/voice_report_screen.dart:426"
+      "apps/teacher/lib/screens/voice_report_screen.dart:431"
      ]
     }
    ],
@@ -5571,7 +5569,7 @@
     {
      "text": "कोई बच्चा नहीं।",
      "where": [
-      "apps/teacher/lib/screens/outcomes_screen.dart:284"
+      "apps/teacher/lib/screens/outcomes_screen.dart:281"
      ]
     }
    ],
@@ -5586,7 +5584,7 @@
     {
      "text": "कोई कक्षा नहीं मिली — स्कूल से जोड़ें।",
      "where": [
-      "apps/teacher/lib/screens/board_screen.dart:135"
+      "apps/teacher/lib/screens/board_screen.dart:137"
      ]
     }
    ],
@@ -5646,7 +5644,7 @@
     {
      "text": "अभी कोई कमी नहीं",
      "where": [
-      "apps/teacher/lib/screens/board_screen.dart:646"
+      "apps/teacher/lib/screens/board_screen.dart:641"
      ]
     }
    ],
@@ -5661,7 +5659,7 @@
     {
      "text": "आज किसी समूह के लिए गतिविधि ज़रूरी नहीं।",
      "where": [
-      "apps/teacher/lib/screens/group_plan_screen.dart:341"
+      "apps/teacher/lib/screens/group_plan_screen.dart:342"
      ]
     }
    ],
@@ -5676,7 +5674,7 @@
     {
      "text": "अभी कोई समूह सत्र नहीं। समूह को पढ़ाने के बाद योजना कार्ड पर \"किया\" दबाएँ।",
      "where": [
-      "apps/teacher/lib/screens/outcomes_screen.dart:195"
+      "apps/teacher/lib/screens/outcomes_screen.dart:192"
      ]
     }
    ],
@@ -5691,8 +5689,8 @@
     {
      "text": "इंटरनेट नहीं है। फ़ोन में रखा है, बाद में भेजा जाएगा।",
      "where": [
-      "apps/teacher/lib/screens/level_check_screen.dart:871",
-      "apps/teacher/lib/screens/level_screen.dart:324",
+      "apps/teacher/lib/screens/level_check_screen.dart:867",
+      "apps/teacher/lib/screens/level_screen.dart:325",
       "apps/teacher/lib/widgets/read_aloud_sheet.dart:209"
      ]
     }
@@ -5771,7 +5769,7 @@
     {
      "text": "अभी कोई बड़ी चूक नहीं दिख रही। ऊपर बोर्ड से जाँच बाकी बच्चों से शुरू करें।",
      "where": [
-      "apps/teacher/lib/screens/level_screen.dart:484"
+      "apps/teacher/lib/screens/level_screen.dart:481"
      ]
     }
    ],
@@ -5786,7 +5784,7 @@
     {
      "text": "आज किसी समूह के लिए नई योजना नहीं — सब ट्रैक पर या जाँच बाकी है।",
      "where": [
-      "apps/teacher/lib/screens/board_screen.dart:651"
+      "apps/teacher/lib/screens/board_screen.dart:646"
      ]
     }
    ],
@@ -5816,7 +5814,7 @@
     {
      "text": "अभी कोई योजना नहीं।",
      "where": [
-      "apps/teacher/lib/screens/group_plan_screen.dart:271"
+      "apps/teacher/lib/screens/group_plan_screen.dart:272"
      ]
     }
    ],
@@ -5846,7 +5844,7 @@
     {
      "text": "इस सबक का तैयार प्रश्न नहीं — सीधे टैप में जाँचें।",
      "where": [
-      "apps/teacher/lib/screens/level_screen.dart:263"
+      "apps/teacher/lib/screens/level_screen.dart:264"
      ]
     }
    ],
@@ -5861,7 +5859,7 @@
     {
      "text": "अभी रिपोर्ट नहीं है। सत्र चल रहा है या पूरा नहीं हुआ।",
      "where": [
-      "apps/teacher/lib/screens/voice_report_screen.dart:242"
+      "apps/teacher/lib/screens/voice_report_screen.dart:247"
      ]
     }
    ],
@@ -5892,7 +5890,7 @@
     {
      "text": "इस कक्षा में अभी कोई बच्चा नहीं।",
      "where": [
-      "apps/teacher/lib/screens/level_check_screen.dart:350",
+      "apps/teacher/lib/screens/level_check_screen.dart:352",
       "apps/teacher/lib/screens/settings_screen.dart:593"
      ]
     }
@@ -5923,7 +5921,7 @@
     {
      "text": "इस फ़िल्टर में कोई विषय नहीं।",
      "where": [
-      "apps/teacher/lib/screens/syllabus_screen.dart:647"
+      "apps/teacher/lib/screens/syllabus_screen.dart:648"
      ]
     }
    ],
@@ -5938,7 +5936,7 @@
     {
      "text": "अभी कोई विषय नहीं — एक जोड़ें या अपनी किताब से जोड़ें",
      "where": [
-      "apps/teacher/lib/screens/syllabus_screen.dart:765"
+      "apps/teacher/lib/screens/syllabus_screen.dart:766"
      ]
     }
    ],
@@ -6015,7 +6013,7 @@
     {
      "text": "अभी जाँच नहीं हुई",
      "where": [
-      "apps/teacher/lib/screens/level_check_screen.dart:493"
+      "apps/teacher/lib/screens/level_check_screen.dart:489"
      ]
     }
    ],
@@ -6047,7 +6045,7 @@
     {
      "text": "सही नहीं",
      "where": [
-      "apps/teacher/lib/screens/level_screen.dart:283",
+      "apps/teacher/lib/screens/level_screen.dart:284",
       "apps/teacher/lib/widgets/read_aloud_sheet.dart:541"
      ]
     }
@@ -6110,7 +6108,7 @@
     {
      "text": "पास नहीं",
      "where": [
-      "apps/teacher/lib/screens/level_check_screen.dart:817"
+      "apps/teacher/lib/screens/level_check_screen.dart:813"
      ]
     }
    ],
@@ -6125,7 +6123,7 @@
     {
      "text": "पास नहीं · पूरा करें",
      "where": [
-      "apps/teacher/lib/screens/level_check_screen.dart:657"
+      "apps/teacher/lib/screens/level_check_screen.dart:653"
      ]
     }
    ],
@@ -6140,7 +6138,7 @@
     {
      "text": "अभी फिर जाँच नहीं",
      "where": [
-      "apps/teacher/lib/screens/outcomes_screen.dart:382"
+      "apps/teacher/lib/screens/outcomes_screen.dart:379"
      ]
     }
    ],
@@ -6202,7 +6200,7 @@
     {
      "text": "शुरू नहीं",
      "where": [
-      "apps/teacher/lib/screens/syllabus_screen.dart:748",
+      "apps/teacher/lib/screens/syllabus_screen.dart:749",
       "apps/teacher/lib/widgets/syllabus_widgets.dart:90",
       "apps/teacher/lib/widgets/syllabus_widgets.dart:630"
      ]
@@ -6236,7 +6234,7 @@
     {
      "text": "अभी नहीं",
      "where": [
-      "apps/teacher/lib/screens/voice_report_screen.dart:889",
+      "apps/teacher/lib/screens/voice_report_screen.dart:894",
       "apps/parent/lib/screens/voice_report_screen.dart:438"
      ]
     }
@@ -6268,7 +6266,7 @@
     {
      "text": "इस जाँच का कुछ भी अभी सहेजा नहीं गया है।",
      "where": [
-      "apps/teacher/lib/screens/level_check_screen.dart:153"
+      "apps/teacher/lib/screens/level_check_screen.dart:155"
      ]
     }
    ],
@@ -6298,7 +6296,7 @@
     {
      "text": "अभी दिखाने को कुछ नहीं।",
      "where": [
-      "apps/parent/lib/screens/journey_screen.dart:208"
+      "apps/parent/lib/screens/journey_screen.dart:213"
      ]
     },
     {
@@ -6423,7 +6421,7 @@
     {
      "text": "ऑफलाइन — पिछली बार का बोर्ड दिख रहा है।",
      "where": [
-      "apps/teacher/lib/screens/board_screen.dart:582"
+      "apps/teacher/lib/screens/board_screen.dart:577"
      ]
     }
    ],
@@ -6438,7 +6436,7 @@
     {
      "text": "ऑफलाइन — आख़िरी सहेजी योजना ({for_date}) दिख रही है। यह पुरानी हो सकती है।",
      "where": [
-      "apps/teacher/lib/screens/group_plan_screen.dart:303"
+      "apps/teacher/lib/screens/group_plan_screen.dart:304"
      ]
     }
    ],
@@ -6455,7 +6453,7 @@
     {
      "text": "ऑफलाइन — पिछली बार के नतीजे दिख रहे हैं।",
      "where": [
-      "apps/teacher/lib/screens/outcomes_screen.dart:174"
+      "apps/teacher/lib/screens/outcomes_screen.dart:171"
      ]
     }
    ],
@@ -6470,13 +6468,13 @@
     {
      "text": "ऑफ़लाइन: पिछली सहेजी हुई जानकारी दिख रही है",
      "where": [
-      "apps/teacher/lib/screens/level_check_screen.dart:327"
+      "apps/teacher/lib/screens/level_check_screen.dart:329"
      ]
     },
     {
      "text": "ऑफ़लाइन: पिछली सहेजी हुई सूची दिख रही है",
      "where": [
-      "apps/teacher/lib/screens/syllabus_screen.dart:615"
+      "apps/teacher/lib/screens/syllabus_screen.dart:616"
      ]
     }
    ],
@@ -6491,7 +6489,7 @@
     {
      "text": "ऑफ़लाइन: पिछली सहेजी जानकारी दिख रही है।",
      "where": [
-      "apps/teacher/lib/screens/voice_report_screen.dart:230"
+      "apps/teacher/lib/screens/voice_report_screen.dart:235"
      ]
     }
    ],
@@ -6521,8 +6519,8 @@
     {
      "text": "बोर्ड पर",
      "where": [
-      "apps/teacher/lib/screens/group_plan_screen.dart:520",
-      "apps/teacher/lib/screens/group_plan_screen.dart:849"
+      "apps/teacher/lib/screens/group_plan_screen.dart:521",
+      "apps/teacher/lib/screens/group_plan_screen.dart:850"
      ]
     }
    ],
@@ -6552,7 +6550,7 @@
     {
      "text": "अपनी गति पर ({onTrackCount})",
      "where": [
-      "apps/teacher/lib/screens/board_screen.dart:675"
+      "apps/teacher/lib/screens/board_screen.dart:670"
      ]
     }
    ],
@@ -6670,8 +6668,8 @@
     {
      "text": "अन्य",
      "where": [
-      "apps/teacher/lib/screens/level_screen.dart:420",
-      "apps/teacher/lib/screens/level_screen.dart:804",
+      "apps/teacher/lib/screens/level_screen.dart:421",
+      "apps/teacher/lib/screens/level_screen.dart:801",
       "apps/teacher/lib/widgets/syllabus_import.dart:783"
      ]
     }
@@ -6813,7 +6811,7 @@
     {
      "text": "पास",
      "where": [
-      "apps/teacher/lib/screens/level_check_screen.dart:816"
+      "apps/teacher/lib/screens/level_check_screen.dart:812"
      ]
     }
    ],
@@ -6828,7 +6826,7 @@
     {
      "text": "पास · पूरा करें",
      "where": [
-      "apps/teacher/lib/screens/level_check_screen.dart:656"
+      "apps/teacher/lib/screens/level_check_screen.dart:652"
      ]
     }
    ],
@@ -6843,7 +6841,7 @@
     {
      "text": "पास · अगला स्तर",
      "where": [
-      "apps/teacher/lib/screens/level_check_screen.dart:654"
+      "apps/teacher/lib/screens/level_check_screen.dart:650"
      ]
     }
    ],
@@ -6933,7 +6931,7 @@
     {
      "text": "फ़ोटो",
      "where": [
-      "apps/teacher/lib/screens/level_screen.dart:797",
+      "apps/teacher/lib/screens/level_screen.dart:794",
       "apps/teacher/lib/widgets/capture_sheet.dart:170"
      ]
     }
@@ -6979,7 +6977,7 @@
     {
      "text": "आज की योजना",
      "where": [
-      "apps/teacher/lib/screens/group_plan_screen.dart:879"
+      "apps/teacher/lib/screens/group_plan_screen.dart:880"
      ]
     }
    ],
@@ -6992,9 +6990,9 @@
    "en": "Plan for today · {v}",
    "hi": [
     {
-     "text": "आज की योजना · {v2}",
+     "text": "आज की योजना · {v}",
      "where": [
-      "apps/teacher/lib/screens/group_plan_screen.dart:206"
+      "apps/teacher/lib/screens/group_plan_screen.dart:207"
      ]
     }
    ],
@@ -7163,7 +7161,7 @@
     {
      "text": "समय के साथ प्रगति",
      "where": [
-      "apps/teacher/lib/screens/level_screen.dart:473"
+      "apps/teacher/lib/screens/level_screen.dart:470"
      ]
     }
    ],
@@ -7319,7 +7317,7 @@
     {
      "text": "पढ़ने की जाँच",
      "where": [
-      "apps/teacher/lib/screens/level_screen.dart:601",
+      "apps/teacher/lib/screens/level_screen.dart:598",
       "apps/teacher/lib/widgets/read_aloud_sheet.dart:250"
      ]
     }
@@ -7335,7 +7333,7 @@
     {
      "text": "पढ़ने की गति",
      "where": [
-      "apps/teacher/lib/screens/voice_report_screen.dart:406"
+      "apps/teacher/lib/screens/voice_report_screen.dart:411"
      ]
     }
    ],
@@ -7414,7 +7412,7 @@
     {
      "text": "अक्षर अलग-अलग पढ़ता है",
      "where": [
-      "apps/teacher/lib/screens/level_screen.dart:826"
+      "apps/teacher/lib/screens/level_screen.dart:823"
      ]
     }
    ],
@@ -7444,7 +7442,7 @@
     {
      "text": "हाल के सबूत",
      "where": [
-      "apps/teacher/lib/screens/level_screen.dart:515"
+      "apps/teacher/lib/screens/level_screen.dart:512"
      ]
     }
    ],
@@ -7550,8 +7548,8 @@
     {
      "text": "ताज़ा करें",
      "where": [
-      "apps/teacher/lib/screens/level_screen.dart:372",
-      "apps/teacher/lib/screens/voice_report_screen.dart:156"
+      "apps/teacher/lib/screens/level_screen.dart:373",
+      "apps/teacher/lib/screens/voice_report_screen.dart:160"
      ]
     }
    ],
@@ -7566,9 +7564,9 @@
     {
      "text": "फिर से बनाएँ",
      "where": [
-      "apps/teacher/lib/screens/group_plan_screen.dart:185",
-      "apps/teacher/lib/screens/group_plan_screen.dart:218",
-      "apps/teacher/lib/screens/group_plan_screen.dart:755"
+      "apps/teacher/lib/screens/group_plan_screen.dart:186",
+      "apps/teacher/lib/screens/group_plan_screen.dart:219",
+      "apps/teacher/lib/screens/group_plan_screen.dart:756"
      ]
     }
    ],
@@ -7583,7 +7581,7 @@
     {
      "text": "योजना फिर से बनाएँ?",
      "where": [
-      "apps/teacher/lib/screens/group_plan_screen.dart:171"
+      "apps/teacher/lib/screens/group_plan_screen.dart:172"
      ]
     }
    ],
@@ -7629,7 +7627,7 @@
      "text": "हटाएँ",
      "where": [
       "apps/teacher/lib/screens/roster_screen.dart:1074",
-      "apps/teacher/lib/screens/syllabus_screen.dart:231",
+      "apps/teacher/lib/screens/syllabus_screen.dart:232",
       "apps/teacher/lib/widgets/syllabus_widgets.dart:702"
      ]
     }
@@ -7705,7 +7703,7 @@
     {
      "text": "यह विषय हटाएँ?",
      "where": [
-      "apps/teacher/lib/screens/syllabus_screen.dart:216"
+      "apps/teacher/lib/screens/syllabus_screen.dart:217"
      ]
     }
    ],
@@ -7737,7 +7735,7 @@
     {
      "text": "पाठ्यक्रम से हटा दिया।",
      "where": [
-      "apps/teacher/lib/screens/syllabus_screen.dart:243"
+      "apps/teacher/lib/screens/syllabus_screen.dart:244"
      ]
     }
    ],
@@ -7801,7 +7799,7 @@
     {
      "text": "विषय का नाम बदलें",
      "where": [
-      "apps/teacher/lib/screens/syllabus_screen.dart:304"
+      "apps/teacher/lib/screens/syllabus_screen.dart:305"
      ]
     }
    ],
@@ -7816,7 +7814,7 @@
     {
      "text": "नाम बदल दिया।",
      "where": [
-      "apps/teacher/lib/screens/syllabus_screen.dart:361"
+      "apps/teacher/lib/screens/syllabus_screen.dart:362"
      ]
     }
    ],
@@ -7863,7 +7861,7 @@
     {
      "text": "वापस लाएँ",
      "where": [
-      "apps/teacher/lib/screens/level_screen.dart:775",
+      "apps/teacher/lib/screens/level_screen.dart:772",
       "apps/teacher/lib/screens/roster_screen.dart:105",
       "apps/teacher/lib/screens/roster_screen.dart:210",
       "apps/teacher/lib/screens/roster_screen.dart:548"
@@ -7898,7 +7896,7 @@
     {
      "text": "यह सुविधा अभी इस सर्वर पर उपलब्ध नहीं है।",
      "where": [
-      "apps/teacher/lib/screens/outcomes_screen.dart:134"
+      "apps/teacher/lib/screens/outcomes_screen.dart:131"
      ]
     }
    ],
@@ -7935,12 +7933,12 @@
      "text": "दोबारा कोशिश करें",
      "where": [
       "apps/teacher/lib/screens/class_picker_screen.dart:138",
-      "apps/teacher/lib/screens/level_check_screen.dart:403",
-      "apps/teacher/lib/screens/level_screen.dart:405",
+      "apps/teacher/lib/screens/level_check_screen.dart:399",
+      "apps/teacher/lib/screens/level_screen.dart:406",
       "apps/teacher/lib/screens/roster_screen.dart:595",
       "apps/teacher/lib/screens/settings_screen.dart:571",
-      "apps/teacher/lib/screens/syllabus_screen.dart:556",
-      "apps/teacher/lib/screens/voice_report_screen.dart:184",
+      "apps/teacher/lib/screens/syllabus_screen.dart:557",
+      "apps/teacher/lib/screens/voice_report_screen.dart:188",
       "apps/teacher/lib/widgets/capture_sheet.dart:539",
       "apps/teacher/lib/widgets/syllabus_import.dart:961",
       "apps/teacher/lib/widgets/syllabus_import.dart:967"
@@ -7949,7 +7947,7 @@
     {
      "text": "फिर कोशिश करें",
      "where": [
-      "apps/teacher/lib/screens/group_plan_screen.dart:261"
+      "apps/teacher/lib/screens/group_plan_screen.dart:262"
      ]
     }
    ],
@@ -7979,9 +7977,9 @@
     {
      "text": "सही",
      "where": [
-      "apps/teacher/lib/screens/level_check_screen.dart:719",
-      "apps/teacher/lib/screens/voice_report_screen.dart:729",
-      "apps/teacher/lib/screens/voice_report_screen.dart:887"
+      "apps/teacher/lib/screens/level_check_screen.dart:715",
+      "apps/teacher/lib/screens/voice_report_screen.dart:734",
+      "apps/teacher/lib/screens/voice_report_screen.dart:892"
      ]
     }
    ],
@@ -8315,9 +8313,9 @@
     {
      "text": "सहेजें",
      "where": [
-      "apps/teacher/lib/screens/level_check_screen.dart:837",
+      "apps/teacher/lib/screens/level_check_screen.dart:833",
       "apps/teacher/lib/screens/roster_screen.dart:1173",
-      "apps/teacher/lib/screens/syllabus_screen.dart:338"
+      "apps/teacher/lib/screens/syllabus_screen.dart:339"
      ]
     }
    ],
@@ -8379,7 +8377,7 @@
     {
      "text": "जाँच दर्ज करें ({passed}/{itemsCount})",
      "where": [
-      "apps/teacher/lib/screens/level_screen.dart:351"
+      "apps/teacher/lib/screens/level_screen.dart:352"
      ]
     }
    ],
@@ -8457,7 +8455,7 @@
     {
      "text": "फ़ोन में सहेजा — नेट आने पर भेजा जाएगा। बाद में फिर जाँचें।",
      "where": [
-      "apps/teacher/lib/screens/group_plan_screen.dart:794"
+      "apps/teacher/lib/screens/group_plan_screen.dart:795"
      ]
     }
    ],
@@ -8489,7 +8487,7 @@
     {
      "text": "फ़ोन में सहेजा। नेटवर्क आने पर भेज दिया जाएगा।",
      "where": [
-      "apps/teacher/lib/screens/board_screen.dart:406"
+      "apps/teacher/lib/screens/board_screen.dart:408"
      ]
     }
    ],
@@ -8523,7 +8521,7 @@
     {
      "text": "दर्ज — अब फिर जाँचें ताकि समूह अपडेट हों।",
      "where": [
-      "apps/teacher/lib/screens/group_plan_screen.dart:798"
+      "apps/teacher/lib/screens/group_plan_screen.dart:799"
      ]
     }
    ],
@@ -8538,7 +8536,7 @@
     {
      "text": "सहेज लिया।",
      "where": [
-      "apps/teacher/lib/screens/level_check_screen.dart:875"
+      "apps/teacher/lib/screens/level_check_screen.dart:871"
      ]
     },
     {
@@ -8578,7 +8576,7 @@
     {
      "text": "सहेज रहे हैं…",
      "where": [
-      "apps/teacher/lib/screens/level_check_screen.dart:837",
+      "apps/teacher/lib/screens/level_check_screen.dart:833",
       "apps/teacher/lib/screens/roster_screen.dart:723",
       "apps/teacher/lib/screens/roster_screen.dart:1173"
      ]
@@ -8586,7 +8584,7 @@
     {
      "text": "दर्ज हो रहा है…",
      "where": [
-      "apps/teacher/lib/screens/level_screen.dart:350",
+      "apps/teacher/lib/screens/level_screen.dart:351",
       "apps/teacher/lib/widgets/read_aloud_sheet.dart:438",
       "apps/teacher/lib/widgets/read_aloud_sheet.dart:561"
      ]
@@ -8799,7 +8797,7 @@
     {
      "text": "सर्वर जाग रहा है, इसमें 40 सेकंड तक लग सकते हैं…",
      "where": [
-      "apps/teacher/lib/screens/group_plan_screen.dart:241"
+      "apps/teacher/lib/screens/group_plan_screen.dart:242"
      ]
     }
    ],
@@ -8859,7 +8857,7 @@
     {
      "text": "सेटिंग्स",
      "where": [
-      "apps/teacher/lib/screens/board_screen.dart:478",
+      "apps/teacher/lib/screens/board_screen.dart:480",
       "apps/teacher/lib/screens/settings_screen.dart:47",
       "apps/parent/lib/screens/home_screen.dart:155",
       "apps/parent/lib/screens/settings_screen.dart:20"
@@ -8972,7 +8970,7 @@
     {
      "text": "चुप",
      "where": [
-      "apps/teacher/lib/screens/voice_report_screen.dart:890"
+      "apps/teacher/lib/screens/voice_report_screen.dart:895"
      ]
     }
    ],
@@ -9017,7 +9015,7 @@
     {
      "text": "एक बच्चे के साथ बैठें। पहले स्तर से शुरू करके आगे बढ़ें; जिस स्तर पर बच्चा पास न हो, वहीं जाँच रुक जाती है।",
      "where": [
-      "apps/teacher/lib/screens/level_check_screen.dart:337"
+      "apps/teacher/lib/screens/level_check_screen.dart:339"
      ]
     }
    ],
@@ -9055,7 +9053,7 @@
     {
      "text": "छोड़ा",
      "where": [
-      "apps/teacher/lib/screens/voice_report_screen.dart:891"
+      "apps/teacher/lib/screens/voice_report_screen.dart:896"
      ]
     },
     {
@@ -9093,7 +9091,7 @@
      "text": "कुछ गड़बड़ हो गई, कृपया दोबारा कोशिश करें",
      "where": [
       "apps/teacher/lib/api_admin.dart:12",
-      "apps/teacher/lib/screens/level_screen.dart:722",
+      "apps/teacher/lib/screens/level_screen.dart:719",
       "apps/teacher/lib/screens/roster_screen.dart:558"
      ]
     }
@@ -9154,7 +9152,7 @@
     {
      "text": "बोलकर",
      "where": [
-      "apps/teacher/lib/screens/level_screen.dart:799"
+      "apps/teacher/lib/screens/level_screen.dart:796"
      ]
     }
    ],
@@ -9169,7 +9167,7 @@
     {
      "text": "फिर से शुरू करें",
      "where": [
-      "apps/teacher/lib/screens/level_check_screen.dart:848"
+      "apps/teacher/lib/screens/level_check_screen.dart:844"
      ]
     }
    ],
@@ -9214,7 +9212,7 @@
     {
      "text": "कदम-दर-कदम",
      "where": [
-      "apps/parent/lib/screens/journey_screen.dart:261"
+      "apps/parent/lib/screens/journey_screen.dart:266"
      ]
     }
    ],
@@ -9229,7 +9227,7 @@
     {
      "text": "रोकें",
      "where": [
-      "apps/teacher/lib/screens/level_check_screen.dart:166",
+      "apps/teacher/lib/screens/level_check_screen.dart:168",
       "apps/parent/lib/screens/voice_report_screen.dart:234",
       "apps/parent/lib/screens/weekly_screen.dart:250",
       "apps/parent/lib/widgets/insight_cards.dart:84",
@@ -9285,7 +9283,7 @@
     {
      "text": "यह जाँच रोकें?",
      "where": [
-      "apps/teacher/lib/screens/level_check_screen.dart:151"
+      "apps/teacher/lib/screens/level_check_screen.dart:153"
      ]
     }
    ],
@@ -9330,7 +9328,7 @@
     {
      "text": "इसी सबक में कठिनाई",
      "where": [
-      "apps/teacher/lib/screens/board_screen.dart:724"
+      "apps/teacher/lib/screens/board_screen.dart:719"
      ]
     }
    ],
@@ -9424,7 +9422,7 @@
     {
      "text": "छोटे में से बड़ा घटा रहा है",
      "where": [
-      "apps/teacher/lib/screens/level_screen.dart:807"
+      "apps/teacher/lib/screens/level_screen.dart:804"
      ]
     }
    ],
@@ -9439,7 +9437,7 @@
     {
      "text": "आपके लिए सार",
      "where": [
-      "apps/teacher/lib/screens/voice_report_screen.dart:322"
+      "apps/teacher/lib/screens/voice_report_screen.dart:327"
      ]
     }
    ],
@@ -9454,7 +9452,7 @@
     {
      "text": "अंकों से बना सार।",
      "where": [
-      "apps/teacher/lib/screens/voice_report_screen.dart:337"
+      "apps/teacher/lib/screens/voice_report_screen.dart:342"
      ]
     }
    ],
@@ -9484,9 +9482,9 @@
     {
      "text": "पाठ्यक्रम",
      "where": [
-      "apps/teacher/lib/screens/board_screen.dart:452",
+      "apps/teacher/lib/screens/board_screen.dart:454",
       "apps/teacher/lib/screens/class_picker_screen.dart:205",
-      "apps/teacher/lib/screens/syllabus_screen.dart:442"
+      "apps/teacher/lib/screens/syllabus_screen.dart:443"
      ]
     }
    ],
@@ -9501,7 +9499,7 @@
     {
      "text": "पाठ्यक्रम सहेज लिया।",
      "where": [
-      "apps/teacher/lib/screens/syllabus_screen.dart:404"
+      "apps/teacher/lib/screens/syllabus_screen.dart:405"
      ]
     }
    ],
@@ -9600,7 +9598,7 @@
     {
      "text": "टैप",
      "where": [
-      "apps/teacher/lib/screens/level_screen.dart:796",
+      "apps/teacher/lib/screens/level_screen.dart:793",
       "apps/teacher/lib/widgets/capture_sheet.dart:160"
      ]
     }
@@ -9616,7 +9614,7 @@
     {
      "text": "जाँच के लिए बच्चे पर टैप करें",
      "where": [
-      "apps/teacher/lib/screens/level_check_screen.dart:345"
+      "apps/teacher/lib/screens/level_check_screen.dart:347"
      ]
     }
    ],
@@ -9676,7 +9674,7 @@
     {
      "text": "इन बच्चों को एक साथ पढ़ाएँ",
      "where": [
-      "apps/teacher/lib/screens/board_screen.dart:665"
+      "apps/teacher/lib/screens/board_screen.dart:660"
      ]
     }
    ],
@@ -9706,7 +9704,7 @@
     {
      "text": "टेम्पलेट योजना (ऑफलाइन/आरक्षित) — लाइब्रेरी से चुनी गई",
      "where": [
-      "apps/teacher/lib/screens/group_plan_screen.dart:328"
+      "apps/teacher/lib/screens/group_plan_screen.dart:329"
      ]
     }
    ],
@@ -9798,7 +9796,7 @@
     {
      "text": "जब टीचर कक्षा में यह विषय शुरू करेंगे, सफ़र यहाँ दिखेगा। {name} जो भी कदम सीखेंगे, वह तारे की तरह चमकेगा।",
      "where": [
-      "apps/parent/lib/screens/journey_screen.dart:230"
+      "apps/parent/lib/screens/journey_screen.dart:235"
      ]
     }
    ],
@@ -10027,7 +10025,7 @@
     {
      "text": "इससे AI से दोबारा योजना बनवाई जाती है, इसमें 40 सेकंड तक लग सकते हैं।",
      "where": [
-      "apps/teacher/lib/screens/group_plan_screen.dart:173"
+      "apps/teacher/lib/screens/group_plan_screen.dart:174"
      ]
     }
    ],
@@ -10057,10 +10055,10 @@
     {
      "text": "इसके लिए नया सर्वर चाहिए। सर्वर अपडेट करवाएँ।",
      "where": [
-      "apps/teacher/lib/screens/level_check_screen.dart:87",
-      "apps/teacher/lib/screens/level_screen.dart:715",
+      "apps/teacher/lib/screens/level_check_screen.dart:90",
+      "apps/teacher/lib/screens/level_screen.dart:712",
       "apps/teacher/lib/screens/roster_screen.dart:564",
-      "apps/teacher/lib/screens/syllabus_screen.dart:129"
+      "apps/teacher/lib/screens/syllabus_screen.dart:130"
      ]
     }
    ],
@@ -10257,7 +10255,7 @@
     {
      "text": "विषय जुड़ गया।",
      "where": [
-      "apps/teacher/lib/screens/syllabus_screen.dart:387"
+      "apps/teacher/lib/screens/syllabus_screen.dart:388"
      ]
     }
    ],
@@ -10347,7 +10345,7 @@
     {
      "text": "जिन सबक पर ध्यान दें",
      "where": [
-      "apps/teacher/lib/screens/voice_report_screen.dart:358"
+      "apps/teacher/lib/screens/voice_report_screen.dart:363"
      ]
     },
     {
@@ -10384,7 +10382,7 @@
     {
      "text": "अंकों को अलग-अलग समझता है",
      "where": [
-      "apps/teacher/lib/screens/level_screen.dart:830"
+      "apps/teacher/lib/screens/level_screen.dart:827"
      ]
     }
    ],
@@ -10399,7 +10397,7 @@
     {
      "text": "प्रयास",
      "where": [
-      "apps/teacher/lib/screens/voice_report_screen.dart:595"
+      "apps/teacher/lib/screens/voice_report_screen.dart:600"
      ]
     }
    ],
@@ -10431,8 +10429,8 @@
     {
      "text": "फिर कोशिश करें",
      "where": [
-      "apps/teacher/lib/screens/board_screen.dart:619",
-      "apps/teacher/lib/screens/outcomes_screen.dart:146"
+      "apps/teacher/lib/screens/board_screen.dart:614",
+      "apps/teacher/lib/screens/outcomes_screen.dart:143"
      ]
     },
     {
@@ -10444,7 +10442,7 @@
     {
      "text": "फिर से कोशिश करें",
      "where": [
-      "apps/parent/lib/screens/journey_screen.dart:215",
+      "apps/parent/lib/screens/journey_screen.dart:220",
       "apps/parent/lib/screens/voice_report_screen.dart:155",
       "apps/parent/lib/screens/voice_report_screen.dart:613",
       "apps/parent/lib/screens/voice_session_screen.dart:677",
@@ -10704,7 +10702,7 @@
     {
      "text": "वापस लें",
      "where": [
-      "apps/teacher/lib/screens/level_screen.dart:757"
+      "apps/teacher/lib/screens/level_screen.dart:754"
      ]
     }
    ],
@@ -10719,7 +10717,7 @@
     {
      "text": "यह एंट्री वापस लें",
      "where": [
-      "apps/teacher/lib/screens/level_screen.dart:699"
+      "apps/teacher/lib/screens/level_screen.dart:696"
      ]
     }
    ],
@@ -10734,7 +10732,7 @@
     {
      "text": "यह एंट्री वापस लें?",
      "where": [
-      "apps/teacher/lib/screens/level_screen.dart:739"
+      "apps/teacher/lib/screens/level_screen.dart:736"
      ]
     }
    ],
@@ -10794,7 +10792,7 @@
     {
      "text": "आवाज़",
      "where": [
-      "apps/teacher/lib/screens/level_screen.dart:798",
+      "apps/teacher/lib/screens/level_screen.dart:795",
       "apps/teacher/lib/widgets/capture_sheet.dart:165"
      ]
     }
@@ -10935,7 +10933,7 @@
     {
      "text": "सर्वर चालू हो रहा है। पहली बार में एक मिनट तक लग सकता है…",
      "where": [
-      "apps/teacher/lib/screens/board_screen.dart:600"
+      "apps/teacher/lib/screens/board_screen.dart:595"
      ]
     }
    ],
@@ -11026,7 +11024,7 @@
     {
      "text": "रंगों का मतलब",
      "where": [
-      "apps/teacher/lib/screens/syllabus_screen.dart:455"
+      "apps/teacher/lib/screens/syllabus_screen.dart:456"
      ]
     }
    ],
@@ -11133,7 +11131,7 @@
     {
      "text": "काम चल रहा है",
      "where": [
-      "apps/parent/lib/screens/journey_screen.dart:428"
+      "apps/parent/lib/screens/journey_screen.dart:435"
      ]
     },
     {
@@ -11155,7 +11153,7 @@
     {
      "text": "अभी 1 कदम पर काम चल रहा है।",
      "where": [
-      "apps/parent/lib/screens/journey_screen.dart:367"
+      "apps/parent/lib/screens/journey_screen.dart:374"
      ]
     }
    ],
@@ -11200,7 +11198,7 @@
     {
      "text": "अभी {working} कदमों पर काम चल रहा है।",
      "where": [
-      "apps/parent/lib/screens/journey_screen.dart:371"
+      "apps/parent/lib/screens/journey_screen.dart:378"
      ]
     }
    ],
@@ -11234,7 +11232,7 @@
     {
      "text": "अंकों से AI ने लिखा। अंक कोड से जाँचे गए हैं।",
      "where": [
-      "apps/teacher/lib/screens/voice_report_screen.dart:333"
+      "apps/teacher/lib/screens/voice_report_screen.dart:338"
      ]
     }
    ],
@@ -11249,8 +11247,8 @@
     {
      "text": "गलत",
      "where": [
-      "apps/teacher/lib/screens/level_check_screen.dart:709",
-      "apps/teacher/lib/screens/voice_report_screen.dart:731",
+      "apps/teacher/lib/screens/level_check_screen.dart:705",
+      "apps/teacher/lib/screens/voice_report_screen.dart:736",
       "apps/teacher/lib/widgets/capture_sheet.dart:48",
       "apps/teacher/lib/widgets/capture_sheet.dart:713",
       "apps/teacher/lib/widgets/read_aloud_sheet.dart:387"
@@ -11397,7 +11395,7 @@
     {
      "text": "सटीकता",
      "where": [
-      "apps/teacher/lib/screens/voice_report_screen.dart:298"
+      "apps/teacher/lib/screens/voice_report_screen.dart:303"
      ]
     }
    ],
@@ -11489,7 +11487,7 @@
     {
      "text": "पहली → अभी",
      "where": [
-      "apps/teacher/lib/screens/level_check_screen.dart:445"
+      "apps/teacher/lib/screens/level_check_screen.dart:441"
      ]
     }
    ],
@@ -11536,7 +11534,7 @@
     {
      "text": "सबसे ऊँचा स्तर",
      "where": [
-      "apps/teacher/lib/screens/voice_report_screen.dart:303"
+      "apps/teacher/lib/screens/voice_report_screen.dart:308"
      ]
     }
    ],
@@ -11551,7 +11549,7 @@
     {
      "text": "प्रश्न",
      "where": [
-      "apps/teacher/lib/screens/voice_report_screen.dart:295"
+      "apps/teacher/lib/screens/voice_report_screen.dart:300"
      ]
     }
    ],
@@ -11566,7 +11564,7 @@
     {
      "text": "मिनट",
      "where": [
-      "apps/teacher/lib/screens/voice_report_screen.dart:294",
+      "apps/teacher/lib/screens/voice_report_screen.dart:299",
       "apps/parent/lib/screens/voice_report_screen.dart:379"
      ]
     }
@@ -11716,7 +11714,7 @@
     {
      "text": "सही: {target}",
      "where": [
-      "apps/teacher/lib/screens/voice_report_screen.dart:774"
+      "apps/teacher/lib/screens/voice_report_screen.dart:779"
      ]
     }
    ],
@@ -11827,7 +11825,7 @@
     {
      "text": "{assessed} / {itemsCount} सबक जाँचे गए",
      "where": [
-      "apps/teacher/lib/screens/level_screen.dart:446"
+      "apps/teacher/lib/screens/level_screen.dart:447"
      ]
     }
    ],
@@ -11845,7 +11843,7 @@
     {
      "text": "{chapter} · {membersCount} बच्चे",
      "where": [
-      "apps/teacher/lib/screens/board_screen.dart:757"
+      "apps/teacher/lib/screens/board_screen.dart:752"
      ]
     }
    ],
@@ -11863,7 +11861,7 @@
     {
      "text": "{total} में से {checked} बच्चे जाँचे गए · {moved} आगे बढ़े",
      "where": [
-      "apps/teacher/lib/screens/level_check_screen.dart:431"
+      "apps/teacher/lib/screens/level_check_screen.dart:427"
      ]
     }
    ],
@@ -11882,7 +11880,7 @@
     {
      "text": "{childName}: आवाज़ सत्र",
      "where": [
-      "apps/teacher/lib/screens/voice_report_screen.dart:149"
+      "apps/teacher/lib/screens/voice_report_screen.dart:153"
      ]
     }
    ],
@@ -11935,7 +11933,7 @@
     {
      "text": "{attempted} में से {correct} सही · {failed} अभी नहीं",
      "where": [
-      "apps/teacher/lib/screens/voice_report_screen.dart:626"
+      "apps/teacher/lib/screens/voice_report_screen.dart:631"
      ]
     }
    ],
@@ -11954,7 +11952,7 @@
     {
      "text": "{count} बच्चों की जाँच बाकी — साक्ष्य जोड़ें।",
      "where": [
-      "apps/teacher/lib/screens/group_plan_screen.dart:685"
+      "apps/teacher/lib/screens/group_plan_screen.dart:686"
      ]
     }
    ],
@@ -11989,7 +11987,7 @@
     {
      "text": "{down} पीछे गए",
      "where": [
-      "apps/teacher/lib/screens/outcomes_screen.dart:237"
+      "apps/teacher/lib/screens/outcomes_screen.dart:234"
      ]
     }
    ],
@@ -12006,8 +12004,8 @@
     {
      "text": "{first_name} का स्तर",
      "where": [
-      "apps/teacher/lib/screens/level_check_screen.dart:792",
-      "apps/teacher/lib/screens/level_check_screen.dart:881"
+      "apps/teacher/lib/screens/level_check_screen.dart:788",
+      "apps/teacher/lib/screens/level_check_screen.dart:877"
      ]
     }
    ],
@@ -12041,7 +12039,7 @@
     {
      "text": "कक्षा में {kids} बच्चे",
      "where": [
-      "apps/teacher/lib/screens/syllabus_screen.dart:727"
+      "apps/teacher/lib/screens/syllabus_screen.dart:728"
      ]
     }
    ],
@@ -12075,7 +12073,7 @@
     {
      "text": "{linesCount} पंक्तियाँ",
      "where": [
-      "apps/teacher/lib/screens/voice_report_screen.dart:699"
+      "apps/teacher/lib/screens/voice_report_screen.dart:704"
      ]
     }
    ],
@@ -12237,7 +12235,7 @@
     {
      "text": "{name} ने {total} में से {learned} कदम सीख लिए हैं।",
      "where": [
-      "apps/parent/lib/screens/journey_screen.dart:318"
+      "apps/parent/lib/screens/journey_screen.dart:325"
      ]
     }
    ],
@@ -12256,7 +12254,7 @@
     {
      "text": "{name} ने {subject} के {total} कदमों का सफ़र अभी शुरू किया है। स्कूल में सीखा हर कदम एक तारा बन जाएगा।",
      "where": [
-      "apps/parent/lib/screens/journey_screen.dart:311"
+      "apps/parent/lib/screens/journey_screen.dart:318"
      ]
     }
    ],
@@ -12292,7 +12290,7 @@
     {
      "text": "{name} का सफ़र",
      "where": [
-      "apps/parent/lib/screens/journey_screen.dart:349"
+      "apps/parent/lib/screens/journey_screen.dart:356"
      ]
     }
    ],
@@ -12309,7 +12307,7 @@
     {
      "text": "{name} का {subject} का सफ़र बस शुरू होने वाला है।",
      "where": [
-      "apps/parent/lib/screens/journey_screen.dart:306"
+      "apps/parent/lib/screens/journey_screen.dart:313"
      ]
     }
    ],
@@ -12362,7 +12360,7 @@
     {
      "text": "{not} की फिर जाँच नहीं",
      "where": [
-      "apps/teacher/lib/screens/outcomes_screen.dart:238"
+      "apps/teacher/lib/screens/outcomes_screen.dart:235"
      ]
     }
    ],
@@ -12414,7 +12412,7 @@
     {
      "text": "{n} विषय · {done} पूरे · {progress} चल रहे · {notStarted} शुरू नहीं",
      "where": [
-      "apps/teacher/lib/screens/syllabus_screen.dart:696"
+      "apps/teacher/lib/screens/syllabus_screen.dart:697"
      ]
     }
    ],
@@ -12577,7 +12575,7 @@
     {
      "text": "{itemsCount} में से {right} सही · पास के लिए {passMin} चाहिए",
      "where": [
-      "apps/teacher/lib/screens/level_check_screen.dart:629"
+      "apps/teacher/lib/screens/level_check_screen.dart:625"
      ]
     }
    ],
@@ -12596,7 +12594,7 @@
     {
      "text": "{same} वहीं",
      "where": [
-      "apps/teacher/lib/screens/outcomes_screen.dart:236"
+      "apps/teacher/lib/screens/outcomes_screen.dart:233"
      ]
     }
    ],
@@ -12613,7 +12611,7 @@
     {
      "text": "{sound} को {with_} बोला, {count} बार",
      "where": [
-      "apps/teacher/lib/screens/voice_report_screen.dart:557"
+      "apps/teacher/lib/screens/voice_report_screen.dart:562"
      ]
     }
    ],
@@ -12702,8 +12700,8 @@
     {
      "text": "{time_min} मिनट",
      "where": [
-      "apps/teacher/lib/screens/group_plan_screen.dart:431",
-      "apps/teacher/lib/screens/group_plan_screen.dart:839"
+      "apps/teacher/lib/screens/group_plan_screen.dart:432",
+      "apps/teacher/lib/screens/group_plan_screen.dart:840"
      ]
     }
    ],
@@ -12720,7 +12718,7 @@
     {
      "text": "{members} में से {up} आगे बढ़े",
      "where": [
-      "apps/teacher/lib/screens/outcomes_screen.dart:235"
+      "apps/teacher/lib/screens/outcomes_screen.dart:232"
      ]
     }
    ],
@@ -12738,7 +12736,7 @@
     {
      "text": "फिर जाँचे गए {rechecked} में से {up} आगे बढ़े · {sessions} सत्र, {kids} बच्चे",
      "where": [
-      "apps/teacher/lib/screens/outcomes_screen.dart:430"
+      "apps/teacher/lib/screens/outcomes_screen.dart:427"
      ]
     }
    ],
@@ -12758,7 +12756,7 @@
     {
      "text": "{wcpm} सही शब्द प्रति मिनट ({paragraphs} अनुच्छेद पढ़े)",
      "where": [
-      "apps/teacher/lib/screens/voice_report_screen.dart:411"
+      "apps/teacher/lib/screens/voice_report_screen.dart:416"
      ]
     }
    ],

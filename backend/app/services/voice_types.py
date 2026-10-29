@@ -54,6 +54,29 @@ STAGE_CHECKPOINTS: dict[str, tuple[str, ...]] = {
                 "L.G2.comprehension_literal", "L.G3.comprehension_inferential"),
 }
 
+# The same ladder for English, taught as a second language (docs/english_subject_contract.md):
+# practised through the built-in `english` subject, so English answers land on `E.*` checkpoints.
+STAGE_CHECKPOINTS_EN: dict[str, tuple[str, ...]] = {
+    "letter": ("E.G1.letter_names", "E.G1.letter_sounds"),
+    "word_build": ("E.G1.build_cvc", "E.G2.spell_words"),
+    "word_read": ("E.G1.read_cvc", "E.G2.blends_digraphs"),
+    "sentence_build": ("E.G2.make_sentence", "E.G3.sentence_formation"),
+    "reading": ("E.G1.read_short_sent", "E.G2.read_sentences", "E.G3.read_passage"),
+}
+# Item kind -> English checkpoint when the item does not name one (a say_sound item is a letter sound).
+KIND_CHECKPOINT_EN: dict[str, str] = {
+    "read_letter": "E.G1.letter_names", "say_sound": "E.G1.letter_sounds", "build_word": "E.G1.build_cvc",
+    "read_word": "E.G1.read_cvc", "make_sentence": "E.G2.make_sentence",
+    "read_sentence": "E.G1.read_short_sent", "read_paragraph": "E.G2.read_sentences",
+}
+
+
+def stage_checkpoints(lang: str | None, stage: str) -> tuple[str, ...]:
+    """The built-in checkpoints a stage practises: `E.*` for English sessions, `L.*` (Hindi track) otherwise."""
+    table = STAGE_CHECKPOINTS if is_home_lang(lang) else STAGE_CHECKPOINTS_EN
+    return table.get(stage, ())
+
+
 VERDICTS = ("correct", "close", "wrong", "silent")
 
 

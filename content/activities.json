@@ -438,6 +438,231 @@
    "source_doc": "team-authored template",
    "reviewed": true,
    "language": "hi"
+  },
+  {
+   "id": "act_en_letter_match",
+   "checkpoint_ids": [
+    "E.G1.letter_names"
+   ],
+   "mode": "group",
+   "title_hi": "Find the letter",
+   "materials_hi": "Chalk and board; 8 paper slips with letters (a, b, d, p, m, s, t, o); slates or notebooks",
+   "steps_hi": [
+    "Write b, d, p, q on the board. Say each name slowly and ask the children to say it after you.",
+    "Teach a clue for b: draw the straight line first, then the round part on the right, like a bat and a ball. For d, draw the round part first, then the line.",
+    "Call out a letter. The children point to it on the board; a few come up and touch it.",
+    "Show a slip. A child says the letter name and writes the capital and the small letter on the slate."
+   ],
+   "duration_min": 8,
+   "blackboard_hi": "b  d  p  q      A a    B b",
+   "reassessment": {
+    "ask_hi": "Show b and d. Ask: Which one is 'd'?",
+    "expected": "d"
+   },
+   "source_doc": "team-written, pending educator review",
+   "reviewed": true,
+   "language": "en"
+  },
+  {
+   "id": "act_en_first_sounds",
+   "checkpoint_ids": [
+    "E.G1.letter_sounds"
+   ],
+   "mode": "group",
+   "title_hi": "First sound game",
+   "materials_hi": "Things on the desk: pen, book, bag, cup",
+   "steps_hi": [
+    "Hold up a pen. Say: pen. The first sound is p, a short 'puh'. It is not 'pee'.",
+    "Do the same with book (b), bag (b) and cup (c says 'kuh'). The children say the first sound together.",
+    "Say a word: sun, map, ten, hat. The children say only the first sound.",
+    "The children look around the room. Each child finds one thing, says its name and its first sound."
+   ],
+   "duration_min": 8,
+   "blackboard_hi": "p - pen    b - bag    s - sun",
+   "reassessment": {
+    "ask_hi": "What is the first sound in 'sun'?",
+    "expected": "s (the sound 'sss', not the name 'ess')"
+   },
+   "source_doc": "team-written, pending educator review",
+   "reviewed": true,
+   "language": "en"
+  },
+  {
+   "id": "act_en_touch_say",
+   "checkpoint_ids": [
+    "E.G1.oral_vocab"
+   ],
+   "mode": "group",
+   "title_hi": "Touch and say",
+   "materials_hi": "Things in the room: pen, book, bag, slate; the children's own body and clothes",
+   "steps_hi": [
+    "Touch your head and say: head. The children touch their heads and say: head. Repeat with eyes, nose, hand and leg.",
+    "Hold up a pen, a book and a bag. Say each name; the children repeat it twice.",
+    "Point to something red, then blue, then green. Ask: What colour is it?",
+    "In pairs, one child points to a thing and the other says its English name. Then they swap."
+   ],
+   "duration_min": 8,
+   "blackboard_hi": "head   eye   nose   hand\nred   blue   green",
+   "reassessment": {
+    "ask_hi": "Point to a book and ask: What is this?",
+    "expected": "book (or 'a book')"
+   },
+   "source_doc": "team-written, pending educator review",
+   "reviewed": true,
+   "language": "en"
+  },
+  {
+   "id": "act_en_sound_blend",
+   "checkpoint_ids": [
+    "E.G1.build_cvc",
+    "E.G1.read_cvc"
+   ],
+   "mode": "group",
+   "title_hi": "Say the sounds, then the word",
+   "materials_hi": "5–6 small stones or bottle caps for each group; chalk",
+   "steps_hi": [
+    "Put three stones on the floor for c-a-t. Touch each stone and say its sound: c, a, t.",
+    "Slide your finger under the three stones and say the word fast: cat. The children copy you.",
+    "Do the same with p-i-g, s-u-n and h-e-n. The children touch the stones, then say the word.",
+    "Write cat on the board. The children read it by saying each sound, then the whole word. Do not let them guess from the first letter.",
+    "Change one sound: cat, cap, cup. Ask: Which sound changed?"
+   ],
+   "duration_min": 10,
+   "blackboard_hi": "c - a - t = cat      p - i - g = pig",
+   "reassessment": {
+    "ask_hi": "Join the sounds: h-e-n. What is the word?",
+    "expected": "hen"
+   },
+   "source_doc": "team-written, pending educator review",
+   "reviewed": true,
+   "language": "en"
+  },
+  {
+   "id": "act_en_word_cards",
+   "checkpoint_ids": [
+    "E.G1.sight_words",
+    "E.G1.read_short_sent",
+    "E.G2.make_sentence"
+   ],
+   "mode": "group",
+   "title_hi": "Build a sentence with word cards",
+   "materials_hi": "8–10 paper slips, one word on each (I, see, a, cat, the, is, my, and)",
+   "steps_hi": [
+    "Show the slips one at a time: I, see, a, the, is, my. The children read each word. Say tricky words together; do not sound them out.",
+    "Lay out I, see, a, cat. Slide your finger under the words and read: I see a cat.",
+    "Mix the slips. A child puts them back in order and reads the sentence, moving a finger smoothly under the words.",
+    "Swap one word: I see a dog. Ask: Which word changed? Each pair makes one new sentence with the slips and reads it to the class."
+   ],
+   "duration_min": 12,
+   "blackboard_hi": "I see a cat.    The cat is big.\nthe   is   my   and   to",
+   "reassessment": {
+    "ask_hi": "Read this sentence: The sun is hot.",
+    "expected": "The sun is hot."
+   },
+   "source_doc": "team-written, pending educator review",
+   "reviewed": true,
+   "language": "en"
+  },
+  {
+   "id": "act_en_digraph_spell",
+   "checkpoint_ids": [
+    "E.G2.blends_digraphs",
+    "E.G2.spell_words"
+   ],
+   "mode": "group",
+   "title_hi": "Sound pairs and spelling",
+   "materials_hi": "Chalk and board; slate or notebook for each child",
+   "steps_hi": [
+    "Write sh, ch, th on the board. Say each sound together: sh like 'shhh, be quiet', ch like a train going ch-ch, th with the tongue between the teeth.",
+    "Write ship, chin, thin and frog. Underline sh, ch and th. The children read each word.",
+    "Say 'ship' slowly. The children say its sounds: sh - i - p. Then they write it on their slates.",
+    "Look, cover, write: show 'milk' for five seconds, cover it, and the children write it. Check together. Repeat with tent, fish and drum."
+   ],
+   "duration_min": 12,
+   "blackboard_hi": "sh ship    ch chin    th thin\nmilk   tent   fish   drum",
+   "reassessment": {
+    "ask_hi": "Read this word: chin. Then write the word 'fish'.",
+    "expected": "chin; f-i-sh"
+   },
+   "source_doc": "team-written, pending educator review",
+   "reviewed": true,
+   "language": "en"
+  },
+  {
+   "id": "act_en_echo_read",
+   "checkpoint_ids": [
+    "E.G2.read_sentences",
+    "E.G3.read_passage"
+   ],
+   "mode": "group",
+   "title_hi": "Echo reading",
+   "materials_hi": "Board or textbook page with 4 short lines",
+   "steps_hi": [
+    "Write 4 short sentences on the board. Read the first one smoothly, like talking.",
+    "Echo reading: you read one line, the children read the same line back at the same speed.",
+    "In pairs, one child reads and the other points to each word and says 'wait' if a word is missed. Then they swap.",
+    "Read all the lines again as one little passage, pausing at each full stop. Ask: What is it about?"
+   ],
+   "duration_min": 12,
+   "blackboard_hi": "Raju has a bicycle.\nHe rides to the market.\nHe buys six mangoes.\nHe goes home.",
+   "reassessment": {
+    "ask_hi": "Read the four lines one after another without stopping at every word.",
+    "expected": "(child reads aloud smoothly, at most 1 mistake)"
+   },
+   "source_doc": "team-written, pending educator review",
+   "reviewed": true,
+   "language": "en"
+  },
+  {
+   "id": "act_en_story_questions",
+   "checkpoint_ids": [
+    "E.G2.simple_comp",
+    "E.G3.story_comp"
+   ],
+   "mode": "group",
+   "title_hi": "Who, what, where",
+   "materials_hi": "A short story of 4–6 lines (from the textbook or written on the board); chalk",
+   "steps_hi": [
+    "Read the story aloud twice. The second time, the children listen for names and places.",
+    "Ask: Who is in the story? What did he or she do? Where? If a child is not sure, read the line again and let the child find the answer in the text.",
+    "Write 4 key words on the board in story order, for example kite, roof, wind, laugh. The children say what happened for each word.",
+    "In pairs, one child tells the story back using the 4 words and the other helps. Then ask: What happened first? What happened last?"
+   ],
+   "duration_min": 15,
+   "blackboard_hi": "Who?   What?   Where?\nfirst - next - last",
+   "reassessment": {
+    "ask_hi": "After a 3-line story, ask: Who is in the story? What did he or she do first?",
+    "expected": "An answer taken from the story"
+   },
+   "source_doc": "team-written, pending educator review",
+   "reviewed": true,
+   "language": "en"
+  },
+  {
+   "id": "act_en_word_types",
+   "checkpoint_ids": [
+    "E.G3.word_types",
+    "E.G3.sentence_formation"
+   ],
+   "mode": "group",
+   "title_hi": "Naming, doing and describing words",
+   "materials_hi": "Things in the room (book, pen, bag); a few children to act",
+   "steps_hi": [
+    "Hold up a book: 'book' is a naming word. Ask a child to jump: 'jump' is a doing word. Point to a big bag: 'big' is a describing word.",
+    "Say pen, run, red, boy, sing, tall. The children show 1 finger for a naming word, 2 for a doing word, 3 for a describing word.",
+    "Draw three columns on the board: naming, doing, describing. Children come up and write one word in each column.",
+    "Give three words, for example girl, big, run. Ask for one sentence with all three: The big girl runs. Children say theirs aloud; write two on the board.",
+    "Check each sentence together: Is it a full sentence? Does it have a doing word?"
+   ],
+   "duration_min": 15,
+   "blackboard_hi": "Naming: book, girl\nDoing: run, sing\nDescribing: big, red",
+   "reassessment": {
+    "ask_hi": "Which is a doing word: book, run or red? Now make a sentence with 'run'.",
+    "expected": "run; for example: The boy can run."
+   },
+   "source_doc": "team-written, pending educator review",
+   "reviewed": true,
+   "language": "en"
   }
  ]
 }

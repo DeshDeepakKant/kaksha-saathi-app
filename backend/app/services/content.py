@@ -36,7 +36,7 @@ class Content:
     activities: dict[str, dict]
     practice_items: list[dict]
     probes: dict[str, dict]
-    subjects: list[str] = field(default_factory=lambda: ["numeracy", "literacy"])
+    subjects: list[str] = field(default_factory=lambda: ["numeracy", "literacy", "english"])
     # Ids of teacher-created topics registered at runtime (see register_custom). They live in
     # `checkpoints` so every existing code path works, but they belong to one school, so the
     # generic listings below (template roadmap, for_grade) never include them.
@@ -80,9 +80,15 @@ class Content:
         )
 
     def template_roadmap(self, subject: str, grade: int) -> list[dict]:
-        """Deterministic starting roadmap: all checkpoints up to the class grade (and one below)."""
+        """Deterministic starting roadmap: all checkpoints up to the class grade (and one below).
+
+        English lessons keep their teaching order (the graph file's order: letters, sounds, words, sentences);
+        the other subjects are ordered by chapter and title as they always were."""
         items, seen = [], set()
-        for c in sorted(self.checkpoints.values(), key=lambda c: (c.grade, c.chapter, c.title_hi)):
+        order = {cid: n for n, cid in enumerate(self.checkpoints)}
+        key = ((lambda c: (c.grade, order[c.id])) if subject == "english"
+               else (lambda c: (c.grade, c.chapter, c.title_hi)))
+        for c in sorted(self.checkpoints.values(), key=key):
             if c.subject != subject or c.grade > grade or c.id in self.custom_ids:
                 continue
             chapter = c.chapter if c.grade == grade else f"{c.chapter} ({c.grade})"

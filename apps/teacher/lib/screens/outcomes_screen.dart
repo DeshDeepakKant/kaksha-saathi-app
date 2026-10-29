@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../api.dart';
 import '../l10n.dart';
+import '../subjects.dart';
 import '../theme.dart';
 import '../widgets/board_followups.dart' show shortDay;
 import 'level_screen.dart';
@@ -104,11 +105,7 @@ class _OutcomesScreenState extends State<OutcomesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final subject = widget.subject == 'numeracy'
-        ? tr('Maths', 'गणित')
-        : widget.subject == 'literacy'
-        ? tr('Hindi', 'हिंदी')
-        : widget.subject;
+    final subject = subjectLabel(widget.subject);
     return Scaffold(
       appBar: AppBar(
         title: Text(trf('Did it work? · {subject}', 'क्या असर हुआ? · {subject}', {'subject': subject})),

@@ -11,6 +11,7 @@ from __future__ import annotations
 from sqlalchemy.orm import Session
 
 from app.services import prefs
+from app.services.content import get_content
 
 SOURCE_LANG = "hi"
 
@@ -62,9 +63,18 @@ def loc(kind: str, id: str, field: str, lang: str, source):
     return val, mt and val != source
 
 
+ENGLISH = "english"  # the built-in English subject: its classroom text is English, whatever the teacher's language
+
+
+def is_english_checkpoint(content, cid: str | None) -> bool:
+    cp = content.checkpoints.get(cid or "")
+    return bool(cp and cp.subject == ENGLISH and cid not in content.custom_ids)
+
+
 def checkpoint_title(content, cid: str, lang: str) -> tuple[str, bool]:
     """A lesson title in `lang`. English uses the reviewed `title_en`; a school's own topic keeps the
-    title the teacher typed."""
+    title the teacher typed. A built-in English lesson missing from the language's file shows `title_en`
+    (not the Hindi title) so the teacher never sees a half-translated name."""
     cp = content.checkpoints.get(cid)
     if cp is None:
         return cid, False
@@ -74,7 +84,10 @@ def checkpoint_title(content, cid: str, lang: str) -> tuple[str, bool]:
         return cp.title_en, False
     if cid in content.custom_ids:
         return cp.title_hi or cp.title_en, False
-    return loc("checkpoint_titles", cid, "title", lang, cp.title_hi)
+    title, mt = loc("checkpoint_titles", cid, "title", lang, cp.title_hi)
+    if cp.subject == ENGLISH and cp.title_en and not mt and title == cp.title_hi:
+        return cp.title_en, False
+    return title, mt
 
 
 def titles(content, lang: str, school_id: int | None) -> dict:
@@ -93,9 +106,12 @@ ACTIVITY_FIELDS = ("title_hi", "steps_hi", "materials_hi", "blackboard_hi")
 
 def activity(act: dict | None, lang: str) -> dict | None:
     """A copy of a library activity with its classroom text in `lang` (+ `machine_translated`).
-    Hindi: the activity unchanged (same object, no new keys)."""
+    Hindi: the activity unchanged (same object, no new keys). An English-subject activity (`language: "en"`)
+    is the thing being taught, so its text is never translated: a copy with `machine_translated: False`."""
     if act is None or lang == SOURCE_LANG:
         return act
+    if act.get("language") == "en":
+        return {**act, "machine_translated": False}
     out, mt = dict(act), False
     for f in ACTIVITY_FIELDS:
         if f in act:
@@ -111,9 +127,12 @@ def activity(act: dict | None, lang: str) -> dict | None:
 
 
 def probe(p: dict | None, cid: str, lang: str) -> dict | None:
-    """A copy of a guided probe with its questions in `lang` (+ `machine_translated`). Hindi: unchanged."""
+    """A copy of a guided probe with its questions in `lang` (+ `machine_translated`). Hindi: unchanged.
+    A probe on an English lesson asks its questions in English and is never translated."""
     if p is None or lang == SOURCE_LANG:
         return p
+    if is_english_checkpoint(get_content(), cid):
+        return {**p, "machine_translated": False}
     out, mt = dict(p), False
     for f in ("title_hi", "tell_hi"):
         if f in p:

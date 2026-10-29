@@ -268,6 +268,129 @@
           "of": 3
         }
       ]
+    },
+    "english": {
+      "title_en": "English reading level",
+      "title_hi": "अंग्रेज़ी पढ़ने का स्तर",
+      "beginner": {
+        "key": "beginner",
+        "title_en": "Beginner (not yet letters)",
+        "title_hi": "शुरुआत (अक्षर अभी नहीं)"
+      },
+      "levels": [
+        {
+          "key": "letter",
+          "title_en": "Letters",
+          "title_hi": "अक्षर",
+          "checkpoint_id": "E.G1.letter_names",
+          "ask_en": "Point to each letter. Ask the child to say its name or its sound.",
+          "ask_hi": "हर अक्षर पर उँगली रखें। बच्चे से उसका नाम या आवाज़ बोलने को कहें।",
+          "items": [
+            {
+              "show": "a",
+              "from": "vb-en-let-001"
+            },
+            {
+              "show": "s",
+              "from": "vb-en-let-002"
+            },
+            {
+              "show": "o",
+              "from": "vb-en-let-004"
+            },
+            {
+              "show": "g",
+              "from": "vb-en-let-007"
+            },
+            {
+              "show": "b",
+              "from": "vb-en-let-011"
+            }
+          ],
+          "pass_min": 4,
+          "of": 5
+        },
+        {
+          "key": "word",
+          "title_en": "Words",
+          "title_hi": "शब्द",
+          "checkpoint_id": "E.G1.read_cvc",
+          "ask_en": "Ask the child to read each word.",
+          "ask_hi": "बच्चे से हर शब्द पढ़ने को कहें।",
+          "items": [
+            {
+              "show": "dog",
+              "from": "vb-en-wr-004"
+            },
+            {
+              "show": "red",
+              "from": "vb-en-wr-005"
+            },
+            {
+              "show": "sit",
+              "from": "vb-en-wr-006"
+            },
+            {
+              "show": "big",
+              "from": "vb-en-wr-007"
+            },
+            {
+              "show": "hot",
+              "from": "vb-en-wr-008"
+            }
+          ],
+          "pass_min": 4,
+          "of": 5
+        },
+        {
+          "key": "sentence",
+          "title_en": "Sentences",
+          "title_hi": "वाक्य",
+          "checkpoint_id": "E.G1.read_short_sent",
+          "ask_en": "Ask the child to read each sentence aloud.",
+          "ask_hi": "बच्चे से हर वाक्य ज़ोर से पढ़ने को कहें।",
+          "items": [
+            {
+              "show": "I see a cat.",
+              "from": "vb-en-rd-001"
+            },
+            {
+              "show": "The sun is hot.",
+              "from": "vb-en-rd-002"
+            },
+            {
+              "show": "I have a red pen.",
+              "from": "vb-en-rd-005"
+            }
+          ],
+          "pass_min": 2,
+          "of": 3
+        },
+        {
+          "key": "story",
+          "title_en": "Longer sentences",
+          "title_hi": "लंबे वाक्य",
+          "checkpoint_id": "E.G2.read_sentences",
+          "ask_en": "Ask the child to read each line like a story. A line passes if it is smooth, with at most 1 mistake.",
+          "ask_hi": "बच्चे से हर पंक्ति कहानी की तरह पढ़ने को कहें। बिना रुके और 1 से ज़्यादा गलती न हो तो वह पंक्ति सही।",
+          "items": [
+            {
+              "show": "The green parrot sits on the tree.",
+              "from": "vb-en-rd-011"
+            },
+            {
+              "show": "Raju rides his bicycle to the market.",
+              "from": "vb-en-rd-012"
+            },
+            {
+              "show": "The farmer has two big cows.",
+              "from": "vb-en-rd-014"
+            }
+          ],
+          "pass_min": 2,
+          "of": 3
+        }
+      ]
     }
   }
 }

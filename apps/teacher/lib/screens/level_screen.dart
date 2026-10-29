@@ -4,6 +4,7 @@ import '../api.dart';
 import '../theme.dart';
 import '../tts.dart';
 import '../l10n.dart';
+import '../subjects.dart';
 import '../widgets/capture_sheet.dart';
 import '../widgets/read_aloud_sheet.dart';
 import '../widgets/trend_chart.dart';
@@ -450,11 +451,7 @@ class _LevelScreenState extends State<LevelScreen> {
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                   Text(
-                    widget.subject == 'numeracy'
-                        ? tr('Maths', 'गणित')
-                        : widget.subject == 'literacy'
-                        ? tr('Hindi', 'हिंदी')
-                        : widget.subject,
+                    subjectLabel(widget.subject),
                     style: const TextStyle(color: Ks.muted),
                   ),
                 ],

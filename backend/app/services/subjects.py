@@ -1,4 +1,4 @@
-"""Subject keys a school can use: the two built-in ones plus subjects a teacher adds.
+"""Subject keys a school can use: the three built-in ones plus subjects a teacher adds.
 
 `resolve_subject` is the single gate every teacher route uses (see `_subject` in api/teacher.py).
 Keys are lowercase slugs of at most 16 characters (`Roadmap.subject` / `Plan.subject` are String(16)).
@@ -16,10 +16,12 @@ from app.models.tables import CustomSubject
 from app.services.content import get_content
 
 ALIASES = {"math": "numeracy", "maths": "numeracy", "ganit": "numeracy",
-           "hindi": "literacy", "reading": "literacy"}
+           "hindi": "literacy", "reading": "literacy",
+           "angrezi": "english"}
 
 
-BUILTIN_NAMES = {"numeracy": ("Maths", "गणित"), "literacy": ("Hindi", "हिन्दी")}
+BUILTIN_NAMES = {"numeracy": ("Maths", "गणित"), "literacy": ("Hindi", "हिन्दी"),
+                 "english": ("English", "अंग्रेज़ी")}
 KEY_MAX = 16
 
 
@@ -65,13 +67,17 @@ def subject_names(db: Session, school_id: int) -> list[dict]:
     out = [{"key": k, "name_en": en, "name_hi": hi, "builtin": True} for k, (en, hi) in BUILTIN_NAMES.items()]
     for r in db.scalars(select(CustomSubject).where(CustomSubject.school_id == school_id)
                         .order_by(CustomSubject.id)):
+        if r.key in BUILTIN_NAMES:  # a school's own "English" from before it was built in: listed once
+            continue
         out.append({"key": r.key, "name_en": r.name_en, "name_hi": r.name_hi, "builtin": False})
     return out
 
 
 def resolve_subject(db: Session, school_id: int, subject: str) -> str:
     s = (subject or "").strip().lower()
-    s = ALIASES.get(s, s)
-    if s in get_content().subjects or s in custom_subject_keys(db, school_id):
+    custom = custom_subject_keys(db, school_id)
+    if s not in custom:  # a school's own key wins over an alias added later (e.g. "angrezi")
+        s = ALIASES.get(s, s)
+    if s in get_content().subjects or s in custom:
         return s
     raise HTTPException(422, f"unknown subject '{subject}'")

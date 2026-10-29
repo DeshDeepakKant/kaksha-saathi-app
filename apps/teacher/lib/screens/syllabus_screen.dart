@@ -56,6 +56,7 @@ class _SyllabusScreenState extends State<SyllabusScreen> {
       list = [
         {'key': 'numeracy', 'name_en': 'Maths', 'name_hi': 'गणित'},
         {'key': 'literacy', 'name_en': 'Hindi', 'name_hi': 'हिन्दी'},
+        {'key': 'english', 'name_en': 'English', 'name_hi': 'अंग्रेज़ी'},
       ];
     }
     if (!list.any((s) => s['key'] == widget.subject)) {

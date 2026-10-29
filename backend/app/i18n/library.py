@@ -114,6 +114,29 @@ def _from_file(kind: str, id: str, field: str, lang: str):
     return None
 
 
+def _english_node(cid: str) -> bool:
+    from app.services.content import get_content
+    c = get_content()
+    cp = c.checkpoints.get(cid)
+    return bool(cp and cp.subject == "english" and cid not in c.custom_ids)
+
+
+def _english_as_is(kind: str, id: str, field: str):
+    """The stored text of an English-subject library entry (an activity with `language: "en"`, a probe on an
+    English lesson), else None. Lesson titles are not covered: they fall back to `title_en` instead."""
+    from app.services.content import get_content
+    c = get_content()
+    if kind == "activity":
+        a = c.activities.get(id)
+        is_en = bool(a) and a.get("language") == "en"
+    elif kind == "probe":
+        cp = c.checkpoints.get(id)
+        is_en = bool(cp) and cp.subject == "english" and id not in c.custom_ids
+    else:
+        return None
+    return source(kind, id, field, SOURCE) if is_en else None
+
+
 def localized(kind: str, id: str, field: str, lang: str, db=None, school_id: int | None = None) -> dict:
     """`{text, machine_translated}` for one content field in `lang` (text is a list for steps/items).
 
@@ -123,9 +146,17 @@ def localized(kind: str, id: str, field: str, lang: str, db=None, school_id: int
     own = source(kind, id, field, lang)
     if own is not None:
         return {"text": own, "machine_translated": False}
+    kept = _english_as_is(kind, id, field)
+    if kept is not None:  # English-subject text is what the children learn: never translated
+        return {"text": kept, "machine_translated": False}
     hit = _from_file(kind, id, field, lang)
     if hit is not None:
         return {"text": hit, "machine_translated": True}
+    if kind == "checkpoint" and field == "title":
+        en = source(kind, id, field, "en")
+        cp = _english_node(id)
+        if cp and en:  # an English lesson missing from the language file: its English title, not Hindi
+            return {"text": en, "machine_translated": False}
     src = source(kind, id, field, SOURCE)
     if src is None:
         return {"text": None, "machine_translated": False, "untranslated": True}

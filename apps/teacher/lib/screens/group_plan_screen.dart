@@ -9,6 +9,7 @@ import '../tts.dart';
 import '../api.dart';
 import '../theme.dart';
 import '../l10n.dart';
+import '../subjects.dart';
 import '../widgets/capture_sheet.dart';
 import 'outcomes_screen.dart';
 
@@ -205,7 +206,7 @@ class _GroupPlanScreenState extends State<GroupPlanScreen> {
         title: Text(
           trf(
             'Plan for today · {v}',
-            'आज की योजना · {v2}', {'v': widget.subject == 'numeracy' ? 'Maths' : 'Hindi', 'v2': widget.subject == 'numeracy' ? 'गणित' : 'हिंदी'},
+            'आज की योजना · {v}', {'v': subjectLabel(widget.subject)},
           ),
         ),
         actions: [

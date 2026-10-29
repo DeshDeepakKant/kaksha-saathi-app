@@ -53,7 +53,7 @@ def load_ladders() -> dict[str, dict]:
 
 
 def ladder(subject: str) -> dict | None:
-    """The ladder for a subject, or None (only literacy and numeracy have one)."""
+    """The ladder for a subject, or None (only the built-in subjects have one)."""
     return load_ladders().get(subject)
 
 
@@ -63,7 +63,8 @@ def ladder_in(subject: str, lang: str) -> dict | None:
     Hindi: the reviewed ladder unchanged. Literacy in another language: the same levels (keys, lesson ids,
     pass rules, UI titles and instructions) with the reading items generated in that language's own script
     (`content/i18n/<lang>/level_check_literacy.json`, not educator-reviewed, so `machine_translated`).
-    Numeracy items are numbers and sums, so they need no change. Falls back to the reviewed ladder when
+    Numeracy items are numbers and sums, and English items are the English being taught, so they need no
+    change in any content language. Falls back to the reviewed ladder when
     the generated one is missing or doesn't line up level by level."""
     base = ladder(subject)
     if base is None or lang == "hi" or subject != "literacy":
@@ -177,10 +178,15 @@ def class_view(db: Session, cls: Classroom, subject: str, lad: dict) -> dict:
 
 # ------------------------------------------------------------------ demo data
 # Placements for DEMO class 2A by roll-order index, chosen to agree with the evidence story in seed.py
-# (literacy gap = index % 5; numeracy groups: 0-4 borrowing, 5-8 carrying, 9-11 place value, 12-13 new).
+# (literacy gap = index % 5; numeracy groups: 0-4 borrowing, 5-8 carrying, 9-11 place value, 12-13 new;
+# english groups: 2-5 letter sounds, 6-10 three-letter words, 14-18 sentences, 12-13 new, rest further on).
 def _demo_latest(subject: str, idx: int) -> int | None:
     if subject == "literacy":
         return {0: -1, 1: 0, 2: 0, 3: 1, 4: 2}[idx % 5]
+    if subject == "english":
+        if 12 <= idx < 14:
+            return None
+        return -1 if idx == 2 else 0 if idx < 11 else 1 if 14 <= idx < 19 else 2 if idx < 22 else 3
     if 12 <= idx < 14:
         return None
     return 2 if idx < 5 else 3 if idx < 9 else 1 if idx < 12 else 3
@@ -200,8 +206,10 @@ def demo_seed(db: Session, school_id: int) -> int:
     kids = ledger.class_children(db, cls.id)
     now = datetime.now(timezone.utc)
     n = 0
-    for subject, first_upto, later_upto in (("literacy", 20, 12), ("numeracy", 20, 10)):
+    for subject, first_upto, later_upto in (("literacy", 20, 12), ("numeracy", 20, 10), ("english", 20, 20)):
         lad = ladder(subject)
+        if lad is None:  # English content not installed: that subject simply has no demo checks
+            continue
         for idx, k in enumerate(kids[:first_upto]):
             latest = _demo_latest(subject, idx)
             if latest is None:

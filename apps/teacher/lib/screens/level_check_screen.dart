@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../api.dart';
 import '../l10n.dart';
+import '../subjects.dart';
 import '../outbox.dart';
 import '../theme.dart';
 
@@ -28,8 +29,10 @@ List<Map<String, dynamic>> _maps(dynamic v) => v is List
 int _int(dynamic v, [int fallback = 0]) => v is num ? v.toInt() : fallback;
 
 class _LevelCheckScreenState extends State<LevelCheckScreen> {
-  // Only literacy and numeracy have a ladder; anything else starts on Maths.
-  late String _subject = widget.subject == 'literacy' ? 'literacy' : 'numeracy';
+  // Only the built-in subjects have a ladder; anything else starts on Maths.
+  late String _subject = builtinSubjectKeys.contains(widget.subject)
+      ? widget.subject
+      : 'numeracy';
   late Future<Map<String, dynamic>> _future;
   Map<String, dynamic>? _data; // last good response: ladder + children
 
@@ -114,8 +117,7 @@ class _LevelCheckScreenState extends State<LevelCheckScreen> {
     return i >= 0 ? _titleAt(i) : (key == 'beginner' ? _titleAt(-1) : key);
   }
 
-  String _subjectLabel(String s) =>
-      s == 'literacy' ? tr('Hindi', 'हिंदी') : tr('Maths', 'गणित');
+  String _subjectLabel(String s) => subjectLabel(s);
 
   // ---- running a check
 
@@ -368,14 +370,8 @@ class _LevelCheckScreenState extends State<LevelCheckScreen> {
     child: SegmentedButton<String>(
       showSelectedIcon: false,
       segments: [
-        ButtonSegment(
-          value: 'numeracy',
-          label: Text(_subjectLabel('numeracy')),
-        ),
-        ButtonSegment(
-          value: 'literacy',
-          label: Text(_subjectLabel('literacy')),
-        ),
+        for (final k in builtinSubjectKeys)
+          ButtonSegment(value: k, label: Text(_subjectLabel(k))),
       ],
       selected: {_subject},
       onSelectionChanged: (s) => _switchSubject(s.first),

@@ -368,10 +368,11 @@ def test_evidence_rows(client, kid, fakes, clock):
 def test_english_topics_and_evidence_stay_off_the_hindi_map(client, kid, sandbox, fakes, clock):
     h, cid = kid
     th = sandbox["teacher_headers"]
-    s = _start(client, h, lang="en")  # no English subject yet: Hindi built-ins only, no evidence
+    s = _start(client, h, lang="en")  # no school English subject: only built-in English lessons can get evidence
     assert s["stage"] == "letter"
     _turn(client, h, s, s["item"]["id"], RIGHT)
-    assert _evidence(cid) == []
+    assert all(cp.startswith("E.") for cp, _ in _evidence(cid))  # never the Hindi map
+    before = len(_evidence(cid))
     r = client.post("/v1/subjects", headers=th, json={"name": "English"})
     assert r.status_code in (200, 409), r.text
     r = client.post(f"/v1/classes/{sandbox['class_id']}/syllabus/topics", headers=th,
@@ -382,7 +383,7 @@ def test_english_topics_and_evidence_stay_off_the_hindi_map(client, kid, sandbox
     custom = [t for t in topics if t["custom"]]
     assert custom and custom[0]["title_en"] == "Letter sounds a-z"
     _turn(client, h, s, s["item"]["id"], RIGHT)  # fake picks the custom English topic
-    assert _evidence(cid) == [(custom[0]["checkpoint_id"], "correct")]
+    assert _evidence(cid)[before:] == [(custom[0]["checkpoint_id"], "correct")]
 
 
 def test_start_stage_from_child_statuses(client, kid, sandbox, fakes, clock):

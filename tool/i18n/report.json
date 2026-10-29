@@ -1,7 +1,7 @@
 {
  "as": {
   "code": "as",
-  "requested": 18,
+  "requested": 0,
   "first_pass_failures": 0,
   "placeholder_failures_first_pass": 0,
   "fixed_on_retry": 0,
@@ -14,15 +14,15 @@
     "bytes": 65926
    },
    "parent": {
-    "translated": 244,
-    "total": 244,
-    "bytes": 26879
+    "translated": 245,
+    "total": 245,
+    "bytes": 26912
    }
   }
  },
  "bn": {
   "code": "bn",
-  "requested": 18,
+  "requested": 0,
   "first_pass_failures": 0,
   "placeholder_failures_first_pass": 0,
   "fixed_on_retry": 0,
@@ -35,15 +35,15 @@
     "bytes": 65543
    },
    "parent": {
-    "translated": 244,
-    "total": 244,
-    "bytes": 26523
+    "translated": 245,
+    "total": 245,
+    "bytes": 26556
    }
   }
  },
  "brx": {
   "code": "brx",
-  "requested": 18,
+  "requested": 0,
   "first_pass_failures": 0,
   "placeholder_failures_first_pass": 0,
   "fixed_on_retry": 0,
@@ -56,15 +56,15 @@
     "bytes": 64452
    },
    "parent": {
-    "translated": 244,
-    "total": 244,
-    "bytes": 26869
+    "translated": 245,
+    "total": 245,
+    "bytes": 26902
    }
   }
  },
  "doi": {
   "code": "doi",
-  "requested": 18,
+  "requested": 0,
   "first_pass_failures": 0,
   "placeholder_failures_first_pass": 0,
   "fixed_on_retry": 0,
@@ -77,15 +77,15 @@
     "bytes": 63062
    },
    "parent": {
-    "translated": 244,
-    "total": 244,
-    "bytes": 26319
+    "translated": 245,
+    "total": 245,
+    "bytes": 26361
    }
   }
  },
  "gu": {
   "code": "gu",
-  "requested": 18,
+  "requested": 0,
   "first_pass_failures": 0,
   "placeholder_failures_first_pass": 0,
   "fixed_on_retry": 0,
@@ -98,15 +98,15 @@
     "bytes": 62628
    },
    "parent": {
-    "translated": 244,
-    "total": 244,
-    "bytes": 26074
+    "translated": 245,
+    "total": 245,
+    "bytes": 26113
    }
   }
  },
  "kn": {
   "code": "kn",
-  "requested": 18,
+  "requested": 0,
   "first_pass_failures": 0,
   "placeholder_failures_first_pass": 0,
   "fixed_on_retry": 0,
@@ -119,15 +119,15 @@
     "bytes": 70267
    },
    "parent": {
-    "translated": 244,
-    "total": 244,
-    "bytes": 28205
+    "translated": 245,
+    "total": 245,
+    "bytes": 28244
    }
   }
  },
  "kok": {
   "code": "kok",
-  "requested": 18,
+  "requested": 0,
   "first_pass_failures": 0,
   "placeholder_failures_first_pass": 0,
   "fixed_on_retry": 0,
@@ -140,15 +140,15 @@
     "bytes": 63925
    },
    "parent": {
-    "translated": 244,
-    "total": 244,
-    "bytes": 26403
+    "translated": 245,
+    "total": 245,
+    "bytes": 26439
    }
   }
  },
  "ks": {
   "code": "ks",
-  "requested": 18,
+  "requested": 0,
   "first_pass_failures": 0,
   "placeholder_failures_first_pass": 0,
   "fixed_on_retry": 0,
@@ -161,15 +161,15 @@
     "bytes": 53052
    },
    "parent": {
-    "translated": 244,
-    "total": 244,
-    "bytes": 22414
+    "translated": 245,
+    "total": 245,
+    "bytes": 22447
    }
   }
  },
  "mai": {
   "code": "mai",
-  "requested": 18,
+  "requested": 0,
   "first_pass_failures": 0,
   "placeholder_failures_first_pass": 0,
   "fixed_on_retry": 0,
@@ -182,15 +182,15 @@
     "bytes": 61004
    },
    "parent": {
-    "translated": 244,
-    "total": 244,
-    "bytes": 25103
+    "translated": 245,
+    "total": 245,
+    "bytes": 25145
    }
   }
  },
  "ml": {
   "code": "ml",
-  "requested": 18,
+  "requested": 0,
   "first_pass_failures": 0,
   "placeholder_failures_first_pass": 0,
   "fixed_on_retry": 0,
@@ -203,15 +203,15 @@
     "bytes": 76175
    },
    "parent": {
-    "translated": 244,
-    "total": 244,
-    "bytes": 29820
+    "translated": 245,
+    "total": 245,
+    "bytes": 29859
    }
   }
  },
  "mni": {
   "code": "mni",
-  "requested": 18,
+  "requested": 0,
   "first_pass_failures": 0,
   "placeholder_failures_first_pass": 0,
   "fixed_on_retry": 0,
@@ -224,15 +224,15 @@
     "bytes": 62795
    },
    "parent": {
-    "translated": 244,
-    "total": 244,
-    "bytes": 25620
+    "translated": 245,
+    "total": 245,
+    "bytes": 25650
    }
   }
  },
  "mr": {
   "code": "mr",
-  "requested": 18,
+  "requested": 0,
   "first_pass_failures": 0,
   "placeholder_failures_first_pass": 0,
   "fixed_on_retry": 0,
@@ -245,15 +245,15 @@
     "bytes": 64164
    },
    "parent": {
-    "translated": 244,
-    "total": 244,
-    "bytes": 26557
+    "translated": 245,
+    "total": 245,
+    "bytes": 26593
    }
   }
  },
  "ne": {
   "code": "ne",
-  "requested": 18,
+  "requested": 0,
   "first_pass_failures": 0,
   "placeholder_failures_first_pass": 0,
   "fixed_on_retry": 0,
@@ -266,15 +266,15 @@
     "bytes": 66639
    },
    "parent": {
-    "translated": 244,
-    "total": 244,
-    "bytes": 27044
+    "translated": 245,
+    "total": 245,
+    "bytes": 27086
    }
   }
  },
  "or": {
   "code": "or",
-  "requested": 18,
+  "requested": 0,
   "first_pass_failures": 0,
   "placeholder_failures_first_pass": 0,
   "fixed_on_retry": 0,
@@ -287,15 +287,15 @@
     "bytes": 67479
    },
    "parent": {
-    "translated": 244,
-    "total": 244,
-    "bytes": 27557
+    "translated": 245,
+    "total": 245,
+    "bytes": 27590
    }
   }
  },
  "pa": {
   "code": "pa",
-  "requested": 18,
+  "requested": 0,
   "first_pass_failures": 0,
   "placeholder_failures_first_pass": 0,
   "fixed_on_retry": 0,
@@ -308,15 +308,15 @@
     "bytes": 62535
    },
    "parent": {
-    "translated": 244,
-    "total": 244,
-    "bytes": 26222
+    "translated": 245,
+    "total": 245,
+    "bytes": 26261
    }
   }
  },
  "sa": {
   "code": "sa",
-  "requested": 18,
+  "requested": 0,
   "first_pass_failures": 0,
   "placeholder_failures_first_pass": 0,
   "fixed_on_retry": 0,
@@ -329,15 +329,15 @@
     "bytes": 70627
    },
    "parent": {
-    "translated": 244,
-    "total": 244,
-    "bytes": 28266
+    "translated": 245,
+    "total": 245,
+    "bytes": 28311
    }
   }
  },
  "sat": {
   "code": "sat",
-  "requested": 18,
+  "requested": 0,
   "first_pass_failures": 0,
   "placeholder_failures_first_pass": 0,
   "fixed_on_retry": 0,
@@ -350,15 +350,15 @@
     "bytes": 68961
    },
    "parent": {
-    "translated": 244,
-    "total": 244,
-    "bytes": 28896
+    "translated": 245,
+    "total": 245,
+    "bytes": 28929
    }
   }
  },
  "sd": {
   "code": "sd",
-  "requested": 18,
+  "requested": 0,
   "first_pass_failures": 0,
   "placeholder_failures_first_pass": 0,
   "fixed_on_retry": 0,
@@ -371,15 +371,15 @@
     "bytes": 50452
    },
    "parent": {
-    "translated": 244,
-    "total": 244,
-    "bytes": 20986
+    "translated": 245,
+    "total": 245,
+    "bytes": 21015
    }
   }
  },
  "ta": {
   "code": "ta",
-  "requested": 18,
+  "requested": 0,
   "first_pass_failures": 0,
   "placeholder_failures_first_pass": 0,
   "fixed_on_retry": 0,
@@ -392,15 +392,15 @@
     "bytes": 79942
    },
    "parent": {
-    "translated": 244,
-    "total": 244,
-    "bytes": 31370
+    "translated": 245,
+    "total": 245,
+    "bytes": 31409
    }
   }
  },
  "te": {
   "code": "te",
-  "requested": 18,
+  "requested": 0,
   "first_pass_failures": 0,
   "placeholder_failures_first_pass": 0,
   "fixed_on_retry": 0,
@@ -413,15 +413,15 @@
     "bytes": 71809
    },
    "parent": {
-    "translated": 244,
-    "total": 244,
-    "bytes": 29126
+    "translated": 245,
+    "total": 245,
+    "bytes": 29165
    }
   }
  },
  "ur": {
   "code": "ur",
-  "requested": 18,
+  "requested": 0,
   "first_pass_failures": 0,
   "placeholder_failures_first_pass": 0,
   "fixed_on_retry": 0,
@@ -434,9 +434,9 @@
     "bytes": 51283
    },
    "parent": {
-    "translated": 244,
-    "total": 244,
-    "bytes": 21140
+    "translated": 245,
+    "total": 245,
+    "bytes": 21169
    }
   }
  }

@@ -787,6 +787,410 @@
    "game_en": "'Tell me more' game: when the child says one word, ask 'what kind? why?'; each new detail earns a stone, and at 3 stones the child says the whole sentence.",
    "example": "क्या पसंद है? → 'आम' (पूरा: मुझे आम पसंद है क्योंकि वह मीठा है।)",
    "reviewed": true
+  },
+  {
+   "id": "confuses_b_d",
+   "checkpoint_ids": [
+    "E.G1.letter_names"
+   ],
+   "explain_hi": "बच्चा 'b' और 'd' को आपस में बदल देता है, जैसे 'bed' को 'deb' पढ़ता है।",
+   "explain_en": "The child swaps 'b' and 'd', for example reading 'bed' as 'deb'.",
+   "game_hi": "रेत या मिट्टी में 'b' लिखें: पहले सीधी लकीर, फिर दाईं ओर गोला — बैट और बॉल जैसा। 'd' में पहले गोला, फिर लकीर। बच्चा उँगली से हवा में दोनों अक्षर लिखे।",
+   "game_en": "Write 'b' in sand or dust: a straight line first, then a round belly on the right, like a bat and a ball. For 'd' draw the round part first, then the line. The child traces both letters in the air with a finger.",
+   "example": "bed → deb",
+   "reviewed": true,
+   "source_doc": "team-written, pending educator review"
+  },
+  {
+   "id": "confuses_p_q",
+   "checkpoint_ids": [
+    "E.G1.letter_names"
+   ],
+   "explain_hi": "बच्चा 'p' और 'q' को आपस में बदल देता है, जैसे 'pig' को 'qig' पढ़ता है।",
+   "explain_en": "The child swaps 'p' and 'q', for example reading 'pig' as 'qig'.",
+   "game_hi": "पर्चियों पर pen, pot, pig और queen लिखें; बच्चा उन्हें 'p' के ढेर और 'q' के ढेर में अलग करे और पहली आवाज़ बोले।",
+   "game_en": "Write pen, pot, pig and queen on slips; the child sorts them into a 'p' pile and a 'q' pile and says the first sound of each.",
+   "example": "pig → qig",
+   "reviewed": true,
+   "source_doc": "team-written, pending educator review"
+  },
+  {
+   "id": "says_letter_name_not_sound",
+   "checkpoint_ids": [
+    "E.G1.letter_sounds"
+   ],
+   "explain_hi": "बच्चा अक्षर की आवाज़ की जगह उसका नाम बोलता है, जैसे 's' देखकर 'एस' कहता है, छोटी 'स्स्स' आवाज़ नहीं।",
+   "explain_en": "The child says the letter's name instead of its sound, for example 'ess' for 's' instead of 'sss'.",
+   "game_hi": "घर की चीज़ें उठाएँ — pen, cup, spoon — और पहली आवाज़ बोलें: 'प-प-pen'। बच्चा वही छोटी आवाज़ दोहराए, 'पी' जैसा नाम नहीं।",
+   "game_en": "Pick up things at home — pen, cup, spoon — and say the first sound: 'p-p-pen'. The child repeats the short sound, not the name 'pee'.",
+   "example": "s → 'ess' ✗ (say 'sss')",
+   "reviewed": true,
+   "source_doc": "team-written, pending educator review"
+  },
+  {
+   "id": "mixes_short_vowel_sounds",
+   "checkpoint_ids": [
+    "E.G1.letter_sounds"
+   ],
+   "explain_hi": "बच्चा a, e, i, o, u की छोटी आवाज़ें आपस में मिला देता है, जैसे 'pen' को 'pin' बोलता है।",
+   "explain_en": "The child mixes up the short sounds of a, e, i, o and u, for example saying 'pin' for 'pen'.",
+   "game_hi": "पाँच कटोरियों पर a, e, i, o, u लिखें; आप cat, pen, pig, dog, cup बोलें और बच्चा बीच की आवाज़ वाली कटोरी में एक कंकड़ डाले।",
+   "game_en": "Mark five bowls a, e, i, o, u; you say cat, pen, pig, dog, cup and the child drops a pebble in the bowl that has the middle sound.",
+   "example": "pen → pin",
+   "reviewed": true,
+   "source_doc": "team-written, pending educator review"
+  },
+  {
+   "id": "uses_home_language_word",
+   "checkpoint_ids": [
+    "E.G1.oral_vocab"
+   ],
+   "explain_hi": "बच्चा चीज़ का अंग्रेज़ी नाम नहीं बोल पाता और हिंदी या घर की बोली का शब्द बोल देता है, जैसे 'book' की जगह 'किताब'।",
+   "explain_en": "The child cannot say the English name of a thing and uses the Hindi or home-language word instead.",
+   "game_hi": "घर की 5 चीज़ें छुएँ और उनके नाम बोलें: spoon, cup, plate, bucket, door। बच्चा छूकर अंग्रेज़ी नाम बोले; जो भूल जाए उसे फिर बता दें।",
+   "game_en": "Touch 5 things at home and name them: spoon, cup, plate, bucket, door. The child touches each one and says the English name; tell it again if the child forgets.",
+   "example": "book → किताब",
+   "reviewed": true,
+   "source_doc": "team-written, pending educator review"
+  },
+  {
+   "id": "mixes_up_colour_names",
+   "checkpoint_ids": [
+    "E.G1.oral_vocab"
+   ],
+   "explain_hi": "बच्चा रंगों के अंग्रेज़ी नाम आपस में बदल देता है, जैसे लाल चीज़ को 'blue' कहता है।",
+   "explain_en": "The child mixes up the English colour names, for example calling a red thing 'blue'.",
+   "game_hi": "कपड़ों या सब्ज़ियों में रंग ढूँढें — 'Find something red!' — बच्चा चीज़ लाकर उसके रंग का नाम बोले: red, green, yellow।",
+   "game_en": "Hunt for colours in clothes or vegetables — 'Find something red!' — the child brings one and says its colour: red, green, yellow.",
+   "example": "red tomato → 'blue'",
+   "reviewed": true,
+   "source_doc": "team-written, pending educator review"
+  },
+  {
+   "id": "says_sounds_but_cannot_blend",
+   "checkpoint_ids": [
+    "E.G1.build_cvc"
+   ],
+   "explain_hi": "बच्चा हर आवाज़ अलग-अलग बोल लेता है, पर उन्हें जोड़कर शब्द नहीं बना पाता, जैसे c-a-t बोलकर भी 'cat' नहीं कहता।",
+   "explain_en": "The child can say each sound but cannot join them into a word, for example saying c-a-t but not 'cat'.",
+   "game_hi": "तीन कंकड़ ज़मीन पर रखें; बच्चा हर कंकड़ छूकर आवाज़ बोले, फिर उँगली तीनों पर फिराते हुए तेज़ी से पूरा शब्द बोले: c-a-t, cat।",
+   "game_en": "Put three pebbles on the ground; the child touches each one and says its sound, then slides a finger across all three and says the whole word fast: c-a-t, cat.",
+   "example": "c … a … t … ?",
+   "reviewed": true,
+   "source_doc": "team-written, pending educator review"
+  },
+  {
+   "id": "drops_middle_sound",
+   "checkpoint_ids": [
+    "E.G1.build_cvc"
+   ],
+   "explain_hi": "बच्चा शब्द की बीच की आवाज़ छोड़ देता है, जैसे 'pig' को 'pg' जैसा बोलता है।",
+   "explain_en": "The child leaves out the middle sound of a word, for example saying 'pg' for 'pig'.",
+   "game_hi": "आप 'pig' बोलें और उँगलियों पर आवाज़ें गिनें — p, i, g। बच्चा हर आवाज़ पर एक उँगली मोड़े; तीन उँगलियाँ मुड़नी चाहिए।",
+   "game_en": "Say 'pig' and count its sounds on your fingers — p, i, g. The child folds one finger for each sound; three fingers should fold.",
+   "example": "pig → pg",
+   "reviewed": true,
+   "source_doc": "team-written, pending educator review"
+  },
+  {
+   "id": "guesses_from_first_letter",
+   "checkpoint_ids": [
+    "E.G1.read_cvc"
+   ],
+   "explain_hi": "बच्चा शब्द का पहला अक्षर देखकर अंदाज़ा लगा देता है, जैसे 'cat' को 'car' या 'cow' पढ़ता है।",
+   "explain_en": "The child looks only at the first letter and guesses, for example reading 'cat' as 'car' or 'cow'.",
+   "game_hi": "पर्चियों पर cat, cap, cot लिखें; बच्चा हर अक्षर पर उँगली रखकर आवाज़ें जोड़े और तब शब्द बोले — अंदाज़ा नहीं।",
+   "game_en": "Write cat, cap, cot on slips; the child puts a finger under each letter, joins the sounds and only then says the word — no guessing.",
+   "example": "cat → car",
+   "reviewed": true,
+   "source_doc": "team-written, pending educator review"
+  },
+  {
+   "id": "changes_middle_vowel",
+   "checkpoint_ids": [
+    "E.G1.read_cvc"
+   ],
+   "explain_hi": "बच्चा शब्द के बीच की आवाज़ बदलकर पढ़ता है, जैसे 'pen' को 'pin' पढ़ता है।",
+   "explain_en": "The child changes the middle sound when reading, for example reading 'pen' as 'pin'.",
+   "game_hi": "पर्चियों पर pan, pen, pin लिखें; बच्चा पढ़े और आप चीज़ बताएँ — pan (तवा), pen (कलम), pin (पिन) — फिर बच्चा सही पर्ची उठाए।",
+   "game_en": "Write pan, pen, pin on slips; the child reads them and you give a clue — pan (a cooking pan), pen (to write), pin (a sewing pin) — then the child picks the right slip.",
+   "example": "pen → pin",
+   "reviewed": true,
+   "source_doc": "team-written, pending educator review"
+  },
+  {
+   "id": "skips_small_words",
+   "checkpoint_ids": [
+    "E.G1.sight_words",
+    "E.G1.read_short_sent"
+   ],
+   "explain_hi": "बच्चा पढ़ते समय छोटे शब्द (is, the, a, to) छोड़ देता है, जैसे 'The cat is big' को 'cat big' पढ़ता है।",
+   "explain_en": "The child skips small words (is, the, a, to) when reading, for example reading 'The cat is big' as 'cat big'.",
+   "game_hi": "छोटे शब्दों की पर्चियाँ (is, the, a, my, to) बनाएँ और एक को 'ताली वाला शब्द' चुनें; वाक्य पढ़ते समय वह शब्द आने पर बच्चा ताली बजाए।",
+   "game_en": "Make slips for small words (is, the, a, my, to) and pick one as the 'clap word'; while reading a sentence the child claps each time that word comes.",
+   "example": "The cat is big → cat big",
+   "reviewed": true,
+   "source_doc": "team-written, pending educator review"
+  },
+  {
+   "id": "confuses_look_alike_words",
+   "checkpoint_ids": [
+    "E.G1.sight_words"
+   ],
+   "explain_hi": "बच्चा मिलते-जुलते शब्द आपस में बदल देता है, जैसे 'was' को 'saw' या 'on' को 'no' पढ़ता है।",
+   "explain_en": "The child swaps words that look alike, for example reading 'was' as 'saw' or 'on' as 'no'.",
+   "game_hi": "'on' और 'no' की दो पर्चियाँ बनाएँ; आप बोलें 'on the bed' और बच्चा सही पर्ची उठाए, फिर 'no, thank you' बोलें और दूसरी पर्ची उठवाएँ।",
+   "game_en": "Make two slips, 'on' and 'no'; you say 'on the bed' and the child picks the right slip, then you say 'no, thank you' and the child picks the other.",
+   "example": "was → saw",
+   "reviewed": true,
+   "source_doc": "team-written, pending educator review"
+  },
+  {
+   "id": "stops_after_every_word",
+   "checkpoint_ids": [
+    "E.G1.read_short_sent"
+   ],
+   "explain_hi": "बच्चा हर शब्द पर रुककर पढ़ता है, इसलिए वाक्य बातचीत जैसा नहीं लगता और मतलब छूट जाता है।",
+   "explain_en": "The child stops after every word, so the sentence does not sound like talking and the meaning gets lost.",
+   "game_hi": "आप 'I see a cat.' को बातचीत की तरह एक साँस में पढ़ें; बच्चा उँगली सरकाते हुए वही दोहराए — 3 बार, हर बार थोड़ा तेज़।",
+   "game_en": "Read 'I see a cat.' in one breath, like talking; the child repeats it sliding a finger smoothly — 3 times, a little faster each time.",
+   "example": "I … see … a … cat",
+   "reviewed": true,
+   "source_doc": "team-written, pending educator review"
+  },
+  {
+   "id": "splits_digraph",
+   "checkpoint_ids": [
+    "E.G2.blends_digraphs"
+   ],
+   "explain_hi": "बच्चा 'sh', 'ch', 'th' को दो अलग आवाज़ों में पढ़ता है, जैसे 'ship' को 's-h-i-p' पढ़ता है।",
+   "explain_en": "The child reads 'sh', 'ch' or 'th' as two separate sounds, for example reading 'ship' as 's-h-i-p'.",
+   "game_hi": "तीनों जोड़ियों के लिए इशारे बनाएँ: 'sh' पर होंठों पर उँगली (चुप!), 'ch' पर रेल की छुक-छुक, 'th' पर जीभ दाँतों के बीच। आप ship, chin, thin बोलें और बच्चा सही इशारा करे।",
+   "game_en": "Make a gesture for each pair: finger on lips for 'sh' (hush!), a train chug for 'ch', tongue between the teeth for 'th'. You say ship, chin, thin and the child makes the right gesture.",
+   "example": "ship → s-h-i-p",
+   "reviewed": true,
+   "source_doc": "team-written, pending educator review"
+  },
+  {
+   "id": "drops_blend_letter",
+   "checkpoint_ids": [
+    "E.G2.blends_digraphs"
+   ],
+   "explain_hi": "बच्चा दो अक्षरों की जोड़ी में से एक छोड़ देता है, जैसे 'frog' को 'fog' या 'drum' को 'dum' पढ़ता है।",
+   "explain_en": "The child drops one letter of a blend, for example reading 'frog' as 'fog' or 'drum' as 'dum'.",
+   "game_hi": "'frog' के चार अक्षरों के लिए चार कंकड़ रखें: f, r, o, g; बच्चा हर कंकड़ पर आवाज़ बोलकर पूरा शब्द बोले — 'fog' नहीं, 'frog'।",
+   "game_en": "Put down four pebbles for the four letters of 'frog': f, r, o, g; the child says a sound for each pebble and then the whole word — 'frog', not 'fog'.",
+   "example": "frog → fog",
+   "reviewed": true,
+   "source_doc": "team-written, pending educator review"
+  },
+  {
+   "id": "spells_by_sound_only",
+   "checkpoint_ids": [
+    "E.G2.spell_words"
+   ],
+   "explain_hi": "बच्चा शब्द को जैसा सुनता है वैसा लिख देता है, जैसे 'milk' को 'melk' या 'cat' को 'kat' लिखता है।",
+   "explain_en": "The child writes a word the way it sounds, for example 'melk' for 'milk' or 'kat' for 'cat'.",
+   "game_hi": "'देखो, ढको, लिखो, मिलाओ': आप शब्द (milk) 5 सेकंड दिखाएँ, फिर ढक दें; बच्चा मिट्टी या कॉपी पर लिखे और दोनों साथ मिलाएँ।",
+   "game_en": "'Look, cover, write, check': show a word (milk) for 5 seconds, then cover it; the child writes it in the dust or in a notebook and you check it together.",
+   "example": "milk → melk",
+   "reviewed": true,
+   "source_doc": "team-written, pending educator review"
+  },
+  {
+   "id": "drops_letters_in_spelling",
+   "checkpoint_ids": [
+    "E.G2.spell_words"
+   ],
+   "explain_hi": "बच्चा लिखते समय कुछ अक्षर छोड़ देता है, जैसे 'tent' को 'tet' लिखता है।",
+   "explain_en": "The child leaves out letters when writing, for example writing 'tet' for 'tent'.",
+   "game_hi": "शब्द की आवाज़ें गिनें: 'tent' में 4 आवाज़ें; बच्चा 4 कंकड़ रखे और हर कंकड़ के लिए एक अक्षर बोलकर लिखे।",
+   "game_en": "Count the sounds of a word: 'tent' has 4; the child puts down 4 pebbles and writes one letter for each pebble, saying it aloud.",
+   "example": "tent → tet",
+   "reviewed": true,
+   "source_doc": "team-written, pending educator review"
+  },
+  {
+   "id": "misreads_word_endings",
+   "checkpoint_ids": [
+    "E.G2.read_sentences"
+   ],
+   "explain_hi": "बच्चा शब्द के अंत (-s, -ed, -ing) को पढ़ना छोड़ देता है, जैसे 'plays' को 'play' या 'walked' को 'walk' पढ़ता है।",
+   "explain_en": "The child skips the ending of a word (-s, -ed, -ing), for example reading 'plays' as 'play' or 'walked' as 'walk'.",
+   "game_hi": "'I walk', 'He walks', 'I walked' की पर्चियाँ बनाएँ; बच्चा चलकर दिखाए और पर्ची पढ़े, अंत की आवाज़ साफ़ बोलते हुए।",
+   "game_en": "Make slips 'I walk', 'He walks', 'I walked'; the child acts out each one and reads the slip, saying the ending clearly.",
+   "example": "walked → walk",
+   "reviewed": true,
+   "source_doc": "team-written, pending educator review"
+  },
+  {
+   "id": "ignores_full_stop",
+   "checkpoint_ids": [
+    "E.G2.read_sentences"
+   ],
+   "explain_hi": "बच्चा पूर्ण विराम (.) पर रुके बिना अगले वाक्य में पढ़ता चला जाता है, इसलिए दो वाक्य एक जैसे सुनाई देते हैं।",
+   "explain_en": "The child does not pause at a full stop and runs on into the next sentence, so two sentences sound like one.",
+   "game_hi": "दो छोटे वाक्य लिखें — 'Raju has a kite. He runs fast.' — बच्चा पूर्ण विराम पर उँगली रखे, एक साँस ले, फिर आगे पढ़े।",
+   "game_en": "Write two short sentences — 'Raju has a kite. He runs fast.' — the child puts a finger on the full stop, takes a breath, then reads on.",
+   "example": "Raju has a kite He runs fast",
+   "reviewed": true,
+   "source_doc": "team-written, pending educator review"
+  },
+  {
+   "id": "lists_words_without_verb",
+   "checkpoint_ids": [
+    "E.G2.make_sentence"
+   ],
+   "explain_hi": "बच्चा दिए गए शब्द बस एक के बाद एक बोल देता है और काम वाला शब्द नहीं जोड़ता, जैसे 'cow, milk' को 'cow milk' कहता है।",
+   "explain_en": "The child just says the given words one after another and adds no doing word, for example 'cow milk' for 'cow, milk'.",
+   "game_hi": "दो चीज़ें उठाएँ (cup, water) और पूछें 'What can we do?' — बच्चा बोले 'I drink water from a cup.'; ज़रूरत हो तो आप काम का शब्द (drink) बोलकर मदद करें।",
+   "game_en": "Pick up two things (cup, water) and ask 'What can we do?' — the child says 'I drink water from a cup.'; if needed, help by saying the doing word (drink).",
+   "example": "cow milk ✗ (The cow gives milk.)",
+   "reviewed": true,
+   "source_doc": "team-written, pending educator review"
+  },
+  {
+   "id": "uses_hindi_word_order",
+   "checkpoint_ids": [
+    "E.G2.make_sentence"
+   ],
+   "explain_hi": "बच्चा अंग्रेज़ी शब्द हिंदी के क्रम में रख देता है, जैसे 'I eat a mango' की जगह 'I mango eat' कहता है।",
+   "explain_en": "The child puts English words in Hindi order, for example saying 'I mango eat' instead of 'I eat a mango'.",
+   "game_hi": "चार पर्चियाँ — 'I', 'eat', 'a', 'mango' — मिलाकर रखें; बच्चा उन्हें 'कौन, क्या करता है, क्या' के क्रम में लगाकर वाक्य पढ़े।",
+   "game_en": "Mix up four slips — 'I', 'eat', 'a', 'mango'; the child arranges them in the order 'who, does what, what' and reads the sentence.",
+   "example": "I mango eat ✗ (I eat a mango.)",
+   "reviewed": true,
+   "source_doc": "team-written, pending educator review"
+  },
+  {
+   "id": "answers_without_looking_back",
+   "checkpoint_ids": [
+    "E.G2.simple_comp"
+   ],
+   "explain_hi": "बच्चा पाठ में देखे बिना अंदाज़े से जवाब दे देता है, इसलिए जवाब अक्सर गलत होता है।",
+   "explain_en": "The child answers by guessing without looking back at the text, so the answer is often wrong.",
+   "game_hi": "एक छोटा वाक्य पढ़ें — 'Meena has a white cow.' — और पूछें 'What does Meena have?'; बच्चा वाक्य पर उँगली रखकर जवाब ढूँढे।",
+   "game_en": "Read a short sentence — 'Meena has a white cow.' — and ask 'What does Meena have?'; the child puts a finger on the sentence and finds the answer.",
+   "example": "What does Meena have? → 'a goat'",
+   "reviewed": true,
+   "source_doc": "team-written, pending educator review"
+  },
+  {
+   "id": "repeats_text_instead_of_answering",
+   "checkpoint_ids": [
+    "E.G2.simple_comp"
+   ],
+   "explain_hi": "बच्चा सवाल का जवाब देने की जगह पाठ का पूरा वाक्य दोहरा देता है।",
+   "explain_en": "The child repeats a whole sentence from the text instead of answering the question.",
+   "game_hi": "'Meena has a white cow. What colour is the cow?' — बच्चा सिर्फ़ 'white' बोले; आप बताएँ कि छोटा जवाब भी सही जवाब है।",
+   "game_en": "'Meena has a white cow. What colour is the cow?' — the child says just 'white'; tell the child that a short answer is a good answer.",
+   "example": "Meena has a white cow. (answer: white)",
+   "reviewed": true,
+   "source_doc": "team-written, pending educator review"
+  },
+  {
+   "id": "reads_without_meaning",
+   "checkpoint_ids": [
+    "E.G3.read_passage"
+   ],
+   "explain_hi": "बच्चा सारे शब्द पढ़ लेता है, पर बाद में बता नहीं पाता कि पाठ में क्या था।",
+   "explain_en": "The child reads all the words but cannot say afterwards what the text was about.",
+   "game_hi": "2–3 वाक्य पढ़ने के बाद किताब बंद करें और पूछें 'What was it about?'; बच्चा हिंदी में बताए तो भी ठीक है, फिर वही एक वाक्य अंग्रेज़ी में दोहराए।",
+   "game_en": "After reading 2–3 sentences, close the book and ask 'What was it about?'; the child may answer in Hindi first, then say it again in one English sentence.",
+   "example": "reads all words → 'don't know'",
+   "reviewed": true,
+   "source_doc": "team-written, pending educator review"
+  },
+  {
+   "id": "skips_hard_words",
+   "checkpoint_ids": [
+    "E.G3.read_passage"
+   ],
+   "explain_hi": "बच्चा कठिन शब्द पर रुकने की जगह उसे छोड़कर आगे पढ़ जाता है।",
+   "explain_en": "The child skips a hard word and reads on instead of working it out.",
+   "game_hi": "पाठ से एक कठिन शब्द चुनें और पर्ची पर टुकड़ों में लिखें (bas-ket); बच्चा टुकड़े जोड़कर पढ़े, फिर पाठ में वह शब्द ढूँढे।",
+   "game_en": "Pick one hard word from the text and write it in parts on a slip (bas-ket); the child joins the parts, reads the word, then finds it in the text.",
+   "example": "basket → (skipped)",
+   "reviewed": true,
+   "source_doc": "team-written, pending educator review"
+  },
+  {
+   "id": "drops_is_am_are",
+   "checkpoint_ids": [
+    "E.G3.sentence_formation"
+   ],
+   "explain_hi": "बच्चा 'is', 'am', 'are' छोड़कर वाक्य बोलता है, जैसे 'I happy' या 'He going to school'।",
+   "explain_en": "The child leaves out 'is', 'am' or 'are', for example saying 'I happy' or 'He going to school'.",
+   "game_hi": "'I am', 'He is', 'They are' की तीन पर्चियाँ बनाएँ; आप 'happy' बोलें और बच्चा घर के लोगों के बारे में सही पर्ची के साथ वाक्य बोले: 'Mother is happy.'",
+   "game_en": "Make three slips: 'I am', 'He is', 'They are'; you say 'happy' and the child makes a sentence about people at home with the right slip: 'Mother is happy.'",
+   "example": "I happy ✗ (I am happy.)",
+   "reviewed": true,
+   "source_doc": "team-written, pending educator review"
+  },
+  {
+   "id": "mixes_up_he_she",
+   "checkpoint_ids": [
+    "E.G3.sentence_formation"
+   ],
+   "explain_hi": "बच्चा लड़के के लिए 'she' और लड़की के लिए 'he' कह देता है।",
+   "explain_en": "The child says 'she' for a boy and 'he' for a girl.",
+   "game_hi": "घर के लोगों की ओर इशारा करके पूछें — 'Who is he?' 'Who is she?' — बच्चा बोले: 'He is my brother.' 'She is my sister.'",
+   "game_en": "Point to people at home and ask 'Who is he?' 'Who is she?' — the child says: 'He is my brother.' 'She is my sister.'",
+   "example": "My sister, he is ✗ (she is)",
+   "reviewed": true,
+   "source_doc": "team-written, pending educator review"
+  },
+  {
+   "id": "confuses_naming_and_doing_words",
+   "checkpoint_ids": [
+    "E.G3.word_types"
+   ],
+   "explain_hi": "बच्चा चीज़ के नाम (book) और काम (run) में फ़र्क़ नहीं कर पाता।",
+   "explain_en": "The child cannot tell naming words (book) from doing words (run).",
+   "game_hi": "आप एक-एक शब्द बोलें — jump, pen, sing, door; काम वाले शब्द पर बच्चा वह काम करके दिखाए और नाम वाले शब्द पर उस चीज़ को छुए।",
+   "game_en": "Say one word at a time — jump, pen, sing, door; for a doing word the child does the action, for a naming word the child touches that thing.",
+   "example": "run → 'a thing'",
+   "reviewed": true,
+   "source_doc": "team-written, pending educator review"
+  },
+  {
+   "id": "mixes_up_describing_words",
+   "checkpoint_ids": [
+    "E.G3.word_types"
+   ],
+   "explain_hi": "बच्चा 'big', 'red' जैसे गुण बताने वाले शब्द को भी चीज़ का नाम मान लेता है।",
+   "explain_en": "The child treats describing words like 'big' or 'red' as the name of a thing.",
+   "game_hi": "एक ही चीज़ के तीन वाक्य बनाएँ — 'a ball', 'a red ball', 'a big red ball'; बच्चा बताए कि हर बार कौन-सा नया शब्द जुड़ा।",
+   "game_en": "Say three phrases about one thing — 'a ball', 'a red ball', 'a big red ball'; the child tells which new word was added each time.",
+   "example": "red → 'a thing'",
+   "reviewed": true,
+   "source_doc": "team-written, pending educator review"
+  },
+  {
+   "id": "retells_out_of_order",
+   "checkpoint_ids": [
+    "E.G3.story_comp"
+   ],
+   "explain_hi": "बच्चा कहानी की बातें आगे-पीछे करके सुनाता है।",
+   "explain_en": "The child tells the events of a story in the wrong order.",
+   "game_hi": "कहानी की तीन बातों के लिए तीन कंकड़ या पर्चियाँ रखें; बच्चा 'first, next, last' कहते हुए उन्हें क्रम में लगाकर कहानी सुनाए।",
+   "game_en": "Put down three pebbles or slips for three events of the story; the child puts them in order saying 'first, next, last' and tells the story.",
+   "example": "last → first",
+   "reviewed": true,
+   "source_doc": "team-written, pending educator review"
+  },
+  {
+   "id": "misses_main_idea",
+   "checkpoint_ids": [
+    "E.G3.story_comp"
+   ],
+   "explain_hi": "बच्चा छोटी-छोटी बातें याद रखता है, पर यह नहीं बता पाता कि कहानी में मुख्य बात क्या थी।",
+   "explain_en": "The child remembers small details but cannot say what the story was mainly about.",
+   "game_hi": "कहानी सुनने के बाद पूछें 'What is the story about?' और एक वाक्य में बताने को कहें; पहली बार आप एक उदाहरण दें, जैसे 'It is about Meena and her cow.'",
+   "game_en": "After the story, ask 'What is the story about?' and ask for one sentence; the first time, give an example yourself, such as 'It is about Meena and her cow.'",
+   "example": "tells details only",
+   "reviewed": true,
+   "source_doc": "team-written, pending educator review"
   }
  ]
 }

@@ -325,6 +325,168 @@
     "Ask: what does the 0 in 305 tell us? (there are no tens)"
    ],
    "minutes": 5
+  },
+  {
+   "id": "act_en_letter_match",
+   "title_hi": "b और d की पहचान",
+   "title_en": "Tell b and d apart",
+   "materials_hi": "मिट्टी या रेत, कॉपी और पेंसिल",
+   "materials_en": "Dust or sand, a notebook and a pencil",
+   "steps_hi": [
+    "मिट्टी में 'b' लिखें: पहले सीधी लकीर, फिर दाईं ओर गोला — बैट और बॉल जैसा।",
+    "अब 'd' लिखें: पहले गोला, फिर सीधी लकीर।",
+    "आप 'b' या 'd' बोलें और बच्चा मिट्टी में वही अक्षर लिखे; 5 बार दोहराएँ।"
+   ],
+   "steps_en": [
+    "Write 'b' in the dust: a straight line first, then a round belly on the right, like a bat and a ball.",
+    "Now write 'd': the round part first, then the straight line.",
+    "Say 'b' or 'd' and the child writes that letter in the dust; repeat 5 times."
+   ],
+   "minutes": 5
+  },
+  {
+   "id": "act_en_first_sounds",
+   "title_hi": "चीज़ों की पहली आवाज़",
+   "title_en": "First sound of things",
+   "materials_hi": "घर की चीज़ें: cup, pen, spoon, bag",
+   "materials_en": "Things at home: cup, pen, spoon, bag",
+   "steps_hi": [
+    "cup उठाएँ और बोलें 'k-k-cup'; बच्चा पहली आवाज़ दोहराए।",
+    "pen, spoon और bag के साथ भी यही करें।",
+    "आप कोई चीज़ छुएँ और बच्चा सिर्फ़ उसकी पहली आवाज़ बताए।"
+   ],
+   "steps_en": [
+    "Pick up a cup and say 'k-k-cup'; the child repeats the first sound.",
+    "Do the same with a pen, a spoon and a bag.",
+    "You touch a thing and the child says only its first sound."
+   ],
+   "minutes": 5
+  },
+  {
+   "id": "act_en_touch_say",
+   "title_hi": "छुओ और बोलो",
+   "title_en": "Touch and say",
+   "materials_hi": "अपना शरीर और घर की चीज़ें",
+   "materials_en": "Your own body and things at home",
+   "steps_hi": [
+    "सिर, आँख, नाक और हाथ छूकर बोलें: head, eye, nose, hand; बच्चा दोहराए।",
+    "घर की तीन चीज़ें उठाकर उनके नाम बोलें: cup, plate, bag।",
+    "आप चीज़ छुएँ और बच्चा उसका अंग्रेज़ी नाम बताए।"
+   ],
+   "steps_en": [
+    "Touch your head, eyes, nose and hand and say: head, eye, nose, hand; the child repeats.",
+    "Pick up three things at home and name them: cup, plate, bag.",
+    "You touch a thing and the child says its English name."
+   ],
+   "minutes": 5
+  },
+  {
+   "id": "act_en_sound_blend",
+   "title_hi": "कंकड़ों से शब्द जोड़ो",
+   "title_en": "Join sounds with pebbles",
+   "materials_hi": "3 कंकड़ या बटन",
+   "materials_en": "3 pebbles or buttons",
+   "steps_hi": [
+    "तीन कंकड़ रखें; हर कंकड़ छूकर आवाज़ बोलें: c, a, t।",
+    "उँगली तीनों पर फिराकर तेज़ी से बोलें: cat; बच्चा दोहराए।",
+    "pig, sun और hen के साथ बच्चा खुद करे।"
+   ],
+   "steps_en": [
+    "Put down three pebbles; touch each one and say its sound: c, a, t.",
+    "Slide a finger across all three and say the word fast: cat; the child repeats.",
+    "The child does it alone with pig, sun and hen."
+   ],
+   "minutes": 5
+  },
+  {
+   "id": "act_en_word_cards",
+   "title_hi": "पर्चियों से वाक्य बनाओ",
+   "title_en": "Make a sentence with slips",
+   "materials_hi": "कागज़ की 5 पर्चियाँ और पेन",
+   "materials_en": "5 paper slips and a pen",
+   "steps_hi": [
+    "पर्चियों पर I, see, a, cat, dog लिखें; बच्चा हर पर्ची पढ़े।",
+    "पर्चियाँ 'I see a cat.' के क्रम में रखें और उँगली सरकाते हुए पढ़ें।",
+    "cat की जगह dog रखें और बच्चे से नया वाक्य पढ़वाएँ।"
+   ],
+   "steps_en": [
+    "Write I, see, a, cat, dog on the slips; the child reads each slip.",
+    "Lay the slips out as 'I see a cat.' and read it, sliding a finger under the words.",
+    "Put dog in place of cat and let the child read the new sentence."
+   ],
+   "minutes": 5
+  },
+  {
+   "id": "act_en_digraph_spell",
+   "title_hi": "sh, ch, th और स्पेलिंग",
+   "title_en": "sh, ch, th and spelling",
+   "materials_hi": "कॉपी और पेंसिल",
+   "materials_en": "A notebook and a pencil",
+   "steps_hi": [
+    "sh, ch, th की आवाज़ें बोलें: 'श्श्श' (चुप!), रेल की छुक-छुक, और जीभ दाँतों के बीच; बच्चा दोहराए।",
+    "ship, chin और thin लिखें और बच्चा उन्हें पढ़े।",
+    "'fish' 5 सेकंड दिखाएँ, ढक दें और बच्चा लिखे; फिर साथ मिलाएँ।"
+   ],
+   "steps_en": [
+    "Say the sounds of sh, ch, th: 'shhh' (hush!), a train chug, and the tongue between the teeth; the child repeats.",
+    "Write ship, chin and thin and let the child read them.",
+    "Show 'fish' for 5 seconds, cover it and let the child write it; then check together."
+   ],
+   "minutes": 5
+  },
+  {
+   "id": "act_en_echo_read",
+   "title_hi": "सुनो और दोहराओ",
+   "title_en": "Listen and read back",
+   "materials_hi": "बच्चे की अंग्रेज़ी की किताब",
+   "materials_en": "The child's English book",
+   "steps_hi": [
+    "किताब से एक छोटा वाक्य चुनें और बातचीत की तरह पढ़ें।",
+    "बच्चा वही वाक्य उसी रफ़्तार से दोहराए।",
+    "ऐसे 4 वाक्य करें, फिर बच्चा चारों पढ़े; पूर्ण विराम (.) पर रुकना याद दिलाएँ।"
+   ],
+   "steps_en": [
+    "Pick one short sentence from the book and read it like talking.",
+    "The child reads the same sentence back at the same speed.",
+    "Do 4 sentences this way, then the child reads all four; remind the child to pause at each full stop."
+   ],
+   "minutes": 5
+  },
+  {
+   "id": "act_en_story_questions",
+   "title_hi": "कहानी के सवाल",
+   "title_en": "Questions about a story",
+   "materials_hi": "किताब की कोई छोटी कहानी",
+   "materials_en": "A short story from a book",
+   "steps_hi": [
+    "कहानी दो बार पढ़ें और बच्चा ध्यान से सुने।",
+    "पूछें: Who? What? Where? — बच्चा किताब में उँगली रखकर जवाब ढूँढे।",
+    "बच्चा first, next, last कहकर कहानी अपने शब्दों में सुनाए।"
+   ],
+   "steps_en": [
+    "Read the story twice while the child listens carefully.",
+    "Ask: Who? What? Where? — the child finds each answer with a finger on the page.",
+    "The child tells the story in their own words, saying first, next, last."
+   ],
+   "minutes": 5
+  },
+  {
+   "id": "act_en_word_types",
+   "title_hi": "नाम, काम और गुण वाले शब्द",
+   "title_en": "Naming, doing and describing words",
+   "materials_hi": "घर की चीज़ें",
+   "materials_en": "Things at home",
+   "steps_hi": [
+    "book, jump, big बोलें: book चीज़ का नाम है, jump काम है और big गुण बताता है।",
+    "आप pen, run, red, sing बोलें; बच्चा 1 उँगली (नाम), 2 उँगली (काम) या 3 उँगली (गुण) दिखाए।",
+    "'girl, big, run' से वाक्य बनवाएँ: The big girl runs."
+   ],
+   "steps_en": [
+    "Say book, jump, big: book names a thing, jump is an action and big describes.",
+    "You say pen, run, red, sing; the child shows 1 finger (naming), 2 fingers (doing) or 3 fingers (describing).",
+    "Ask for a sentence with 'girl, big, run': The big girl runs."
+   ],
+   "minutes": 5
   }
  ]
 }

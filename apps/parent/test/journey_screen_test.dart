@@ -53,8 +53,12 @@ final _journey = {
   ],
 };
 
-Future<void> _pump(WidgetTester tester, MockClient client) async {
-  tester.view.physicalSize = const Size(1080, 4000);
+Future<void> _pump(
+  WidgetTester tester,
+  MockClient client, {
+  double width = 1080,
+}) async {
+  tester.view.physicalSize = Size(width, 4000);
   tester.view.devicePixelRatio = 2;
   addTearDown(tester.view.reset);
   await http.runWithClient(
@@ -154,4 +158,36 @@ void main() {
     );
     expect(find.textContaining('journey will appear here'), findsOneWidget);
   });
+
+  for (final hi in [false, true]) {
+    testWidgets('English chip fetches the english journey on a narrow phone (${hi ? 'hi' : 'en'})', (
+      tester,
+    ) async {
+      Lang.code.value = hi ? 'hi' : 'en';
+      final asked = <String>[];
+      final client = MockClient((req) async {
+        asked.add(req.url.toString());
+        final subject = req.url.queryParameters['subject'];
+        return http.Response(
+          jsonEncode({..._journey, 'subject': subject}),
+          200,
+          headers: {'content-type': 'application/json; charset=utf-8'},
+        );
+      });
+      await _pump(tester, client, width: 720); // 360 dp: the narrowest phones
+      final label = hi ? 'अंग्रेज़ी' : 'English';
+      expect(find.text(label), findsOneWidget);
+      expect(find.byIcon(Icons.translate_rounded), findsOneWidget);
+      await http.runWithClient(() async {
+        await tester.tap(find.text(label));
+        await tester.pumpAndSettle();
+      }, () => client);
+      expect(asked.last, contains('/v1/parent/journey?subject=english'));
+      expect(
+        find.text(hi ? 'Kavita ने 5 में से 2 कदम सीख लिए हैं।' : 'Kavita has learned 2 of 5 steps.'),
+        findsOneWidget,
+      );
+      expect(tester.takeException(), isNull); // no overflow in the 3-way toggle
+    });
+  }
 }

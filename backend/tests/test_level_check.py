@@ -60,7 +60,7 @@ def _post(client, s, cid, child, results, subject="literacy", client_uuid=None):
 # ------------------------------------------------------------------ content + stop rule
 def test_ladder_loads_and_matches_the_graph():
     ladders = lc.load_ladders()
-    assert set(ladders) == {"literacy", "numeracy"}
+    assert {"literacy", "numeracy"} <= set(ladders) <= {"literacy", "numeracy", "english"}
     cps = get_content().checkpoints
     for subject, lad in ladders.items():
         assert lad["beginner"]["key"] == "beginner"
@@ -68,7 +68,7 @@ def test_ladder_loads_and_matches_the_graph():
             assert cps[lv["checkpoint_id"]].subject == subject
             assert lv["of"] == len(lv["items"]) and 1 <= lv["pass_min"] <= lv["of"]
     assert [lv["key"] for lv in ladders["literacy"]["levels"]] == ["letter", "word", "sentence", "story"]
-    assert lc.ladder("english") is None
+    assert lc.ladder("nope") is None
 
 
 def test_placement_stop_rule():

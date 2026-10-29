@@ -35,7 +35,8 @@ from app.models.tables import (
 from app.services import ledger
 from app.services.content import get_content
 from app.services.voice_types import (
-    MAX_ATTEMPTS, KINDS, STAGE_CHECKPOINTS, STAGES, TARGET_MINUTES, Assessment, is_reviewed_lang, voice_lang,
+    MAX_ATTEMPTS, KINDS, STAGE_CHECKPOINTS, STAGES, TARGET_MINUTES, Assessment, is_reviewed_lang, stage_checkpoints,
+    voice_lang,
 )
 
 # The clock is injectable so tests can run a 30-minute session in milliseconds.
@@ -244,20 +245,24 @@ def _topic(cp_id: str, custom: bool) -> dict:
 
 
 def _english_cps(db: Session, cls: Classroom) -> list[str]:
-    """Checkpoints of the school's own English subject (key or name "english"), if it has one."""
+    """What an English session practises: the class's built-in English roadmap (`E.*`; the grade's template
+    when the class has none), plus the topics of a school's own legacy custom subject named "english"."""
+    content = get_content()
+    ids = ledger.class_roadmap_cps(db, cls, "english")
     subj = db.scalar(select(CustomSubject).where(
         CustomSubject.school_id == cls.school_id,
         (func.lower(CustomSubject.key) == "english") | (func.lower(CustomSubject.name_en) == "english"))
         .order_by(CustomSubject.id).limit(1))
-    if not subj:
-        return []
-    ids = ledger.roadmap_checkpoint_ids(ledger.current_roadmap(db, cls.id, subj.key))
-    if not ids:
-        rows = list(db.scalars(select(CustomCheckpoint).where(CustomCheckpoint.school_id == cls.school_id,
-                                                              CustomCheckpoint.subject == subj.key)))
-        ids = [r.id for r in rows if r.grade == cls.grade] or [r.id for r in rows]
-    content = get_content()
-    return [i for i in ids if i in content.checkpoints]
+    if subj:
+        own = ledger.roadmap_checkpoint_ids(ledger.current_roadmap(db, cls.id, subj.key))
+        if not own:
+            rows = list(db.scalars(select(CustomCheckpoint).where(CustomCheckpoint.school_id == cls.school_id,
+                                                                  CustomCheckpoint.subject == subj.key)))
+            own = [r.id for r in rows if r.grade == cls.grade] or [r.id for r in rows]
+        template = [i["checkpoint_id"] for i in content.template_roadmap("english", cls.grade)]
+        # a legacy roadmap that holds only the school's own topics still practises the built-in ones
+        ids = (ids if any(i in template for i in ids) else template + ids) + own
+    return [i for i in dict.fromkeys(ids) if i in content.checkpoints]
 
 
 def _syllabus(db: Session, cls: Classroom, lang: str) -> dict:
@@ -271,9 +276,17 @@ def _syllabus(db: Session, cls: Classroom, lang: str) -> dict:
 
 
 def topics_for(st: dict, stage: str) -> list[dict]:
-    """The class syllabus filtered to `stage` (built-ins), plus every custom topic (the AI decides)."""
+    """The class syllabus filtered to `stage` (built-ins), plus every custom topic (the AI decides).
+    English sessions use the English syllabus (`E.*` built-ins for the stage, then the school's own topics)."""
     content = get_content()
     syl = st["syllabus"]
+    if st.get("lang") == "en":
+        stage_cps = stage_checkpoints("en", stage)
+        eng = syl["english"]
+        builtin = ([c for c in eng if c in stage_cps and c not in content.custom_ids]
+                   or [c for c in stage_cps if c in content.checkpoints])
+        return ([_topic(c, False) for c in builtin]
+                + [_topic(c, True) for c in eng if c in content.custom_ids])
     stage_cps = STAGE_CHECKPOINTS[stage]
     builtin = [c for c in syl["builtin"] if c in stage_cps] or [c for c in stage_cps if c in content.checkpoints]
     return ([_topic(c, False) for c in builtin] + [_topic(c, True) for c in syl["custom"]]
@@ -575,11 +588,15 @@ def _note_weak(st: dict, errors: list[dict]) -> None:
 
 # ------------------------------------------------------------------ evidence
 def _evidence_ok(st: dict, cp: str | None) -> bool:
-    """English answers only count for the school's English topics, never for the Hindi map."""
-    if not cp or cp not in get_content().checkpoints:
+    """English answers only count for the class's English topics (`E.*`, or the school's own), never for
+    the Hindi map, and a home-language session never writes to an English topic."""
+    content = get_content()
+    if not cp or cp not in content.checkpoints:
         return False
     english = set(st["syllabus"]["english"])
-    return cp in english if st["lang"] == "en" else cp not in english
+    if st["lang"] == "en":
+        return cp in english
+    return cp not in english and content.checkpoints[cp].subject != "english"
 
 
 def _write_evidence(db: Session, vs: VoiceSession, st: dict, item: dict, result: str, score: float) -> str | None:

@@ -17,6 +17,9 @@ String voiceStageLabel(String? stage) => switch (stage) {
   _ => tr('Not reached', 'अभी नहीं'),
 };
 
+/// Subject a voice session belongs to: English sessions are 'english', everything else Hindi.
+String voiceSubject(String? lang) => lang == 'en' ? 'english' : 'literacy';
+
 String voiceLangLabel(String? lang) =>
     lang == 'en' ? tr('English', 'अंग्रेज़ी') : tr('Hindi', 'हिंदी');
 
@@ -111,6 +114,7 @@ class VoiceReportScreen extends StatefulWidget {
 
 class _VoiceReportScreenState extends State<VoiceReportScreen> {
   late Future<dynamic> _future;
+  String? _lang; // language of the loaded session; English sessions are checked as 'english'
 
   @override
   void initState() {
@@ -133,7 +137,7 @@ class _VoiceReportScreenState extends State<VoiceReportScreen> {
       ),
       builder: (_) => CaptureSheet(
         classId: widget.classId,
-        subject: 'literacy',
+        subject: voiceSubject(_lang),
         presetCheckpointId: checkpointId,
         presetChildIds: [widget.childId],
       ),
@@ -212,6 +216,7 @@ class _VoiceReportScreenState extends State<VoiceReportScreen> {
     required bool offline,
   }) {
     final lang = (report?['lang'] ?? session['lang']) as String?;
+    _lang = lang;
     final transcript = _ms(session['transcript']);
     final subtitle = [
       voiceWhen(session['started_at']),

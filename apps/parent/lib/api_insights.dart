@@ -17,7 +17,7 @@ extension InsightsApi on Api {
   Future<List<Map<String, dynamic>>> moments() async =>
       _list((await get('/v1/parent/moments') as Map?)?['moments']);
 
-  /// `{subject, grade, milestones, counts, celebrations, growth}` for `numeracy` / `literacy`.
+  /// `{subject, grade, milestones, counts, celebrations, growth}` for `numeracy` / `literacy` / `english`.
   Future<Map<String, dynamic>> journey(String subject) async => _map(
     await get(
       '/v1/parent/journey?subject=${Uri.encodeQueryComponent(subject)}',

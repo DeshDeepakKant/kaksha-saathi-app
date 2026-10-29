@@ -122,8 +122,14 @@ class Translator:
 
 
 # ------------------------------------------------------------------ per-file builders
+# The built-in English subject is what the children learn: its activities (`language: "en"`), probes and level
+# check are never translated, and its lesson titles fall back to `title_en` (app/i18n/library.py).
+def english_nodes() -> set[str]:
+    return {n["id"] for n in load("competency_graph.json")["nodes"] if n.get("subject") == "english"}
+
+
 def build_activities(t: Translator) -> dict:
-    acts = load("activities.json")["activities"]
+    acts = [a for a in load("activities.json")["activities"] if a.get("language") != "en"]
     texts = []
     for a in acts:
         texts += [a["title_hi"], a.get("materials_hi", ""), a.get("blackboard_hi", ""),
@@ -146,7 +152,8 @@ def build_activities(t: Translator) -> dict:
 
 
 def build_probes(t: Translator) -> dict:
-    probes = load("probes.json")["probes"]
+    skip = english_nodes()
+    probes = [p for p in load("probes.json")["probes"] if p["checkpoint_id"] not in skip]
     texts = []
     for p in probes:
         texts += [p["title_hi"], p.get("tell_hi", ""), p.get("pass_rule", "")]
@@ -167,7 +174,7 @@ def build_probes(t: Translator) -> dict:
 
 
 def build_titles(t: Translator) -> dict:
-    nodes = load("competency_graph.json")["nodes"]
+    nodes = [n for n in load("competency_graph.json")["nodes"] if n.get("subject") != "english"]
     m = t.translate([n["title_en"] for n in nodes], "en",
                     "Names of learning checkpoints (skills) in a grade 1-3 maths and reading map, shown as short "
                     "labels. Reading skills about Hindi letters/matras may be named generally (letters, vowel "
@@ -181,6 +188,8 @@ def _level_sources(lang: str) -> dict:
     subjects = load("level_check.json")["subjects"]
     out = {}
     for name, s in subjects.items():
+        if name == "english":
+            continue
         title = f"{language(lang).name_en} reading level" if name == "literacy" else s["title_en"]
         out[name] = {"title": title, "beginner": s["beginner"]["title_en"],
                      "levels": {lv["key"]: {"title": lv["title_en"], "ask": lv["ask_en"]} for lv in s["levels"]}}
@@ -352,7 +361,9 @@ def check_lang(lang: str) -> list[str]:
             return None
         return json.loads(p.read_text(encoding="utf-8"))
 
-    acts, probes = load("activities.json")["activities"], load("probes.json")["probes"]
+    skip = english_nodes()
+    acts = [a for a in load("activities.json")["activities"] if a.get("language") != "en"]
+    probes = [p for p in load("probes.json")["probes"] if p["checkpoint_id"] not in skip]
     a = get("activities.json")
     if a:
         for src in acts:
@@ -387,7 +398,7 @@ def check_lang(lang: str) -> list[str]:
     t = get("checkpoint_titles.json")
     if t:
         nodes = load("competency_graph.json")["nodes"]
-        missing = [n["id"] for n in nodes if n["id"] not in t["titles"]]
+        missing = [n["id"] for n in nodes if n["id"] not in t["titles"] and n["id"] not in skip]
         if missing:
             probs.append(f"checkpoint_titles: {len(missing)} missing")
         probs += [f"checkpoint_titles: {k}: not in script" for k, v in t["titles"].items() if not in_script(v, lang)]

@@ -10,6 +10,7 @@ import pytest
 from app.ai import llm, voice_schemas as vs, voice_tutor as vt
 from app.db import SessionLocal
 from app.services import voice_bank
+from app.services.content import get_content
 from app.services.voice_types import STAGES, Assessment
 
 LANGS = ("hi", "en")
@@ -199,7 +200,9 @@ def test_generate_items_ai_paragraph_ok(db, fake_claude):
     p = items[0]
     assert p["kind"] == "read_paragraph" and len(p["followups"]) == 2
     assert p["followups"][0]["id"] == p["id"] + "-q1" and p["followups"][0]["context"] == para
-    assert p["max_record_s"] >= 30 and p["checkpoint_id"] is None
+    assert p["max_record_s"] >= 30
+    # English reading items carry the English lesson once it is in the graph (else no checkpoint, as before)
+    assert p["checkpoint_id"] == ("E.G2.read_sentences" if "E.G2.read_sentences" in get_content().checkpoints else None)
 
 
 # ---------------------------------------------------------------- validators

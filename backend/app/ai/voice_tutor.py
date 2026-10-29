@@ -28,8 +28,10 @@ from app.ai.features import prompt
 from app.ai.schemas import INJECTION_MARKERS
 from app.config import get_settings
 from app.services import voice_bank
+from app.services.content import get_content
 from app.services.voice_types import (
-    LANGS, MAX_ATTEMPTS, STAGE_CHECKPOINTS, STAGES, Assessment, is_home_lang, is_reviewed_lang, voice_lang,
+    KIND_CHECKPOINT_EN, LANGS, MAX_ATTEMPTS, STAGES, Assessment, is_home_lang, is_reviewed_lang, stage_checkpoints,
+    voice_lang,
 )
 
 SITUATIONS = ("greet", "intro_item", "praise", "retry_hint", "move_on", "stage_up", "stage_down",
@@ -40,8 +42,8 @@ LINE_TIMEOUT_S, OPEN_TIMEOUT_S, ITEMS_TIMEOUT_S = 6.0, 8.0, 40.0
 REPORT_TIMEOUT_S = 120.0  # the narrative is written in the background after the session ends
 PREPARE_TIMEOUT_S = 20.0  # translating a language's fixed lines at session start (once per language)
 
-# Hindi-track checkpoint per kind when Claude's choice is not one we allow. English has no
-# checkpoints in the competency graph yet, so English items carry None unless a class topic applies.
+# Hindi-track checkpoint per kind when Claude's choice is not one we allow. English falls back to
+# KIND_CHECKPOINT_EN (voice_types), and only when the class's English syllabus allows it.
 KIND_CHECKPOINT_HI = {
     "read_letter": "L.G1.vyanjan", "say_sound": "L.G1.phonological", "build_word": "L.G1.blend_no_matra",
     "read_word": "L.G1.read_matra_words", "make_sentence": "L.G3.sentence_formation",
@@ -150,7 +152,9 @@ def _build_item(raw: dict, *, lang: str, stage: str, allowed_cps: set[str]) -> d
         accept = [ex] if ex else []
     cp = raw.get("checkpoint_id")
     if cp not in allowed_cps:
-        cp = KIND_CHECKPOINT_HI.get(kind) if is_home_lang(lang) else None
+        cp = KIND_CHECKPOINT_HI.get(kind) if is_home_lang(lang) else KIND_CHECKPOINT_EN.get(kind)
+        if cp not in allowed_cps and not is_home_lang(lang):
+            cp = None
     key = target or text or " ".join(required)
     iid = _item_id(lang, stage, kind, vs.norm(key))
     item = {"id": iid, "stage": stage, "kind": kind, "lang": lang, "checkpoint_id": cp,
@@ -200,8 +204,10 @@ def filter_items(raws: list, *, lang: str, stage: str, grade: int, avoid: set[st
 
 
 def _ai_items(*, school_id, lang, grade, stage, topics, avoid, weak_sounds, n) -> list[dict]:
-    allowed_cps = set(STAGE_CHECKPOINTS.get(stage, ())) | {t["checkpoint_id"] for t in topics}
-    if stage == "reading":
+    allowed_cps = set(stage_checkpoints(lang, stage)) | {t["checkpoint_id"] for t in topics}
+    if not is_home_lang(lang):  # English lessons count only once they are in the graph
+        allowed_cps = {c for c in allowed_cps if c in get_content().checkpoints}
+    if stage == "reading" and is_home_lang(lang):
         allowed_cps |= {LITERAL_CP, INFERENTIAL_CP}
     need = (n + 1) // 2
     if lang == "hi":

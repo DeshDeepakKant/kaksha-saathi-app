@@ -180,6 +180,11 @@ class _JourneyScreenState extends State<JourneyScreen> {
                       icon: const Icon(Icons.menu_book_rounded),
                       label: Text(tr('Hindi', 'हिंदी')),
                     ),
+                    ButtonSegment(
+                      value: 'english',
+                      icon: const Icon(Icons.translate_rounded),
+                      label: Text(tr('English', 'अंग्रेज़ी')),
+                    ),
                   ],
                   selected: {_subject},
                   onSelectionChanged: (s) => _switch(s.first),
@@ -296,9 +301,11 @@ class _JourneyScreenState extends State<JourneyScreen> {
         ? _int(counts['working'])
         : ms.where((m) => m['state'] == 'working').length;
     final name = _name;
-    final subject = _subject == 'literacy'
-        ? tr('Hindi', 'हिंदी')
-        : tr('Maths', 'गणित');
+    final subject = switch (_subject) {
+      'literacy' => tr('Hindi', 'हिंदी'),
+      'english' => tr('English', 'अंग्रेज़ी'),
+      _ => tr('Maths', 'गणित'),
+    };
     final grade = (d['grade'] ?? '').toString();
 
     final String sentence;

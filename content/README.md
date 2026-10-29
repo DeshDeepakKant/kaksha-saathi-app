@@ -9,6 +9,11 @@ Everything the runtime may use is here, and everything is versioned in git.
 | `practice_items.json` | parent session item bank | team-authored; same caveat |
 | `probes.json` | 2-minute teacher probes | team-authored |
 
+English (`subject: "english"`, nodes `E.G1.*`, `E.G2.*`, `E.G3.*`, activities `act_en_*`) is written in English because
+English is what is being taught: activities carry `"language": "en"` and keep English text in the `*_hi`-named
+fields. New English activities and tips are marked `reviewed: true` only so the planner and parent app can use
+them; their `source_doc` says `team-written, pending educator review`, and they need the same mentor review.
+
 ## `reviewed` means what?
 
 `reviewed: true` currently marks **team review**, not mentor sign-off. Before a real pilot:

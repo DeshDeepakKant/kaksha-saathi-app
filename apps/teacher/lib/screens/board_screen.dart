@@ -18,6 +18,7 @@ import 'outcomes_screen.dart';
 import 'settings_screen.dart';
 import 'syllabus_screen.dart';
 import '../l10n.dart';
+import '../subjects.dart';
 
 /// Class + subject selection, then the "classroom board": today's groups, on-track, unassessed.
 class BoardScreen extends StatefulWidget {
@@ -31,6 +32,7 @@ class BoardScreen extends StatefulWidget {
 const _builtinSubjects = <Map<String, dynamic>>[
   {'key': 'numeracy', 'builtin': true},
   {'key': 'literacy', 'builtin': true},
+  {'key': 'english', 'builtin': true},
 ];
 
 List<Map<String, dynamic>> _maps(dynamic v) => v is List
@@ -528,17 +530,10 @@ class _BoardScreenState extends State<BoardScreen> {
     );
   }
 
-  String _subjectLabel(Map<String, dynamic> s) => switch (s['key']) {
-    'numeracy' => tr('Maths', 'गणित'),
-    'literacy' => tr('Hindi', 'हिंदी'),
-    _ => pick(s, 'name').isNotEmpty ? pick(s, 'name') : '${s['key']}',
-  };
+  String _subjectLabel(Map<String, dynamic> s) =>
+      subjectLabel('${s['key']}', fallback: pick(s, 'name'));
 
-  IconData _subjectIcon(Map<String, dynamic> s) => switch (s['key']) {
-    'numeracy' => Icons.calculate_rounded,
-    'literacy' => Icons.menu_book_rounded,
-    _ => Icons.auto_stories_rounded,
-  };
+  IconData _subjectIcon(Map<String, dynamic> s) => subjectIcon('${s['key']}');
 
   Widget _subjectTabs() => Padding(
     padding: const EdgeInsets.symmetric(vertical: 8),
