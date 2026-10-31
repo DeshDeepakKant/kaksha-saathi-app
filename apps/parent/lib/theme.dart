@@ -8,7 +8,7 @@ class Ks {
   static const ink = Color(0xFF1D2B2A);
   static const paper = Color(0xFFFBF8F2);
   static const card = Colors.white;
-  static const accent = Color(0xFF0F6B5C); // deep teal — primary action
+  static const accent = Color(0xFF0F6B5C); // deep teal, primary action
   static const accentSoft = Color(0xFFE3F0EC);
   // Status colours double as text/icon colour on their soft backgrounds, so each is dark enough for
   // >= 4.5:1 on its *Soft pair (amber was #E7A13B, about 2:1; rose 3.9:1; green 4.4:1).

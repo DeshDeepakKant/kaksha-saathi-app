@@ -56,7 +56,7 @@ def parent_consent(body: ConsentIn, db: Session = Depends(get_db)):
     if child.consent_on is None:
         raise HTTPException(403, "school has not recorded a parent consent form for this child yet")
     if db.scalar(select(ParentAccount).where(ParentAccount.child_id == child.id)):
-        raise HTTPException(409, "parent account already set up — sign in instead")
+        raise HTTPException(409, "parent account already set up. Sign in instead")
     p = ParentAccount(school_id=school.id, child_id=child.id, phone_hash=hash_phone(body.parent_phone),
                       pin_hash=hash_pin(body.pin), language=body.language)
     db.add(p)
@@ -246,7 +246,7 @@ async def session_turn(session_id: int, meta: str = Form(...), audio: UploadFile
     if transcript and not m.offline:
         category = features.classify_child_input(db, school_id=parent.school_id, text=transcript)
     if category in ("distress", "personal"):
-        return {"judged": "none", "line_hi": "यह बात किसी बड़े — मम्मी, पापा या अध्यापक — को बताइए।",
+        return {"judged": "none", "line_hi": "यह बात किसी बड़े (मम्मी, पापा या अध्यापक) को बताइए।",
                 "line_status": "safety", "advance": False, "next_index": m.index, "next_activity": None,
                 "done": False, "record_evidence": False, "safety_flag": category, "asr": asr_status,
                 "attempt": m.attempt, "activity": act.__dict__}

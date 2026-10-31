@@ -262,8 +262,8 @@ class _LevelScreenState extends State<LevelScreen> {
                 if (items.isEmpty)
                   Text(
                     tr(
-                      'No ready-made question for this lesson — check directly with taps.',
-                      'इस सबक का तैयार प्रश्न नहीं — सीधे टैप में जाँचें।',
+                      'No ready-made question for this lesson. Check directly with taps.',
+                      'इस सबक का तैयार प्रश्न नहीं। सीधे टैप में जाँचें।',
                     ),
                   ),
                 if ((p?['tell_hi'] as String?)?.isNotEmpty == true)
@@ -573,8 +573,8 @@ class _LevelScreenState extends State<LevelScreen> {
                 padding: EdgeInsets.only(top: 4),
                 child: Text(
                   tr(
-                    'Little evidence — check with taps',
-                    'सबूत कम — टैप से जाँचें',
+                    'Little evidence: check with taps',
+                    'सबूत कम: टैप से जाँचें',
                   ),
                   style: TextStyle(color: Ks.muted, fontSize: 13),
                 ),

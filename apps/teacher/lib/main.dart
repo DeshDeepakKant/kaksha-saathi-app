@@ -38,7 +38,7 @@ class KakshaTeacherApp extends StatelessWidget {
       valueListenable: Lang.code,
       builder: (_, _, _) => MaterialApp(
         navigatorKey: _nav,
-        title: tr('Kaksha Saathi — Teacher', 'कक्षा साथी — शिक्षिका'),
+        title: tr('Kaksha Saathi: Teacher', 'कक्षा साथी: शिक्षिका'),
         debugShowCheckedModeBanner: false,
         theme: _theme(),
         locale: Lang.locale,

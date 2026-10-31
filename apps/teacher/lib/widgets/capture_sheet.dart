@@ -52,8 +52,8 @@ String _resultLabel(String r) => switch (r) {
 bool _wasQueued(dynamic r) => r is Map && r['queued'] == true;
 
 String _queuedMsg() => tr(
-  'Saved on this phone — will send when online.',
-  'इस फ़ोन पर सहेजा — नेट आने पर भेजा जाएगा।',
+  'Saved on this phone. Will send when online.',
+  'इस फ़ोन पर सहेजा। नेट आने पर भेजा जाएगा।',
 );
 
 /// Guardrail counter: an AI result the teacher walked away from counts as rejected.
@@ -534,7 +534,9 @@ class _TapPanelState extends State<_TapPanel> {
           ),
           const SizedBox(height: 14),
           FilledButton.icon(
-            onPressed: () => setState(() { _data = _load(refresh: true); }),
+            onPressed: () => setState(() {
+              _data = _load(refresh: true);
+            }),
             icon: const Icon(Icons.refresh_rounded),
             label: Text(tr('Retry', 'दोबारा कोशिश करें')),
           ),
@@ -832,8 +834,8 @@ class _NotePanelState extends State<_NotePanel> {
       if (!ok) {
         _toast(
           tr(
-            'Mic not available — type below instead.',
-            'माइक उपलब्ध नहीं — नीचे लिखकर लिखें।',
+            'Mic not available: type below instead.',
+            'माइक उपलब्ध नहीं: नीचे लिखकर लिखें।',
           ),
         );
         return;
@@ -1000,8 +1002,8 @@ class _NotePanelState extends State<_NotePanel> {
       children: [
         Text(
           tr(
-            'Speak for 20 seconds after class — who was absent, who struggled with what.',
-            'कक्षा के बाद 20 सेकंड में बोलें — कौन नहीं आया, किसे क्या कठिन लगा।',
+            'Speak for 20 seconds after class. Who was absent, who struggled with what.',
+            'कक्षा के बाद 20 सेकंड में बोलें। कौन नहीं आया, किसे क्या कठिन लगा।',
           ),
           style: TextStyle(color: Ks.muted),
         ),
@@ -1099,7 +1101,7 @@ class _NotePanelState extends State<_NotePanel> {
         const SizedBox(height: 14),
       ],
       Text(
-        tr('AI understood this — please check', 'AI ने यह समझा — जाँचें'),
+        tr('AI understood this: please check', 'AI ने यह समझा, जाँचें'),
         style: TextStyle(fontWeight: FontWeight.w700, fontSize: 17),
       ),
       if (fallback && resp['note'] != null)
@@ -1349,8 +1351,8 @@ class _PhotoPanelState extends State<_PhotoPanel> {
           () => _message =
               map['message'] as String? ??
               tr(
-                'The photo isn\'t clear — retake it.',
-                'फ़ोटो साफ़ नहीं है — दोबारा लें।',
+                'The photo isn\'t clear, retake it.',
+                'फ़ोटो साफ़ नहीं है, दोबारा लें।',
               ),
         );
         return;
@@ -1391,8 +1393,8 @@ class _PhotoPanelState extends State<_PhotoPanel> {
     if (needLook.isNotEmpty) {
       _toast(
         trf(
-          '{needLookCount} answer(s) need a look — choose Correct, Partly, Wrong or Skip.',
-          '{needLookCount} जवाब देखने हैं — सही, थोड़ा, गलत या छोड़ें चुनें।', {'needLookCount': needLook.length},
+          '{needLookCount} answer(s) need a look, choose Correct, Partly, Wrong or Skip.',
+          '{needLookCount} जवाब देखने हैं, सही, थोड़ा, गलत या छोड़ें चुनें।', {'needLookCount': needLook.length},
         ),
       );
       return;
@@ -1475,8 +1477,8 @@ class _PhotoPanelState extends State<_PhotoPanel> {
           children: [
             Text(
               tr(
-                'Take a photo of the page — notebook only, no faces. Answers are checked by code.',
-                'पन्ने की फ़ोटो लें — सिर्फ़ कॉपी, चेहरा नहीं। जवाब कोड से जाँचे जाएँगे।',
+                'Take a photo of the page. Notebook only, no faces. Answers are checked by code.',
+                'पन्ने की फ़ोटो लें। सिर्फ़ कॉपी, चेहरा नहीं। जवाब कोड से जाँचे जाएँगे।',
               ),
               style: TextStyle(color: Ks.muted),
             ),
@@ -1542,7 +1544,7 @@ class _PhotoPanelState extends State<_PhotoPanel> {
     return [
       const SizedBox(height: 16),
       Text(
-        tr('AI read this — please check', 'AI ने यह पढ़ा — जाँचें'),
+        tr('AI read this: please check', 'AI ने यह पढ़ा, जाँचें'),
         style: TextStyle(fontWeight: FontWeight.w700, fontSize: 17),
       ),
       if (fallback && res['note'] != null)
@@ -1571,8 +1573,8 @@ class _PhotoPanelState extends State<_PhotoPanel> {
                 SizedBox(height: 4),
                 Text(
                   tr(
-                    'Use the Tap tab to check in 20 seconds — it always works.',
-                    'टैप टैब में जाकर 20 सेकंड में जाँचें — वह हमेशा काम करता है।',
+                    'Use the Tap tab to check in 20 seconds. It always works.',
+                    'टैप टैब में जाकर 20 सेकंड में जाँचें। वह हमेशा काम करता है।',
                   ),
                   style: TextStyle(color: Ks.muted),
                 ),
@@ -1660,8 +1662,8 @@ class _PhotoPanelState extends State<_PhotoPanel> {
                 padding: const EdgeInsets.only(top: 2),
                 child: Text(
                   tr(
-                    'Needs a look — the answer was not clear. Choose one, or skip.',
-                    'देखना होगा — जवाब साफ़ नहीं था। एक चुनें, या छोड़ें।',
+                    'Needs a look: the answer was not clear. Choose one, or skip.',
+                    'देखना होगा: जवाब साफ़ नहीं था। एक चुनें, या छोड़ें।',
                   ),
                   style: const TextStyle(fontSize: 14, color: Ks.amber),
                 ),

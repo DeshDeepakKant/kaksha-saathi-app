@@ -13,7 +13,7 @@
    "steps": [
     "Write 52 and 28 on the board. For 52, keep 5 bundles (each bundle of 10) and 2 loose sticks.",
     "Ask: How do we take out 8 sticks when there are only 2?",
-    "Ask: Open one bundle — now there are 4 bundles and 12 sticks. 10 + 2 = 12. This is borrowing.",
+    "Ask: Open one bundle, now there are 4 bundles and 12 sticks. 10 + 2 = 12. This is borrowing.",
     "Now take 8 away from 12 → 4 left. 4 bundles − 2 bundles = 2 bundles, that is 20. Answer 24.",
     "Let each child do 63 − 27 the same way using sticks."
    ],
@@ -89,7 +89,7 @@
    "title": "Tens-ones using bundles of sticks",
    "materials": "Sticks/broom sticks, rubber bands",
    "steps": [
-    "Make a bundle of 10 sticks — this is one ten.",
+    "Make a bundle of 10 sticks, this is one ten.",
     "Teacher says a number (like 34); children keep 3 bundles and 4 loose sticks.",
     "Each child says: '3 tens, 4 ones = 34'.",
     "Reverse it: children show bundles, tell the number."
@@ -118,10 +118,10 @@
     "Write K, Kh, G, Gh on the blackboard.",
     "Tell a child: 'Touch G'.",
     "Repeat with 5 more letters.",
-    "Mix the first 3 letters — which one is different?"
+    "Mix the first 3 letters, which one is different?"
    ],
    "blackboard": "K Kh G Gh",
-   "reassessment_ask": "Say the sound of G — which letter is it?",
+   "reassessment_ask": "Say the sound of G, which letter is it?",
    "machine_translated": true
   },
   "act_matra_aa": {
@@ -155,7 +155,7 @@
    "materials": "Seeds/pebbles",
    "steps": [
     "Give each child 15 seeds.",
-    "Count and keep them, then give 5 more — how many in total?",
+    "Count and keep them, then give 5 more, how many in total?",
     "Count from 1 to 20 with empty hands.",
     "Ask a child to say the numbers from 10 to 20."
    ],
@@ -219,7 +219,7 @@
    "title": "Add a vowel sign to make a word",
    "materials": "Letter cards",
    "steps": [
-    "Show c — a — t.",
+    "Show c: a, t.",
     "Add the vowel sign 'a' in the middle → caat? No.",
     "Correct: cat without the long vowel sign, cart with long 'a' sound.",
     "Children make 3 words: cat, cart, cot."

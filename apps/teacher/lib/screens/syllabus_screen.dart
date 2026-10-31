@@ -93,11 +93,15 @@ class _SyllabusScreenState extends State<SyllabusScreen> {
     }
   }
 
-  void _reload() => setState(() { _future = _fetch(); });
+  void _reload() => setState(() {
+    _future = _fetch();
+  });
 
   Future<void> _refresh() async {
     final f = _fetch();
-    setState(() { _future = f; });
+    setState(() {
+      _future = f;
+    });
     try {
       await f;
     } catch (_) {
@@ -764,8 +768,8 @@ class _SyllabusScreenState extends State<SyllabusScreen> {
           EmptyState(
             icon: Icons.menu_book_rounded,
             text: tr(
-              'No topics yet — add one or import from your book',
-              'अभी कोई विषय नहीं — एक जोड़ें या अपनी किताब से जोड़ें',
+              'No topics yet: add one or import from your book',
+              'अभी कोई विषय नहीं। एक जोड़ें या अपनी किताब से जोड़ें',
             ),
           ),
           const SizedBox(height: 8),

@@ -48,7 +48,7 @@ def template_plan(groups: list[dict], content: Content, budget_min: int = TOTAL_
             want = GENERIC_TEMPLATE["duration_min"]
         if remaining < MIN_BLOCK_MIN:
             base.update({"time_min": 0, "deferred": True,
-                         "defer_note_hi": "आज समय नहीं — कल इस समूह से शुरू करें।"})
+                         "defer_note_hi": "आज समय नहीं: कल इस समूह से शुरू करें।"})
         else:
             base.update({"time_min": max(MIN_BLOCK_MIN, min(want, remaining)), "deferred": False})
             remaining -= base["time_min"]

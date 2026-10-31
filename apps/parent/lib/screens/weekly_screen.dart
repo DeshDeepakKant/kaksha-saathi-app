@@ -13,7 +13,7 @@ import '../tts.dart';
 import '../widgets/weekly_card.dart';
 
 /// Weekly summary (`GET /v1/parent/weekly`): one card for the week that can be read aloud or
-/// shared as an image. Progress words only — no scores, ranks or comparisons.
+/// shared as an image. Progress words only, no scores, ranks or comparisons.
 class WeeklyScreen extends StatefulWidget {
   const WeeklyScreen({super.key});
   @override
@@ -154,8 +154,8 @@ class _WeeklyScreenState extends State<WeeklyScreen> {
         await Clipboard.setData(ClipboardData(text: weeklyShareText(w, _name)));
         _snack(
           tr(
-            'Copied — paste it in WhatsApp',
-            'कॉपी हो गया — WhatsApp में चिपकाएँ',
+            'Copied: paste it in WhatsApp',
+            'कॉपी हो गया: WhatsApp में चिपकाएँ',
           ),
         );
       } catch (_) {

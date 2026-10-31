@@ -121,7 +121,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     ),
   );
 
-  String _money(Object? v) => v is num ? v.toStringAsFixed(2) : '—';
+  String _money(Object? v) => v is num ? v.toStringAsFixed(2) : '-';
 
   Widget _stat(String label, Object? v) => Container(
     constraints: const BoxConstraints(minWidth: 96),
@@ -133,7 +133,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     child: Column(
       children: [
         Text(
-          '${v ?? '—'}',
+          '${v ?? '-'}',
           style: const TextStyle(
             fontSize: 22,
             fontWeight: FontWeight.w700,
@@ -494,7 +494,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           child: Text(k, style: const TextStyle(color: Ks.muted)),
         ),
         Text(
-          '${v ?? '—'}',
+          '${v ?? '-'}',
           style: const TextStyle(fontWeight: FontWeight.w600),
         ),
       ],
@@ -820,7 +820,7 @@ class _LanguageVoiceCardState extends State<LanguageVoiceCard> {
   String _providerName(Map<String, dynamic> p) {
     final name = (p['name'] ?? p['key']).toString();
     return p['default'] == true
-        ? '$name${tr(' — recommended', ' — सुझाया गया')}'
+        ? '$name${tr(': recommended', ': सुझाया गया')}'
         : name;
   }
 

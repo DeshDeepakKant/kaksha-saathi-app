@@ -140,7 +140,7 @@ class _LanguageVoiceCardState extends State<LanguageVoiceCard> {
   String _providerName(Map<String, dynamic> p) {
     final name = (p['name'] ?? p['key']).toString();
     return p['default'] == true
-        ? '$name${tr(' — recommended', ' — सुझाया गया')}'
+        ? '$name${tr(': recommended', ': सुझाया गया')}'
         : name;
   }
 

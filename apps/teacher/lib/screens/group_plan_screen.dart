@@ -143,8 +143,8 @@ class _GroupPlanScreenState extends State<GroupPlanScreen> {
           SnackBar(
             content: Text(
               trf(
-                'Could not refresh — showing the saved plan. ({e})',
-                'ताज़ा नहीं हो सका — सहेजी योजना दिख रही है। ({e})', {'e': e},
+                'Could not refresh: showing the saved plan. ({e})',
+                'ताज़ा नहीं हो सका, सहेजी योजना दिख रही है। ({e})', {'e': e},
               ),
             ),
           ),
@@ -302,8 +302,8 @@ class _GroupPlanScreenState extends State<GroupPlanScreen> {
                 Expanded(
                   child: Text(
                     trf(
-                      'Offline — showing the last saved plan ({for_date}). It may be out of date.',
-                      'ऑफलाइन — आख़िरी सहेजी योजना ({for_date}) दिख रही है। यह पुरानी हो सकती है।', {'for_date': p['for_date'] ?? ''},
+                      'Offline: showing the last saved plan ({for_date}). It may be out of date.',
+                      'ऑफलाइन: आख़िरी सहेजी योजना ({for_date}) दिख रही है। यह पुरानी हो सकती है।', {'for_date': p['for_date'] ?? ''},
                     ),
                     style: const TextStyle(fontSize: 13),
                   ),
@@ -323,12 +323,12 @@ class _GroupPlanScreenState extends State<GroupPlanScreen> {
               child: Text(
                 ai
                     ? tr(
-                        'AI-generated — chosen from reviewed activities only',
-                        'AI तैयार की गई — सबकी समीक्षा की गई गतिविधियों से चुनी गई',
+                        'AI-generated: chosen from reviewed activities only',
+                        'AI तैयार की गई। सबकी समीक्षा की गई गतिविधियों से चुनी गई',
                       )
                     : tr(
-                        'Template plan (offline/fallback) — chosen from the library',
-                        'टेम्पलेट योजना (ऑफलाइन/आरक्षित) — लाइब्रेरी से चुनी गई',
+                        'Template plan (offline/fallback): chosen from the library',
+                        'टेम्पलेट योजना (ऑफलाइन/आरक्षित): लाइब्रेरी से चुनी गई',
                       ),
                 style: const TextStyle(color: Ks.muted, fontSize: 13),
               ),
@@ -616,12 +616,12 @@ class _GroupPlanScreenState extends State<GroupPlanScreen> {
                             child: Text(
                               _queued.contains(doneId)
                                   ? tr(
-                                      'Done ✓ — will sync when online. Now check again',
-                                      'किया ✓ — नेट आने पर भेजा जाएगा। अब फिर जाँचें',
+                                      'Done ✓: will sync when online. Now check again',
+                                      'किया ✓: नेट आने पर भेजा जाएगा। अब फिर जाँचें',
                                     )
                                   : tr(
-                                      'Done ✓ — now check again',
-                                      'किया ✓ — अब फिर जाँचें',
+                                      'Done ✓: now check again',
+                                      'किया ✓: अब फिर जाँचें',
                                     ),
                               style: const TextStyle(
                                 color: Ks.green,
@@ -684,8 +684,8 @@ class _GroupPlanScreenState extends State<GroupPlanScreen> {
                       const SizedBox(height: 4),
                       Text(
                         trf(
-                          '{count} children still need checking — add evidence.',
-                          '{count} बच्चों की जाँच बाकी — साक्ष्य जोड़ें।', {'count': count},
+                          '{count} children still need checking, add evidence.',
+                          '{count} बच्चों की जाँच बाकी, साक्ष्य जोड़ें।', {'count': count},
                         ),
                         style: const TextStyle(color: Ks.muted),
                       ),
@@ -748,8 +748,8 @@ class _GroupPlanScreenState extends State<GroupPlanScreen> {
         SnackBar(
           content: Text(
             tr(
-              'Evidence saved — regenerate the plan to update groups.',
-              'साक्ष्य दर्ज — समूह अपडेट करने के लिए योजना फिर से बनाएँ।',
+              'Evidence saved: regenerate the plan to update groups.',
+              'साक्ष्य दर्ज: समूह अपडेट करने के लिए योजना फिर से बनाएँ।',
             ),
           ),
           action: SnackBarAction(
@@ -793,12 +793,12 @@ class _GroupPlanScreenState extends State<GroupPlanScreen> {
           content: Text(
             queued
                 ? tr(
-                    'Saved on this phone — will send when you are online. Check again later.',
-                    'फ़ोन में सहेजा — नेट आने पर भेजा जाएगा। बाद में फिर जाँचें।',
+                    'Saved on this phone. Will send when you are online. Check again later.',
+                    'फ़ोन में सहेजा: नेट आने पर भेजा जाएगा। बाद में फिर जाँचें।',
                   )
                 : tr(
-                    'Saved — now check again so groups update.',
-                    'दर्ज — अब फिर जाँचें ताकि समूह अपडेट हों।',
+                    'Saved: now check again so groups update.',
+                    'दर्ज: अब फिर जाँचें ताकि समूह अपडेट हों।',
                   ),
           ),
         ),
@@ -812,8 +812,8 @@ class _GroupPlanScreenState extends State<GroupPlanScreen> {
         SnackBar(
           content: Text(
             trf(
-              'Could not save "Done" — tap again to retry. ({e})',
-              '"किया" दर्ज नहीं हो सका — फिर से दबाएँ। ({e})', {'e': e},
+              'Could not save "Done": tap again to retry. ({e})',
+              '"किया" दर्ज नहीं हो सका, फिर से दबाएँ। ({e})', {'e': e},
             ),
           ),
         ),
@@ -862,8 +862,8 @@ class _GroupPlanScreenState extends State<GroupPlanScreen> {
       SnackBar(
         content: Text(
           tr(
-            'Copied — paste it in WhatsApp',
-            'कॉपी हो गया — WhatsApp में पेस्ट करें',
+            'Copied: paste it in WhatsApp',
+            'कॉपी हो गया: WhatsApp में पेस्ट करें',
           ),
         ),
       ),

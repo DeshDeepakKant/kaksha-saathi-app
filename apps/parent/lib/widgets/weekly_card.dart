@@ -210,7 +210,7 @@ String weeklyShareText(WeeklyData w, String name) {
   }
   b
     ..writeln()
-    ..write(tr('— Kaksha Saathi', '— कक्षा साथी'));
+    ..write(tr('- Kaksha Saathi', '- कक्षा साथी'));
   return b.toString();
 }
 

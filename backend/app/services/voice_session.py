@@ -69,8 +69,8 @@ MASTERY_RATE = 0.8
 SUPPORT_FAILS = 3       # failed items in a row at difficulty 1 drop one stage (support)
 SUPPORT_BACK = 3        # successes there return to the focus
 
-SAFETY_LINE = {"hi": "यह बात किसी बड़े — मम्मी, पापा या अध्यापक — को बताइए।",
-               "en": "Please tell a grown-up — your mummy, papa or teacher — about this."}
+SAFETY_LINE = {"hi": "यह बात किसी बड़े (मम्मी, पापा या अध्यापक) को बताइए।",
+               "en": "Please tell a grown-up (your mummy, papa or teacher) about this."}
 
 _DEFAULT_RECORD_S = {"read_letter": 4, "say_sound": 4, "build_word": 5, "read_word": 5, "make_sentence": 10,
                      "read_sentence": 8, "read_paragraph": 30, "answer_question": 10}

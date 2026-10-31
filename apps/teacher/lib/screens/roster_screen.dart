@@ -43,7 +43,9 @@ class _RosterScreenState extends State<RosterScreen> {
 
   Future<void> _reload() async {
     final f = AdminApi.roster(widget.classId);
-    setState(() { _future = f; });
+    setState(() {
+      _future = f;
+    });
     _loadInactive();
     try {
       await f;

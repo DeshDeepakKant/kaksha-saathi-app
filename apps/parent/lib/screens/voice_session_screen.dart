@@ -203,15 +203,15 @@ class _VoiceSessionScreenState extends State<VoiceSessionScreen> {
       if (!ok) {
         _toast(switch (_tutorLang) {
           'en' => tr(
-            'No English (India) voice on this phone — read Saathi\'s words from the screen.',
-            'इस फ़ोन पर अंग्रेज़ी आवाज़ नहीं है — साथी की बात स्क्रीन से पढ़कर सुनाइए।',
+            'No English (India) voice on this phone, read Saathi\'s words from the screen.',
+            'इस फ़ोन पर अंग्रेज़ी आवाज़ नहीं है, साथी की बात स्क्रीन से पढ़कर सुनाइए।',
           ),
           'hi' => tr(
-            'No Hindi voice on this phone — install it in Settings › Text-to-speech, or read Saathi\'s words aloud.',
-            'इस फ़ोन पर हिंदी आवाज़ नहीं है — सेटिंग › टेक्स्ट-टू-स्पीच में डालें, या साथी की बात पढ़कर सुनाइए।',
+            'No Hindi voice on this phone, install it in Settings › Text-to-speech, or read Saathi\'s words aloud.',
+            'इस फ़ोन पर हिंदी आवाज़ नहीं है, सेटिंग › टेक्स्ट-टू-स्पीच में डालें, या साथी की बात पढ़कर सुनाइए।',
           ),
           _ =>
-            '${_nativeName(_tutorLang)}: ${tr('no voice for this language on this phone — install it in Settings › Text-to-speech, or read Saathi\'s words aloud.', 'इस भाषा की आवाज़ इस फ़ोन पर नहीं है — सेटिंग › टेक्स्ट-टू-स्पीच में डालें, या साथी की बात पढ़कर सुनाइए।')}',
+            '${_nativeName(_tutorLang)}: ${tr('no voice for this language on this phone, install it in Settings › Text-to-speech, or read Saathi\'s words aloud.', 'इस भाषा की आवाज़ इस फ़ोन पर नहीं है, सेटिंग › टेक्स्ट-टू-स्पीच में डालें, या साथी की बात पढ़कर सुनाइए।')}',
         });
       }
     });
@@ -712,8 +712,8 @@ class _VoiceSessionScreenState extends State<VoiceSessionScreen> {
     _Phase.ending => Loading(
       label: _endReason == 'time_up'
           ? tr(
-              'Time\'s up — great work! Making the report…',
-              'समय पूरा — बहुत बढ़िया! रिपोर्ट बन रही है…',
+              'Time\'s up: great work! Making the report…',
+              'समय पूरा: बहुत बढ़िया! रिपोर्ट बन रही है…',
             )
           : tr('Making the report…', 'रिपोर्ट बन रही है…'),
     ),
@@ -827,8 +827,8 @@ class _VoiceSessionScreenState extends State<VoiceSessionScreen> {
             tip(
               Icons.timer_outlined,
               tr(
-                'About 30 minutes — you can pause or stop anytime',
-                'लगभग 30 मिनट — कभी भी रोक सकते हैं',
+                'About 30 minutes: you can pause or stop anytime',
+                'लगभग 30 मिनट: कभी भी रोक सकते हैं',
               ),
             ),
             tip(

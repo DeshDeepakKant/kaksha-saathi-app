@@ -123,7 +123,7 @@ List<AppLanguage> appLanguages() => const [
   (code: 'sat', nativeName: 'ᱥᱟᱱᱛᱟᱲᱤ', englishName: 'Santali', beta: true),
 ];
 
-/// `tr('Save', 'सहेजें')` — English first, Hindi second. Other languages look the English up.
+/// `tr('Save', 'सहेजें')`: English first, Hindi second. Other languages look the English up.
 String tr(String en, String hi) => switch (Lang.code.value) {
   'en' => en,
   'hi' => hi,
@@ -131,7 +131,7 @@ String tr(String en, String hi) => switch (Lang.code.value) {
   _ => Lang._table['$en␟$hi'] ?? Lang._table[en] ?? en,
 };
 
-/// `trf('Hello, {name}!', 'नमस्ते, {name}!', {'name': n})` — [tr] with `{placeholders}`, so the
+/// `trf('Hello, {name}!', 'नमस्ते, {name}!', {'name': n})`: [tr] with `{placeholders}`, so the
 /// English template stays a stable lookup key. An unknown placeholder is left as written.
 String trf(String en, String hi, Map<String, Object?> args) => tr(en, hi).replaceAllMapped(
   _placeholder,

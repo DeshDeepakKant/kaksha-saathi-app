@@ -107,7 +107,7 @@ def extract_note(session: Session, *, school_id: int, transcript: str, roster: l
         return Proposal("note", res.data, "ready", res.model)
     except Exception as e:
         p = _note_rules(transcript, roster, checkpoint_ids, content)
-        p.note = f"AI unavailable ({type(e).__name__}); used keyword rules — please check each chip."
+        p.note = f"AI unavailable ({type(e).__name__}); used keyword rules. Please check each chip."
         return p
 
 
@@ -121,7 +121,7 @@ def _note_rules(transcript: str, roster: list[tuple[int, str]], checkpoint_ids: 
     children = [_Child(r, n) for r, n in roster]
     cps = [content.checkpoints[c] for c in checkpoint_ids if c in content.checkpoints]
     data = rules.extract_note_rules(transcript, children, cps)
-    return Proposal("note", data, "fallback", note="AI not configured — keyword rules. Please check each chip.")
+    return Proposal("note", data, "fallback", note="AI not configured: keyword rules. Please check each chip.")
 
 
 # ---------------------------------------------------------------- A2 photos
@@ -140,7 +140,7 @@ def analyze_photo(session: Session, *, school_id: int, image: bytes, media_type:
         return Proposal("photo", res.data, "ready", res.model)
     except llm.LLMUnavailable as e:
         return Proposal("photo", {"page": {}, "questions": []}, "fallback",
-                        note="AI unavailable — mark each question by hand on the photo.")
+                        note="AI unavailable: mark each question by hand on the photo.")
     except Exception as e:  # pragma: no cover
         return Proposal("photo", {"page": {}, "questions": []}, "failed", note=str(e)[:200])
 
@@ -320,10 +320,10 @@ def home_summary(session: Session, *, school_id: int, activities: list[str], str
 
 
 # ---------------------------------------------------------------- A5 textbook / chapter mapping
-BOOK_FALLBACK_NOTE = "AI unavailable — showing the class template; edit it to match your book."
-BOOK_UNKNOWN_NOTE = ("Could not identify this book's chapters — showing the class template; "
+BOOK_FALLBACK_NOTE = "AI unavailable: showing the class template; edit it to match your book."
+BOOK_UNKNOWN_NOTE = ("Could not identify this book's chapters: showing the class template; "
                      "edit it to match your book.")
-REVISE_FALLBACK_NOTE = "AI unavailable — your correction was not applied; edit the chapters by hand."
+REVISE_FALLBACK_NOTE = "AI unavailable: your correction was not applied; edit the chapters by hand."
 IDENTIFIED_FROM = ("typed", "cover", "both", "none")
 
 
@@ -390,7 +390,7 @@ def _book_fallback(content: Content, *, subject: str, grade: int, book: dict, no
                                         "confidence": 0},
                                        book_allowed_ids(content, subject, grade), require_chapters=False)
     if not mapped["chapters"]:
-        note = "AI unavailable and this subject has no class template — add the chapters by hand."
+        note = "AI unavailable and this subject has no class template, add the chapters by hand."
     return Proposal("book", _book_payload(content, mapped, book, subject, grade, False, lang), "fallback",
                     note=note)
 
@@ -475,7 +475,7 @@ def map_book(session: Session, *, school_id: int, content: Content, subject: str
                               lang=lang)
     except Exception as e:
         return _book_fallback(content, subject=subject, grade=grade, book=fallback_book,
-                              note=f"AI unavailable ({type(e).__name__}) — showing the class template; "
+                              note=f"AI unavailable ({type(e).__name__}): showing the class template; "
                                    "edit it to match your book.", lang=lang)
     mapped, used_web = res.data, bool(research)
     read = mapped["book"]
@@ -537,7 +537,7 @@ def revise_book_map(session: Session, *, school_id: int, content: Content, subje
     except Exception as e:
         return Proposal("book", _book_payload(content, clean, book_out(clean["book"]), subject, grade,
                                               used_web(clean["chapters"]), lang), "fallback",
-                        note=f"AI unavailable ({type(e).__name__}) — your correction was not applied; "
+                        note=f"AI unavailable ({type(e).__name__}): your correction was not applied; "
                              "edit the chapters by hand.")
     book = book_out({k: mapped["book"].get(k) or clean["book"].get(k) for k in ("title", "grade", "board", "publisher")})
     p = Proposal("book", _book_payload(content, mapped, book, subject, grade, used_web(mapped["chapters"]), lang),

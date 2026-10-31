@@ -100,6 +100,18 @@ def _charge(session: Session, school_id: int, cost: float) -> None:
     row.cost_inr += cost
 
 
+
+def plain_dashes(obj):
+    """The apps show no em dashes: swap any the model wrote for a comma (or a hyphen when it stands alone)."""
+    if isinstance(obj, str):
+        return obj.replace(" \u2014 ", ", ").replace("\u2014", "-")
+    if isinstance(obj, list):
+        return [plain_dashes(x) for x in obj]
+    if isinstance(obj, dict):
+        return {k: plain_dashes(v) for k, v in obj.items()}
+    return obj
+
+
 def structured(
     session: Session,
     *,
@@ -174,7 +186,7 @@ def structured(
         _charge(session, school_id, cost)
     if parsed is None:
         raise LLMValidationError(last_err)
-    return LLMResult(parsed, model, in_tok, out_tok, latency, cost)
+    return LLMResult(plain_dashes(parsed), model, in_tok, out_tok, latency, cost)
 
 
 def simple_text(session: Session, *, feature: str, prompt_version: str, model: str, system: str,
@@ -199,7 +211,7 @@ def simple_text(session: Session, *, feature: str, prompt_version: str, model: s
                        latency_ms=int((time.monotonic() - started) * 1000), cost_inr=round(cost, 4)))
     if school_id is not None:
         _charge(session, school_id, cost)
-    return text
+    return plain_dashes(text)
 
 
 # INR per web search request (server-side tool; assumption: ~$10 per 1,000 searches)

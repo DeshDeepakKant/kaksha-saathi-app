@@ -73,8 +73,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 4),
                 Text(
                   tr(
-                    'Where every child is — and what to do today',
-                    'हर बच्चा कहाँ है — और आज क्या करें',
+                    'Where every child is, and what to do today',
+                    'हर बच्चा कहाँ है, और आज क्या करें',
                   ),
                   textAlign: TextAlign.center,
                   style: TextStyle(color: Ks.muted, fontSize: 16),
@@ -85,7 +85,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   textCapitalization: TextCapitalization.characters,
                   decoration: InputDecoration(
                     labelText: tr('School code', 'स्कूल कोड'),
-                    hintText: 'DEMO',
                   ),
                 ),
                 const SizedBox(height: 12),
@@ -116,12 +115,6 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         )
                       : Text(tr('Log in', 'लॉगिन')),
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  tr('Demo: code DEMO · PIN 1234', 'डेमो: कोड DEMO · पिन 1234'),
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: Ks.muted, fontSize: 14),
                 ),
               ],
             ),

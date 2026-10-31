@@ -135,8 +135,8 @@ class _BoardScreenState extends State<BoardScreen> {
         setState(() {
           _loading = false;
           _error = tr(
-            'No class found — connect with your school.',
-            'कोई कक्षा नहीं मिली — स्कूल से जोड़ें।',
+            'No class found: connect with your school.',
+            'कोई कक्षा नहीं मिली। स्कूल से जोड़ें।',
           );
         });
         return;
@@ -575,8 +575,8 @@ class _BoardScreenState extends State<BoardScreen> {
         Expanded(
           child: Text(
             tr(
-              'Offline — showing the last saved board.',
-              'ऑफलाइन — पिछली बार का बोर्ड दिख रहा है।',
+              'Offline: showing the last saved board.',
+              'ऑफलाइन: पिछली बार का बोर्ड दिख रहा है।',
             ),
             style: TextStyle(color: Ks.amber),
           ),
@@ -644,8 +644,8 @@ class _BoardScreenState extends State<BoardScreen> {
                   const SizedBox(height: 4),
                   Text(
                     tr(
-                      'No new plan needed for any group today — everyone is on track or awaiting checks.',
-                      'आज किसी समूह के लिए नई योजना नहीं — सब ट्रैक पर या जाँच बाकी है।',
+                      'No new plan needed for any group today. Everyone is on track or awaiting checks.',
+                      'आज किसी समूह के लिए नई योजना नहीं। सब ट्रैक पर या जाँच बाकी है।',
                     ),
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.bodyLarge,
@@ -662,7 +662,7 @@ class _BoardScreenState extends State<BoardScreen> {
         ...groups.map(_groupCard),
       ],
       if (unassessed.isNotEmpty) ...[
-        SectionTitle(tr('Check pending — 3 taps', 'जाँच बाकी — 3 टैप')),
+        SectionTitle(tr('Check pending: 3 taps', 'जाँच बाकी: 3 टैप')),
         _unassessedCard(unassessed),
       ],
       if (onTrack.isNotEmpty) ...[
@@ -713,8 +713,8 @@ class _BoardScreenState extends State<BoardScreen> {
     final nipun = '${g['nipun_ref'] ?? ''}'.trim();
     final reasonHi = switch (reason) {
       'needs_intervention_root' || 'needs_practice_root' => tr(
-        'Foundation gap — start here first',
-        'आधार की चूक — पहले यहीं से शुरू करें',
+        'Foundation gap: start here first',
+        'आधार की चूक: पहले यहीं से शुरू करें',
       ),
       'direct' => tr('Struggling in this lesson', 'इसी सबक में कठिनाई'),
       _ => '',

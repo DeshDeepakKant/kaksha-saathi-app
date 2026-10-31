@@ -18,7 +18,7 @@ class GateScreen extends StatefulWidget {
 
 class _GateScreenState extends State<GateScreen> {
   int _mode = 0; // 0 sign-in, 1 new consent
-  final _school = TextEditingController(text: 'DEMO');
+  final _school = TextEditingController();
   final _roll = TextEditingController();
   final _phone = TextEditingController();
   final _pin = TextEditingController();
@@ -111,8 +111,8 @@ class _GateScreenState extends State<GateScreen> {
                   ),
                   Text(
                     tr(
-                      'Fun 25–30 minute practice at home — by speaking',
-                      'घर पर 25–30 मिनट का मज़ेदार अभ्यास — बोलकर',
+                      'Fun 25–30 minute practice at home, by speaking',
+                      'घर पर 25–30 मिनट का मज़ेदार अभ्यास, बोलकर',
                     ),
                     textAlign: TextAlign.center,
                     style: TextStyle(color: Ks.muted, fontSize: 16),
@@ -191,9 +191,9 @@ class _GateScreenState extends State<GateScreen> {
                             const SizedBox(height: 6),
                             Text(
                               tr(
-                                'We keep only the child\'s first name, roll number and learning evidence. Photos are deleted after 7 days and voice is not saved. Practice is for learning only — if the child talks about something else, Saathi brings them back to the lesson. You can have the data deleted at any time.',
+                                'We keep only the child\'s first name, roll number and learning evidence. Photos are deleted after 7 days and voice is not saved. Practice is for learning only, if the child talks about something else, Saathi brings them back to the lesson. You can have the data deleted at any time.',
                                 'हम बच्चे का पहला नाम, रोल नंबर और सीखने के सबूत ही रखते हैं। फ़ोटो 7 दिन में हट जाती हैं और आवाज़ सहेजी नहीं जाती। '
-                                    'अभ्यास केवल पढ़ाई का है — बच्चा किसी और विषय की बात करे तो साथी पढ़ाई पर लौटाता है। आप कभी भी डेटा हटवा सकते हैं।',
+                                    'अभ्यास केवल पढ़ाई का है, बच्चा किसी और विषय की बात करे तो साथी पढ़ाई पर लौटाता है। आप कभी भी डेटा हटवा सकते हैं।',
                               ),
                               style: TextStyle(fontSize: 15),
                             ),
@@ -241,15 +241,6 @@ class _GateScreenState extends State<GateScreen> {
                                   )
                                 : tr('Sign in', 'साइन इन'),
                           ),
-                  ),
-                  const SizedBox(height: 14),
-                  Text(
-                    tr(
-                      'Demo: code DEMO · roll 12 · phone 9876500000 · PIN 0000',
-                      'डेमो: कोड DEMO · रोल 12 · फ़ोन 9876500000 · पिन 0000',
-                    ),
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: Ks.muted, fontSize: 13),
                   ),
                 ],
               ),

@@ -251,8 +251,8 @@ class _HomeScreenState extends State<HomeScreen> {
             Expanded(
               child: Text(
                 trf(
-                  '{streak}-day practice streak — well done!',
-                  '{streak} दिन लगातार अभ्यास — शाबाश!', {'streak': profile['streak']},
+                  '{streak}-day practice streak: well done!',
+                  '{streak} दिन लगातार अभ्यास, शाबाश!', {'streak': profile['streak']},
                 ),
                 style: const TextStyle(
                   color: Ks.amber,

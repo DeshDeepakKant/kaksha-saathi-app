@@ -60,8 +60,8 @@ def toast_lines() -> dict:
     """Canned, teacher-reviewed UI lines shared by both apps (served via /v1/me)."""
     return {
         "grid_saved": "दर्ज हो गया।",
-        "offline": "इंटरनेट नहीं है — बाद में दोबारा कोशिश करें।",
-        "reassess_done": "अपडेट हो गया — समूह बदल सकते हैं।",
+        "offline": "इंटरनेट नहीं है: बाद में दोबारा कोशिश करें।",
+        "reassess_done": "अपडेट हो गया: समूह बदल सकते हैं।",
     }
 
 
@@ -299,7 +299,7 @@ async def capture_note(class_id: int, transcript: str | None = Form(None), audio
         except Exception:
             text = ""
     if not text:
-        raise HTTPException(422, "no transcript (audio not understood — use the tap checklist)")
+        raise HTTPException(422, "no transcript (audio not understood, use the tap checklist)")
     content = get_content()
     rm = ledger.current_roadmap(db, cls.id, subject)
     cids = ledger.roadmap_checkpoint_ids(rm) or [c.id for c in content.for_grade(subject, cls.grade)]

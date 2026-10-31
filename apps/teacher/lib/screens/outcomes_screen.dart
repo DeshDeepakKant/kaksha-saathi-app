@@ -169,8 +169,8 @@ class _OutcomesScreenState extends State<OutcomesScreen> {
                 Expanded(
                   child: Text(
                     tr(
-                      'Offline — showing the last saved results.',
-                      'ऑफलाइन — पिछली बार के नतीजे दिख रहे हैं।',
+                      'Offline: showing the last saved results.',
+                      'ऑफलाइन: पिछली बार के नतीजे दिख रहे हैं।',
                     ),
                     style: const TextStyle(color: Ks.amber),
                   ),

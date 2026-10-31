@@ -168,8 +168,8 @@ class _VoiceReportScreenState extends State<VoiceReportScreen> {
           EmptyState(
             icon: Icons.hourglass_top_rounded,
             text: tr(
-              'The report is not ready yet — this session may still be in progress.',
-              'रिपोर्ट अभी तैयार नहीं है — यह सत्र शायद अभी चल रहा है।',
+              'The report is not ready yet: this session may still be in progress.',
+              'रिपोर्ट अभी तैयार नहीं है: यह सत्र शायद अभी चल रहा है।',
             ),
           ),
           _transcriptTile(),

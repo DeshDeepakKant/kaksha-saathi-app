@@ -1,14 +1,34 @@
 {
-  "name": "Kaksha Saathi — Home practice",
-  "short_name": "Kaksha साथी",
-  "start_url": ".",
-  "display": "standalone",
-  "background_color": "#fbf8f2",
-  "theme_color": "#0f6b5c",
-  "description": "Continuous learning-gap and intervention system for primary classrooms.",
-  "orientation": "portrait-primary",
-  "icons": [
-    {"src": "icons/Icon-192.png", "sizes": "192x192", "type": "image/png"},
-    {"src": "icons/Icon-512.png", "sizes": "512x512", "type": "image/png"}
-  ]
+    "name": "Kaksha Saathi",
+    "short_name": "Kaksha Saathi",
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "#FBF8F2",
+    "theme_color": "#0F6B5C",
+    "description": "Continuous learning-gap and intervention system for primary classrooms.",
+    "orientation": "portrait-primary",
+    "icons": [
+        {
+            "src": "icons/Icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "icons/Icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        },
+        {
+            "src": "icons/Icon-maskable-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "maskable"
+        },
+        {
+            "src": "icons/Icon-maskable-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+        }
+    ]
 }

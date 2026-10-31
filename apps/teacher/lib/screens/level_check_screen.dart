@@ -68,7 +68,9 @@ class _LevelCheckScreenState extends State<LevelCheckScreen> {
 
   Future<void> _reload() async {
     final f = _fetch();
-    setState(() { _future = f; });
+    setState(() {
+      _future = f;
+    });
     try {
       await f;
     } catch (_) {}

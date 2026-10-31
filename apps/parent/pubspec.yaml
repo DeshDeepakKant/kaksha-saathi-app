@@ -23,6 +23,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
+  flutter_launcher_icons: ^0.14.4
 
 flutter:
   uses-material-design: true
@@ -38,3 +39,17 @@ flutter:
     - family: NotoSansMeeteiMayek
       fonts:
         - asset: assets/fonts/NotoSansMeeteiMayek-Regular.ttf
+# Icons are drawn by tools/make_app_icons.py; regenerate with:
+#   dart run flutter_launcher_icons
+flutter_launcher_icons:
+  android: ic_launcher
+  ios: false
+  image_path: assets/icon/icon.png
+  adaptive_icon_background: "#025149"
+  adaptive_icon_foreground: assets/icon/icon_foreground.png
+  adaptive_icon_monochrome: assets/icon/icon_mono.png
+  web:
+    generate: true
+    image_path: assets/icon/icon.png
+    background_color: "#FBF8F2"
+    theme_color: "#0F6B5C"

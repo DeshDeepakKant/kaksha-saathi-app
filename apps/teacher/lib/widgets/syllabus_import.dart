@@ -319,8 +319,8 @@ class _SylImportScreenState extends State<SylImportScreen> {
       if (!ok) {
         _toast(
           tr(
-            'Mic not available — type the correction instead.',
-            'माइक उपलब्ध नहीं — सुधार लिखकर बताएँ।',
+            'Mic not available: type the correction instead.',
+            'माइक उपलब्ध नहीं: सुधार लिखकर बताएँ।',
           ),
         );
         return;
@@ -1159,16 +1159,16 @@ class _SylImportScreenState extends State<SylImportScreen> {
     if (!chap.inferred && chap.basis != 'template') return null;
     return switch (chap.basis) {
       'book_knowledge' => tr(
-        'Topics guessed from the book — please check',
-        'विषय किताब के अनुमान से — कृपया जाँचें',
+        'Topics guessed from the book, please check',
+        'विषय किताब के अनुमान से, कृपया जाँचें',
       ),
       'web' => tr(
-        'Topics found online — please check',
-        'विषय इंटरनेट से मिले — कृपया जाँचें',
+        'Topics found online: please check',
+        'विषय इंटरनेट से मिले, कृपया जाँचें',
       ),
       'template' => tr(
-        'Not read from the book: the usual class syllabus — please check',
-        'किताब से नहीं पढ़ा: कक्षा का सामान्य पाठ्यक्रम — कृपया जाँचें',
+        'Not read from the book: the usual class syllabus, please check',
+        'किताब से नहीं पढ़ा: कक्षा का सामान्य पाठ्यक्रम, कृपया जाँचें',
       ),
       _ => tr('Please check these topics', 'कृपया ये विषय जाँचें'),
     };

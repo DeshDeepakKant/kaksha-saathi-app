@@ -174,7 +174,7 @@ def todays_plan(db: Session, cls: Classroom, subject: str, for_date: date, conte
         if generated_by == "fallback":
             payload = _template_in_lang(db, payload, content, lang, cls.school_id)
     else:
-        payload = {"groups": [], "whole_class_note_hi": "आज किसी समूह के लिए योजना की ज़रूरत नहीं — या मूल्यांकन बाकी है।",
+        payload = {"groups": [], "whole_class_note_hi": "आज किसी समूह के लिए योजना की ज़रूरत नहीं, या मूल्यांकन बाकी है।",
                    "today_observation_to_collect_hi": ""}
         generated_by = "fallback"
         payload = _template_in_lang(db, payload, content, lang, cls.school_id)
