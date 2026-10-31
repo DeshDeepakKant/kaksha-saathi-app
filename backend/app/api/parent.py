@@ -28,7 +28,7 @@ from app.models.tables import (Child, Classroom, Evidence, HomeSession, ParentAc
 from app.services import ledger, parent_insights, tutor
 from app.services.mastery import find_gap
 from app.services.content import get_content
-from app.speech import get_asr
+from app.speech import capabilities, get_asr
 from app.speech.scorer import score_read
 
 router = APIRouter(prefix="/v1")
@@ -207,7 +207,7 @@ def _transcribe(db: Session, parent: ParentAccount, audio: bytes, filename: str,
         from app.services import prefs
         preferred = prefs.provider_for(db, parent=parent)
     except Exception:
-        preferred = "sarvam"
+        preferred = capabilities.DEFAULT_PROVIDER
     return fn(audio, filename, lang=lang, preferred=preferred).text
 
 

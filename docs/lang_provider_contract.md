@@ -1,11 +1,11 @@
 # Voice provider + App Language + Content Language: contract (v1)
 
-Goal: each teacher/parent independently chooses **Voice provider** (Sarvam default, Gnani) →
+Goal: each teacher/parent independently chooses **Voice provider** (Gnani default, Sarvam as the second choice) →
 **App Language** (UI, 23 options) → **Content Language** (learning content, AI output, speech in/out).
 Claude keeps doing all text AI (CLAUDE.md); Sarvam/Gnani do speech only.
 
 Hard rules (all agents):
-- **Default behaviour is unchanged.** With content_lang = `hi`, app_lang = `en`/`hi`, provider = `sarvam`,
+- **Default behaviour is unchanged.** With content_lang = `hi`, app_lang = `en`/`hi`, provider = `gnani` (falls back to Sarvam),
   every existing endpoint returns what it returns today. All existing tests must still pass.
 - Payload changes are additive only. New tables only (create_all cannot alter tables). No new
   frameworks; one new Flutter plugin is allowed (`audioplayers`) for server speech playback.
@@ -33,7 +33,7 @@ Devanagari, Bengali, Gurmukhi, Gujarati, Odia, Tamil, Telugu, Kannada, Malayalam
 ## 2. Speech providers — `backend/app/speech/` (owner: Backend-Speech)
 `capabilities.py`:
 ```python
-PROVIDERS = ("sarvam", "gnani"); DEFAULT_PROVIDER = "sarvam"
+PROVIDERS = ("gnani", "sarvam"); DEFAULT_PROVIDER = "gnani"   # unconfigured providers are skipped
 SUPPORT = {"sarvam": {"stt": {...23 codes...}, "tts": {"en","hi","bn","gu","kn","ml","mr","or","pa","ta","te"}},
            "gnani":  {"stt": {"en","hi","bn","gu","kn","ml","mr","pa","ta","te"}, "tts": {same 10}}}
 def configured(provider) -> bool         # key present
@@ -46,8 +46,8 @@ def content_languages() -> list[str]     # APP_LANGS order; langs with >=1 confi
 ```python
 @dataclass class Transcript: text: str; lang: str; provider: str | None; fallback_used: bool; error: str | None
 @dataclass class Speech: audio: bytes; mime: str; provider: str
-def transcribe(audio, filename, lang="hi", keyterms=None, preferred="sarvam") -> Transcript
-def synthesize(text, lang="hi", preferred="sarvam") -> Speech | None
+def transcribe(audio, filename, lang="hi", keyterms=None, preferred=None) -> Transcript
+def synthesize(text, lang="hi", preferred=None) -> Speech | None
 ```
 Order = preferred first, then the other provider; skip providers not configured or not supporting the
 language. Fall back on exception, timeout (STT 25 s, TTS 20 s), HTTP error, or empty/unusable result.

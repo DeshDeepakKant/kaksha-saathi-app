@@ -92,7 +92,7 @@ def content_lang_for(db: Session, teacher: Teacher | None = None, parent: Parent
 
 
 def provider_for(db: Session, teacher: Teacher | None = None, parent: ParentAccount | None = None) -> str:
-    """The user's preferred speech provider. Default 'sarvam'."""
+    """The user's preferred speech provider. Default is Gnani; Sarvam backs it up."""
     who = _who(teacher, parent)
     if who is None:
         return DEFAULTS["voice_provider"]

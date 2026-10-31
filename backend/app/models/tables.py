@@ -356,7 +356,7 @@ class UserPrefs(Base):
     kind: Mapped[str] = mapped_column(String(8))  # teacher | parent
     user_id: Mapped[int] = mapped_column(Integer)
     school_id: Mapped[int] = mapped_column(ForeignKey("schools.id"), index=True)
-    voice_provider: Mapped[str] = mapped_column(String(12), default="sarvam")
+    voice_provider: Mapped[str] = mapped_column(String(12), default="gnani")
     app_lang: Mapped[str] = mapped_column(String(8), default="en")
     content_lang: Mapped[str] = mapped_column(String(8), default="hi")
     updated_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow, onupdate=utcnow)

@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import base64
 import binascii
+import json
 
 import httpx
 
@@ -90,6 +91,10 @@ class Sarvam:
             raise ProviderError("sarvam tts: audio was not base64")
 
 
+# Formats Gnani's REST STT takes. webm (the browser recorder) is not one: skip the call, Sarvam hears it.
+_GNANI_AUDIO_EXT = frozenset({"wav", "mp3", "ogg", "flac", "aac", "m4a"})
+
+
 class Gnani:
     name = "gnani"
 
@@ -99,7 +104,13 @@ class Gnani:
 
     def stt(self, audio: bytes, filename: str, lang: str, keyterms: list[str] | None = None) -> str:
         s = get_settings()
-        data = {"language_code": self.code(lang), "model": s.gnani_stt_model}
+        if filename.rsplit(".", 1)[-1].lower() not in _GNANI_AUDIO_EXT:
+            raise ProviderError("gnani stt: audio format not supported")
+        # format=transcribe writes numbers as digits, which is what the reading scorer compares
+        # (it also treats Hindi number words and digits as equal), instead of spelled-out words.
+        data = {"language_code": self.code(lang), "model": s.gnani_stt_model, "format": "transcribe"}
+        if keyterms and s.gnani_stt_model == "prisma-v3.0":  # roster names and target words, up to 200
+            data["keyterms"] = json.dumps([k for k in keyterms if k][:200], ensure_ascii=False)
         files = {"audio_file": (filename, audio, audio_mime(filename))}
         r = _post("gnani stt", f"{s.gnani_base}/stt/v3", s.stt_timeout_s,
                   headers={"X-API-Key-ID": s.gnani_api_key}, data=data, files=files)

@@ -191,7 +191,7 @@ class Api {
   static Map<String, dynamic> _pickPrefs(Object? m) {
     final src = m is Map ? m : const {};
     return {
-      'voice_provider': src['voice_provider'] ?? 'sarvam',
+      'voice_provider': src['voice_provider'] ?? 'gnani',
       'app_lang': src['app_lang'] ?? 'en',
       'content_lang': src['content_lang'] ?? 'hi',
       'stored': src['stored'] == true,

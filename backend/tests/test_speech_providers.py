@@ -129,8 +129,11 @@ def test_content_languages_follow_configured_keys(keys):
 
 def test_providers_for_puts_default_first(keys):
     keys(sarvam="k", gnani="g")
-    assert capabilities.providers_for("stt", "hi") == ["sarvam", "gnani"]
-    assert capabilities.order("stt", "hi", "gnani") == ["gnani", "sarvam"]
+    assert capabilities.DEFAULT_PROVIDER == "gnani"
+    assert capabilities.providers_for("stt", "hi") == ["gnani", "sarvam"]
+    assert capabilities.order("stt", "hi", "sarvam") == ["sarvam", "gnani"]
+    assert capabilities.order("stt", "hi", None) == ["gnani", "sarvam"]
+    assert capabilities.providers_for("stt", "or") == ["sarvam"]  # Gnani does not cover Odia
     assert capabilities.providers_for("tts", "as") == []
 
 
@@ -183,16 +186,16 @@ def test_preferred_provider_first_then_fallback_on_http_error(keys, net):
 
 def test_timeout_falls_back(keys, net):
     keys(sarvam="k", gnani="g")
-    net.on("sarvam", "stt", "timeout").on("gnani", "stt", stt_ok("gnani", "hello"))
+    net.on("gnani", "stt", "timeout").on("sarvam", "stt", stt_ok("sarvam", "hello"))
     t = speech.transcribe(b"\x00" * 10, "a.wav", lang="en")
-    assert t.provider == "gnani" and t.fallback_used and "timed out" in t.error
+    assert t.provider == "sarvam" and t.fallback_used and "timed out" in t.error
 
 
 def test_empty_transcript_falls_back(keys, net):
     keys(sarvam="k", gnani="g")
-    net.on("sarvam", "stt", stt_ok("sarvam", "  ")).on("gnani", "stt", stt_ok("gnani", "पाँच"))
+    net.on("gnani", "stt", stt_ok("gnani", "  ")).on("sarvam", "stt", stt_ok("sarvam", "पाँच"))
     t = speech.transcribe(b"\x00" * 10, "a.wav", lang="hi")
-    assert t.text == "पाँच" and t.provider == "gnani" and "empty transcript" in t.error
+    assert t.text == "पाँच" and t.provider == "sarvam" and "empty transcript" in t.error
 
 
 def test_all_empty_is_empty_not_failed(keys, net):
@@ -254,13 +257,42 @@ def test_sarvam_tts_request_shape(keys, net):
     assert body["speaker"] == get_settings().sarvam_tts_speaker
 
 
-def test_tts_falls_back_to_gnani(keys, net):
+def test_tts_falls_back_to_sarvam(keys, net):
     keys(sarvam="k", gnani="g")
-    net.on("sarvam", "tts", 429).on("gnani", "tts", tts_ok("gnani"))
+    net.on("gnani", "tts", 429).on("sarvam", "tts", tts_ok("sarvam"))
     sp = speech.synthesize("hello", "en")
-    assert sp.provider == "gnani" and sp.audio == WAV_BYTES
+    assert net.order() == [("gnani", "tts"), ("sarvam", "tts")]
+    assert sp.provider == "sarvam" and sp.audio == WAV_BYTES
     body = json.loads(net.calls[1][2].content)
+    assert body["language_code"] == "en-IN" and body["model"] and body["speaker"]
+
+
+def test_gnani_is_first_and_speaks_with_timbre_v3(keys, net):
+    keys(sarvam="k", gnani="g")
+    net.on("gnani", "tts", tts_ok("gnani"))
+    sp = speech.synthesize("hello", "en")
+    assert sp.provider == "gnani" and net.order() == [("gnani", "tts")]
+    body = json.loads(net.calls[0][2].content)
     assert body["model"] == "timbre-v3.0" and body["language"] == "en-IN" and body["voice"]
+
+
+def test_gnani_stt_request_uses_prisma_v3_digits_and_keyterms(keys, net):
+    keys(sarvam="k", gnani="g")
+    net.on("gnani", "stt", stt_ok("gnani", "23"))
+    t = speech.transcribe(b"\x00" * 10, "a.m4a", lang="hi", keyterms=["गिनती", "पाँच"])
+    assert t.provider == "gnani" and not t.fallback_used and net.order() == [("gnani", "stt")]
+    req = net.calls[0][2]
+    body = req.content.decode("utf-8", "ignore")
+    assert req.headers["X-API-Key-ID"] == "g" and req.url.path == "/stt/v3"
+    for part in ("prisma-v3.0", "hi-IN", "transcribe", "गिनती"):
+        assert part in body, part
+
+
+def test_webm_skips_gnani_without_a_wasted_call(keys, net):
+    keys(sarvam="k", gnani="g")
+    net.on("sarvam", "stt", stt_ok("sarvam", "नमस्ते"))
+    t = speech.transcribe(b"\x00" * 10, "turn.webm", lang="hi")
+    assert net.order() == [("sarvam", "stt")] and t.provider == "sarvam" and t.fallback_used
 
 
 def test_tts_empty_audio_falls_back(keys, net):

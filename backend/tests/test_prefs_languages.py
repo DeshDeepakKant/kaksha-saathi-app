@@ -32,7 +32,7 @@ def clean_prefs():
 
 
 def test_defaults_when_nothing_stored(pc, teacher_headers, parent_headers):
-    want = {"voice_provider": "sarvam", "app_lang": "en", "content_lang": "hi", "stored": False}
+    want = {"voice_provider": "gnani", "app_lang": "en", "content_lang": "hi", "stored": False}
     assert pc.get("/v1/me/prefs", headers=teacher_headers).json() == want
     assert pc.get("/v1/parent/prefs", headers=parent_headers).json() == want
 
@@ -40,9 +40,9 @@ def test_defaults_when_nothing_stored(pc, teacher_headers, parent_headers):
 def test_partial_update_keeps_other_fields(pc, teacher_headers):
     r = pc.post("/v1/me/prefs", json={"app_lang": "mr"}, headers=teacher_headers)
     assert r.status_code == 200, r.text
-    assert r.json() == {"voice_provider": "sarvam", "app_lang": "mr", "content_lang": "hi", "stored": True}
-    r = pc.post("/v1/me/prefs", json={"voice_provider": "gnani", "content_lang": "en"}, headers=teacher_headers)
-    assert r.json() == {"voice_provider": "gnani", "app_lang": "mr", "content_lang": "en", "stored": True}
+    assert r.json() == {"voice_provider": "gnani", "app_lang": "mr", "content_lang": "hi", "stored": True}
+    r = pc.post("/v1/me/prefs", json={"voice_provider": "sarvam", "content_lang": "en"}, headers=teacher_headers)
+    assert r.json() == {"voice_provider": "sarvam", "app_lang": "mr", "content_lang": "en", "stored": True}
     assert pc.get("/v1/me/prefs", headers=teacher_headers).json()["app_lang"] == "mr"
 
 
@@ -85,8 +85,8 @@ def test_languages_without_speech_keys(pc, teacher_headers, parent_headers):
         assert [c["code"] for c in j["content_languages"]] == ["hi", "en"]
         assert all(c["stt"] == [] and c["tts"] == [] for c in j["content_languages"])
         assert j["providers"] == [
-            {"key": "sarvam", "name": "Sarvam", "configured": False, "default": True},
-            {"key": "gnani", "name": "Gnani", "configured": False, "default": False},
+            {"key": "gnani", "name": "Gnani", "configured": False, "default": True},
+            {"key": "sarvam", "name": "Sarvam", "configured": False, "default": False},
         ]
 
 
@@ -106,12 +106,12 @@ def test_service_helpers(teacher_headers, parent_headers):
         t = db.query(Teacher).first()
         p = db.query(ParentAccount).first()
         assert prefs_svc.content_lang_for(db, teacher=t) == "hi"
-        assert prefs_svc.provider_for(db, parent=p) == "sarvam"
+        assert prefs_svc.provider_for(db, parent=p) == "gnani"
         assert prefs_svc.content_lang_for(db) == "hi"
-        prefs_svc.set_prefs(db, "teacher", t.id, t.school_id, voice_provider="gnani", content_lang="en")
+        prefs_svc.set_prefs(db, "teacher", t.id, t.school_id, voice_provider="sarvam", content_lang="en")
         assert prefs_svc.content_lang_for(db, teacher=t) == "en"
-        assert prefs_svc.provider_for(db, teacher=t) == "gnani"
-        assert prefs_svc.provider_for(db, parent=p) == "sarvam"  # parent untouched
+        assert prefs_svc.provider_for(db, teacher=t) == "sarvam"
+        assert prefs_svc.provider_for(db, parent=p) == "gnani"  # parent untouched
         with pytest.raises(prefs_svc.PrefsError):
             prefs_svc.set_prefs(db, "parent", p.id, p.school_id, app_lang="klingon")
         with pytest.raises(ValueError):

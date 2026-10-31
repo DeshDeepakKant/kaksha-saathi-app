@@ -107,8 +107,8 @@ class _LanguageVoiceCardState extends State<LanguageVoiceCard> {
     final l = _list('providers');
     if (l.isNotEmpty) return l;
     return const [
-      {'key': 'sarvam', 'name': 'Sarvam', 'default': true},
-      {'key': 'gnani', 'name': 'Gnani', 'default': false},
+      {'key': 'gnani', 'name': 'Gnani', 'default': true},
+      {'key': 'sarvam', 'name': 'Sarvam', 'default': false},
     ];
   }
 
@@ -171,7 +171,7 @@ class _LanguageVoiceCardState extends State<LanguageVoiceCard> {
   }
 
   Future<void> _pickProvider() async {
-    final cur = '${Api.i.prefs?['voice_provider'] ?? 'sarvam'}';
+    final cur = '${Api.i.prefs?['voice_provider'] ?? 'gnani'}';
     final picked = await _pick(
       title: tr('Voice service', 'आवाज़ सेवा'),
       selected: cur,
@@ -376,7 +376,7 @@ class _LanguageVoiceCardState extends State<LanguageVoiceCard> {
 
   @override
   Widget build(BuildContext context) {
-    final providerKey = '${Api.i.prefs?['voice_provider'] ?? 'sarvam'}';
+    final providerKey = '${Api.i.prefs?['voice_provider'] ?? 'gnani'}';
     final provider = _providers.firstWhere(
       (p) => p['key'] == providerKey,
       orElse: () => {'key': providerKey, 'name': providerKey},

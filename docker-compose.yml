@@ -26,6 +26,7 @@ services:
       DATABASE_URL: postgresql+psycopg://kaksha:kaksha@db:5432/kaksha
       JWT_SECRET: ${JWT_SECRET:-change-me-in-production}
       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      GNANI_API_KEY: ${GNANI_API_KEY:-}
       SARVAM_API_KEY: ${SARVAM_API_KEY:-}
       MODEL_EXTRACT: ${MODEL_EXTRACT:-claude-haiku-4-5-20251001}
       MODEL_PLAN: ${MODEL_PLAN:-claude-sonnet-5}

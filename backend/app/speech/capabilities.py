@@ -13,8 +13,10 @@ except ImportError:  # pragma: no cover - registry not merged yet
     APP_LANGS: tuple[str, ...] = ("en", "hi", "bn", "mr", "te", "ta", "gu", "kn", "ml", "or", "pa", "as",
                                   "ur", "sa", "ne", "kok", "mai", "doi", "sd", "ks", "brx", "mni", "sat")
 
-PROVIDERS = ("sarvam", "gnani")
-DEFAULT_PROVIDER = "sarvam"
+PROVIDERS = ("gnani", "sarvam")
+# Gnani first (its newest Prisma/Timbre models, per language it supports); Sarvam answers when Gnani is
+# not configured, does not cover the language, or fails. `order()` skips unconfigured providers.
+DEFAULT_PROVIDER = "gnani"
 PROVIDER_NAMES = {"sarvam": "Sarvam", "gnani": "Gnani"}
 
 _GNANI_LANGS = frozenset({"en", "hi", "bn", "gu", "kn", "ml", "mr", "pa", "ta", "te"})

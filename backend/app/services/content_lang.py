@@ -22,7 +22,7 @@ def for_teacher(db: Session, teacher) -> tuple[str, str]:
 
 
 def transcribe(audio: bytes, filename: str, lang: str = SOURCE_LANG, keyterms: list[str] | None = None,
-               preferred: str = "sarvam"):
+               preferred: str | None = None):
     """`app.speech.transcribe` (provider order + fallback per contract §2). Until that lands, the old
     single-provider client with the language passed through. Returns an object with `.text`."""
     import app.speech as speech

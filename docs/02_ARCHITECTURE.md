@@ -76,7 +76,7 @@
 | **Parent app** | Flutter Web (mobile-first); installable PWA | Child login (parent-gated), daily session, history, progress |
 | **API service** | Python 3.12, FastAPI, SQLAlchemy 2, Pydantic 2, Alembic | REST, auth, orchestration entry points, rate limits |
 | **AI orchestration** | `ai_orchestrator/` Python module using Anthropic SDK | Prompt assembly, structured outputs, validation, retries, fallback, budgets, logging |
-| **Speech service** | Sarvam AI (ASR `saaras:v4`, TTS `bulbul`), provider abstraction | Transcription with keyterm boosting (roster names, target words); TTS for parent app |
+| **Speech service** | Gnani Vachana (STT `prisma-v3.0`, TTS `timbre-v3.0`) first, Sarvam AI (`saaras:v3`, `bulbul:v3`) second, provider abstraction | Transcription with keyterm boosting (roster names, target words); TTS for parent app |
 | **Pronunciation / reading scorer** | Python: normalization → alignment → constrained diff; optional phonemisation | Deterministic accuracy/omission/insertion scores vs. target text |
 | **Mastery engine** | Pure Python | Evidence → status/confidence, prerequisite-aware gap detection |
 | **Grouping engine** | Pure Python | Top-gap clustering, rule selection |

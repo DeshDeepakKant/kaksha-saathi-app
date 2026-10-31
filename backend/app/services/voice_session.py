@@ -179,7 +179,8 @@ def transcribe(audio: bytes, filename: str, lang: str) -> str:
     """Speech-to-text in the session language with the parent's preferred provider; the speech layer
     falls back to the other provider. Older speech modules without `transcribe` use `get_asr()`."""
     from app import speech
-    preferred = getattr(_ASR_CTX, "provider", None) or "sarvam"
+    from app.speech import capabilities
+    preferred = getattr(_ASR_CTX, "provider", None) or capabilities.DEFAULT_PROVIDER
     fn = getattr(speech, "transcribe", None)
     if fn is not None and _stt_configured(lang):
         return (fn(audio, filename, lang=lang, preferred=preferred).text or "")
