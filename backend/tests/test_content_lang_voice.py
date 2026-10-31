@@ -21,7 +21,7 @@ from app.ai import voice_tutor
 from app.core.security import hash_phone, hash_pin, make_token
 from app.db import SessionLocal
 from app.i18n import script, translate
-from app.models.tables import Child, Classroom, Evidence, ParentAccount, School, Teacher
+from app.models.tables import Child, Classroom, Evidence, LevelCheck, ParentAccount, School, Teacher
 from app.services import parent_insights, prefs, voice_bank
 from app.services import voice_session as vse
 from app.speech import assess, capabilities
@@ -156,6 +156,14 @@ def kid(sandbox):
         return {"Authorization": f"Bearer {make_token(str(p.id), 'parent')}"}, c.id, p.id
 
 
+def _level(sandbox, child_id, key, index):
+    """A literacy level check for the child (the session plans its focus from it)."""
+    with SessionLocal() as db:
+        db.add(LevelCheck(school_id=sandbox["school_id"], class_id=sandbox["class_id"], child_id=child_id,
+                          subject="literacy", level_index=index, level_key=key, at=datetime(2026, 10, 20)))
+        db.commit()
+
+
 def _set_prefs(parent_id, school_id, **fields):
     with SessionLocal() as db:
         prefs.set_prefs(db, "parent", parent_id, school_id, **fields)
@@ -250,8 +258,9 @@ def test_script_and_item_rules_per_language():
 
 
 # ------------------------------------------------------------------ sessions
-def test_marathi_session_with_claude_items(client, kid, translator, clock, langs, monkeypatch):
+def test_marathi_session_with_claude_items(client, kid, sandbox, translator, clock, langs, monkeypatch):
     h, child_id, parent_id = kid
+    _level(sandbox, child_id, "letter", 0)  # reads letters: warm up on letters, focus on building words
     monkeypatch.setattr(voice_tutor, "_ai_ready", lambda: True)
     monkeypatch.setattr(voice_tutor, "_call", fake_call)
     from app.services import voice_bank
@@ -267,16 +276,17 @@ def test_marathi_session_with_claude_items(client, kid, translator, clock, langs
     assert not any("Kavya" in t for t in translator.seen)  # the child's name never goes to the translator
 
     item, stages = s["item"], {s["stage"]}
-    for _ in range(9):  # right answers climb the ladder, judged by the real Marathi assessment
+    for _ in range(10):  # 2 warm-up letters, then 8 words built right: mastered, one stage up
         clock.advance(20)
-        t = _turn(client, h, s, item["id"], _answer(item))
+        t = _turn(client, h, s, item["id"], _answer(item))  # judged by the real Marathi assessment
         assert t["verdict"] == "correct", (item, t)
         assert t["tutor"]["lang"] == "mr" and t["next_item"]["lang"] == "mr"
         item = t["next_item"]
         stages.add(t["stage"])
     assert {"letter", "word_build", "word_read"} <= stages
+    assert t["focus_stage"] == "word_read" and t["stage_changed"]
 
-    assert item["kind"] == "make_sentence" and item["source"] == "ai"
+    assert item["kind"] == "read_word" and item["source"] == "ai"
     for _ in range(5):  # one item not managed: a mistake for the report
         clock.advance(20)
         t = _turn(client, h, s, item["id"], "कमळ")
@@ -319,6 +329,7 @@ def _write_tamil_files(folder):
 def test_tamil_session_defaults_to_parent_language(client, kid, sandbox, translator, clock, langs,
                                                    monkeypatch, tmp_path):
     h, child_id, parent_id = kid
+    _level(sandbox, child_id, "letter", 0)  # warm up on letters, focus on building words
     _write_tamil_files(tmp_path / "ta")
     monkeypatch.setattr(voice_bank, "lang_dir", lambda lang: tmp_path / lang)
     voice_bank._load_lang.cache_clear()
@@ -351,7 +362,7 @@ def test_tamil_session_defaults_to_parent_language(client, kid, sandbox, transla
         t = _turn(client, h, s, item["id"], _answer(item))
         assert t["verdict"] == "correct"
         item = t["next_item"]
-    assert t["stage"] == "word_build"  # no Tamil build_word items: emergency letters keep it going
+    assert t["stage"] == "word_build"  # after the warm-up; no Tamil build_word items: emergency letters
     assert item["kind"] == "read_letter" and vs.script_ok(item["display"]["text"], "ta")
 
     for _ in range(5):

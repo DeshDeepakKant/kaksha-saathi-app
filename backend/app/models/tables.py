@@ -373,3 +373,23 @@ class TranslationCache(Base):
     src: Mapped[str] = mapped_column(Text)
     text: Mapped[str] = mapped_column(Text)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow)
+
+
+class HomeFocus(Base):
+    """A teacher's override of what a child's home voice sessions practise (docs/voice_focus_contract.md §3).
+
+    One subject per row (literacy | english). Setting a new focus deactivates the old row instead of
+    deleting it, so the history of what the teacher asked for stays; a row counts until `until`.
+    """
+    __tablename__ = "home_focus"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    school_id: Mapped[int] = mapped_column(ForeignKey("schools.id"), index=True)
+    child_id: Mapped[int] = mapped_column(ForeignKey("children.id"), index=True)
+    subject: Mapped[str] = mapped_column(String(16))
+    stage: Mapped[str] = mapped_column(String(20))
+    checkpoint_ids: Mapped[list] = mapped_column(JSON, default=list)
+    note: Mapped[str | None] = mapped_column(String(200))
+    created_by: Mapped[int | None] = mapped_column(Integer)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow)
+    until: Mapped[date] = mapped_column(Date)
+    active: Mapped[bool] = mapped_column(Boolean, default=True)

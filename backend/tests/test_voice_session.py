@@ -16,7 +16,7 @@ from app.ai import features
 from app.core.security import hash_phone, hash_pin, make_token
 from app.db import SessionLocal
 from app.models.tables import (
-    Child, Classroom, Evidence, ParentAccount, School, Teacher, VoiceSession, VoiceTurn,
+    Child, Classroom, Evidence, LevelCheck, ParentAccount, School, Teacher, VoiceSession, VoiceTurn,
 )
 from app.services import voice_session as vse
 from app.services.voice_types import MAX_ATTEMPTS, STAGE_CHECKPOINTS, Assessment
@@ -132,9 +132,12 @@ def sandbox():
     return out
 
 
-@pytest.fixture
-def kid(sandbox):
-    """A fresh child with a parent account in the sandbox class: (parent headers, child id)."""
+LEVEL_AT = datetime(2026, 10, 9, 9, 0)  # 20 days before the test clock: recent, and older than its sessions
+
+
+def make_kid(sandbox, levels: dict[str, str] | None = None):
+    """A fresh child with a parent account in the sandbox class: (parent headers, child id).
+    `levels`: subject -> level check result (`level_key`, the highest level passed)."""
     sandbox["roll"] += 1
     with SessionLocal() as db:
         c = Child(class_id=sandbox["class_id"], roll_no=sandbox["roll"], first_name="Meena")
@@ -143,8 +146,25 @@ def kid(sandbox):
         p = ParentAccount(school_id=sandbox["school_id"], child_id=c.id, phone_hash=hash_phone("9000000000"),
                           pin_hash=hash_pin("0000"))
         db.add(p)
+        for subject, key in (levels or {}).items():
+            index = {"beginner": -1, "letter": 0, "word": 1, "sentence": 2, "story": 3}[key]
+            db.add(LevelCheck(school_id=sandbox["school_id"], class_id=sandbox["class_id"], child_id=c.id,
+                              subject=subject, level_index=index, level_key=key, at=LEVEL_AT))
         db.commit()
         return {"Authorization": f"Bearer {make_token(str(p.id), 'parent')}"}, c.id
+
+
+@pytest.fixture
+def kid(sandbox):
+    """A child whose level checks say beginner in both subjects, so sessions practise `letter`
+    (no warm-up below it): the engine's own rules are tested from the bottom of the ladder."""
+    return make_kid(sandbox, {"literacy": "beginner", "english": "beginner"})
+
+
+@pytest.fixture
+def bare_kid(sandbox):
+    """A child with no evidence at all (the plan falls through to its later sources, or placement)."""
+    return make_kid(sandbox)
 
 
 def _start(client, h, lang="hi"):
@@ -185,12 +205,14 @@ def test_start_shape(client, parent_headers, fakes, clock):
               "transcript", "tutor"):
         assert k in s, k
     assert s["status"] == "active" and s["lang"] == "hi" and s["target_minutes"] == 30 and s["attempt"] == 1
-    assert s["stage"] == "letter"  # seeded roll 12 has no secure letter checkpoints
-    assert s["item"]["kind"] == "read_letter" and "{name}" not in s["item"]["prompt"]
+    # seeded roll 12: last session's outcome says reading words again, so it warms up one stage below
+    assert s["focus_stage"] == "word_read" and s["phase"] == "warmup" and s["stage"] == "word_build"
+    assert s["plan"]["source"] == "last_session" and s["plan"]["based_on_session"]
+    assert s["item"]["kind"] == "build_word" and "{name}" not in s["item"]["prompt"]
     assert s["tutor"]["text"].startswith("[greet") and s["transcript"][0]["role"] == "tutor"
     # topics passed to the generator: the class literacy syllabus filtered to the stage
     topics = fakes.gen_calls[0]["topics"]
-    assert topics and all(t["checkpoint_id"] in STAGE_CHECKPOINTS["letter"] for t in topics)
+    assert topics and all(t["checkpoint_id"] in STAGE_CHECKPOINTS["word_build"] for t in topics)
     assert {"checkpoint_id", "title_hi", "title_en", "custom"} <= set(topics[0])
     with SessionLocal() as db:  # keep the shared seeded child clean
         db.query(VoiceTurn).filter(VoiceTurn.session_id == s["id"]).delete()
@@ -198,9 +220,12 @@ def test_start_shape(client, parent_headers, fakes, clock):
         db.commit()
 
 
-def test_correct_path_climbs_and_hides_answers(client, kid, fakes, clock):
+def test_correct_path_stays_at_the_focus_and_hides_answers(client, kid, fakes, clock):
+    """Was the 3-in-a-row climb: now right answers make items harder inside the focus stage only."""
     h, cid = kid
+    fakes.kind["letter"] = "build_word"  # an answer the child must work out, so it is hidden
     s = _start(client, h)
+    assert s["phase"] == "focus" and s["focus_stage"] == "letter" and s["plan"]["source"] == "level_check"
     item = s["item"]
     assert item["difficulty"] == 1
     t1 = _turn(client, h, s, item["id"], RIGHT)
@@ -210,14 +235,14 @@ def test_correct_path_climbs_and_hides_answers(client, kid, fakes, clock):
     t2 = _turn(client, h, s, t1["next_item"]["id"], RIGHT)
     assert t2["next_item"]["difficulty"] == 2  # 2 successes in a row -> harder item
     t3 = _turn(client, h, s, t2["next_item"]["id"], RIGHT)
-    assert t3["stage_changed"] and t3["stage"] == "word_build"  # 3 -> next stage
-    assert "[stage_up:1]" in t3["tutor"]["text"]
+    assert not t3["stage_changed"] and t3["stage"] == "letter"  # no climbing on 3 in a row
+    assert t3["phase"] == "focus" and t3["focus_stage"] == "letter"
     nxt = t3["next_item"]
     assert nxt["kind"] == "build_word"
     assert not {"target", "accept", "keywords"} & set(nxt)  # the child must not see the answer
     assert [l["role"] for l in t3["transcript_append"]] == ["child", "tutor"]
     full = client.get(f"/v1/parent/voice/sessions/{s['id']}", headers=h).json()
-    assert full["session"]["stage"] == "word_build" and full["report"] is None
+    assert full["session"]["stage"] == "letter" and full["report"] is None
     assert not {"target", "accept", "keywords"} & set(full["session"]["item"])
     assert len(full["session"]["transcript"]) == 7  # greet + 3 x (child, tutor)
 
@@ -248,20 +273,33 @@ def test_retry_escalates_then_moves_on_easier(client, kid, fakes, clock):
     assert any("श" in c["weak_sounds"] for c in fakes.gen_calls)
 
 
-def test_two_failed_items_step_down_never_below_letter(client, kid, fakes, clock):
-    h, cid = kid
+def test_warmup_then_support_drop_and_return_never_below_letter(client, kid, sandbox, fakes, clock):
+    """Was "two failed items step down": now 3 failed items at difficulty 1 drop one stage for support,
+    and 3 successes there return to the focus. The focus stage itself never changes."""
+    h, cid = make_kid(sandbox, {"literacy": "letter"})  # passed letters -> focus word_build
     s = _start(client, h)
-    t = {"next_item": s["item"]}
-    for _ in range(3):
-        t = _turn(client, h, s, t["next_item"]["id"], RIGHT)
-    assert t["stage"] == "word_build"
-    t = _fail_item(client, h, s, t["next_item"])
-    assert t["stage"] == "word_build" and not t["stage_changed"]
+    assert (s["phase"], s["stage"], s["focus_stage"]) == ("warmup", "letter", "word_build")
+    t = _turn(client, h, s, s["item"]["id"], RIGHT)
+    assert t["stage"] == "letter" and t["phase"] == "warmup" and not t["stage_changed"]
+    t = _turn(client, h, s, t["next_item"]["id"], RIGHT)  # 2 warm-up items done
+    assert t["stage"] == "word_build" and t["phase"] == "focus" and t["stage_changed"]
+    for _ in range(2):
+        t = _fail_item(client, h, s, t["next_item"])
+        assert t["stage"] == "word_build" and not t["stage_changed"]
     t = _fail_item(client, h, s, t["next_item"])
     assert t["stage"] == "letter" and t["stage_changed"] and "[stage_down:1]" in t["tutor"]["text"]
-    t = _fail_item(client, h, s, t["next_item"])
-    t = _fail_item(client, h, s, t["next_item"])
-    assert t["stage"] == "letter" and not t["stage_changed"]
+    assert t["focus_stage"] == "word_build" and t["phase"] == "focus"  # support is not a level change
+    for n in range(3):
+        t = _turn(client, h, s, t["next_item"]["id"], RIGHT)
+        assert t["stage"] == ("word_build" if n == 2 else "letter")
+    assert t["stage_changed"] and t["focus_stage"] == "word_build"
+    # a letter focus has nowhere to drop to
+    h2, _ = kid
+    s2 = _start(client, h2)
+    t = {"next_item": s2["item"]}
+    for _ in range(4):
+        t = _fail_item(client, h2, s2, t["next_item"])
+        assert t["stage"] == "letter" and not t["stage_changed"]
 
 
 def test_silence_and_asr_failure_do_not_use_a_try(client, kid, fakes, clock, monkeypatch):
@@ -386,10 +424,10 @@ def test_english_topics_and_evidence_stay_off_the_hindi_map(client, kid, sandbox
     assert _evidence(cid)[before:] == [(custom[0]["checkpoint_id"], "correct")]
 
 
-def test_start_stage_from_child_statuses(client, kid, sandbox, fakes, clock):
-    h, cid = kid
+def test_start_stage_from_child_statuses(client, bare_kid, sandbox, fakes, clock):
+    h, cid = bare_kid
     now = datetime.now(timezone.utc)
-    with SessionLocal() as db:  # letters and word building secure at school -> warm up at word_build
+    with SessionLocal() as db:  # letters and word building secure at school -> focus word_read, warm-up below
         for cp in STAGE_CHECKPOINTS["letter"] + STAGE_CHECKPOINTS["word_build"]:
             for d in (3, 2, 1):
                 db.add(Evidence(school_id=sandbox["school_id"], class_id=sandbox["class_id"], child_id=cid,
@@ -397,8 +435,10 @@ def test_start_stage_from_child_statuses(client, kid, sandbox, fakes, clock):
                                 at=now - timedelta(days=d)))
         db.commit()
     s = _start(client, h)
-    assert s["stage"] == "word_build"
-    assert _start(client, h, lang="en")["stage"] == "letter"  # English starts at letter without English evidence
+    assert s["stage"] == "word_build" and s["phase"] == "warmup" and s["focus_stage"] == "word_read"
+    assert s["plan"]["source"] in ("board_gap", "mastery")
+    en = _start(client, h, lang="en")  # no English evidence at all: find the level first
+    assert en["stage"] == "word_read" and en["phase"] == "placement" and en["plan"]["placement"]
 
 
 def test_safety_flag(client, kid, fakes, clock, monkeypatch):

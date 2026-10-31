@@ -5,13 +5,13 @@ from sqlalchemy.orm import sessionmaker
 
 from app import seed as seed_mod
 from app.db import Base
-from app.models.tables import ParentAccount, School, Teacher, UserPrefs
+from app.models.tables import HomeFocus, ParentAccount, School, Teacher, UserPrefs, VoiceSession
 
 # Every table with a foreign key to schools.id. When you add one, make seed()'s reset branch delete it
 # (see the delete(...) calls in app/seed.py), then add its name here.
 SCHOOL_LINKED = {
     "ai_calls", "attendance", "capture_sessions", "classes", "custom_checkpoints", "custom_subjects",
-    "evidence", "group_sessions", "home_sessions", "intervention_logs", "level_checks", "parent_accounts",
+    "evidence", "group_sessions", "home_focus", "home_sessions", "intervention_logs", "level_checks", "parent_accounts",
     "plans", "roadmaps", "teachers", "textbook_maps", "usage_counters", "user_prefs", "voice_sessions",
 }
 
@@ -41,6 +41,7 @@ def test_reseed_deletes_a_demo_school_with_saved_prefs(tmp_path, monkeypatch):
         sch = db.scalar(select(School).where(School.code == seed_mod.DEMO_CODE))
         t = db.scalar(select(Teacher).where(Teacher.school_id == sch.id))
         p = db.scalar(select(ParentAccount).where(ParentAccount.school_id == sch.id))
+        assert db.scalars(select(HomeFocus)).all() and db.scalars(select(VoiceSession)).all()  # the demo has both
         db.add(UserPrefs(kind="teacher", user_id=t.id, school_id=sch.id, content_lang="mr"))
         db.add(UserPrefs(kind="parent", user_id=p.id, school_id=sch.id, voice_provider="gnani"))
         db.commit()
@@ -49,3 +50,4 @@ def test_reseed_deletes_a_demo_school_with_saved_prefs(tmp_path, monkeypatch):
         new = db.scalar(select(School).where(School.code == seed_mod.DEMO_CODE))
         assert new is not None  # rebuilt (SQLite may reuse the old id; Postgres does not)
         assert db.scalars(select(UserPrefs)).all() == []  # the old users' settings are gone with them
+        assert all(r.school_id == new.id for r in db.scalars(select(HomeFocus)))

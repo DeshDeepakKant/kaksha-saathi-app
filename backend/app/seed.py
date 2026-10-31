@@ -16,7 +16,7 @@ from app.db import SessionLocal, init_db
 from app.models.tables import (
     AiCall, Attendance, CaptureSession, Child, Classroom, Evidence, GroupSession, HomeSession,
     InterventionLog, ParentAccount, Plan, Roadmap, RoadmapItem, School, Teacher, UsageCounter, utcnow,
-    CustomCheckpoint, CustomSubject, VoiceSession, VoiceTurn, AppMeta, TextbookMap, UserPrefs,
+    CustomCheckpoint, CustomSubject, VoiceSession, VoiceTurn, AppMeta, TextbookMap, UserPrefs, HomeFocus,
 )
 from app.services import level_check, tips
 from app.services.content import get_content
@@ -26,7 +26,7 @@ DEMO_CODE = "DEMO"
 # Bump when the demo story changes: the next start rebuilds the DEMO school once (other schools
 # are never touched). Needed because the live database is persistent (Neon), so restarts no longer
 # reseed it.
-SEED_VERSION = "2026-10-31-english"
+SEED_VERSION = "2026-10-31-voice-focus"
 TEACHER_PIN = "1234"
 PARENT_PIN = "0000"
 PARENT_PHONE = "9876500000"
@@ -223,6 +223,127 @@ def _seed_english(db, sch: int, cls2: Classroom, cls3: Classroom, teacher: int, 
             _ev(db, sch, cls3.id, k.id, cp, res, src, now - timedelta(days=d, hours=1), _CONF[src])
 
 
+# ------------------------------------------------------------------ voice sessions at the child's level
+# (docs/voice_focus_contract.md section 3). Items are (stage, kind, texts, results): "1" right first time,
+# "r" right on the second try, "0" not managed after five tries.
+_VOICE_A = [("letter", "read_letter", ["क", "म"], "11"),                                      # warm-up
+            ("word_build", "build_word", ["कमल", "घर", "नल", "जल", "दाल", "बस", "मटर", "पानी"], "11r10111"),
+            ("word_read", "read_word", ["आम", "नाक", "दिन", "मीठा", "किताब"], "11010")]         # moved up
+_VOICE_B = [("word_build", "build_word", ["कमल", "मकान"], "11"),                               # warm-up
+            ("word_read", "read_word", ["दिन", "किताब", "चिड़िया", "मीठा", "खिलौना", "तितली", "पानी", "मछली",
+                                        "बिल्ली", "नाक"], "1101r01001"),
+            ("sentence_build", "make_sentence", [["राम", "आम"], ["बिल्ली", "दूध"], ["बस", "घर"]], "100")]  # stretch
+
+
+def _voice_items(script, t0: datetime):
+    """(items, turns, focus_hist-ready (stage, ok) list) in the engine's report-input shape."""
+    from app.services.voice_session import _graphemes
+    items, turns, oks, n = {}, [], [], 0
+    for stage, kind, texts, results in script:
+        for text, res in zip(texts, results):
+            n += 1
+            iid = f"seed-{n}"
+            it = {"id": iid, "stage": stage, "kind": kind, "lang": "hi", "checkpoint_id": None, "prompt": "",
+                  "difficulty": 1, "source": "bank", "accept": [], "keywords": []}
+            if kind == "make_sentence":
+                it.update(display={"words": text}, target=None, required_words=list(text))
+                right, wrong = f"{text[0]} ने {text[1]} देखा", text[0]
+                err = {"type": "missing_word", "target": text[1], "heard": "", "word": text[1]}
+            else:
+                it.update(display={"tiles": _graphemes(text)} if kind == "build_word" else {"text": text},
+                          target=text, required_words=[])
+                right = text
+                wrong = text.replace("ि", "ी") if "ि" in text else text[:-1] or text
+                err = ({"type": "matra", "target": "ि", "heard": "ी", "word": text} if "ि" in text
+                       else {"type": "substitution", "target": text[-1], "heard": "", "word": text})
+            verdicts = {"1": ["correct"], "r": ["wrong", "correct"], "0": ["wrong"] * 5}[res]
+            attempts = []
+            for k, v in enumerate(verdicts, start=1):
+                at = t0 + timedelta(seconds=40 * n + 8 * k)
+                attempts.append({"attempt": k, "verdict": v, "score": 1.0 if v == "correct" else 0.2,
+                                 "heard": right if v == "correct" else wrong, "words": [],
+                                 "errors": [] if v == "correct" else [err], "fluency": None,
+                                 "at": at.isoformat()})
+            result = {"1": "first_try", "r": "after_retry", "0": "failed"}[res]
+            items[iid] = {**it, "attempts": attempts, "result": result, "attempts_used": len(attempts),
+                          "heard": attempts[-1]["heard"], "errors": [e for a in attempts for e in a["errors"]]}
+            turns += [{"role": "child", "item_id": iid, "kind": kind, "stage": stage, **a} for a in attempts]
+            oks.append((stage, res != "0"))
+    return items, turns, oks
+
+
+def _seed_voice_session(db, sch: int, child: Child, plan: dict, start: datetime, minutes: float, script,
+                        weak: list[str], stretch: str | None) -> VoiceSession:
+    """One ended Hindi session with its plan, outcome and report, as the engine would have stored it."""
+    from app.ai import voice_tutor
+    from app.services import voice_plan, voice_report, voice_session as vse
+    items, turns, oks = _voice_items(script, start)
+    focus = plan["focus_stage"]
+    hist, mastered, moved, log = {}, [], None, []
+    for stage, ok in oks:
+        if stage == stretch or (stage != focus and stage != moved):
+            continue  # warm-up and stretch items are not focus items
+        hist.setdefault(stage, []).append(ok)
+        log.append(ok)
+        if stage == focus and not moved and vse._mastered(log):
+            mastered.append(focus)
+            moved, log = voice_plan.above(focus), []
+    sx_items = [ok for stage, ok in oks if stage == stretch]
+    st = {"v": 1, "lang": "hi", "plan": plan, "phase": "focus", "focus_stage": moved or focus, "focus_log": log,
+          "moves_up": int(bool(moved)), "focus_hist": hist, "mastered": mastered, "moved_up_to": moved,
+          "stretch": {"stage": stretch, "items": len(sx_items), "correct": sum(sx_items), "done": bool(stretch)},
+          "stage": script[-1][0], "highest_stage": max((x[0] for x in script), key=vse.STAGES.index),
+          "start_stage": script[0][0], "weak_sounds": weak, "sound_counts": {w: 2 for w in weak},
+          "elapsed_s": minutes * 60, "done": True, "current": None, "attempt": 1, "items": {}, "outcomes": {},
+          "order": [], "pending": [], "safety_flags": [], "evidence": 0, "seeded": True}
+    end = start + timedelta(minutes=minutes)
+    vs = VoiceSession(school_id=sch, child_id=child.id, lang="hi", status="ended", stage=st["stage"],
+                      started_at=start.replace(tzinfo=None), ended_at=end.replace(tzinfo=None), end_reason="time_up",
+                      elapsed_s=minutes * 60, state=st)
+    db.add(vs)
+    db.flush()
+    report = dict(voice_report.build_report(lang="hi", started_at=start, ended_at=end, turns=turns, items=items,
+                                            content=get_content(), session_id=vs.id))
+    report.update(session_id=vs.id, lang="hi", minutes=minutes, end_reason="time_up", safety_flags=[],
+                  plan=plan, outcome=vse.outcome(st))
+    vse._apply_narrative(report, voice_tutor.fallback_narrative(dict(report)), "fallback")
+    report.setdefault("next_steps", {"hi": [], "en": []})
+    vs.report = report
+    db.add(VoiceTurn(session_id=vs.id, role="tutor", text="नमस्ते {name}! चलो साथ में पढ़ते हैं।",
+                     at=start.replace(tzinfo=None)))
+    for t in turns:
+        db.add(VoiceTurn(session_id=vs.id, role="child", text=t["heard"], item_id=t["item_id"], verdict=t["verdict"],
+                         at=datetime.fromisoformat(t["at"]).replace(tzinfo=None)))
+    db.add(VoiceTurn(session_id=vs.id, role="tutor", text="आज तुमने बहुत अच्छा अभ्यास किया। शाबाश!",
+                     at=end.replace(tzinfo=None)))
+    db.flush()
+    return vs
+
+
+def _seed_voice_focus(db, sch: int, cls2: Classroom, teacher: int, kids2: list[Child], demo_child: Child,
+                      now: datetime) -> None:
+    """The demo parent's child (roll 12): two Hindi sessions this week, planned by the same code the app
+    uses. The first follows the level check (word building), masters it and moves up; the second, from
+    that outcome, practises reading words and is not yet there, so the next plan is reading words again
+    (source last_session). Roll 3 gets the teacher's English home focus on letter sounds this week."""
+    from app.services import voice_plan, voice_session as vse
+    syl = vse._syllabus(db, cls2, "hi")
+    a_start = now - timedelta(days=3, hours=5)
+    plan_a = voice_plan.plan_session(db, demo_child, "hi", syl, now=a_start)
+    if plan_a["focus_stage"] != "word_build":  # the demo story needs the level-check plan; never break a seed
+        return
+    _seed_voice_session(db, sch, demo_child, plan_a, a_start, 12.0, _VOICE_A, ["ड", "ल"], None)
+    b_start = now - timedelta(days=1, hours=4)
+    plan_b = voice_plan.plan_session(db, demo_child, "hi", syl, now=b_start)
+    _seed_voice_session(db, sch, demo_child, plan_b, b_start, 15.0, _VOICE_B, ["ी", "ि", "छ"], "sentence_build")
+    if _en_ready(get_content()):
+        db.add(HomeFocus(school_id=sch, child_id=kids2[2].id, subject="english", stage="letter",
+                         checkpoint_ids=["E.G1.letter_sounds"], note="Practise letter sounds this week",
+                         created_by=teacher, created_at=now - timedelta(days=1),
+                         until=school_today(now) + timedelta(days=6), active=True))
+    db.flush()
+
+
 def seed() -> dict:
     init_db()
     content = get_content()
@@ -245,6 +366,7 @@ def seed() -> dict:
                 db.execute(delete(Evidence).where(Evidence.child_id.in_(ids)))
                 db.execute(delete(Attendance).where(Attendance.child_id.in_(ids)))
                 db.execute(delete(HomeSession).where(HomeSession.child_id.in_(ids)))
+            db.execute(delete(HomeFocus).where(HomeFocus.school_id == old.id))
             voice = select(VoiceSession.id).where(VoiceSession.school_id == old.id)
             db.execute(delete(VoiceTurn).where(VoiceTurn.session_id.in_(voice)))
             db.execute(delete(VoiceSession).where(VoiceSession.school_id == old.id))
@@ -401,6 +523,7 @@ def seed() -> dict:
             _seed_english(db, sch.id, cls2, cls3, teacher.id, kids2, kids3, demo_child, now)
 
         level_check.demo_seed(db, sch.id)
+        _seed_voice_focus(db, sch.id, cls2, teacher.id, kids2, demo_child, now)
 
         db.merge(AppMeta(key="demo_seed_version", value=SEED_VERSION))
         db.commit()
