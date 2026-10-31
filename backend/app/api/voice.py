@@ -11,17 +11,20 @@ voice); omitted, it is the parent's content language (Settings), else Hindi.
 from __future__ import annotations
 
 import copy
+from datetime import datetime, timedelta, timezone
 from typing import Literal
 
-from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
+from fastapi import APIRouter, Depends, File, Form, HTTPException, Query, UploadFile
 from pydantic import BaseModel, Field, ValidationError
+from sqlalchemy import update
 from sqlalchemy.orm import Session
 
 from app.api.deps import current_parent, current_teacher, owned_child, validate_media
 from app.db import get_db
-from app.models.tables import Child, ParentAccount, Teacher, VoiceSession
-from app.services import prefs, voice_session as engine
-from app.services.voice_types import VOICE_LANGS
+from app.models.tables import Child, Classroom, HomeFocus, ParentAccount, Teacher, VoiceSession
+from app.services import ledger, prefs, voice_plan, voice_session as engine
+from app.services.content import get_content
+from app.services.voice_types import STAGES, VOICE_LANGS
 from app.speech import capabilities
 
 router = APIRouter(prefix="/v1")
@@ -168,6 +171,14 @@ def voice_end(session_id: int, body: EndIn | None = None, parent: ParentAccount 
     return _fill(report, _name(db, vs.child_id))
 
 
+@router.get("/parent/voice/plan")
+def voice_plan_preview(lang: str | None = Query(default=None, max_length=8),
+                       parent: ParentAccount = Depends(current_parent), db: Session = Depends(get_db)):
+    """The plan for the child's next session in `lang` ("Today's practice" before starting). Writes nothing."""
+    child = db.get(Child, parent.child_id)
+    return voice_plan.preview(db, child, _session_lang(db, parent, lang))
+
+
 @router.get("/parent/voice/sessions")
 def voice_sessions(parent: ParentAccount = Depends(current_parent), db: Session = Depends(get_db)):
     return engine.list_for_child(db, parent.child_id)
@@ -198,3 +209,60 @@ def teacher_voice_session(session_id: int, teacher: Teacher = Depends(current_te
     except HTTPException:
         raise HTTPException(404, "session not found")
     return _detail(db, vs, child.first_name)
+
+
+# ------------------------------------------------------------------ teacher: home practice focus
+Subject = Literal["literacy", "english"]
+
+
+class HomeFocusIn(BaseModel):
+    subject: Subject
+    stage: str
+    checkpoint_ids: list[str] = Field(default_factory=list, max_length=8)
+    note: str | None = Field(default=None, max_length=200)
+    days: int = Field(default=7, ge=1, le=30)
+
+
+def _deactivate(db: Session, child_id: int, subject: str) -> None:
+    db.execute(update(HomeFocus).where(HomeFocus.child_id == child_id, HomeFocus.subject == subject,
+                                       HomeFocus.active.is_(True)).values(active=False))
+
+
+@router.get("/children/{child_id}/home_focus")
+def get_home_focus(child_id: int, subject: Subject = "literacy", teacher: Teacher = Depends(current_teacher),
+                   db: Session = Depends(get_db)):
+    child = owned_child(child_id, teacher, db)
+    return voice_plan.home_focus_view(db, child, subject)
+
+
+@router.put("/children/{child_id}/home_focus")
+def put_home_focus(child_id: int, body: HomeFocusIn, teacher: Teacher = Depends(current_teacher),
+                   db: Session = Depends(get_db)):
+    child = owned_child(child_id, teacher, db)
+    if body.stage not in STAGES:
+        raise HTTPException(422, f"stage must be one of: {', '.join(STAGES)}")
+    content = get_content()
+    for cp in body.checkpoint_ids:
+        c = content.checkpoints.get(cp)
+        if c is None or (cp not in content.custom_ids and c.subject != body.subject):
+            raise HTTPException(422, f"unknown {body.subject} checkpoint: {cp}")
+        if cp in content.custom_ids and not cp.startswith(f"C{teacher.school_id}-"):
+            raise HTTPException(422, f"unknown {body.subject} checkpoint: {cp}")  # another school's topic
+    _deactivate(db, child.id, body.subject)
+    cls = db.get(Classroom, child.class_id)
+    note = (body.note or "").strip() or None
+    db.add(HomeFocus(school_id=cls.school_id, child_id=child.id, subject=body.subject, stage=body.stage,
+                     checkpoint_ids=list(dict.fromkeys(body.checkpoint_ids)), note=note, created_by=teacher.id,
+                     created_at=datetime.now(timezone.utc), until=ledger.school_today() + timedelta(days=body.days),
+                     active=True))
+    db.flush()
+    return voice_plan.home_focus_view(db, child, body.subject)
+
+
+@router.delete("/children/{child_id}/home_focus")
+def delete_home_focus(child_id: int, subject: Subject = "literacy", teacher: Teacher = Depends(current_teacher),
+                      db: Session = Depends(get_db)):
+    child = owned_child(child_id, teacher, db)
+    _deactivate(db, child.id, subject)
+    db.flush()
+    return voice_plan.home_focus_view(db, child, subject)

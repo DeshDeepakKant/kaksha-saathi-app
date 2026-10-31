@@ -6,6 +6,10 @@ report assembly. Three other modules do the parts around it, called through the 
 `app/services/voice_report.py` builds the deterministic report. Every seam has a small fallback,
 so a session keeps running if one of them fails.
 
+What a session practises is planned per child by `voice_plan.plan_session` from the teacher's evidence
+(docs/voice_focus_contract.md): placement -> warm-up -> focus -> stretch, moving the focus up only on
+mastery (at most once a session) and dropping a stage only for support. The outcome goes in the report.
+
 All working memory lives in `VoiceSession.state` (JSON), so turns survive restarts. Turns are
 idempotent by `client_turn_id`: the stored response is returned on a retry.
 
@@ -32,7 +36,7 @@ from app.ai import features
 from app.models.tables import (
     Child, Classroom, CustomCheckpoint, CustomSubject, Evidence, VoiceSession, VoiceTurn,
 )
-from app.services import ledger
+from app.services import ledger, voice_plan
 from app.services.content import get_content
 from app.services.voice_types import (
     MAX_ATTEMPTS, KINDS, STAGE_CHECKPOINTS, STAGES, TARGET_MINUTES, Assessment, is_reviewed_lang, stage_checkpoints,
@@ -52,6 +56,18 @@ SILENT_CHECK_IN = 3     # silent turns in a row before Saathi checks in
 OPEN_KINDS = ("make_sentence", "answer_question")
 SECURE = "on_track"
 MAX_WEAK = 8
+# Session phases and their rules (docs/voice_focus_contract.md section 2)
+PLACEMENT_ITEMS = 2     # items per placement probe; both must succeed to pass the stage
+PLACEMENT_TRIES = 2     # tries per placement item
+MAX_PROBES = 3
+WARMUP_ITEMS = 2
+STRETCH_ITEMS = 3
+STRETCH_AT_S = 240      # stretch once this little time is left, when the focus was not mastered
+MASTERY_MIN = 8         # judged focus items before mastery can count
+MASTERY_WINDOW = 10
+MASTERY_RATE = 0.8
+SUPPORT_FAILS = 3       # failed items in a row at difficulty 1 drop one stage (support)
+SUPPORT_BACK = 3        # successes there return to the focus
 
 SAFETY_LINE = {"hi": "यह बात किसी बड़े — मम्मी, पापा या अध्यापक — को बताइए।",
                "en": "Please tell a grown-up — your mummy, papa or teacher — about this."}
@@ -275,26 +291,40 @@ def _syllabus(db: Session, cls: Classroom, lang: str) -> dict:
     return {"builtin": builtin, "custom": custom, "english": english}
 
 
+def _plan_cps(st: dict, stage: str) -> tuple[list[str], list[str]]:
+    """(built-in, custom) checkpoints the plan picked, when `stage` is the planned focus stage."""
+    plan = st.get("plan") or {}
+    if not plan or stage != st.get("focus_stage") or stage != plan.get("focus_stage"):
+        return [], []
+    content = get_content()
+    cps = [c for c in plan.get("focus_checkpoints") or [] if c in content.checkpoints]
+    return [c for c in cps if c not in content.custom_ids], [c for c in cps if c in content.custom_ids]
+
+
 def topics_for(st: dict, stage: str) -> list[dict]:
     """The class syllabus filtered to `stage` (built-ins), plus every custom topic (the AI decides).
-    English sessions use the English syllabus (`E.*` built-ins for the stage, then the school's own topics)."""
+    English sessions use the English syllabus (`E.*` built-ins for the stage, then the school's own topics).
+    In the focus stage the built-ins are the plan's focus checkpoints (the child's weak ones)."""
     content = get_content()
     syl = st["syllabus"]
+    focus, focus_custom = _plan_cps(st, stage)
     if st.get("lang") == "en":
         stage_cps = stage_checkpoints("en", stage)
         eng = syl["english"]
-        builtin = ([c for c in eng if c in stage_cps and c not in content.custom_ids]
+        builtin = (focus or [c for c in eng if c in stage_cps and c not in content.custom_ids]
                    or [c for c in stage_cps if c in content.checkpoints])
-        return ([_topic(c, False) for c in builtin]
-                + [_topic(c, True) for c in eng if c in content.custom_ids])
+        custom = list(dict.fromkeys(focus_custom + [c for c in eng if c in content.custom_ids]))
+        return [_topic(c, False) for c in builtin] + [_topic(c, True) for c in custom]
     stage_cps = STAGE_CHECKPOINTS[stage]
-    builtin = [c for c in syl["builtin"] if c in stage_cps] or [c for c in stage_cps if c in content.checkpoints]
-    return ([_topic(c, False) for c in builtin] + [_topic(c, True) for c in syl["custom"]]
-            + [_topic(c, True) for c in syl["english"]])
+    builtin = (focus or [c for c in syl["builtin"] if c in stage_cps]
+               or [c for c in stage_cps if c in content.checkpoints])
+    custom = list(dict.fromkeys(focus_custom + syl["custom"] + syl["english"]))
+    return [_topic(c, False) for c in builtin] + [_topic(c, True) for c in custom]
 
 
 def start_stage(db: Session, child: Child, lang: str, english_cps: list[str]) -> int:
-    """One stage below the lowest stage that is not secure (at least half its checkpoints assessed,
+    """Before per-child plans (kept for reference; sessions now start from `voice_plan.plan_session`).
+    One stage below the lowest stage that is not secure (at least half its checkpoints assessed,
     and every assessed one on track); English
     starts at `letter` unless the child's English checkpoints are all on track."""
     statuses = {cp: r.status for cp, r in ledger.child_statuses(db, [child.id])[child.id].items()}
@@ -674,14 +704,25 @@ def start(db: Session, *, child: Child, lang: str, provider: str | None = None) 
             pass
     now = _now()
     syl = _syllabus(db, cls, lang)
-    idx = start_stage(db, child, lang, syl["english"])
+    plan = voice_plan.plan_session(db, child, lang, syl, now=now)
     st = {"v": 1, "lang": lang, "grade": cls.grade, "school_id": cls.school_id, "syllabus": syl,
-          "stage": STAGES[idx], "highest_stage": STAGES[idx], "start_stage": STAGES[idx],
+          "stage": plan["focus_stage"], "highest_stage": plan["focus_stage"], "start_stage": plan["focus_stage"],
           "queues": {}, "items": {}, "outcomes": {}, "order": [], "pending": [],
           "current": None, "attempt": 1, "success_streak": 0, "fail_streak": 0, "silent_streak": 0,
-          "difficulty": 1, "weak_sounds": [], "sound_counts": {}, "seen": [], "sources": {},
-          "break_given": False, "done": False, "wrap_up": None, "elapsed_s": 0.0, "last_at": now.isoformat(),
-          "safety_flags": [], "evidence": 0, "provider": provider}
+          "difficulty": 1, "weak_sounds": list(reversed(plan["target_sounds"]))[-MAX_WEAK:], "sound_counts": {},
+          "seen": [], "sources": {}, "break_given": False, "done": False, "wrap_up": None, "elapsed_s": 0.0,
+          "last_at": now.isoformat(), "safety_flags": [], "evidence": 0, "provider": provider,
+          # the plan and where the session is in it (docs/voice_focus_contract.md section 2)
+          "plan": plan, "phase": "focus", "focus_stage": plan["focus_stage"], "focus_log": [], "moves_up": 0}
+    _phase_defaults(st)
+    st["focus_difficulty"] = plan["start_difficulty"]
+    if plan["placement"]:
+        st["phase"] = "placement"
+        st["probes"] = [{"stage": plan["focus_stage"], "results": []}]
+        _set_stage(st, plan["focus_stage"], 1)
+    else:
+        _enter_warmup(st)
+    st["start_stage"] = st["highest_stage"] = st["stage"]
     vs = VoiceSession(school_id=cls.school_id, child_id=child.id, lang=lang, status="active",
                       stage=st["stage"], started_at=_naive(now), state={})
     db.add(vs)
@@ -705,18 +746,21 @@ def session_view(db: Session, vs: VoiceSession) -> dict:
             "elapsed_s": st.get("elapsed_s", vs.elapsed_s), "remaining_s": remaining_s(st) if st else 0.0,
             "target_minutes": TARGET_MINUTES, "stage": st.get("stage", vs.stage),
             "item": copy.deepcopy(st["items"][cur]) if cur and vs.status == "active" and not st.get("done") else None,
-            "attempt": st.get("attempt", 1), "attempts_left": MAX_ATTEMPTS - st.get("attempt", 1) + 1,
+            "attempt": st.get("attempt", 1), "attempts_left": _max_tries(st) - st.get("attempt", 1) + 1,
             "done": bool(st.get("done")) or vs.status == "ended", "transcript": lines,
-            "tutor": _tutor(last_tutor, vs.lang), "safety_flag": vs.safety_flag}
+            "tutor": _tutor(last_tutor, vs.lang), "safety_flag": vs.safety_flag,
+            "phase": st.get("phase"), "focus_stage": st.get("focus_stage"),
+            "plan": copy.deepcopy(st.get("plan"))}
 
 
 def _turn_base(st: dict, **kw) -> dict:
     cur = st["current"]
     out = {"verdict": "silent", "score": 0.0, "heard": "", "words": [], "errors": [],
-           "attempt": st["attempt"], "attempts_left": MAX_ATTEMPTS - st["attempt"] + 1,
+           "attempt": st["attempt"], "attempts_left": _max_tries(st) - st["attempt"] + 1,
            "next_item": copy.deepcopy(st["items"][cur]) if cur and not st["done"] else None,
            "stage": st["stage"], "stage_changed": False, "elapsed_s": st["elapsed_s"],
-           "remaining_s": remaining_s(st), "done": st["done"], "asr": "silent"}
+           "remaining_s": remaining_s(st), "done": st["done"], "asr": "silent",
+           "phase": st.get("phase"), "focus_stage": st.get("focus_stage")}
     out.update(kw)
     return out
 
@@ -756,17 +800,179 @@ def _time_up(st: dict) -> bool:
     return st["elapsed_s"] >= TARGET_S
 
 
-def _stage_move(st: dict, step: int) -> bool:
-    idx = STAGES.index(st["stage"]) + step
-    if idx < 0 or idx >= len(STAGES):
-        return False
-    st["stage"] = STAGES[idx]
+# ------------------------------------------------------------------ the plan's phases
+# placement -> warmup -> focus -> stretch -> focus ... Code moves between them; the stage of the current
+# item (`stage`) follows the phase. The focus stage changes at most once a session (mastery, one up).
+def _phase_defaults(st: dict) -> dict:
+    """Fill the phase fields (also for a session started before plans existed: all focus, no plan)."""
+    st.setdefault("plan", None)
+    st.setdefault("phase", "focus")
+    st.setdefault("focus_stage", st.get("stage"))
+    st.setdefault("focus_log", [])
+    st.setdefault("moves_up", 0)
+    st.setdefault("focus_hist", {})       # stage -> [bool] of every judged focus item there
+    st.setdefault("mastered", [])         # focus stages mastered this session
+    st.setdefault("moved_up_to", None)
+    st.setdefault("focus_difficulty", 1)
+    st.setdefault("support", False)
+    st.setdefault("support_ok", 0)
+    st.setdefault("easy_fails", 0)
+    st.setdefault("phase_n", 0)
+    st.setdefault("probes", [])
+    st.setdefault("stretch", {"stage": None, "items": 0, "correct": 0, "done": False})
+    return st
+
+
+def _max_tries(st: dict) -> int:
+    return PLACEMENT_TRIES if st.get("phase") == "placement" else MAX_ATTEMPTS
+
+
+def _set_stage(st: dict, stage: str, difficulty: int) -> None:
+    if stage != st["stage"]:
+        st["pending"] = []
+    st["stage"] = stage
+    st["difficulty"] = difficulty
     st["success_streak"] = st["fail_streak"] = 0
-    st["difficulty"] = 1 if step > 0 else 2
-    st["pending"] = []
-    if STAGES.index(st["stage"]) > STAGES.index(st["highest_stage"]):
-        st["highest_stage"] = st["stage"]
-    return True
+    if STAGES.index(stage) > STAGES.index(st.get("highest_stage") or stage):
+        st["highest_stage"] = stage
+
+
+def _enter_focus(st: dict) -> None:
+    st["phase"], st["phase_n"], st["support"] = "focus", 0, False
+    _set_stage(st, st["focus_stage"], st["focus_difficulty"])
+
+
+def _enter_warmup(st: dict) -> None:
+    warm = voice_plan.below(st["focus_stage"])
+    if warm is None:
+        _enter_focus(st)
+        return
+    st["phase"], st["phase_n"] = "warmup", 0
+    _set_stage(st, warm, 1)
+
+
+def _enter_stretch(st: dict) -> None:
+    up = voice_plan.above(st["focus_stage"])
+    st["focus_difficulty"] = st["difficulty"]
+    st["phase"], st["phase_n"] = "stretch", 0
+    st["stretch"]["stage"] = up
+    _set_stage(st, up, 1)
+
+
+def _adapt_difficulty(st: dict, result: str, tried: int) -> None:
+    """Inside a stage, as before: 2 successes in a row -> harder, a miss -> easier."""
+    if result == "first_try" or (result == "after_retry" and tried <= 2):
+        st["success_streak"] += 1
+        st["fail_streak"] = 0
+        if st["success_streak"] >= 2:
+            st["difficulty"] = min(3, st["difficulty"] + 1)
+            st["success_streak"] = 0
+    elif result == "after_retry":
+        st["success_streak"] = st["fail_streak"] = 0
+    else:
+        st["success_streak"] = 0
+        st["fail_streak"] += 1
+        st["difficulty"] = max(1, st["difficulty"] - 1)
+
+
+def _mastered(log: list[bool]) -> bool:
+    last = log[-MASTERY_WINDOW:]
+    return len(log) >= MASTERY_MIN and sum(last) >= MASTERY_RATE * len(last)
+
+
+def _end_placement(db: Session, vs: VoiceSession, st: dict) -> None:
+    failed = [STAGES.index(p["stage"]) for p in st["probes"] if not p.get("passed")]
+    focus = STAGES[min(failed)] if failed else STAGES[-1]
+    plan = st["plan"]
+    child = db.get(Child, vs.child_id)
+    try:
+        statuses = {cp: r.status for cp, r in ledger.child_statuses(db, [child.id]).get(child.id, {}).items()}
+    except Exception:
+        statuses = {}
+    plan.update(focus_stage=focus, warmup_stage=voice_plan.below(focus), stretch_stage=voice_plan.above(focus),
+                source="placement", start_difficulty=1,
+                focus_checkpoints=voice_plan.focus_checkpoints(st["lang"], st["syllabus"], focus, statuses),
+                probes=[{"stage": p["stage"], "passed": bool(p.get("passed"))} for p in st["probes"]])
+    plan["reason_en"], plan["reason_hi"] = voice_plan.placement_reason(focus)
+    st["focus_stage"] = focus
+    st["focus_difficulty"] = 1
+    _enter_warmup(st)
+
+
+def _placement_step(db: Session, vs: VoiceSession, st: dict, ok: bool) -> None:
+    """Probe 2 items a stage from word_read: both right -> the stage above, else below; stop when the
+    direction reverses, the ladder ends or after 3 probes."""
+    probe = st["probes"][-1]
+    probe["results"].append(ok)
+    if len(probe["results"]) < PLACEMENT_ITEMS:
+        return
+    probe["passed"] = all(probe["results"])
+    step = 1 if probe["passed"] else -1
+    first = st["probes"][0]
+    direction = 1 if first.get("passed") else -1
+    nxt = STAGES.index(probe["stage"]) + step
+    if step != direction or not 0 <= nxt < len(STAGES) or len(st["probes"]) >= MAX_PROBES:
+        _end_placement(db, vs, st)
+        return
+    st["probes"].append({"stage": STAGES[nxt], "results": []})
+    _set_stage(st, STAGES[nxt], 1)
+
+
+def _after_item(db: Session, vs: VoiceSession, st: dict, result: str, tried: int) -> None:
+    """Move through the plan after an item ends (`result`: first_try|after_retry|failed|skipped)."""
+    ok = result == "first_try" or (result == "after_retry" and tried <= 2)
+    judged = result in ("first_try", "after_retry", "failed")
+    phase = st["phase"]
+    if phase == "placement":
+        _placement_step(db, vs, st, ok)  # a skipped probe item counts as not managed
+        return
+    if phase in ("warmup", "stretch"):
+        st["phase_n"] += 1
+        if phase == "stretch":
+            st["stretch"]["items"] += 1
+            st["stretch"]["correct"] += int(ok)
+        if st["phase_n"] >= (WARMUP_ITEMS if phase == "warmup" else STRETCH_ITEMS):
+            if phase == "stretch":
+                st["stretch"]["done"] = True
+            _enter_focus(st)
+        return
+    if judged:
+        easy = st["difficulty"] == 1
+        _adapt_difficulty(st, result, tried)
+        if st["support"]:
+            st["support_ok"] += int(ok)
+            if st["support_ok"] >= SUPPORT_BACK:
+                st["support"] = False
+                _set_stage(st, st["focus_stage"], 1)
+            return
+        focus = st["focus_stage"]
+        st["focus_log"].append(ok)
+        st["focus_hist"].setdefault(focus, []).append(ok)
+        if ok:
+            st["easy_fails"] = 0
+        elif result == "failed" and easy:
+            st["easy_fails"] += 1
+        if st["easy_fails"] >= SUPPORT_FAILS:
+            st["easy_fails"] = 0
+            down = voice_plan.below(focus)
+            if down:  # support: one stage easier for a while; not a level change
+                st["support"], st["support_ok"] = True, 0
+                _set_stage(st, down, 1)
+                return
+        if focus not in st["mastered"] and _mastered(st["focus_log"]):
+            st["mastered"].append(focus)
+            up = voice_plan.above(focus)
+            if st["moves_up"] == 0 and up:  # at most one move up a session
+                st["moves_up"] = 1
+                st["moved_up_to"] = up
+                st["focus_stage"] = up
+                st["focus_log"] = []
+                _set_stage(st, up, 1)
+                return
+    if (not st["support"] and st["moves_up"] == 0 and st["stretch"]["items"] == 0
+            and st["focus_stage"] not in st["mastered"] and voice_plan.above(st["focus_stage"])
+            and remaining_s(st) <= STRETCH_AT_S):
+        _enter_stretch(st)
 
 
 def _close_current(st: dict, result: str) -> None:
@@ -789,7 +995,7 @@ def turn(db: Session, vs: VoiceSession, *, item_id: str, client_turn_id: str, tr
     prior = _replay(db, vs, client_turn_id)
     if prior is not None:
         return prior
-    st = _state(vs)
+    st = _phase_defaults(_state(vs))
     if vs.status == "ended" or st["done"]:
         return _wrap_reply(db, vs, st)
     if item_id != st["current"]:
@@ -847,7 +1053,7 @@ def turn(db: Session, vs: VoiceSession, *, item_id: str, client_turn_id: str, tr
     if a["verdict"] == "correct":
         finished = "first_try" if tried == 1 else "after_retry"
         parts.append(_line(db, st, "praise", item, a, tried))
-    elif tried >= MAX_ATTEMPTS:
+    elif tried >= _max_tries(st):
         finished = "failed"
         parts.append(_line(db, st, "move_on", item, a, tried))
     else:
@@ -860,27 +1066,8 @@ def turn(db: Session, vs: VoiceSession, *, item_id: str, client_turn_id: str, tr
         out["evidence"] = _write_evidence(db, vs, st, item, finished, a["score"])
         if item["kind"] == "read_paragraph" and finished != "failed":
             st["pending"] = list(item.get("followup_ids") or []) + st["pending"]
-        if finished == "first_try" or (finished == "after_retry" and tried <= 2):
-            st["success_streak"] += 1
-            st["fail_streak"] = 0
-            if st["success_streak"] >= 3:
-                if _stage_move(st, +1):
-                    stage_changed = True
-                else:  # top of the ladder: keep stretching within it
-                    st["difficulty"] = min(3, st["difficulty"] + 1)
-                    st["success_streak"] = 0
-            elif st["success_streak"] == 2:
-                st["difficulty"] = min(3, st["difficulty"] + 1)
-        elif finished == "after_retry":
-            st["success_streak"] = st["fail_streak"] = 0
-        else:
-            st["success_streak"] = 0
-            st["fail_streak"] += 1
-            st["difficulty"] = max(1, st["difficulty"] - 1)
-            if st["fail_streak"] >= 2 and _stage_move(st, -1):
-                stage_changed = True
-            elif st["fail_streak"] >= 2:
-                st["fail_streak"] = 0  # already at `letter`: stay, with easier items
+        _after_item(db, vs, st, finished, tried)  # the plan decides the next stage; no climbing on streaks
+        stage_changed = st["stage"] != item["stage"]
 
     if time_up:
         if not finished:
@@ -909,7 +1096,7 @@ def skip(db: Session, vs: VoiceSession, *, item_id: str, client_turn_id: str | N
     prior = _replay(db, vs, client_turn_id)
     if prior is not None:
         return prior
-    st = _state(vs)
+    st = _phase_defaults(_state(vs))
     if vs.status == "ended" or st["done"]:
         return _wrap_reply(db, vs, st)
     if item_id != st["current"]:
@@ -920,16 +1107,20 @@ def skip(db: Session, vs: VoiceSession, *, item_id: str, client_turn_id: str | N
     item = st["items"][st["current"]]
     _close_current(st, "skipped")
     st["silent_streak"] = 0
+    stage_changed = False
     if _time_up(st):
         st["done"], st["current"] = True, None
         text = _line(db, st, "wrap_up")
     else:
+        _after_item(db, vs, st, "skipped", st["attempt"])
+        stage_changed = st["stage"] != item["stage"]
         _serve(st, _next_item(db, st))
         nxt = st["items"].get(st["current"]) if st["current"] else None
         text = _line(db, st, "intro_item", nxt) if nxt else ""
     return _finish_turn(db, vs, st, client_turn_id=client_turn_id, child_text="", child_verdict="skipped",
                         child_item=item["id"], words=None, tutor_text=text,
-                        base={"verdict": "skipped", "asr": "silent", "item_result": "skipped"})
+                        base={"verdict": "skipped", "asr": "silent", "item_result": "skipped",
+                              "stage_changed": stage_changed})
 
 
 # ------------------------------------------------------------------ end and report
@@ -991,11 +1182,46 @@ def _fallback_narrative(report: dict) -> dict:
     return {"parent_hi": hi, "parent_en": en, "teacher_en": en, "teacher_hi": hi}
 
 
+def outcome(st: dict) -> dict | None:
+    """How the session went against its plan, and what the next one should practise (code decides)."""
+    plan = st.get("plan")
+    if not plan:
+        return None
+    focus = plan["focus_stage"]
+    log = st["focus_hist"].get(focus, [])
+    acc = round(sum(log) / len(log), 2) if log else 0.0
+    mastered = focus in st["mastered"]
+    moved = st.get("moved_up_to")
+    sx = st["stretch"]
+    stretch_ok = bool(sx["stage"]) and sx["done"] and sx["items"] > 0 and sx["correct"] == sx["items"]
+    unplaced = st.get("phase") == "placement"  # stopped before the level was found: find it next time
+    nxt = None if unplaced else (moved or (sx["stage"] if stretch_ok else focus))
+    L = voice_plan.label
+    if unplaced:
+        en, hi = "Saathi will find the level again next time.", "अगली बार साथी फिर से स्तर पता करेगा।"
+    elif moved:
+        en = f"Mastered {L(focus).lower()}, so next time: {L(moved).lower()}."
+        hi = f"{L(focus, 'hi')} पक्का हुआ, अगली बार: {L(moved, 'hi')}।"
+    elif stretch_ok:
+        en = f"Got every {L(sx['stage']).lower()} challenge right, so next time: {L(sx['stage']).lower()}."
+        hi = f"चुनौती ({L(sx['stage'], 'hi')}) में सब सही, अगली बार: {L(sx['stage'], 'hi')}।"
+    elif mastered:
+        en = f"Mastered {L(focus).lower()}: next time harder {L(focus).lower()}."
+        hi = f"{L(focus, 'hi')} पक्का हुआ: अगली बार और कठिन अभ्यास।"
+    else:
+        pct = round(100 * acc)
+        en = f"Keep practising {L(focus).lower()} ({len(log)} tries, {pct}% right)."
+        hi = f"अभ्यास जारी रखें: {L(focus, 'hi')} ({len(log)} सवाल, {pct}% सही)।"
+    return {"focus_stage": focus, "focus_items": len(log), "focus_accuracy": acc, "mastered": mastered,
+            "moved_up_to": moved, "stretch_stage": sx["stage"], "stretch_items": sx["items"],
+            "stretch_correct": sx["correct"], "next_focus_stage": nxt, "next_reason_en": en, "next_reason_hi": hi}
+
+
 def end(db: Session, vs: VoiceSession, *, reason: str = "parent_stop") -> dict:
     _drop_prefetch(vs.id)
     if vs.status == "ended" and vs.report is not None:
         return copy.deepcopy(vs.report)
-    st = _state(vs)
+    st = _phase_defaults(_state(vs))
     now = _now()
     if not st["done"]:
         _tick(st, now)
@@ -1016,6 +1242,9 @@ def end(db: Session, vs: VoiceSession, *, reason: str = "parent_stop") -> dict:
     report["minutes"] = minutes  # active minutes (paused time excluded), the same figure the app's timer shows
     report["end_reason"] = reason
     report["safety_flags"] = sorted({f["category"] for f in st["safety_flags"]})
+    if st.get("plan"):  # what the session set out to practise, and how it went
+        report["plan"] = copy.deepcopy(st["plan"])
+        report["outcome"] = outcome(st)
     # Claude's narrative takes 20-60 s (four texts, mostly Hindi), too long to hold the parent at
     # "end". Store the templated narrative now; a background thread upgrades it when Claude is done.
     from app.ai import voice_tutor
@@ -1144,8 +1373,13 @@ def summary(vs: VoiceSession) -> dict:
         items = len(judged)
         acc = round((items - res.count("failed")) / items, 2) if items else 0.0
         high, minutes = st.get("highest_stage", vs.stage), round(st.get("elapsed_s", 0) / 60, 1)
+    plan = (rep or {}).get("plan") or st.get("plan") or {}
+    oc = (rep or {}).get("outcome") or {}
     return {"id": vs.id, "lang": vs.lang, "started_at": iso(vs.started_at), "minutes": minutes, "items": items,
-            "accuracy": acc, "highest_stage": high, "status": vs.status, "safety_flag": vs.safety_flag}
+            "accuracy": acc, "highest_stage": high, "status": vs.status, "safety_flag": vs.safety_flag,
+            "focus_stage": oc.get("focus_stage") or st.get("focus_stage") or plan.get("focus_stage"),
+            "mastered": bool(oc.get("mastered")) if oc else (plan.get("focus_stage") in (st.get("mastered") or [])),
+            "next_focus_stage": oc.get("next_focus_stage"), "plan_source": plan.get("source")}
 
 
 def list_for_child(db: Session, child_id: int, limit: int = 30) -> list[dict]:

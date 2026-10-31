@@ -24,7 +24,7 @@ from app.services.content import Checkpoint, Content, get_content
 from app.services.subjects import ALIASES, BUILTIN_NAMES, resolve_subject, subject_names
 from app.services.voice_types import STAGE_CHECKPOINTS, STAGE_CHECKPOINTS_EN, stage_checkpoints
 from tests.test_voice_session import (  # noqa: F401 - fixtures and helpers of the voice-session tests
-    RIGHT, _evidence, _start, _turn, clock, fakes, kid, sandbox,
+    RIGHT, _evidence, _start, _turn, bare_kid, clock, fakes, kid, sandbox,
 )
 
 HAS_ENGLISH = "E.G1.letter_names" in get_content().checkpoints
@@ -405,21 +405,22 @@ def test_english_session_practises_E_nodes_and_writes_E_evidence(client, kid, sa
 
 
 @needs_english
-def test_english_start_stage_and_hindi_session_untouched(client, kid, sandbox, fakes, clock):
-    h, cid = kid
+def test_english_start_stage_and_hindi_session_untouched(client, bare_kid, sandbox, fakes, clock):
+    h, cid = bare_kid
     from datetime import datetime, timedelta, timezone
     now = datetime.now(timezone.utc)
-    with SessionLocal() as db:  # every English lesson secure at school -> the session warms up one stage in
+    with SessionLocal() as db:  # every G1-G2 English lesson secure at school -> the plan follows the records
         for cp in G1 + G2:
             for d in (3, 2, 1):
                 db.add(Evidence(school_id=sandbox["school_id"], class_id=sandbox["class_id"], child_id=cid,
                                 checkpoint_id=cp, result="correct", source="teacher_tap", confidence=1.0,
                                 at=now - timedelta(days=d)))
         db.commit()
-    assert _start(client, h, lang="en")["stage"] == "word_build"
+    en = _start(client, h, lang="en")
+    assert en["plan"]["source"] in ("board_gap", "mastery") and en["focus_stage"] in ("sentence_build", "reading")
     hi = _start(client, h, lang="hi")
-    assert hi["stage"] == "letter"  # Hindi ladder ignores English statuses
-    assert all(t["checkpoint_id"] in STAGE_CHECKPOINTS["letter"] for t in fakes.gen_calls[-1]["topics"])
+    assert hi["stage"] == "word_read" and hi["phase"] == "placement"  # Hindi ladder ignores English statuses
+    assert all(t["checkpoint_id"] in STAGE_CHECKPOINTS["word_read"] for t in fakes.gen_calls[-1]["topics"])
     before = _evidence(cid)
     _turn(client, h, hi, hi["item"]["id"], RIGHT)
     assert all(cp.startswith("L.") for cp, _ in _evidence(cid)[len(before):])

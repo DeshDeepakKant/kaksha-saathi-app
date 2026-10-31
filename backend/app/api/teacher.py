@@ -25,8 +25,8 @@ from app.api.deps import current_teacher, image_media_type, owned_child, owned_c
 from app.core.security import decode_token, make_token, verify_pin
 from app.db import get_db
 from app.models.tables import (
-    AiCall, Attendance, CaptureSession, Child, Classroom, Evidence, GroupSession, InterventionLog, LevelCheck,
-    ParentAccount, Plan, Roadmap, RoadmapItem, School, Teacher,
+    AiCall, Attendance, CaptureSession, Child, Classroom, Evidence, GroupSession, HomeFocus, InterventionLog,
+    LevelCheck, ParentAccount, Plan, Roadmap, RoadmapItem, School, Teacher,
 )
 from app.services import content_lang, followups, ledger, prefs
 from app.services.subjects import resolve_subject
@@ -793,6 +793,7 @@ def delete_child_data(child_id: int, teacher: Teacher = Depends(current_teacher)
     db.execute(delete(Evidence).where(Evidence.child_id == ch.id))
     db.execute(delete(Attendance).where(Attendance.child_id == ch.id))
     db.execute(delete(LevelCheck).where(LevelCheck.child_id == ch.id))
+    db.execute(delete(HomeFocus).where(HomeFocus.child_id == ch.id))
     return {"deleted": True}
 
 
@@ -803,6 +804,7 @@ def delete_class_data(class_id: int, teacher: Teacher = Depends(current_teacher)
     if ids:
         db.execute(delete(Evidence).where(Evidence.child_id.in_(ids)))
         db.execute(delete(Attendance).where(Attendance.class_id == cls.id))
+        db.execute(delete(HomeFocus).where(HomeFocus.child_id.in_(ids)))
     db.execute(delete(LevelCheck).where(LevelCheck.class_id == cls.id))
     db.execute(delete(CaptureSession).where(CaptureSession.class_id == cls.id))
     plans = select(Plan.id).where(Plan.class_id == cls.id)
