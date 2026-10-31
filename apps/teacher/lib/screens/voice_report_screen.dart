@@ -17,6 +17,51 @@ String voiceStageLabel(String? stage) => switch (stage) {
   _ => tr('Not reached', 'अभी नहीं'),
 };
 
+/// The reading ladder, lowest first (`STAGES` in docs/voice_focus_contract.md).
+const voiceStages = [
+  'letter',
+  'word_build',
+  'word_read',
+  'sentence_build',
+  'reading',
+];
+
+/// Where the next session's focus came from (`plan.source`), for the teacher.
+String voiceFocusSourceLabel(String? source) => switch (source) {
+  'teacher_override' => tr('Set by you', 'आपने तय किया'),
+  'level_check' => tr('From the level check', 'स्तर जाँच से'),
+  'board_gap' => tr('From the class board', 'कक्षा बोर्ड से'),
+  'last_session' => tr('From the last session', 'पिछले सत्र से'),
+  'mastery' => tr('From the learning map', 'सीखने के नक्शे से'),
+  'placement' => tr('Saathi found the level', 'साथी ने स्तर पता किया'),
+  _ => '',
+};
+
+/// "7 Nov" / "7 नवंबर" from an ISO date or timestamp; '' when it does not parse.
+String voiceDay(dynamic iso) {
+  if (iso is! String) return '';
+  final at = DateTime.tryParse(iso);
+  if (at == null) return '';
+  final d = iso.length > 10
+      ? at.toLocal()
+      : at; // a plain date has no time zone
+  final month = switch (d.month) {
+    1 => tr('Jan', 'जनवरी'),
+    2 => tr('Feb', 'फ़रवरी'),
+    3 => tr('Mar', 'मार्च'),
+    4 => tr('Apr', 'अप्रैल'),
+    5 => tr('May', 'मई'),
+    6 => tr('Jun', 'जून'),
+    7 => tr('Jul', 'जुलाई'),
+    8 => tr('Aug', 'अगस्त'),
+    9 => tr('Sep', 'सितंबर'),
+    10 => tr('Oct', 'अक्टूबर'),
+    11 => tr('Nov', 'नवंबर'),
+    _ => tr('Dec', 'दिसंबर'),
+  };
+  return '${d.day} $month';
+}
+
 /// Subject a voice session belongs to: English sessions are 'english', everything else Hindi.
 String voiceSubject(String? lang) => lang == 'en' ? 'english' : 'literacy';
 
@@ -322,6 +367,9 @@ class _VoiceReportScreenState extends State<VoiceReportScreen> {
       ),
       const SizedBox(height: 14),
 
+      // ---- focus: what this session practised and what comes next (report.plan / report.outcome)
+      ..._focusSection(_m(r['plan']), _m(r['outcome'])),
+
       // ---- narrative
       if (teacherText.isNotEmpty) ...[
         SectionTitle(tr('Summary for you', 'आपके लिए सार')),
@@ -433,6 +481,146 @@ class _VoiceReportScreenState extends State<VoiceReportScreen> {
           _bullet(Icons.arrow_forward_rounded, Ks.accent, s),
         const SizedBox(height: 14),
       ],
+    ];
+  }
+
+  /// "Focus" section; empty for sessions recorded before plans existed.
+  List<Widget> _focusSection(
+    Map<String, dynamic> plan,
+    Map<String, dynamic> outcome,
+  ) {
+    final stage = (outcome['focus_stage'] ?? plan['focus_stage']) as String?;
+    if (stage == null || stage.isEmpty) return const [];
+    final source = voiceFocusSourceLabel(plan['source'] as String?);
+    final reason = plan.isEmpty ? '' : pick(plan, 'reason').trim();
+    final pct = voiceAccuracyPct(outcome['focus_accuracy']);
+    final items = _n(outcome['focus_items']);
+    final hasOutcome = outcome.isNotEmpty;
+    final mastered = outcome['mastered'] == true;
+    final movedUp = outcome['moved_up_to'] as String?;
+    final stretch = outcome['stretch_stage'] as String?;
+    final stretchItems = _n(outcome['stretch_items']);
+    final next = outcome['next_focus_stage'] as String?;
+    final nextReason = hasOutcome ? pick(outcome, 'next_reason').trim() : '';
+    return [
+      SectionTitle(tr('Focus', 'फ़ोकस')),
+      Card(
+        child: Padding(
+          padding: const EdgeInsets.all(14),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  const Icon(
+                    Icons.center_focus_strong_rounded,
+                    color: Ks.accent,
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      voiceStageLabel(stage),
+                      style: const TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                  if (pct != null)
+                    Text(
+                      trf('{pct}% right', '{pct}% सही', {'pct': pct}),
+                      style: TextStyle(
+                        fontWeight: FontWeight.w700,
+                        color: voiceAccuracyColor(pct),
+                      ),
+                    ),
+                ],
+              ),
+              if (source.isNotEmpty || reason.isNotEmpty) ...[
+                const SizedBox(height: 4),
+                Text(
+                  [source, reason].where((t) => t.isNotEmpty).join(': '),
+                  style: const TextStyle(color: Ks.muted, fontSize: 14),
+                ),
+              ],
+              if (hasOutcome) ...[
+                const SizedBox(height: 10),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: [
+                    if (items > 0)
+                      _chip(
+                        trf('{items} items', '{items} प्रश्न', {
+                          'items': items,
+                        }),
+                        Ks.ink,
+                        Ks.line,
+                        fontSize: 14,
+                      ),
+                    mastered
+                        ? _chip(
+                            tr('Mastered', 'पक्का हुआ'),
+                            Ks.green,
+                            Ks.greenSoft,
+                            fontSize: 14,
+                            icon: Icons.check_circle_rounded,
+                          )
+                        : _chip(
+                            tr('Not yet mastered', 'अभी पक्का नहीं'),
+                            Ks.amber,
+                            Ks.amberSoft,
+                            fontSize: 14,
+                          ),
+                    if (movedUp != null && movedUp.isNotEmpty)
+                      _chip(
+                        trf('Moved up to {stage}', '{stage} पर आगे बढ़ा', {
+                          'stage': voiceStageLabel(movedUp),
+                        }),
+                        Ks.accent,
+                        Ks.accentSoft,
+                        fontSize: 14,
+                        icon: Icons.trending_up_rounded,
+                      ),
+                    if (stretch != null &&
+                        stretch.isNotEmpty &&
+                        stretchItems > 0)
+                      _chip(
+                        trf(
+                          'Challenge ({stage}): {correct}/{items}',
+                          'चुनौती ({stage}): {correct}/{items}',
+                          {
+                            'stage': voiceStageLabel(stretch),
+                            'correct': _n(outcome['stretch_correct']),
+                            'items': stretchItems,
+                          },
+                        ),
+                        Ks.ink,
+                        Ks.line,
+                        fontSize: 14,
+                      ),
+                  ],
+                ),
+              ],
+              if (next != null && next.isNotEmpty) ...[
+                const Divider(height: 22, color: Ks.line),
+                Text(
+                  trf('Next time: {stage}', 'अगली बार: {stage}', {
+                    'stage': voiceStageLabel(next),
+                  }),
+                  style: const TextStyle(fontWeight: FontWeight.w600),
+                ),
+                if (nextReason.isNotEmpty)
+                  Text(
+                    nextReason,
+                    style: const TextStyle(color: Ks.muted, fontSize: 14),
+                  ),
+              ],
+            ],
+          ),
+        ),
+      ),
+      const SizedBox(height: 14),
     ];
   }
 

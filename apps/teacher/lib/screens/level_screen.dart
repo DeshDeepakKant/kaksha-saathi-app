@@ -485,11 +485,13 @@ class _LevelScreenState extends State<LevelScreen> {
               ),
             ),
           ),
-        if (widget.subject != 'numeracy')
+        // Home voice sessions practise reading: Hindi (literacy) and English only.
+        if (widget.subject == 'literacy' || widget.subject == 'english')
           VoiceSessionsCard(
             childId: widget.childId,
             childName: widget.childName,
             classId: widget.classId,
+            subject: widget.subject,
             reloadToken: _loads,
             onEvidenceSaved: () => _load(silent: true),
           ),

@@ -254,11 +254,37 @@ class Api {
   }
 
   Future<dynamic> delete(String path) async {
-    final r = await _client
-        .delete(Uri.parse('$base$path'), headers: _headers)
-        .timeout(const Duration(seconds: 30));
-    if (r.statusCode >= 400) throw _fail(r);
-    return jsonDecode(utf8.decode(r.bodyBytes));
+    try {
+      final r = await _client
+          .delete(Uri.parse('$base$path'), headers: _headers)
+          .timeout(const Duration(seconds: 30));
+      if (r.statusCode >= 400) throw _fail(r);
+      return jsonDecode(utf8.decode(r.bodyBytes));
+    } on ApiError {
+      rethrow;
+    } catch (_) {
+      throw ApiError.network();
+    }
+  }
+
+  /// PUT that needs the network (not queued in the outbox): a lost connection is
+  /// `ApiError.network()`, a failed response is `ApiError(status)`.
+  Future<dynamic> putJson(String path, Map<String, dynamic> body) async {
+    try {
+      final r = await _client
+          .put(
+            Uri.parse('$base$path'),
+            headers: {..._headers, 'content-type': 'application/json'},
+            body: jsonEncode(body),
+          )
+          .timeout(const Duration(seconds: 45));
+      if (r.statusCode >= 400) throw _fail(r);
+      return jsonDecode(utf8.decode(r.bodyBytes));
+    } on ApiError {
+      rethrow;
+    } catch (_) {
+      throw ApiError.network();
+    }
   }
 
   Future<dynamic> postMultipart(
@@ -687,7 +713,9 @@ class ApiError implements Exception {
           '${parts.where((x) => x.isNotEmpty).join('; ')}';
     }
     if (detail != null) return detail.toString();
-    return trf('Request failed ({status})', 'अनुरोध सफल नहीं हुआ ({status})', {'status': '$status'});
+    return trf('Request failed ({status})', 'अनुरोध सफल नहीं हुआ ({status})', {
+      'status': '$status',
+    });
   }
 
   @override
