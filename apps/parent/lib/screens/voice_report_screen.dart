@@ -110,7 +110,8 @@ class _VoiceReportScreenState extends State<VoiceReportScreen> {
       'Your child practised for {mins} minutes and tried {items} questions, getting {acc}% right. '
           'The highest level reached was "{stage}".',
       'आपके बच्चे ने {mins} मिनट अभ्यास किया और {items} सवाल किए, जिनमें {acc}% सही रहे। '
-          'सबसे ऊँचा स्तर "{stage}" रहा।', {'mins': mins, 'items': items, 'acc': acc, 'stage': stage},
+          'सबसे ऊँचा स्तर "{stage}" रहा।',
+      {'mins': mins, 'items': items, 'acc': acc, 'stage': stage},
     );
   }
 
@@ -197,6 +198,10 @@ class _VoiceReportScreenState extends State<VoiceReportScreen> {
         _headline(r),
         const SizedBox(height: 10),
         _counts(r),
+        if ((r['outcome'] as Map?)?['focus_stage'] is String) ...[
+          const SizedBox(height: 10),
+          _focusLine((r['outcome'] as Map).cast<String, dynamic>()),
+        ],
         const SizedBox(height: 18),
         // Narrative + read aloud
         Card(
@@ -315,13 +320,15 @@ class _VoiceReportScreenState extends State<VoiceReportScreen> {
               title: Text(
                 trf(
                   'Reading speed: {wcpm} words a minute',
-                  'पढ़ने की गति: {wcpm} शब्द प्रति मिनट', {'wcpm': wcpm.round()},
+                  'पढ़ने की गति: {wcpm} शब्द प्रति मिनट',
+                  {'wcpm': wcpm.round()},
                 ),
               ),
               subtitle: Text(
                 trf(
                   'Paragraphs read: {paragraphs}',
-                  'पढ़े गए अनुच्छेद: {paragraphs}', {'paragraphs': _int((r['fluency'] as Map?)?['paragraphs'])},
+                  'पढ़े गए अनुच्छेद: {paragraphs}',
+                  {'paragraphs': _int((r['fluency'] as Map?)?['paragraphs'])},
                 ),
               ),
             ),
@@ -441,6 +448,92 @@ class _VoiceReportScreenState extends State<VoiceReportScreen> {
     );
   }
 
+  /// The level this session practised: accuracy there, mastered or not, and the next focus
+  /// (`report.outcome`, docs/voice_focus_contract.md §2).
+  Widget _focusLine(Map<String, dynamic> o) {
+    final stage = o['focus_stage'] as String?;
+    final mastered = o['mastered'] == true;
+    final items = _int(o['focus_items']);
+    final next = o['next_focus_stage'] as String?;
+    final movedUp = o['moved_up_to'] as String?;
+    final why = _bi(o, 'next_reason_en', 'next_reason_hi').trim();
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(14),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Icon(
+              mastered
+                  ? Icons.verified_rounded
+                  : Icons.center_focus_strong_rounded,
+              color: mastered ? Ks.green : Ks.accent,
+              size: 26,
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    items > 0
+                        ? trf(
+                            'Focus: {stage} · {acc}% right',
+                            'मुख्य अभ्यास: {stage} · {acc}% सही',
+                            {
+                              'stage': voiceStageLabel(stage),
+                              'acc': _pct(o['focus_accuracy']),
+                            },
+                          )
+                        : trf('Focus: {stage}', 'मुख्य अभ्यास: {stage}', {
+                            'stage': voiceStageLabel(stage),
+                          }),
+                    style: const TextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.w700,
+                      color: Ks.ink,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    mastered
+                        ? (movedUp != null && movedUp.isNotEmpty
+                              ? trf(
+                                  'Mastered — moved up to {stage}',
+                                  'पक्का हो गया — {stage} पर पहुँचे',
+                                  {'stage': voiceStageLabel(movedUp)},
+                                )
+                              : tr('Mastered', 'पक्का हो गया'))
+                        : tr('Not mastered yet', 'अभी पक्का नहीं हुआ'),
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                      color: mastered ? Ks.green : Ks.amber,
+                    ),
+                  ),
+                  if (next != null && next.isNotEmpty) ...[
+                    const SizedBox(height: 4),
+                    Text(
+                      trf('Next time: {stage}', 'अगली बार: {stage}', {
+                        'stage': voiceStageLabel(next),
+                      }),
+                      style: const TextStyle(fontSize: 15, color: Ks.ink),
+                    ),
+                  ],
+                  if (why.isNotEmpty)
+                    Text(
+                      why,
+                      style: const TextStyle(fontSize: 14, color: Ks.muted),
+                    ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _stageBar(Map<String, dynamic> s) {
     final attempted = _int(s['attempted']);
     final correct = _int(s['correct']);
@@ -461,7 +554,8 @@ class _VoiceReportScreenState extends State<VoiceReportScreen> {
               Text(
                 trf(
                   '{correct} of {attempted} right',
-                  '{attempted} में से {correct} सही', {'correct': correct, 'attempted': attempted},
+                  '{attempted} में से {correct} सही',
+                  {'correct': correct, 'attempted': attempted},
                 ),
                 style: const TextStyle(color: Ks.muted, fontSize: 14),
               ),
@@ -543,12 +637,16 @@ class _VoiceReportScreenState extends State<VoiceReportScreen> {
                       'Saathi heard: (nothing clear)',
                       'साथी ने सुना: (कुछ साफ़ नहीं)',
                     )
-                  : trf('Saathi heard: {heard}', 'साथी ने सुना: {heard}', {'heard': heard}),
+                  : trf('Saathi heard: {heard}', 'साथी ने सुना: {heard}', {
+                      'heard': heard,
+                    }),
               style: const TextStyle(color: Ks.rose, fontSize: 15),
             ),
             if (attempts > 0)
               Text(
-                trf('Tries: {attempts}', 'कोशिशें: {attempts}', {'attempts': attempts}),
+                trf('Tries: {attempts}', 'कोशिशें: {attempts}', {
+                  'attempts': attempts,
+                }),
                 style: const TextStyle(color: Ks.muted, fontSize: 14),
               ),
             if (errors.isNotEmpty)
@@ -608,7 +706,9 @@ class _TranscriptLoaderState extends State<_TranscriptLoader> {
                 ),
               ),
               TextButton.icon(
-                onPressed: () => setState(() { _f = widget.load(); }),
+                onPressed: () => setState(() {
+                  _f = widget.load();
+                }),
                 icon: const Icon(Icons.refresh_rounded),
                 label: Text(tr('Try again', 'फिर से कोशिश करें')),
               ),
@@ -676,7 +776,9 @@ class _TranscriptLoaderState extends State<_TranscriptLoader> {
           )
         : Text(text, style: const TextStyle(fontSize: 16, color: Ks.ink));
     return Align(
-      alignment: tutor ? AlignmentDirectional.centerStart : AlignmentDirectional.centerEnd,
+      alignment: tutor
+          ? AlignmentDirectional.centerStart
+          : AlignmentDirectional.centerEnd,
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 320),
         child: Container(
