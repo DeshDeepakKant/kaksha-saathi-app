@@ -10,7 +10,7 @@ from __future__ import annotations
 
 import json
 import uuid
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 
 from sqlalchemy import delete, select
 
@@ -62,8 +62,13 @@ class World:
             return cls.id
 
     def child(self, name: str = "Meena", *, account: bool = True, consent: bool = True, roll: int | None = None,
-              class_id: int | None = None, phone: str = "9000000000", pin: str = "0000") -> dict:
-        """-> {id, roll, name, class_id, headers (parent token or None), parent_id}"""
+              class_id: int | None = None, phone: str = "9000000000", pin: str = "0000",
+              level: str | None = "beginner") -> dict:
+        """-> {id, roll, name, class_id, headers (parent token or None), parent_id}
+
+        `level`: the level-check result (highest level passed) recorded for both subjects. Voice sessions
+        practise the child's level, so "beginner" means they start at `letter`, the bottom of the ladder.
+        None: no evidence at all (the plan falls back to placement)."""
         if roll is None:
             self._roll += 1
             roll = self._roll
@@ -73,6 +78,11 @@ class World:
                       consent_source="parent_form_photo" if consent else None)
             db.add(c)
             db.flush()
+            if level:
+                idx = {"beginner": -1, "letter": 0, "word": 1, "sentence": 2, "story": 3}[level]
+                for subject in ("literacy", "english"):
+                    db.add(LevelCheck(school_id=self.school_id, class_id=c.class_id, child_id=c.id, subject=subject,
+                                      level_index=idx, level_key=level, at=datetime.utcnow() - timedelta(days=3)))
             pid, headers = None, None
             if account:
                 p = ParentAccount(school_id=self.school_id, child_id=c.id, phone_hash=hash_phone(phone),
@@ -90,6 +100,7 @@ class World:
             cls_ids = select(Classroom.id).where(Classroom.school_id == sid)
             kid_ids = select(Child.id).where(Child.class_id.in_(cls_ids))
             vs_ids = select(VoiceSession.id).where(VoiceSession.school_id == sid)
+            db.execute(delete(LevelCheck).where(LevelCheck.school_id == sid))
             db.execute(delete(VoiceTurn).where(VoiceTurn.session_id.in_(vs_ids)))
             db.execute(delete(VoiceSession).where(VoiceSession.school_id == sid))
             db.execute(delete(Evidence).where(Evidence.school_id == sid))

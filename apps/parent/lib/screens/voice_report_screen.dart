@@ -498,8 +498,8 @@ class _VoiceReportScreenState extends State<VoiceReportScreen> {
                     mastered
                         ? (movedUp != null && movedUp.isNotEmpty
                               ? trf(
-                                  'Mastered — moved up to {stage}',
-                                  'पक्का हो गया — {stage} पर पहुँचे',
+                                  'Mastered: moved up to {stage}',
+                                  'पक्का हो गया: {stage} पर पहुँचे',
                                   {'stage': voiceStageLabel(movedUp)},
                                 )
                               : tr('Mastered', 'पक्का हो गया'))

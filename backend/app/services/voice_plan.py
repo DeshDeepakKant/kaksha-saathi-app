@@ -179,7 +179,7 @@ def _last_reason(vs: VoiceSession, outcome: dict) -> tuple[str, str]:
 
 def placement_reason(stage: str) -> tuple[str, str]:
     return (f"Saathi checked the level first: practise {label(stage).lower()}.",
-            f"साथी ने पहले स्तर जाँचा: अब अभ्यास — {label(stage, 'hi')}।")
+            f"साथी ने पहले स्तर जाँचा: अब अभ्यास: {label(stage, 'hi')}।")
 
 
 # ------------------------------------------------------------------ the plan

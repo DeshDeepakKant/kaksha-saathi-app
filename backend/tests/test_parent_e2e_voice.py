@@ -127,42 +127,8 @@ def test_start_greets_the_child_by_name(rc, w):
 
 
 # ------------------------------------------------------------------ the ladder, tries, stage moves
-def test_three_successes_climb_and_two_raise_the_difficulty(rc, kid):
-    h = kid["headers"]
-    s = start(rc, h)
-    assert s["item"]["difficulty"] == 1
-    t1 = turn(rc, h, s["id"], s["item"]["id"], right_answer(full_item(s["id"], s["item"]["id"])))
-    assert t1["verdict"] == "correct" and t1["item_result"] == "first_try" and t1["attempt"] == 1
-    assert t1["asr"] == "provided" and not t1["stage_changed"] and t1["stage"] == "letter"
-    t2 = turn(rc, h, s["id"], t1["next_item"]["id"], right_answer(full_item(s["id"], t1["next_item"]["id"])))
-    assert t2["next_item"]["difficulty"] >= 2  # two in a row -> harder
-    t3 = turn(rc, h, s["id"], t2["next_item"]["id"], right_answer(full_item(s["id"], t2["next_item"]["id"])))
-    assert t3["stage_changed"] and t3["stage"] == "word_build"
-    assert t3["next_item"]["kind"] == "build_word" and t3["next_item"]["stage"] == "word_build"
-    assert_item_public(t3["next_item"])
-    assert len(t3["transcript_append"]) == 2 and t3["transcript_append"][0]["role"] == "child"
 
 
-def test_full_ladder_reaches_reading_and_every_kind_hides_answers(rc, w):
-    for lang in ("hi", "en"):
-        c = w.child(f"Ladder{lang}")
-        h = c["headers"]
-        s = start(rc, h, lang)
-        item, stages, kinds = s["item"], [s["stage"]], set()
-        for _ in range(45):
-            f = full_item(s["id"], item["id"])
-            kinds.add(f["kind"])
-            t = turn(rc, h, s["id"], item["id"], right_answer(f))
-            assert_turn_shape(t)
-            assert t["verdict"] == "correct", (lang, f["kind"], right_answer(f), t["heard"], t["errors"])
-            if not stages or t["stage"] != stages[-1]:
-                stages.append(t["stage"])
-            item = t["next_item"]
-        assert stages == list(STAGES), (lang, stages)
-        # say_sound has its own test. English letter items are drawn per child as letter names (read_letter)
-        # or letter sounds (say_sound), and three right answers leave the stage, so either may not show up.
-        needed = set(KINDS) - {"say_sound"} - ({"read_letter"} if lang == "en" else set())
-        assert kinds >= needed, (lang, needed - kinds)
 
 
 def test_five_tries_then_move_on_with_escalating_hints_and_easier_item(rc, kid):
@@ -197,10 +163,10 @@ def test_five_tries_then_move_on_with_escalating_hints_and_easier_item(rc, kid):
 
 def test_answers_not_given_away_by_the_first_three_hints(rc, w):
     """build_word / answer_question hints 1-3 must not say the answer (contract: only 'say it together' does)."""
-    c = w.child("Hinty")
+    c = w.child("Hinty", level="letter")  # word_build in focus, after a letter warm-up
     h = c["headers"]
     s = start(rc, h)
-    t = climb(rc, h, s["id"], s["item"], 3)  # word_build now
+    t = to_stage(rc, h, s["id"], s["item"], "word_build")
     checked = 0
     for _ in range(6):
         item = t["next_item"]
@@ -242,26 +208,6 @@ def test_third_try_success_is_partial_evidence_not_a_streak(rc, kid):
     assert home_voice_evidence(kid["id"]) == [(f["checkpoint_id"], "partial")]
 
 
-def test_two_failed_items_step_down_never_below_letter(rc, w):
-    c = w.child("Stepper")
-    h = c["headers"]
-    s = start(rc, h)
-    t = climb(rc, h, s["id"], s["item"], 3)
-    assert t["stage"] == "word_build"
-
-    def fail(t):
-        for _ in range(MAX_ATTEMPTS):
-            t = turn(rc, h, s["id"], t["next_item"]["id"], WRONG)
-        return t
-    t = fail(t)
-    assert t["stage"] == "word_build" and not t["stage_changed"]
-    t = fail(t)
-    assert t["stage"] == "letter" and t["stage_changed"]
-    t = fail(t)
-    t = fail(t)
-    assert t["stage"] == "letter" and not t["stage_changed"]  # never below letter
-    r = end(rc, h, s["id"])
-    assert r["highest_stage"] == "word_build" and r["failed"] == 4
 
 
 def test_silent_turns_use_no_try_and_third_silence_checks_in(rc, kid):
@@ -369,10 +315,17 @@ def play(rc, h, sid, item, sc):
     return t, "skipped", None
 
 
+# Sessions practise the child's level and no longer climb, so a kind is reached with a child whose
+# level check puts its stage in focus (or its warm-up, one stage below): highest level passed.
+LEVEL_FOR_KIND = {"read_letter": "beginner", "say_sound": "beginner", "build_word": "letter",
+                  "read_word": "word", "make_sentence": "word", "read_sentence": "sentence",
+                  "read_paragraph": "story", "answer_question": "story"}
+
+
 def reach_kind(rc, w, lang, kind):
     """A fresh child + session driven with right answers until the current item is `kind`."""
     for _ in range(8):
-        c = w.child("Mx")
+        c = w.child("Mx", level=LEVEL_FOR_KIND[kind])
         h = c["headers"]
         s = start(rc, h, lang)
         item, t, tally, evid = s["item"], None, Counter(), []
@@ -677,7 +630,7 @@ ORDINARY_HI = ["पता नहीं", "बिल्ली डर गई", "�
 
 
 def test_distress_and_personal_phrases_redirect_on_open_items(rc, w):
-    c = w.child("Safe")
+    c = w.child("Safe", level="word")  # sentence_build in focus, after a word_read warm-up
     h = c["headers"]
     s = start(rc, h)
     t = to_stage(rc, h, s["id"], s["item"], "sentence_build")
@@ -712,7 +665,7 @@ def test_distress_and_personal_phrases_redirect_on_open_items(rc, w):
 
 
 def test_english_distress_redirect(rc, w):
-    c = w.child("SafeEn")
+    c = w.child("SafeEn", level="word")  # sentence_build in focus, after a word_read warm-up
     h = c["headers"]
     s = start(rc, h, "en")
     t = to_stage(rc, h, s["id"], s["item"], "sentence_build")
@@ -723,7 +676,7 @@ def test_english_distress_redirect(rc, w):
 
 
 def test_no_false_positive_for_ordinary_sentences_on_open_items(rc, w):
-    c = w.child("Calm")
+    c = w.child("Calm", level="word")  # sentence_build in focus, after a word_read warm-up
     h = c["headers"]
     s = start(rc, h)
     t = to_stage(rc, h, s["id"], s["item"], "sentence_build")
@@ -739,7 +692,7 @@ def test_no_false_positive_for_ordinary_sentences_on_open_items(rc, w):
 
 @pytest.mark.parametrize("phrase", ["लोग ढोल पीटते हैं", "बच्चे गेंद को मारते हैं", "the dog is scared of the cat"])
 def test_no_false_positive_for_ordinary_phrases_that_contain_a_distress_word(rc, w, phrase):
-    c = w.child("CalmToo")
+    c = w.child("CalmToo", level="word")  # sentence_build in focus, after a word_read warm-up
     h = c["headers"]
     lang = "en" if phrase.startswith("the ") else "hi"
     s = start(rc, h, lang)
@@ -790,7 +743,7 @@ def test_english_topic_added_by_the_teacher_reaches_english_sessions_only(rc, w)
     r = rc.post(f"/v1/classes/{w.class_id}/syllabus/topics", headers=th,
                 json={"subject": "english", "chapter": "Letters", "title": "Letter sounds a-z"})
     assert r.status_code == 200, r.text
-    c = w.child("EnTopic")
+    c = w.child("EnTopic", level="letter")  # word_build in focus, after a letter warm-up
     en = start(rc, c["headers"], "en")
     hi = start(rc, c["headers"], "hi")
     with SessionLocal() as db:

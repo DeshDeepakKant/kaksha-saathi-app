@@ -42,8 +42,8 @@ void main() {
         },
       ),
     );
-    expect(find.text('Focus: Making words · 86% right'), findsOneWidget);
-    expect(find.text('Mastered — moved up to Reading words'), findsOneWidget);
+    expect(find.text('Focus: Making words · 12 of 14 right'), findsOneWidget);
+    expect(find.text('Mastered: moved up to Reading words'), findsOneWidget);
     expect(find.text('Next time: Reading words'), findsOneWidget);
     expect(find.text('Ready for reading words.'), findsOneWidget);
   });
