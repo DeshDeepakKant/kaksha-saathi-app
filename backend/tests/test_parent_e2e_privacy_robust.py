@@ -4,6 +4,7 @@ Sandbox school only. Every case that could crash the server is checked through a
 unhandled exception into a 500 response, and a 500 is always a failure.
 """
 import json
+import re
 import threading
 import uuid
 from datetime import datetime, timedelta, timezone
@@ -169,8 +170,11 @@ def test_first_wrong_try_does_not_reveal_the_answer_in_words_or_errors(rc, w, ki
     t = turn(rc, h, s["id"], item["id"], WRONG)
     assert t["attempt"] == 2
     shown = json.dumps([t["words"], t["errors"], [l.get("words") for l in t["transcript_append"]]], ensure_ascii=False)
-    leaked = [a for a in answers if a in shown]
-    assert not leaked, f"{kind}: answer {leaked} is in the first wrong-try response"
+    # A one- or two-character answer (an English letter such as "a") is looked for as a whole word: as a
+    # substring it matches inside ordinary words ("heard", "again") and says nothing about leaking.
+    words = set(re.findall(r"\w+", shown, flags=re.UNICODE))
+    leaked = [a for a in answers if (a in words if len(a) <= 2 else a in shown)]
+    assert not leaked, f"{kind}: answer {leaked} is in the first wrong-try response: {shown[:200]}"
 
 
 # ------------------------------------------------------------------ 7. robustness

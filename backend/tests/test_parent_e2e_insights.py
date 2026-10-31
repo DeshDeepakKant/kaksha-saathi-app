@@ -358,10 +358,17 @@ def test_unknown_subject_is_422(rc, parent_headers):
     assert rc.get("/v1/parent/journey?subject=", headers=parent_headers).status_code in (200, 422)
 
 
-@pytest.mark.parametrize("subject", ["nonsense", "maths", "NUMERACY", "drop table", "🙂"])
+@pytest.mark.parametrize("subject", ["nonsense", "drop table", "🙂"])
 def test_unknown_subject_param_is_rejected(rc, parent_headers, subject):
     r = rc.get("/v1/parent/journey", params={"subject": subject}, headers=parent_headers)
     assert r.status_code == 422, (r.status_code, r.text[:120])
+
+
+@pytest.mark.parametrize("subject", ["maths", "NUMERACY", "hindi", "english", " English "])
+def test_subject_aliases_and_case_are_accepted(rc, parent_headers, subject):
+    """The same names and aliases the teacher routes take (services/subjects.py)."""
+    r = rc.get("/v1/parent/journey", params={"subject": subject}, headers=parent_headers)
+    assert r.status_code == 200, (r.status_code, r.text[:120])
 
 
 def test_journey_never_500_for_odd_subjects(rc, parent_headers):

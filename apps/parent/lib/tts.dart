@@ -20,7 +20,19 @@ class Speak {
   Speak._();
 
   static final _tts = FlutterTts();
-  static final _player = AudioPlayer();
+  // Created only when server audio is first played; a phone-voice line never needs it.
+  static AudioPlayer? _playerInstance;
+  static AudioPlayer get _player {
+    var p = _playerInstance;
+    if (p == null) {
+      p = _playerInstance = AudioPlayer();
+      try {
+        p.onPlayerComplete.listen((_) => _finish());
+      } catch (_) {}
+    }
+    return p;
+  }
+
   static bool _ready = false;
   static String? _voice;
   static Completer<void>? _current;
@@ -43,9 +55,6 @@ class Speak {
       _tts.setCompletionHandler(() => _started ? _finish() : null);
       _tts.setCancelHandler(() => _started ? _finish() : null);
     } catch (_) {}
-    try {
-      _player.onPlayerComplete.listen((_) => _finish());
-    } catch (_) {}
   }
 
   static void _finish() {
@@ -55,6 +64,19 @@ class Speak {
 
   /// Phone-voice (BCP-47) code for one of our language codes: `en` → en-IN, `or` → or-IN,
   /// `mr` → mr-IN, …; empty means Hindi.
+  /// Tests only: a fresh player and cleared state, so one test's timers and cache never leak into the next.
+  @visibleForTesting
+  static void resetForTest() {
+    _ready = false;
+    _voice = null;
+    _current = null;
+    _started = false;
+    _cache.clear();
+    _skipUntil.clear();
+    _serverMissing = false;
+    _playerInstance = null;
+  }
+
   static String bcp47(String lang) => lang.isEmpty ? 'hi-IN' : '$lang-IN';
   static String _code(String lang) => bcp47(lang);
 
@@ -180,7 +202,7 @@ class Speak {
       await _tts.stop();
     } catch (_) {}
     try {
-      await _player.stop();
+      await _playerInstance?.stop();
     } catch (_) {}
   }
 }

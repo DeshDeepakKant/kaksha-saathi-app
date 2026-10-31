@@ -113,7 +113,9 @@ def test_start_defaults_and_bad_lang(rc, kid):
     r = rc.post("/v1/parent/voice/sessions", headers=kid["headers"])  # body optional -> hindi
     assert r.status_code == 200 and r.json()["lang"] == "hi"
     assert rc.post("/v1/parent/voice/sessions", headers=kid["headers"], json={"lang": "fr"}).status_code == 422
-    assert rc.post("/v1/parent/voice/sessions", headers=kid["headers"], json={"lang": None}).status_code == 422
+    # no language chosen: the parent's content language (Hindi until changed in Settings)
+    none = rc.post("/v1/parent/voice/sessions", headers=kid["headers"], json={"lang": None})
+    assert none.status_code == 200 and none.json()["lang"] == "hi"
     assert rc.post("/v1/parent/voice/sessions", headers=kid["headers"], json={"lang": "EN"}).status_code == 422
 
 
@@ -157,7 +159,10 @@ def test_full_ladder_reaches_reading_and_every_kind_hides_answers(rc, w):
                 stages.append(t["stage"])
             item = t["next_item"]
         assert stages == list(STAGES), (lang, stages)
-        assert kinds >= set(KINDS) - {"say_sound"}, (lang, set(KINDS) - kinds)  # say_sound: see its own test
+        # say_sound has its own test. English letter items are drawn per child as letter names (read_letter)
+        # or letter sounds (say_sound), and three right answers leave the stage, so either may not show up.
+        needed = set(KINDS) - {"say_sound"} - ({"read_letter"} if lang == "en" else set())
+        assert kinds >= needed, (lang, needed - kinds)
 
 
 def test_five_tries_then_move_on_with_escalating_hints_and_easier_item(rc, kid):
@@ -386,12 +391,19 @@ def reach_kind(rc, w, lang, kind):
             if ev and _evidence_ok(lang, f):
                 evid.append(ev)
             item = t["next_item"]
+    if lang == "en" and kind == "read_letter":
+        pytest.skip("English letter items are drawn per child (names or sounds); none was a letter name")
     raise AssertionError(f"never met a {kind} item ({lang})")
 
 
 def _evidence_ok(lang, f):
-    # English answers never write to the Hindi map; Hindi items need a known checkpoint
-    return lang == "hi" and f["checkpoint_id"] in get_content().checkpoints
+    # An English session writes evidence only for English topics, a home-language one only for the others,
+    # and either needs a checkpoint the content knows.
+    cps = get_content().checkpoints
+    cp = f["checkpoint_id"]
+    if cp not in cps:
+        return False
+    return (cps[cp].subject == "english") == (lang == "en")
 
 
 @pytest.mark.parametrize("kind", MATRIX_KINDS)

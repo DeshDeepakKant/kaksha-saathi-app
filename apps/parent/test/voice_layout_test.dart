@@ -20,6 +20,7 @@ import 'package:http/testing.dart';
 import 'package:kaksha_parent/l10n.dart';
 import 'package:kaksha_parent/screens/voice_session_screen.dart';
 import 'package:kaksha_parent/theme.dart';
+import 'package:kaksha_parent/tts.dart';
 import 'package:kaksha_parent/voice_recorder.dart';
 import 'package:kaksha_parent/widgets/voice_item_view.dart';
 import 'package:kaksha_parent/widgets/voice_mic.dart';
@@ -174,11 +175,36 @@ class _Mic implements AudioRecorder {
 }
 
 void _installTts() {
+  // Speak also owns an audioplayers player (server voice); an unmocked channel call never completes
+  // in a widget test, so answer every call the way a plugin with nothing to play would.
+  for (final ch in const [
+    'xyz.luan/audioplayers',
+    'xyz.luan/audioplayers.global',
+  ]) {
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(MethodChannel(ch), (call) async => null);
+  }
+  Speak.resetForTest();
   TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
       .setMockMethodCallHandler(const MethodChannel('flutter_tts'), (
         call,
       ) async {
         if (call.method == 'isLanguageAvailable') return true;
+        if (call.method == 'speak') {
+          // A real engine reports start, then completion; Speak ignores completion before start.
+          const codec = StandardMethodCodec();
+          final messenger =
+              TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
+          for (final event in const ['speak.onStart', 'speak.onComplete']) {
+            scheduleMicrotask(
+              () => messenger.handlePlatformMessage(
+                'flutter_tts',
+                codec.encodeMethodCall(MethodCall(event, null)),
+                (_) {},
+              ),
+            );
+          }
+        }
         return 1;
       });
 }
@@ -250,6 +276,8 @@ class _Rig {
       return js(r);
     }
     if (path.endsWith('/end')) return js({});
+    // No server voice: Saathi speaks with the (faked) phone voice, as on a device with no Gnani/Sarvam key.
+    if (path.endsWith('/speech/tts')) return http.Response('', 204);
     return js(_session(item));
   }
 

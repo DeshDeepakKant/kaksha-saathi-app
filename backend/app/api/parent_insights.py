@@ -12,7 +12,7 @@ from app.api.deps import current_parent
 from app.db import get_db
 from app.models.tables import ParentAccount
 from app.services import parent_insights as insights
-from app.services.subjects import ALIASES
+from app.services.subjects import resolve_subject
 
 router = APIRouter(prefix="/v1")
 
@@ -25,8 +25,8 @@ def school_week(parent: ParentAccount = Depends(current_parent), db: Session = D
 @router.get("/parent/journey")
 def journey(subject: str = Query("numeracy", max_length=16), parent: ParentAccount = Depends(current_parent),
             db: Session = Depends(get_db)):
-    key = subject.strip().lower()
-    return insights.journey(db, parent.child_id, ALIASES.get(key, key))  # "english", "hindi", "maths" all work
+    # "english", "hindi", "maths" and a school's own subjects all work; anything else is a 422
+    return insights.journey(db, parent.child_id, resolve_subject(db, parent.school_id, subject))
 
 
 @router.get("/parent/tips")
