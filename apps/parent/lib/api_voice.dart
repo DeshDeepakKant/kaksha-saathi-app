@@ -57,6 +57,16 @@ extension VoiceApi on Api {
   Future<Map<String, dynamic>> voiceSession(Object id) async =>
       _map(await get('/v1/parent/voice/sessions/$id'));
 
+  /// The next session's plan for the child in [lang] (docs/voice_focus_contract.md §1): focus
+  /// stage, reason, placement, teacher override. Null when the server sent no focus stage.
+  Future<Map<String, dynamic>?> voicePlan(String lang) async {
+    final r = await get(
+      '/v1/parent/voice/plan?lang=${Uri.encodeQueryComponent(lang)}',
+    );
+    if (r is! Map || r['focus_stage'] is! String) return null;
+    return r.cast<String, dynamic>();
+  }
+
   static Map<String, dynamic> _map(dynamic r) =>
       (r as Map).cast<String, dynamic>();
 }
@@ -115,4 +125,13 @@ String voiceStageLabel(String? s) => switch (s) {
   'sentence_build' => tr('Sentences', 'वाक्य'),
   'reading' => tr('Reading', 'पढ़ना'),
   _ => s ?? '',
+};
+
+/// The session's phase (`placement` / `warmup` / `focus` / `stretch`) as a short label.
+String voicePhaseLabel(String? p) => switch (p) {
+  'placement' => tr('Finding the level', 'स्तर पता कर रहे हैं'),
+  'warmup' => tr('Warm-up', 'शुरुआती अभ्यास'),
+  'focus' => tr('Practice', 'अभ्यास'),
+  'stretch' => tr('Challenge', 'चुनौती'),
+  _ => '',
 };

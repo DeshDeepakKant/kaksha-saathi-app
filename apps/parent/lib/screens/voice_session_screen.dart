@@ -63,6 +63,12 @@ class _VoiceSessionScreenState extends State<VoiceSessionScreen> {
   String _tutorText = '';
   String _tutorLang = 'hi';
   String? _stage;
+  // The child's level for this session and the step within it (docs/voice_focus_contract.md
+  // §2); null on an older server.
+  String? _focusStage;
+  String? _step;
+  // "Today's practice" per language, fetched before starting; null when there is none.
+  final _plans = <String, Future<Map<String, dynamic>?>>{};
   double _elapsedS = 0;
   DateTime _since = DateTime.now();
   int _targetMin = 30;
@@ -88,7 +94,18 @@ class _VoiceSessionScreenState extends State<VoiceSessionScreen> {
   void initState() {
     super.initState();
     // Refresh the content-language list (the last copy shows at once).
-    Api.i.languages().then((_) => _set(() {})).catchError((_) {});
+    Api.i.languages().then((_) => _set(_loadPlans)).catchError((_) {});
+    _loadPlans();
+  }
+
+  /// Fetches the plan for each session language not asked yet. A failed call hides the card.
+  void _loadPlans() {
+    for (final code in _sessionLangs) {
+      _plans.putIfAbsent(
+        code,
+        () => Api.i.voicePlan(code).catchError((Object _) => null),
+      );
+    }
   }
 
   /// Languages Saathi can teach in, the learning language first. Hindi and English when the
@@ -208,6 +225,8 @@ class _VoiceSessionScreenState extends State<VoiceSessionScreen> {
     _tutorText = (tutor?['text'] ?? '').toString();
     _tutorLang = (tutor?['lang'] as String?) ?? _lang;
     _stage = (s['stage'] as String?) ?? _stage;
+    _focusStage = (s['focus_stage'] as String?) ?? _focusStage;
+    _step = (s['phase'] as String?) ?? _step;
     _item = _map(s['item']);
     _shown = _item;
     _shownWords = const [];
@@ -366,6 +385,16 @@ class _VoiceSessionScreenState extends State<VoiceSessionScreen> {
         .toList();
     final prevStage = voiceStages.indexOf(_stage ?? '');
     final stage = (r['stage'] as String?) ?? _stage;
+    final prevFocus = _focusStage;
+    final focus = (r['focus_stage'] as String?) ?? _focusStage;
+    final changed = r['stage_changed'] == true;
+    // A new level is a rise of the focus stage (mastery), not a warm-up, challenge or support
+    // item, nor the level found by placement. Older servers send no focus: any stage rise.
+    final levelUp = focus != null && prevFocus != null
+        ? changed &&
+              _step != 'placement' &&
+              voiceStages.indexOf(focus) > voiceStages.indexOf(prevFocus)
+        : changed && voiceStages.indexOf(stage ?? '') > prevStage;
     final left = (r['attempts_left'] as num?)?.toInt();
     final attempt = (r['attempt'] as num?)?.toInt();
     final same = next != null && prevId != null && next['id'] == prevId;
@@ -398,6 +427,8 @@ class _VoiceSessionScreenState extends State<VoiceSessionScreen> {
               _maxTries,
             );
       _stage = stage;
+      _focusStage = focus;
+      _step = (r['phase'] as String?) ?? _step;
       final e = (r['elapsed_s'] as num?)?.toDouble();
       if (e != null) {
         _elapsedS = e;
@@ -407,10 +438,8 @@ class _VoiceSessionScreenState extends State<VoiceSessionScreen> {
       if (r['safety_flag'] != null) _safetyHold = true;
       _cheer = _cheerFor(
         verdict,
-        stageUp:
-            r['stage_changed'] == true &&
-            voiceStages.indexOf(stage ?? '') > prevStage,
-        stage: stage,
+        stageUp: levelUp,
+        stage: _focusStage ?? stage,
       );
       _cheerKey++;
     });
@@ -427,7 +456,8 @@ class _VoiceSessionScreenState extends State<VoiceSessionScreen> {
         emoji: '⭐',
         text: trf(
           'New level: {voiceStageLabel}!',
-          'नया स्तर: {voiceStageLabel}!', {'voiceStageLabel': voiceStageLabel(stage)},
+          'नया स्तर: {voiceStageLabel}!',
+          {'voiceStageLabel': voiceStageLabel(stage)},
         ),
         fg: Ks.green,
         bg: Ks.greenSoft,
@@ -705,6 +735,17 @@ class _VoiceSessionScreenState extends State<VoiceSessionScreen> {
       'en' => tr('English reading', 'अंग्रेज़ी पढ़ना'),
       _ => _englishName(code) ?? code,
     };
+    // Other languages: their own focus stage under the name, once the plan is in.
+    Widget subText(String code, String sub) => FutureBuilder(
+      future: code == langs.first ? null : _plans[code],
+      builder: (_, snap) {
+        final focus = snap.data?['focus_stage'] as String?;
+        return Text(
+          focus == null ? sub : '$sub · ${voiceStageLabel(focus)}',
+          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
+        );
+      },
+    );
     Widget langButton(String code, String label, String sub) => Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: FilledButton(
@@ -720,10 +761,7 @@ class _VoiceSessionScreenState extends State<VoiceSessionScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(label, style: const TextStyle(fontSize: 24)),
-            Text(
-              sub,
-              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
-            ),
+            subText(code, sub),
           ],
         ),
       ),
@@ -747,6 +785,20 @@ class _VoiceSessionScreenState extends State<VoiceSessionScreen> {
           children: [
             const Center(child: Text('🦉', style: TextStyle(fontSize: 72))),
             const SizedBox(height: 8),
+            FutureBuilder(
+              future: _plans[langs.first],
+              builder: (_, snap) {
+                final plan = snap.data;
+                if (plan == null) return const SizedBox.shrink();
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 16),
+                  child: _planCard(
+                    plan,
+                    langs.length > 1 ? _nativeName(langs.first) : null,
+                  ),
+                );
+              },
+            ),
             Text(
               tr(
                 'Which language should Saathi speak?',
@@ -786,6 +838,107 @@ class _VoiceSessionScreenState extends State<VoiceSessionScreen> {
                 'रिकॉर्डिंग सिर्फ़ जवाब जाँचने के लिए है, फ़ोन पर सेव नहीं होती',
               ),
             ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// "Today's practice": the level this session works on and why (contract §4).
+  Widget _planCard(Map<String, dynamic> plan, String? langName) {
+    final reason = pick(plan, 'reason').trim();
+    final byTeacher = plan['source'] == 'teacher_override';
+    final note = byTeacher
+        ? ((_map(plan['override'])?['note'] ?? '').toString().trim())
+        : '';
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                const Icon(
+                  Icons.center_focus_strong_rounded,
+                  color: Ks.accent,
+                  size: 22,
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    langName == null
+                        ? tr('Today\'s practice', 'आज का अभ्यास')
+                        : '${tr('Today\'s practice', 'आज का अभ्यास')} · $langName',
+                    style: const TextStyle(color: Ks.muted, fontSize: 14),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 6),
+            Text(
+              voiceStageLabel(plan['focus_stage'] as String?),
+              style: const TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.w700,
+                color: Ks.ink,
+              ),
+            ),
+            if (reason.isNotEmpty) ...[
+              const SizedBox(height: 4),
+              Text(reason, style: const TextStyle(fontSize: 15, height: 1.4)),
+            ],
+            if (plan['placement'] == true) ...[
+              const SizedBox(height: 8),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Icon(Icons.search_rounded, color: Ks.accent, size: 20),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      tr(
+                        'Saathi will first find the right level (about 2 minutes).',
+                        'साथी पहले सही स्तर पता करेगा (लगभग 2 मिनट)।',
+                      ),
+                      style: const TextStyle(fontSize: 15),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+            if (byTeacher) ...[
+              const SizedBox(height: 10),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 8,
+                ),
+                decoration: BoxDecoration(
+                  color: Ks.amberSoft,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Icon(Icons.school_rounded, color: Ks.amber, size: 20),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        note.isEmpty
+                            ? tr('Set by the teacher', 'टीचर ने तय किया')
+                            : '${tr('Set by the teacher', 'टीचर ने तय किया')}: $note',
+                        style: const TextStyle(
+                          fontSize: 15,
+                          color: Ks.ink,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ],
         ),
       ),
@@ -865,7 +1018,11 @@ class _VoiceSessionScreenState extends State<VoiceSessionScreen> {
                 running: !_paused,
               ),
               const SizedBox(height: 8),
-              VoiceLadder(stage: _stage),
+              VoiceLadder(
+                stage: _stage,
+                // While placement probes, the focus is only provisional.
+                focus: _step == 'placement' ? null : _focusStage,
+              ),
             ],
           ),
         ),
@@ -937,6 +1094,8 @@ class _VoiceSessionScreenState extends State<VoiceSessionScreen> {
             ),
           ),
         ),
+        if (voicePhaseLabel(_step).isNotEmpty)
+          Positioned(top: 8, left: 4, child: _stepChip(_step!)),
         if (_try > 1 && _item != null && _shown?['id'] == _item?['id'])
           Positioned(
             top: 8,
@@ -948,7 +1107,10 @@ class _VoiceSessionScreenState extends State<VoiceSessionScreen> {
                 borderRadius: BorderRadius.circular(99),
               ),
               child: Text(
-                trf('Try {try} of {maxTries}', 'कोशिश {try} / {maxTries}', {'try': _try, 'maxTries': _maxTries}),
+                trf('Try {try} of {maxTries}', 'कोशिश {try} / {maxTries}', {
+                  'try': _try,
+                  'maxTries': _maxTries,
+                }),
                 style: const TextStyle(
                   color: Ks.amber,
                   fontWeight: FontWeight.w700,
@@ -992,6 +1154,38 @@ class _VoiceSessionScreenState extends State<VoiceSessionScreen> {
             ),
           ),
       ],
+    );
+  }
+
+  /// Small chip for the session step: finding the level, warm-up, practice or challenge.
+  Widget _stepChip(String step) {
+    final (IconData icon, Color fg, Color bg) = switch (step) {
+      'placement' => (Icons.search_rounded, Ks.accent, Ks.accentSoft),
+      'warmup' => (Icons.wb_sunny_outlined, Ks.green, Ks.greenSoft),
+      'stretch' => (Icons.trending_up_rounded, Ks.amber, Ks.amberSoft),
+      _ => (Icons.center_focus_strong_rounded, Ks.accent, Ks.accentSoft),
+    };
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      decoration: BoxDecoration(
+        color: bg,
+        borderRadius: BorderRadius.circular(99),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 16, color: fg),
+          const SizedBox(width: 5),
+          Text(
+            voicePhaseLabel(step),
+            style: TextStyle(
+              color: fg,
+              fontSize: 13,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -1132,10 +1326,9 @@ class _VoiceSessionScreenState extends State<VoiceSessionScreen> {
           const SizedBox(width: 8),
           Expanded(
             child: Text(
-              trf(
-                'Conversation ({linesCount})',
-                'बातचीत ({linesCount})', {'linesCount': _lines.length},
-              ),
+              trf('Conversation ({linesCount})', 'बातचीत ({linesCount})', {
+                'linesCount': _lines.length,
+              }),
               style: const TextStyle(
                 fontWeight: FontWeight.w600,
                 color: Ks.accent,

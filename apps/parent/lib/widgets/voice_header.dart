@@ -61,10 +61,10 @@ class _VoiceClockState extends State<VoiceClock> {
         : widget.elapsedS;
     final left = target - e;
     return Semantics(
-      label: trf(
-        '{mmss} done, {mmss2} left',
-        '{mmss} हुए, {mmss2} बाकी', {'mmss': _mmss(e), 'mmss2': _mmss(left)},
-      ),
+      label: trf('{mmss} done, {mmss2} left', '{mmss} हुए, {mmss2} बाकी', {
+        'mmss': _mmss(e),
+        'mmss2': _mmss(left),
+      }),
       child: Row(
         children: [
           const Icon(Icons.timer_outlined, size: 20, color: Ks.accent),
@@ -106,14 +106,20 @@ class _VoiceClockState extends State<VoiceClock> {
   }
 }
 
-/// The reading ladder with the current stage highlighted.
+/// The reading ladder. The child's focus stage is highlighted; the current item's stage, when it
+/// is a warm-up or challenge step away from the focus, is outlined.
 class VoiceLadder extends StatelessWidget {
-  const VoiceLadder({super.key, required this.stage});
+  const VoiceLadder({super.key, required this.stage, this.focus});
   final String? stage;
+
+  /// The session's focus stage; null on an older server (then [stage] is highlighted).
+  final String? focus;
 
   @override
   Widget build(BuildContext context) {
-    final at = voiceStages.indexOf(stage ?? '');
+    final cur = voiceStages.indexOf(stage ?? '');
+    final f = voiceStages.indexOf(focus ?? '');
+    final at = f >= 0 ? f : cur;
     return Row(
       children: [
         for (var i = 0; i < voiceStages.length; i++)
@@ -129,8 +135,13 @@ class VoiceLadder extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: i < at
                           ? Ks.green
-                          : (i == at ? Ks.accent : Ks.line),
+                          : (i == at
+                                ? Ks.accent
+                                : (i == cur ? Ks.amberSoft : Ks.line)),
                       borderRadius: BorderRadius.circular(99),
+                      border: i == cur && i != at
+                          ? Border.all(color: Ks.amber, width: 1.5)
+                          : null,
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -141,8 +152,12 @@ class VoiceLadder extends StatelessWidget {
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 11.5,
-                      color: i == at ? Ks.accent : Ks.muted,
-                      fontWeight: i == at ? FontWeight.w700 : FontWeight.w400,
+                      color: i == at
+                          ? Ks.accent
+                          : (i == cur ? Ks.amber : Ks.muted),
+                      fontWeight: i == at || i == cur
+                          ? FontWeight.w700
+                          : FontWeight.w400,
                     ),
                   ),
                 ],
