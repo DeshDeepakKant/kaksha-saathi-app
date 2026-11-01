@@ -72,17 +72,18 @@ AI for Foundational Learning Hackathon · Team **anya** · build-stage submissio
 
 ## How the loop works
 
-```
-syllabus (textbook photos or book name → draft map → teacher confirms)
-   → evidence: tap list | voice note | notebook photo | reading check | level check
-   → the teacher confirms what the AI understood (nothing is saved before that)
-   → MASTERY ENGINE (code): source-weighted, decayed, prerequisite-aware → status per lesson
-   → GROUPING (code): children who share the same foundational gap
-   → TODAY'S PLAN (Claude picks only from the reviewed activity library; code validates; template fallback)
-   → follow-ups: re-check, not moving, missed, not checked, "did it work?"
-   → HOME: the parent app shows the class's week and a catch-up; Saathi runs a voice session at the
-     level code chose from the teacher's evidence (or the teacher's home focus)
-   → the session report goes back into the same map
+```mermaid
+flowchart TD
+    A["1. Syllabus<br/>textbook photos or a book name<br/>become a draft map"] --> B["2. Evidence<br/>tap list, voice note, notebook photo,<br/>reading check, level check"]
+    B --> C{"3. Teacher confirms<br/>what the AI understood"}
+    C -- "edit or reject" --> B
+    C -- "confirm" --> D["4. Mastery engine<br/>code: status per lesson"]
+    D --> E["5. Grouping<br/>code: children who share a gap"]
+    E --> F["6. Today's plan<br/>Claude picks from the reviewed library,<br/>code validates, template fallback"]
+    F --> G["7. Follow-ups<br/>re-check, not moving, missed,<br/>did it work?"]
+    G --> H["8. Home practice<br/>parent app and Saathi voice session<br/>at the level code chose"]
+    H --> I["9. Session report<br/>back into the same map"]
+    I --> D
 ```
 
 **Design rule: AI proposes, code decides, the teacher confirms.** AI reads messy input (speech,
@@ -113,6 +114,106 @@ network.
 - **Saathi voice sessions** (up to 30 minutes) in 11 spoken languages: a warm-up, practice at the
   child's level, hints and retries. Every word is scored by code. The report shows the exact sounds
   to practise and the next focus, and the teacher sees it on the child's profile.
+
+---
+
+## System design
+
+```mermaid
+flowchart LR
+    T["Teacher app<br/>Flutter, Android and web<br/>offline cache and outbox"]
+    P["Parent app<br/>Flutter, Android and web<br/>Saathi voice sessions"]
+    subgraph Render["Render: one Docker web service"]
+        API["FastAPI under /v1<br/>JWT login, every route<br/>scoped to one school"]
+        ENG["Deterministic engine<br/>mastery, grouping, follow-ups,<br/>scoring, reviewed content"]
+        GW["AI gateway<br/>JSON schema, validator,<br/>one retry, daily budget, call log"]
+        SP["Speech router<br/>Gnani first, Sarvam second"]
+    end
+    DB[("Neon Postgres")]
+    CL["Anthropic Claude<br/>Haiku 4.5, Sonnet 5.5, Sonnet 5"]
+    GN["Gnani<br/>prisma-v3.0, timbre-v3.0"]
+    SV["Sarvam<br/>saaras:v3, bulbul:v3"]
+    T --> API
+    P --> API
+    API --> ENG
+    API --> GW
+    API --> SP
+    ENG --> DB
+    GW --> CL
+    SP --> GN
+    SP --> SV
+```
+
+Claude reads messy input and writes language. Code decides status, groups, counts, arithmetic and
+scores. With no API keys the same routes fall back to keyword rules, the template planner and the
+reviewed item bank.
+
+## Workflows
+
+### A teacher's day: voice note to plan
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Teacher
+    participant App as Teacher app
+    participant API as FastAPI
+    participant Speech as Speech router
+    participant AI as Claude via AI gateway
+    participant Eng as Mastery engine
+    participant DB as Postgres
+    Teacher->>App: speaks a note after class
+    App->>API: POST /classes/ID/captures/voice
+    API->>Speech: transcribe the audio
+    Speech-->>API: transcript
+    API->>AI: read the note into per child results
+    AI-->>API: proposals with the quoted words
+    API-->>App: proposal chips, nothing saved yet
+    Teacher->>App: edits or confirms
+    App->>API: POST /captures/ID/confirm
+    API->>Eng: add evidence, recompute status
+    Eng->>DB: save evidence and status
+    App->>API: POST /classes/ID/plans
+    API->>Eng: group children who share a gap
+    API->>AI: pick one reviewed activity per group
+    AI-->>API: plan
+    API->>API: validate against the library, else template plan
+    API-->>App: today's plan
+    Note over App,API: With no network, taps wait in an outbox and sync later
+```
+
+### A child's evening: Saathi voice session
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Parent
+    actor Child
+    participant App as Parent app
+    participant API as FastAPI
+    participant Eng as Engine
+    participant Speech as Speech router
+    participant AI as Claude via AI gateway
+    Parent->>App: signs in, picks a language, starts a session
+    App->>API: POST /parent/voice/sessions
+    API->>Eng: choose the level from the teacher's evidence or home focus
+    API-->>App: first item and Saathi's line
+    App->>API: POST /speech/tts
+    API->>Speech: text to speech
+    Speech-->>App: audio, Saathi speaks
+    loop until time is up or the parent stops
+        Child->>App: answers aloud
+        App->>API: POST /parent/voice/sessions/ID/turn
+        API->>Speech: transcribe the answer
+        API->>Eng: score the answer in code
+        API->>AI: safety check and a short reply
+        API-->>App: result, hint or next item
+    end
+    App->>API: POST /parent/voice/sessions/ID/end
+    API->>AI: write the report text
+    API-->>App: session report
+    Note over API: The teacher sees the report on the child's profile
+```
 
 ---
 
