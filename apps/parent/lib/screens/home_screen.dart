@@ -138,7 +138,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final c = (profile?['child'] as Map?)?.cast<String, dynamic>();
     return Scaffold(
       appBar: AppBar(
-        title: Text(tr('Kaksha Saathi', 'कक्षा साथी')),
+        title: Text(tr('Kaksha Sathi Parents', 'कक्षा साथी पैरेंट्स')),
         actions: [
           TextButton(
             onPressed: () => Lang.set(Lang.isHi ? 'en' : 'hi'),

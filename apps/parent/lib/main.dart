@@ -23,7 +23,7 @@ class KakshaParentApp extends StatelessWidget {
     return ValueListenableBuilder<String>(
       valueListenable: Lang.code,
       builder: (_, _, _) => MaterialApp(
-        title: tr('Kaksha Saathi: Practice', 'कक्षा साथी: अभ्यास'),
+        title: tr('Kaksha Sathi Parents', 'कक्षा साथी पैरेंट्स'),
         debugShowCheckedModeBanner: false,
         theme: _theme(),
         locale: Lang.locale,

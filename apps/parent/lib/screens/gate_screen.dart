@@ -116,7 +116,7 @@ class _GateScreenState extends State<GateScreen> {
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    tr('Kaksha Saathi', 'कक्षा साथी'),
+                    tr('Kaksha Sathi Parents', 'कक्षा साथी पैरेंट्स'),
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.titleLarge
                         ?.copyWith(fontSize: 30),

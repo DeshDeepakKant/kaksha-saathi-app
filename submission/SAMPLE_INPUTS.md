@@ -7,9 +7,6 @@ minutes. All children in the demo school are fictional.
 - Teacher: school code `DEMO`, PIN `1234`
 - Parent: school code `DEMO`, roll number `12`, phone `9876500000`, PIN `0000` (child: कविता, class 2A)
 
-Web: https://kaksha-saathi-558g.onrender.com/teacher/ and https://kaksha-saathi-558g.onrender.com/parent/
-(the first load after a quiet spell can take up to a minute while the free server wakes up).
-
 ---
 
 ## 1. Teacher: an end-of-day voice note in Hindi

@@ -173,7 +173,7 @@ Details and data-collection plan: [05_EVALUATION_PLAN.md](05_EVALUATION_PLAN.md)
 
 ## 9. Deliverables for 1 November
 
-- Hosted web demo (teacher + parent) with demo accounts and seeded fictional class.
+- Demo accounts and a seeded fictional class.
 - APK with install instructions (teacher app; mic recording).
 - GitHub repo: no secrets; README; `.env.example`; 3–5 sample inputs (notes, notebook photos, audio clips, parent session).
 - 3-minute video; deck with architecture layers, guardrails, offline story, user inputs/testing, roadmap, and this documentation set condensed.

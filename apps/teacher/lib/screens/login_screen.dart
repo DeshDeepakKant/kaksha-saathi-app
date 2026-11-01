@@ -65,7 +65,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 const Icon(Icons.school_rounded, size: 64, color: Ks.accent),
                 const SizedBox(height: 12),
                 Text(
-                  tr('Kaksha Saathi', 'कक्षा साथी'),
+                  tr('Kaksha Sathi', 'कक्षा साथी'),
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.titleLarge
                       ?.copyWith(fontSize: 30),

@@ -432,7 +432,7 @@ class _BoardScreenState extends State<BoardScreen> {
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(_cls?['label'] ?? tr('Kaksha Saathi', 'कक्षा साथी')),
+            Text(_cls?['label'] ?? tr('Kaksha Sathi', 'कक्षा साथी')),
             if (Api.i.me != null)
               Text(
                 Api.i.me!['name'] ?? '',

@@ -1,7 +1,6 @@
 # Kaksha Saathi: Android apps and install steps
 
-Two apps share one learning map. Both talk to the hosted server at
-`https://kaksha-saathi-558g.onrender.com`, so there is nothing to set up.
+Two apps share one learning map. Both talk to the hosted server, so there is nothing to set up.
 
 | File | Who uses it | Login |
 |---|---|---|
@@ -9,8 +8,6 @@ Two apps share one learning map. Both talk to the hosted server at
 | `KakshaSaathi-Parent.apk` (about 56 MB) | Parent at home | School code `DEMO`, roll `12`, phone `9876500000`, PIN `0000` |
 
 Works on Android 7.0 or newer. Tested on a Moto g64 (Android 15).
-No phone handy? The same apps run in a browser:
-https://kaksha-saathi-558g.onrender.com/teacher/ and https://kaksha-saathi-558g.onrender.com/parent/
 
 ## Install
 

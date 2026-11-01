@@ -1307,7 +1307,7 @@ class _VoiceSessionScreenState extends State<VoiceSessionScreen>
           icon: Icons.mic_off_rounded,
           text: _micDenied
               ? tr(
-                  'Saathi needs the microphone to hear your child. Allow microphone access (phone Settings › Apps › Kaksha Saathi › Permissions), then try again.',
+                  'Saathi needs the microphone to hear your child. Allow microphone access (phone Settings › Apps › Kaksha Sathi Parents › Permissions), then try again.',
                   'बच्चे को सुनने के लिए साथी को माइक चाहिए। फ़ोन की सेटिंग › ऐप › कक्षा साथी › अनुमति में माइक चालू करें, फिर कोशिश करें।',
                 )
               : tr('The microphone did not start.', 'माइक चालू नहीं हुआ।'),

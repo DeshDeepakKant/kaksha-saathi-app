@@ -106939,7 +106939,7 @@ $S:133}
 A.To.prototype={
 J(a){return new A.j_($.fy(),new A.akI(),null,null,t.x_)}}
 A.akI.prototype={
-$3(a,b,c){var s,r,q,p,o=null,n=$.b_S(),m=A.e("Kaksha Saathi: Teacher","\u0915\u0915\u094d\u0937\u093e \u0938\u093e\u0925\u0940: \u0936\u093f\u0915\u094d\u0937\u093f\u0915\u093e"),l=A.yF(o,A.b17(B.aM,o,B.J,B.J,B.bR),"NotoSansDevanagari",B.bR,!0),k=l.ok,j=k.y
+$3(a,b,c){var s,r,q,p,o=null,n=$.b_S(),m=A.e("Kaksha Sathi","\u0915\u0915\u094d\u0937\u093e \u0938\u093e\u0925\u0940"),l=A.yF(o,A.b17(B.aM,o,B.J,B.J,B.bR),"NotoSansDevanagari",B.bR,!0),k=l.ok,j=k.y
 j=j==null?o:j.a4_(B.ai,17,1.5)
 s=k.z
 s=s==null?o:s.a4_(B.ai,16,1.45)
@@ -107479,7 +107479,7 @@ if(p==null){p=m.at.h(0,q)
 p.toString}h.push(p)}}s=m.d
 s=s==null?l:s.h(0,"label")
 p=t.p
-s=A.a([A.h(s==null?A.e("Kaksha Saathi","\u0915\u0915\u094d\u0937\u093e \u0938\u093e\u0925\u0940"):s,l,l,l,l,l,l,l)],p)
+s=A.a([A.h(s==null?A.e("Kaksha Sathi","\u0915\u0915\u094d\u0937\u093e \u0938\u093e\u0925\u0940"):s,l,l,l,l,l,l,l)],p)
 o=$.aV().w
 if(o!=null){o=o.h(0,"name")
 s.push(A.h(o==null?"":o,l,l,l,l,B.ajQ,l,l))}s=A.ay(s,B.y,B.f,B.j)
@@ -109564,7 +109564,7 @@ break
 case 6:case 1:return A.q(q,r)
 case 2:return A.p(o.at(-1),r)}})
 return A.r($async$xN,r)},
-J(a){var s=this,r=null,q=A.e("Kaksha Saathi","\u0915\u0915\u094d\u0937\u093e \u0938\u093e\u0925\u0940"),p=A.L(a).ok.r,o=t.p
+J(a){var s=this,r=null,q=A.e("Kaksha Sathi","\u0915\u0915\u094d\u0937\u093e \u0938\u093e\u0925\u0940"),p=A.L(a).ok.r,o=t.p
 p=A.a([B.Na,B.bi,B.VY,B.R,A.h(q,r,r,r,r,p==null?r:p.aCa(30),B.aQ,r),B.aC,A.h(A.e("Where every child is, and what to do today","\u0939\u0930 \u092c\u091a\u094d\u091a\u093e \u0915\u0939\u093e\u0901 \u0939\u0948, \u0914\u0930 \u0906\u091c \u0915\u094d\u092f\u093e \u0915\u0930\u0947\u0902"),r,r,r,r,A.c5(r,r,B.K,r,r,r,r,r,r,r,r,16,r,r,r,r,r,!0,r,r,r,r,r,r,r,r),B.aQ,r),B.af0,A.dC(!1,s.d,A.d1(r,r,r,r,r,r,r,r,!0,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,A.e("School code","\u0938\u094d\u0915\u0942\u0932 \u0915\u094b\u0921"),!0,!0,!1,r,r,r,r,r,r,r,r,r,r,r,r,r,r),r,r,r,1,r,!1,r,r,r,B.Me),B.R,A.dC(!1,s.e,A.d1(r,r,r,r,r,r,r,r,!0,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,"\u2022\u2022\u2022\u2022",r,r,r,r,r,r,r,r,A.e("PIN","\u092a\u093f\u0928"),!0,!0,!1,r,r,r,r,r,r,r,r,r,r,r,r,r,r),r,B.mm,r,1,r,!0,r,new A.aIv(s),r,B.bM)],o)
 q=s.r
 if(q!=null)B.b.M(p,A.a([B.R,A.h(q,r,r,r,r,B.ek,r,r)],o))
@@ -114656,7 +114656,7 @@ if(k!=null&&k.length!==0)B.b.M(o,A.a([B.a4,A.h(k,e,e,e,e,B.em,e,e)],r))
 o.push(B.R)
 k=t.N
 j=t.X
-o.push(A.h(A.ac("{n} topics: {matched} match lessons already in Kaksha Saathi, {n2} are new.","{n} \u0935\u093f\u0937\u092f: {matched} \u0915\u0915\u094d\u0937\u093e \u0938\u093e\u0925\u0940 \u0915\u0947 \u092e\u094c\u091c\u0942\u0926\u093e \u092a\u093e\u0920\u094b\u0902 \u0938\u0947 \u092e\u093f\u0932\u0924\u0947 \u0939\u0948\u0902, {n2} \u0928\u090f \u0939\u0948\u0902\u0964",A.z(["n",c,"matched",q,"n2",c-q],k,j)),e,e,e,e,B.ajY,e,e))
+o.push(A.h(A.ac("{n} topics: {matched} match lessons already in Kaksha Sathi, {n2} are new.","{n} \u0935\u093f\u0937\u092f: {matched} \u0915\u0915\u094d\u0937\u093e \u0938\u093e\u0925\u0940 \u0915\u0947 \u092e\u094c\u091c\u0942\u0926\u093e \u092a\u093e\u0920\u094b\u0902 \u0938\u0947 \u092e\u093f\u0932\u0924\u0947 \u0939\u0948\u0902, {n2} \u0928\u090f \u0939\u0948\u0902\u0964",A.z(["n",c,"matched",q,"n2",c-q],k,j)),e,e,e,e,B.ajY,e,e))
 if(f.a.r&&f.gKB()>0){i=f.gLE()
 h=f.fr||f.ch?e:new A.aQi(f)
 g=A.h(A.ac("Keep my current {existingCount} topics","\u092e\u0947\u0930\u0947 \u092e\u094c\u091c\u0942\u0926\u093e {existingCount} \u0935\u093f\u0937\u092f \u0930\u0916\u0947\u0902",A.z(["existingCount",f.gKB()],k,j)),e,e,e,e,e,e,e)

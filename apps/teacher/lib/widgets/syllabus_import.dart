@@ -1052,7 +1052,7 @@ class _SylImportScreenState extends State<SylImportScreen> {
               const SizedBox(height: 12),
               Text(
                 trf(
-                  '{n} topics: {matched} match lessons already in Kaksha Saathi, {n2} are new.',
+                  '{n} topics: {matched} match lessons already in Kaksha Sathi, {n2} are new.',
                   '{n} विषय: {matched} कक्षा साथी के मौजूदा पाठों से मिलते हैं, {n2} नए हैं।', {'n': n, 'matched': matched, 'n2': n - matched},
                 ),
                 style: const TextStyle(fontSize: 14.5, color: Ks.ink),

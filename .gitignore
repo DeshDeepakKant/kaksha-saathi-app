@@ -49,3 +49,7 @@ node_modules/
 
 # --- l10n translation cache (regenerable, large)
 tool/i18n/cache/
+
+# raw photos of real children's work: never commit
+docs/student_homework_raw_photos/
+docs/subject_index raw photos/

@@ -210,7 +210,7 @@ String weeklyShareText(WeeklyData w, String name) {
   }
   b
     ..writeln()
-    ..write(tr('- Kaksha Saathi', '- कक्षा साथी'));
+    ..write(tr('- Kaksha Sathi Parents', '- कक्षा साथी पैरेंट्स'));
   return b.toString();
 }
 
@@ -337,7 +337,7 @@ class WeeklyCard extends StatelessWidget {
                 Align(
                   alignment: AlignmentDirectional.centerEnd,
                   child: Text(
-                    tr('Kaksha Saathi', 'कक्षा साथी'),
+                    tr('Kaksha Sathi Parents', 'कक्षा साथी पैरेंट्स'),
                     style: const TextStyle(
                       color: Ks.muted,
                       fontSize: 13,

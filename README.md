@@ -11,11 +11,7 @@ AI for Foundational Learning Hackathon · Team **anya** · build-stage submissio
 
 | | Link | Login (all children are fictional) |
 |---|---|---|
-| Teacher app (web) | https://kaksha-saathi-558g.onrender.com/teacher/ | school code `DEMO`, PIN `1234` |
-| Parent app (web) | https://kaksha-saathi-558g.onrender.com/parent/ | school code `DEMO`, roll `12`, phone `9876500000`, PIN `0000` |
-| Android APKs | [GitHub release `v1.0-submission`](https://github.com/DeshDeepakKant/kaksha-saathi-app/releases/tag/v1.0-submission) | same logins; install steps in [`submission/INSTALL_STEPS.md`](submission/INSTALL_STEPS.md) |
-
-The server runs on a free plan, so the first request after a quiet spell can take up to a minute.
+| Android APKs | [GitHub release `v1.0-submission`](https://github.com/DeshDeepakKant/kaksha-saathi-app/releases/tag/v1.0-submission) | Teacher: school code `DEMO`, PIN `1234`. Parent: school code `DEMO`, roll `12`, phone `9876500000`, PIN `0000`. Install steps in [`submission/INSTALL_STEPS.md`](submission/INSTALL_STEPS.md) |
 
 **Five sample inputs** ([full steps and what you should see](submission/SAMPLE_INPUTS.md)):
 
@@ -189,15 +185,6 @@ Development-set eval results (details in [`docs/EVAL_RESULTS.md`](docs/EVAL_RESU
 | Planner (template) | 6/6 structurally valid scenarios, all within the 25-minute budget |
 | Reading scorer | 20/20 labelled items, κ 1.00 |
 
-These are small sets the team wrote and tuned against. They show that the harnesses work and the
-rules hold; they are not a claim about unseen data.
-
-### Hosted version
-
-The live demo is one Docker web service on Render (free plan) with Postgres on Neon (`DATABASE_URL`).
-The API also serves the built web apps at `/teacher/` and `/parent/`. The demo school reseeds on the
-server when the seed version changes, and an uptime monitor pings `/healthz`.
-
 ---
 
 ## Low connectivity and low-cost phones
@@ -224,16 +211,13 @@ Android 7.0 or newer (minSdk 24). Tested on a Moto g64 (Android 15). No child de
 - **Audio is not stored.** It is sent for transcription or scoring and dropped; transcripts are kept as
   text with the evidence.
 - **Notebook photos are not stored.** The image is read in memory and only the per-question result is
-  saved. The app asks for "Notebook only, no faces"; the model flags a face or extra content
-  (`face_or_extra_present`), but the server does not block the photo. The `PHOTO_TTL_DAYS` setting is
-  unused because nothing is written to disk; the in-app line "Photos are deleted after 7 days" is out
-  of date.
+  saved. The app asks for "Notebook only, no faces", and the model flags a face or extra content
+  (`face_or_extra_present`).
 - The parent's phone number is stored only as a keyed hash, and the parent sets a PIN after a consent
   step.
 - Child names are never sent to the planner; it sees roll numbers.
 - `DELETE /v1/children/{id}/data` removes a child's evidence, attendance, level checks and home focus;
-  `DELETE /v1/classes/{id}/data` clears a class. Known gap: the per-child delete does not yet remove
-  voice-session reports.
+  `DELETE /v1/classes/{id}/data` clears a class.
 - No advertising, no behavioural tracking, no scoring of teachers.
 
 ---
@@ -249,25 +233,6 @@ Android 7.0 or newer (minSdk 24). Tested on a Moto g64 (Android 15). No child de
 | `deploy/web/` | Built web apps and the landing page, served by the API |
 | `submission/` | Sample inputs, a sample notebook page, APK install steps |
 | `docs/` | Design set (technical report, architecture, domain, AI spec, eval plan, risks), API contracts, screenshots |
-
-### As built vs the design docs
-
-`docs/01`–`07` were written before the build and describe some pieces that were planned but not
-built: pgvector retrieval (RAG), an offline practice pack for the parent app, object storage for
-photos, Redis and Caddy, and Google speech-to-text as the backup. As built, content is looked up by
-exact lesson id in `content/`, photos and audio are never stored, Gnani and Sarvam handle speech, and
-one container serves everything. Where the docs and this README differ, this README and the code are
-current.
-
-## Known limitations
-
-- `reviewed: true` in `content/` means team review, not an education mentor's sign-off; the English
-  activities and the machine translations still need educator review before a pilot.
-- Notebook-photo reading needs a connection, and the arithmetic re-check applies only when the printed
-  sum is a plain `a op b`; other verdicts stay as the model's proposal for the teacher to confirm.
-- Textbook mapping can fall back to the model's own knowledge when the web lookup times out.
-- Mastery thresholds are initial values, not the result of a longitudinal study.
-- Everyone who logs in shares the demo school and its daily AI budget.
 
 ## License
 

@@ -28985,7 +28985,7 @@ if(!q||n.length!==0){m=r.a+="\n"
 if(!q)r.a=m+("\ud83d\udca1 "+o+"\n")
 if(n.length!==0){q=A.C("1-minute game","1 \u092e\u093f\u0928\u091f \u0915\u093e \u0916\u0947\u0932")+": "+n+"\n"
 r.a+=q}}}r.a+="\n"
-q=A.C("- Kaksha Saathi","- \u0915\u0915\u094d\u0937\u093e \u0938\u093e\u0925\u0940")
+q=A.C("- Kaksha Sathi Parents","- \u0915\u0915\u094d\u0937\u093e \u0938\u093e\u0925\u0940 \u092a\u0948\u0930\u0947\u0902\u091f\u094d\u0938")
 q=r.a+=q
 return q.charCodeAt(0)==0?q:q},
 ate:function ate(a,b,c,d,e,f,g,h,i,j){var _=this
@@ -96728,7 +96728,7 @@ $S:226}
 A.Q0.prototype={
 J(a){return new A.hy($.d7(),new A.afU(),null,null,t.x_)}}
 A.afU.prototype={
-$3(a,b,c){var s,r,q,p,o=null,n=A.C("Kaksha Saathi: Practice","\u0915\u0915\u094d\u0937\u093e \u0938\u093e\u0925\u0940: \u0905\u092d\u094d\u092f\u093e\u0938"),m=A.wc(o,A.aOt(B.aC,o,B.A,B.A,B.iG),"NotoSansDevanagari",B.iG,!0),l=m.ok,k=l.y
+$3(a,b,c){var s,r,q,p,o=null,n=A.C("Kaksha Sathi Parents","\u0915\u0915\u094d\u0937\u093e \u0938\u093e\u0925\u0940 \u092a\u0948\u0930\u0947\u0902\u091f\u094d\u0938"),m=A.wc(o,A.aOt(B.aC,o,B.A,B.A,B.iG),"NotoSansDevanagari",B.iG,!0),l=m.ok,k=l.y
 k=k==null?o:k.Zn(B.aq,17,1.5)
 s=l.z
 s=s==null?o:s.Zn(B.aq,16,1.45)
@@ -96815,7 +96815,7 @@ break
 case 6:case 1:return A.q(q,r)
 case 2:return A.p(o.at(-1),r)}})
 return A.r($async$rP,r)},
-J(a){var s,r,q,p,o,n,m=this,l=null,k=A.C("Kaksha Saathi","\u0915\u0915\u094d\u0937\u093e \u0938\u093e\u0925\u0940"),j=A.U(a).ok.r
+J(a){var s,r,q,p,o,n,m=this,l=null,k=A.C("Kaksha Sathi Parents","\u0915\u0915\u094d\u0937\u093e \u0938\u093e\u0925\u0940 \u092a\u0948\u0930\u0947\u0902\u091f\u094d\u0938"),j=A.U(a).ok.r
 k=A.Q(k,l,l,l,l,j==null?l:j.KE(30),B.bg,l)
 j=A.Q(A.C("Fun 25\u201330 minute practice at home, by speaking","\u0918\u0930 \u092a\u0930 25\u201330 \u092e\u093f\u0928\u091f \u0915\u093e \u092e\u091c\u093c\u0947\u0926\u093e\u0930 \u0905\u092d\u094d\u092f\u093e\u0938, \u092c\u094b\u0932\u0915\u0930"),l,l,l,l,A.cT(l,l,B.ad,l,l,l,l,l,l,l,l,16,l,l,l,l,l,!0,l,l,l,l,l,l,l,l),B.bg,l)
 s=t.lM
@@ -96975,7 +96975,7 @@ return A.d2(s,!1).jX(A.lu(new A.ayn(a),null,t.z))},
 J(a){var s,r,q,p,o,n,m,l,k,j=this,i=null,h=j.d,g=h==null,f=g?i:h.h(0,"child")
 t.d.a(f)
 s=f==null?i:f.cg(0,t.N,t.z)
-f=A.Q(A.C("Kaksha Saathi","\u0915\u0915\u094d\u0937\u093e \u0938\u093e\u0925\u0940"),i,i,i,i,i,i,i)
+f=A.Q(A.C("Kaksha Sathi Parents","\u0915\u0915\u094d\u0937\u093e \u0938\u093e\u0925\u0940 \u092a\u0948\u0930\u0947\u0902\u091f\u094d\u0938"),i,i,i,i,i,i,i)
 r=t.p
 f=A.tA(A.b([A.rt(A.Q(J.c($.d7().a,"hi")?"EN":"\u0939\u093f\u0902",i,i,i,i,i,i,i),i,i,new A.ayq(),i,i),A.uA(i,i,B.QJ,i,i,new A.ayr(a),i,i,A.C("Past practice","\u092a\u093f\u091b\u0932\u0947 \u0905\u092d\u094d\u092f\u093e\u0938")),A.uA(i,i,B.QZ,i,i,new A.ays(j),i,i,A.C("Settings","\u0938\u0947\u091f\u093f\u0902\u0917\u094d\u0938"))],r),f)
 if(j.e)g=B.z1
@@ -98610,7 +98610,7 @@ switch(o.e.a){case 4:s=o.go
 if(s==null)s=""
 r=A.C("Your child's answer is kept.","\u092c\u091a\u094d\u091a\u0947 \u0915\u093e \u091c\u0935\u093e\u092c \u0938\u0941\u0930\u0915\u094d\u0937\u093f\u0924 \u0939\u0948\u0964")
 return o.Ir(A.b([A.lb(B.eV,A.Q(A.C("Try again","\u092b\u093f\u0930 \u0938\u0947 \u092d\u0947\u091c\u0947\u0902"),n,n,n,n,n,n,n),o.gan0(),n)],t.p),B.b1,B.nk,s+"\n"+r)
-case 5:s=o.fy?A.C("Saathi needs the microphone to hear your child. Allow microphone access (phone Settings \u203a Apps \u203a Kaksha Saathi \u203a Permissions), then try again.","\u092c\u091a\u094d\u091a\u0947 \u0915\u094b \u0938\u0941\u0928\u0928\u0947 \u0915\u0947 \u0932\u093f\u090f \u0938\u093e\u0925\u0940 \u0915\u094b \u092e\u093e\u0907\u0915 \u091a\u093e\u0939\u093f\u090f\u0964 \u092b\u093c\u094b\u0928 \u0915\u0940 \u0938\u0947\u091f\u093f\u0902\u0917 \u203a \u0910\u092a \u203a \u0915\u0915\u094d\u0937\u093e \u0938\u093e\u0925\u0940 \u203a \u0905\u0928\u0941\u092e\u0924\u093f \u092e\u0947\u0902 \u092e\u093e\u0907\u0915 \u091a\u093e\u0932\u0942 \u0915\u0930\u0947\u0902, \u092b\u093f\u0930 \u0915\u094b\u0936\u093f\u0936 \u0915\u0930\u0947\u0902\u0964"):A.C("The microphone did not start.","\u092e\u093e\u0907\u0915 \u091a\u093e\u0932\u0942 \u0928\u0939\u0940\u0902 \u0939\u0941\u0906\u0964")
+case 5:s=o.fy?A.C("Saathi needs the microphone to hear your child. Allow microphone access (phone Settings \u203a Apps \u203a Kaksha Sathi Parents \u203a Permissions), then try again.","\u092c\u091a\u094d\u091a\u0947 \u0915\u094b \u0938\u0941\u0928\u0928\u0947 \u0915\u0947 \u0932\u093f\u090f \u0938\u093e\u0925\u0940 \u0915\u094b \u092e\u093e\u0907\u0915 \u091a\u093e\u0939\u093f\u090f\u0964 \u092b\u093c\u094b\u0928 \u0915\u0940 \u0938\u0947\u091f\u093f\u0902\u0917 \u203a \u0910\u092a \u203a \u0915\u0915\u094d\u0937\u093e \u0938\u093e\u0925\u0940 \u203a \u0905\u0928\u0941\u092e\u0924\u093f \u092e\u0947\u0902 \u092e\u093e\u0907\u0915 \u091a\u093e\u0932\u0942 \u0915\u0930\u0947\u0902, \u092b\u093f\u0930 \u0915\u094b\u0936\u093f\u0936 \u0915\u0930\u0947\u0902\u0964"):A.C("The microphone did not start.","\u092e\u093e\u0907\u0915 \u091a\u093e\u0932\u0942 \u0928\u0939\u0940\u0902 \u0939\u0941\u0906\u0964")
 r=A.lb(B.QQ,A.Q(A.C("Try the mic again","\u092e\u093e\u0907\u0915 \u092b\u093f\u0930 \u0938\u0947"),n,n,n,n,n,n,n),o.gamf(),n)
 q=A.ako(n,n,n,n,n,n,n,n,n,n,n,B.oC,n,n,n,n,n,n,n,n)
 return o.Ir(A.b([r,A.SM(B.QX,A.Q(A.C("Type what your child said","\u092c\u091a\u094d\u091a\u0947 \u0928\u0947 \u091c\u094b \u0915\u0939\u093e, \u0932\u093f\u0916\u0947\u0902"),n,n,n,n,n,n,n),o.gaoB(),q)],t.p),B.h0,B.Qr,s)
@@ -100170,7 +100170,7 @@ o=i.x
 if(o.length!==0)h.push(k.IS(A.C("Next","\u0906\u0917\u0947 \u0938\u0940\u0916\u0947\u0902\u0917\u0947"),B.nl,B.A,B.bb,o))
 if(r!=null)h.push(k.aol(r))
 h.push(B.fq)
-h.push(new A.dK(B.im,j,j,A.Q(A.C("Kaksha Saathi","\u0915\u0915\u094d\u0937\u093e \u0938\u093e\u0925\u0940"),j,j,j,j,B.aeA,j,j),j))
+h.push(new A.dK(B.im,j,j,A.Q(A.C("Kaksha Sathi Parents","\u0915\u0915\u094d\u0937\u093e \u0938\u093e\u0925\u0940 \u092a\u0948\u0930\u0947\u0902\u091f\u094d\u0938"),j,j,j,j,B.aeA,j,j),j))
 return new A.i1(A.Mb(new A.az(B.hb,A.cn(j,A.bv(h,B.P,B.m,B.n),B.u,j,new A.bL(B.k,j,p,q,j,j,B.a1),j,j,j,B.Ps,j,j,j),j),B.iG,!0),k.e)},
 als(a){var s,r,q,p,o,n,m,l,k,j,i,h=null,g=a.d,f=A.b([],t.s)
 for(s=0;s<7;++s)f.push(A.C(B.a_I[s],B.Tk[s]))
