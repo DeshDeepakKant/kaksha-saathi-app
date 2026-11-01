@@ -29,6 +29,7 @@ services:
       GNANI_API_KEY: ${GNANI_API_KEY:-}
       SARVAM_API_KEY: ${SARVAM_API_KEY:-}
       MODEL_EXTRACT: ${MODEL_EXTRACT:-claude-haiku-4-5-20251001}
+      MODEL_PHOTO: ${MODEL_PHOTO:-claude-sonnet-5-5}
       MODEL_PLAN: ${MODEL_PLAN:-claude-sonnet-5}
       MODEL_TUTOR: ${MODEL_TUTOR:-claude-sonnet-5}
       SEED_ON_STARTUP: "true"

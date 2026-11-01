@@ -73,6 +73,16 @@ def _supports_temperature(client) -> bool:  # pragma: no cover - depends on inst
         return False
 
 
+# Claude 5.5-generation models reject a forced tool_choice ("tool"/"any") and non-default sampling
+# parameters with a 400. For them we ask for the tool with tool_choice "auto" plus an explicit
+# instruction, and retry when the model answers in text instead.
+_NO_FORCED_TOOL = ("sonnet-5-5", "opus-5-5", "fable-5-1", "mythos-5-1")
+
+
+def _forced_tool_ok(model: str) -> bool:
+    return not any(tag in model for tag in _NO_FORCED_TOOL)
+
+
 def _model_tier(model: str) -> str:
     return "haiku" if "haiku" in model else "sonnet"
 
@@ -146,10 +156,17 @@ def structured(
     last_err = ""
     parsed: dict | None = None
 
+    forced = _forced_tool_ok(model)
+    if forced:
+        tool_choice = {"type": "tool", "name": tool_name}
+        sys_text = system
+    else:
+        tool_choice = {"type": "auto"}
+        sys_text = f"{system}\n\nAnswer by calling the `{tool_name}` tool exactly once. Do not reply in plain text."
     kw = dict(model=model, max_tokens=max_tokens,
-              system=[{"type": "text", "text": system, "cache_control": {"type": "ephemeral"}}],
-              tools=tools, tool_choice={"type": "tool", "name": tool_name}, messages=messages)
-    if _supports_temperature(client):
+              system=[{"type": "text", "text": sys_text, "cache_control": {"type": "ephemeral"}}],
+              tools=tools, tool_choice=tool_choice, messages=messages)
+    if forced and _supports_temperature(client):
         kw["temperature"] = temperature
     for attempt in range(2 if retry_with_error else 1):
         resp = _create(client, **kw)
@@ -158,6 +175,11 @@ def structured(
         block = next((b for b in resp.content if getattr(b, "type", None) == "tool_use"), None)
         if block is None:
             last_err = "no tool_use block"
+            if attempt == 0 and not forced:
+                kw["messages"] = messages = messages + [
+                    {"role": "assistant", "content": [{"type": "text", "text": "(no result yet)"}]},
+                    {"role": "user", "content": f"Call the `{tool_name}` tool now with the result."},
+                ]
         else:
             data = block.input if isinstance(block.input, dict) else json.loads(block.input)
             try:

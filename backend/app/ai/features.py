@@ -133,7 +133,7 @@ def analyze_photo(session: Session, *, school_id: int, image: bytes, media_type:
     images = [{"type": "image", "source": {"type": "base64", "media_type": media_type, "data": b64}},
               {"type": "text", "text": "The image above is the page to analyse."}]
     try:
-        res = llm.structured(session, feature="photo", prompt_version="v1", model=get_settings().model_extract,
+        res = llm.structured(session, feature="photo", prompt_version="v1", model=get_settings().model_photo,
                              system=system, user=user, schema=schemas.PHOTO_SCHEMA, tool_name="return_page",
                              images=images, max_tokens=3000, school_id=school_id,
                              validate=lambda d: schemas.validate_photo(d, set(checkpoint_ids)))

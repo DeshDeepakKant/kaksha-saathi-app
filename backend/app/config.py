@@ -26,6 +26,7 @@ class Settings(BaseSettings):
 
     # --- models (single source of truth; prompts never hard-code an id)
     model_extract: str = "claude-haiku-4-5-20251001"
+    model_photo: str = "claude-sonnet-5-5"  # evidence photo reading (vision; handwriting and tick marks)
     model_plan: str = "claude-sonnet-5"
     model_tutor: str = "claude-sonnet-5"
     model_book: str = "claude-sonnet-5"  # textbook/chapter mapping (vision + book knowledge)
