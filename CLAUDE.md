@@ -69,7 +69,7 @@ Rules for agents:
 ```bash
 make setup                                   # backend venv + deps
 make api                                     # API on :8000 (serves built web apps too)
-make test                                    # 42 backend tests, no API key needed
+make test                                    # ~940 backend tests on a fresh DB (rm backend/kaksha_dev.db), no API key needed
 make eval                                    # deterministic evals
 cd apps/teacher && flutter analyze           # likewise apps/parent
 ```
